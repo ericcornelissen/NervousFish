@@ -38,8 +38,12 @@ captures/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
+.idea/markdown-navigator.xml
+.idea/misc.xml
+.idea/vcs.xml
 .idea/dictionaries
 .idea/libraries
+.idea/markdown-navigator
 
 # Keystore files
 *.jks
