@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<module name="Checker">
-<module name="FileTabCharacter"/>
-  <module name="TreeWalker">
-    <module name="UnusedImports"/>
-  </module>
-</module>
