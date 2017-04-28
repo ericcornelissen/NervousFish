@@ -16,6 +16,7 @@
     <property name="charset" value="UTF-8"/>
 
     <property name="severity" value="warning"/>
+
     <!-- Checks for whitespace                               -->
     <!-- See http://checkstyle.sf.net/config_whitespace.html -->
     <module name="FileTabCharacter">
@@ -134,10 +135,6 @@
                      value="Method name ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="SingleLineJavadoc">
-            <property name="ignoreInlineTags" value="false"/>
-        </module>
-        <module name="EmptyCatchBlock">
-            <property name="exceptionVariableName" value="expected"/>
         </module>
     </module>
 </module>
