@@ -7,10 +7,10 @@
 Specify what this Pull Request adds to the repository.
 
 ## Why
-Specify why this Pull Request is need in the project.
+Specify why this Pull Request is needed in the project.
 
 ## How
-Specify how the feature added can be viewed/tested within the project.
+Specify how this feature can be viewed/tested within the project.
 
 ## Notes
 Is there anything reviewers need to know about? Do they need to take something into account while
