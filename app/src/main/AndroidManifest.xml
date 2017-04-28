@@ -19,6 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- This is an example Cucumber class that can be deleted safely after we're accustomed to using Cucumber -->
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
