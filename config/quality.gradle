@@ -23,7 +23,7 @@ checkstyle {
 }
 
 task findbugs(type: FindBugs) {
-    ignoreFailures = true
+    ignoreFailures = false
     effort = "max"
     reportLevel = "high"
     excludeFilter = file("$configDir/findbugs/findbugs-filter.xml")
@@ -37,9 +37,6 @@ task findbugs(type: FindBugs) {
         xml.enabled = false
 		xml.withMessages = true
         html.enabled = true
-        xml {
-            destination "$reportsDir/findbugs/findbugs.xml"
-        }
         html {
             destination "$reportsDir/findbugs/findbugs.html"
         }
@@ -49,35 +46,9 @@ task findbugs(type: FindBugs) {
 }
 
 task pmd(type: Pmd) {
-    ignoreFailures = true
-    ruleSets = [
-            'java-android',
-            'java-basic',
-            'java-braces',
-            'java-clone',
-            'java-codesize',
-            'java-comments',
-            'java-controversial',
-            'java-coupling',
-            'java-design',
-            'java-empty',
-            'java-finalizers',
-            'java-imports',
-            'java-j2ee',
-            'java-javabeans',
-            'java-junit',
-            'java-logging-jakarta-commons',
-            'java-logging-java',
-            'java-migrating',
-            'java-naming',
-            'java-optimizations',
-            'java-strictexception',
-            'java-strings',
-            'java-sunsecure',
-            'java-typeresolution',
-            'java-unnecessary',
-            'java-unusedcode'
-            ]
+    ignoreFailures = false
+    ruleSetFiles = files("$configDir/pmd/pmd-ruleset.xml")
+    ruleSets = []
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
@@ -85,13 +56,14 @@ task pmd(type: Pmd) {
     reports {
         xml.enabled = false
         html.enabled = true
-        xml {
-            destination "$reportsDir/pmd/pmd.xml"
-        }
         html {
             destination "$reportsDir/pmd/pmd.html"
         }
     }
+}
+
+pmd {
+    toolVersion = "5.5.0"
 }
 
 android {
@@ -101,7 +73,6 @@ android {
         htmlReport true
         lintConfig file("$configDir/lint/lint.xml")
         htmlOutput file("$reportsDir/lint/lint-result.html")
-        xmlOutput file("$reportsDir/lint/lint-result.xml")
     }
 }
 
