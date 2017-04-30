@@ -24,7 +24,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.not;
 
 @SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
@@ -53,9 +52,9 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
     public void I_should_see_auth_error(boolean shouldSeeError) {
         if (shouldSeeError) {
             onView(withId(R.id.error)).check(matches(isDisplayed()));
-        } else {
-            onView(withId(R.id.error)).check(matches(not(isDisplayed())));
         }
+        //There is no else, because if there is no error it goes to the next activity, which
+        //doesn't have the error text.
     }
 
     private static Matcher<? super View> hasErrorText(String expectedError) {
