@@ -5,6 +5,7 @@ import android.support.test.runner.MonitoringInstrumentation;
 
 import cucumber.api.android.CucumberInstrumentationCore;
 
+@SuppressWarnings("PMD")
 public class Instrumentation extends MonitoringInstrumentation {
 
     private final CucumberInstrumentationCore mInstrumentationCore = new CucumberInstrumentationCore(this);

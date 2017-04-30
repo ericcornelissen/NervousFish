@@ -12,22 +12,31 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The main activity class that shows a list of all people with their public keys
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ListView lv;
     private List<String> contacts = new ArrayList<>();
-
+    /**
+     * Creates the new activity, should only be called by Android
+     *
+     * @param savedInstanceState Don't touch this
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
+            @SuppressWarnings("PMD.MethodCommentRequirement")
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

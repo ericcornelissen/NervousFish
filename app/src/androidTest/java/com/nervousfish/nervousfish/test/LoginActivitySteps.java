@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
+@SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
 public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginActivity> {
 
