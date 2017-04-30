@@ -6,11 +6,19 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main activity class that shows a list of all people with their public keys
  */
-public final class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
+
+    private ListView lv;
+    private List<String> contacts = new ArrayList<>();
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -33,5 +41,23 @@ public final class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        lv = (ListView) findViewById(R.id.listView);
+
+        //Retrieve the contacts from the database
+        getContacts();
+
+        lv.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, contacts));
+
+    }
+
+    public void getContacts() {
+        contacts.add("Eric");
+        contacts.add("Kilian");
+        contacts.add("Joost");
+        contacts.add("Stas");
     }
 }
