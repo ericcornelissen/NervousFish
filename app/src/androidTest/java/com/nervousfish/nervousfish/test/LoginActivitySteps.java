@@ -39,11 +39,6 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
         assertNotNull(getActivity());
     }
 
-    @When("^I input email (\\S+)$")
-    public void I_input_email(final String email) {
-        onView(withId(R.id.email)).perform(typeText(email));
-    }
-
     @When("^I input password \"(.*?)\"$")
     public void I_input_password(final String password) {
         onView(withId(R.id.password)).perform(typeText(password));
@@ -52,14 +47,6 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
     @When("^I press submit button$")
     public void I_press_submit_button() {
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
-    }
-
-    @Then("^I should see error on the (\\S+)$")
-    public void I_should_see_error_on_the_editTextView(final String viewName) {
-        int viewId = (viewName.equals("email")) ? R.id.email : R.id.password;
-        int messageId = (viewName.equals("email")) ? R.string.msg_email_error : R.string.msg_password_error;
-
-        onView(withId(viewId)).check(matches(hasErrorText(getActivity().getString(messageId))));
     }
 
     @Then("^I should (true|false) auth error$")
