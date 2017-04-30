@@ -1,8 +1,8 @@
 Feature: Login
-  Perform login on email and password are inputted
+  Perform login when a password is entered
 
 
-  Scenario Outline: Input email and password in correct format
+  Scenario Outline: Input and validate password
     Given I have a LoginActivity
     When I input password "<password>"
     And I press submit button

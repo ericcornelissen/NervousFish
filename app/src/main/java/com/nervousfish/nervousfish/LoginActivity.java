@@ -13,12 +13,8 @@ import android.widget.EditText;
 @SuppressWarnings("PMD")
 public class LoginActivity extends Activity {
 
-    private static final String DEMO_PASSWORD = "12345";
-
     private EditText mPassword;
     private View mError;
-
-    private boolean inDevelopment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +41,8 @@ public class LoginActivity extends Activity {
             mError = findViewById(R.id.error);
         }
 
-        //The code below has to be changed before deployment. For development
-        //you can continue when the password is empty.
-        boolean wrongPassword = !mPassword.getText().toString().equals(DEMO_PASSWORD);
-        if(inDevelopment) {
-            wrongPassword = !mPassword.getText().toString().isEmpty();
-        }
+        // TODO: have a real password check
+        boolean wrongPassword = !mPassword.getText().toString().isEmpty();
         if (wrongPassword) {
             mError.setVisibility(View.VISIBLE);
         } else {

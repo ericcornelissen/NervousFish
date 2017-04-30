@@ -53,8 +53,6 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
         if (shouldSeeError) {
             onView(withId(R.id.error)).check(matches(isDisplayed()));
         }
-        //There is no else, because if there is no error it goes to the next activity, which
-        //doesn't have the error text.
     }
 
     private static Matcher<? super View> hasErrorText(String expectedError) {
