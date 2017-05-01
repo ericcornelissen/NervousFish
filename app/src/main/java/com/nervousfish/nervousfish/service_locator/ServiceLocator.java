@@ -4,11 +4,14 @@ import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.modules.exploring.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.exploring.INFCHandler;
-import com.nervousfish.nervousfish.modules.exploring.IQRHandler;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
+import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 
+/**
+ * Manages all modules and provides access to them.
+ */
 public final class ServiceLocator implements IServiceLocator {
     private final IDatabase database;
     private final IKeyGenerator keyGenerator;
@@ -19,6 +22,17 @@ public final class ServiceLocator implements IServiceLocator {
     private final INFCHandler nfcHandler;
     private final IQRHandler qrHandler;
 
+    /**
+     * Package-private constructor of the service locator
+     * @param database The {@link IDatabase} module
+     * @param keyGenerator The {@link IKeyGenerator} module
+     * @param encryptor The {@link IEncryptor} module
+     * @param fileSystem The {@link IFileSystem} module
+     * @param constants The {@link IConstants} module
+     * @param bluetoothHandler The {@link IBluetoothHandler} module
+     * @param nfcHandler The {@link INFCHandler} module
+     * @param qrHandler The {@link IQRHandler} module
+     */
     ServiceLocator(
             final IDatabase database,
             final IKeyGenerator keyGenerator,

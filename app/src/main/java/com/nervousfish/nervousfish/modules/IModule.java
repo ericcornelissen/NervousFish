@@ -1,7 +1,7 @@
 package com.nervousfish.nervousfish.modules;
 
 /**
- * Created by jverb on 5/1/2017.
+ * Defines a module that can be used by a service locator.
  */
 
 public interface IModule {
