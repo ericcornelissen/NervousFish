@@ -1,8 +1,9 @@
 package com.nervousfish.nervousfish.modules.constants;
 
-/**
- * Created by jverb on 4/30/2017.
- */
+import com.nervousfish.nervousfish.modules.IModule;
 
-public interface IConstants {
+/**
+ * Interface for the Constants classes
+ */
+public interface IConstants extends IModule {
 }

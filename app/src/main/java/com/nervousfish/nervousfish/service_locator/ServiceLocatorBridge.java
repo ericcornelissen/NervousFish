@@ -11,22 +11,23 @@ import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.util.commands.IServiceLocatorCreatedCommand;
 
 /**
- * Created by jverb on 4/30/2017.
+ * Used to make a new Service Locator.
+ * We use this class so that all modules of the ServiceLocator are initialized (they must be final) and all modules have a reference to a reference to the service locator
+ * A callback is used so that
  */
-
-public class ServiceLocatorBridge {
+class ServiceLocatorBridge implements IServiceLocatorBridge {
     private final IServiceLocator serviceLocator;
 
-    public ServiceLocatorBridge(final IServiceLocatorCreatedCommand resultCallback) {
+    ServiceLocatorBridge(final IServiceLocatorCreatedCommand resultCallback) {
         this.serviceLocator = new ServiceLocator(
-                GsonDatabaseAdapter.register(this),
-                KeyGeneratorAdapter.register(this),
-                EncryptorAdapter.register(this),
-                AndroidFileSystemAdapter.register(this),
-                Constants.register(this),
-                AndroidBluetoothAdapter.register(this),
-                AndroidNFCAdapter.register(this),
-                AndroidQRAdapter.register(this)
+                GsonDatabaseAdapter.newInstance(this).get(),
+                KeyGeneratorAdapter.newInstance(this).get(),
+                EncryptorAdapter.newInstance(this).get(),
+                AndroidFileSystemAdapter.newInstance(this).get(),
+                Constants.newInstance(this).get(),
+                AndroidBluetoothAdapter.newInstance(this).get(),
+                AndroidNFCAdapter.newInstance(this).get(),
+                AndroidQRAdapter.newInstance(this).get()
         );
         resultCallback.execute(serviceLocator);
     }

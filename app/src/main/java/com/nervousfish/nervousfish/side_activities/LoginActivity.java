@@ -1,10 +1,12 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.side_activities;
 
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import com.nervousfish.nervousfish.R;
 
 /**
  * Demo Login activity class

@@ -1,6 +1,5 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.service_locator;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,8 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocatorBridge;
+import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.util.commands.IServiceLocatorCreatedCommand;
 
 import java.util.ArrayList;

@@ -9,6 +9,9 @@ import com.nervousfish.nervousfish.modules.exploring.INFCHandler;
 import com.nervousfish.nervousfish.modules.exploring.IQRHandler;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 
+/**
+ * Provides the interface that should be implemented by all Service Locators.
+ */
 public interface IServiceLocator {
     IDatabase getDatabase();
     IKeyGenerator getKeyGenerator();

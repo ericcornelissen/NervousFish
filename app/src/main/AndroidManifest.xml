@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".service_locator.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <!-- This is an example Cucumber class that can be deleted safely after we're accustomed to using Cucumber -->
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".side_activities.LoginActivity"></activity>
     </application>
 
 </manifest>
