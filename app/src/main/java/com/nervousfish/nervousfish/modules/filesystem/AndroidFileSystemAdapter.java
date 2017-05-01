@@ -5,7 +5,7 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorBridge;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 /**
- * An adapter to the default Android bluetooth library
+ * An adapter to the default Android file system
  */
 public final class AndroidFileSystemAdapter implements IFileSystem {
     /**
