@@ -34,17 +34,17 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
     }
 
     @Given("^I have a LoginActivity")
-    public void I_have_a_LoginActivity() {
+    public void i_have_a_LoginActivity() {
         assertNotNull(getActivity());
     }
 
     @When("^I input password \"(.*?)\"$")
-    public void I_input_password(final String password) {
+    public void i_input_password(final String password) {
         onView(withId(R.id.password)).perform(typeText(password));
     }
 
     @When("^I press submit button$")
-    public void I_press_submit_button() {
+    public void iPressSubmit() {
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
     }
 

@@ -13,6 +13,8 @@ import android.widget.EditText;
 @SuppressWarnings("PMD")
 public class LoginActivity extends Activity {
 
+    private final String DUMMY_PASS = "12345";
+
     private EditText mPassword;
     private View mError;
 
@@ -41,14 +43,21 @@ public class LoginActivity extends Activity {
             mError = findViewById(R.id.error);
         }
 
-        // TODO: have a real password check
-        boolean wrongPassword = !mPassword.getText().toString().isEmpty();
-        if (wrongPassword) {
-            mError.setVisibility(View.VISIBLE);
-        } else {
+        // TODO: have an error when empty, don't accept it
+        boolean skipPassword = mPassword.getText().toString().isEmpty();
+        if (skipPassword) {
             mError.setVisibility(View.GONE);
             Intent k = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(k);
+        } else {
+            boolean wrongPassword = !mPassword.getText().toString().equals(DUMMY_PASS);
+            if (wrongPassword) {
+                mError.setVisibility(View.VISIBLE);
+            } else {
+                mError.setVisibility(View.GONE);
+                Intent k = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(k);
+            }
         }
     }
 }
