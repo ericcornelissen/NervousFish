@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.util.commands.IServiceLocatorCreatedCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new ServiceLocatorBridge(new IServiceLocatorCreatedCommand() {
-            @Override
-            public void execute(final IServiceLocator serviceLocator) {
-                MainActivity.this.serviceLocator = serviceLocator;
-            }
-        });
+        this.serviceLocator = ServiceLocatorBridge.newInstance();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
