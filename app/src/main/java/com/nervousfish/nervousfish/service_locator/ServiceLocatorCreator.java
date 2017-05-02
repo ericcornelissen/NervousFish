@@ -4,10 +4,10 @@ import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
-import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothAdapter;
-import com.nervousfish.nervousfish.modules.pairing.AndroidNFCAdapter;
-import com.nervousfish.nervousfish.modules.pairing.ZXingQRAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
+import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 /**
  * Used to make a new Service Locator.
@@ -34,9 +34,12 @@ class ServiceLocatorCreator implements IServiceLocatorCreator {
                 EncryptorAdapter.newInstance(this).get(),
                 AndroidFileSystemAdapter.newInstance(this).get(),
                 Constants.newInstance(this).get(),
-                AndroidBluetoothAdapter.newInstance(this).get(),
-                AndroidNFCAdapter.newInstance(this).get(),
-                ZXingQRAdapter.newInstance(this).get()
+                new IBluetoothHandler() {
+                },
+                new INFCHandler() {
+                },
+                new IQRHandler() {
+                }
         );
     }
 
