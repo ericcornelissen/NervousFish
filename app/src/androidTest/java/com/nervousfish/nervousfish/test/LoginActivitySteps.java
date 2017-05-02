@@ -34,12 +34,12 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
     }
 
     @Given("^I have a LoginActivity")
-    public void i_have_a_LoginActivity() {
+    public void iHaveALoginActivity() {
         assertNotNull(getActivity());
     }
 
     @When("^I input password \"(.*?)\"$")
-    public void i_input_password(final String password) {
+    public void iInputPassword(final String password) {
         onView(withId(R.id.password)).perform(typeText(password));
     }
 
@@ -49,7 +49,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
     }
 
     @Then("^I should (true|false) auth error$")
-    public void I_should_see_auth_error(boolean shouldSeeError) {
+    public void iShouldSeeAuthError(boolean shouldSeeError) {
         if (shouldSeeError) {
             onView(withId(R.id.error)).check(matches(isDisplayed()));
         }
