@@ -1,11 +1,16 @@
 package com.nervousfish.nervousfish.test;
 
 
+import android.app.Activity;
+import android.support.test.espresso.core.deps.guava.collect.Iterables;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.LoginActivity;
+import com.nervousfish.nervousfish.MainActivity;
 import com.nervousfish.nervousfish.R;
 
 import org.hamcrest.Description;
@@ -49,13 +54,34 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
     }
 
-    @Then("^I should (true|false) auth error$")
-    public void iShouldSeeAuthError(boolean shouldSeeError) {
-        if (shouldSeeError) {
-            onView(withId(R.id.error)).check(matches(isDisplayed()));
+    @Then("^I (true|false) continue to the MainActivity$")
+    public void iShouldContinueToNextActivity(boolean continuesToNextActivity) {
+        if(continuesToNextActivity) {
+            assertEquals(getCurrentActivity().getClass(), MainActivity.class);
         } else {
-            onView(withId(R.id.error)).check(doesNotExist());
+            assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
         }
+    }
+
+    @Then("^I should see an auth error$")
+    public void iShouldSeeAuthError() {
+        onView(withId(R.id.error)).check(matches(isDisplayed()));
+    }
+
+    Activity getCurrentActivity() {
+        getInstrumentation().waitForIdleSync();
+        final Activity[] activity = new Activity[1];
+        try {
+            runTestOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+                    activity[0] = Iterables.getOnlyElement(activities);
+                }});
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return activity[0];
     }
 
     private static Matcher<? super View> hasErrorText(String expectedError) {
