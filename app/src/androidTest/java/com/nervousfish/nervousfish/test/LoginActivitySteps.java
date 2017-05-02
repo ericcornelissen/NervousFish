@@ -67,7 +67,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
         onView(withId(R.id.error)).check(matches(isDisplayed()));
     }
 
-    Activity getCurrentActivity() {
+    private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
         final Activity[] activity = new Activity[1];
         try {
