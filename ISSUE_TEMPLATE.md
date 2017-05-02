@@ -1,7 +1,7 @@
 [//]: # "Check if the title is descriptive!"
 - Parent issues: -
 - Relevant issues: -
-- Estimated effort: PLACEHOLDER
+- Estimated effort: -
 
 * * *
 
@@ -18,7 +18,7 @@ Specify in more detail why this issue is needed in the project.
 Specify in general terms how this feature can be added.
 
 ## Definition of done
-Specify what must be done exactly before this task is done.
+Specify exactly what must be done before this task can be considered done.
 
 ## Notes
 Is there anything important to know? Are there relevant links (or other sources) for this issue?
