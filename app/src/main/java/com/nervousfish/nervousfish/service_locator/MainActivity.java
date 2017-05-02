@@ -48,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         lv = (ListView) findViewById(R.id.listView);
 
@@ -60,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Temporary method for filling the listview with some friends.
+     */
     public void getContacts() {
         contacts.add("Eric");
         contacts.add("Kilian");
