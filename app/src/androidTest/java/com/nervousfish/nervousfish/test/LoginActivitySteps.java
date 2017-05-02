@@ -26,7 +26,6 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -56,7 +55,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
 
     @Then("^I (true|false) continue to the MainActivity$")
     public void iShouldContinueToNextActivity(boolean continuesToNextActivity) {
-        if(continuesToNextActivity) {
+        if (continuesToNextActivity) {
             assertEquals(getCurrentActivity().getClass(), MainActivity.class);
         } else {
             assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
@@ -101,7 +100,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
 
         @Override
         public boolean matchesSafely(View view) {
-            if(!(view instanceof EditText)) {
+            if (!(view instanceof EditText)) {
                 return false;
             }
 
