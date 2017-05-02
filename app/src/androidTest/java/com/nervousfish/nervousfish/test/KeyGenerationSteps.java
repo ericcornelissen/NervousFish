@@ -35,16 +35,16 @@ public class KeyGenerationSteps extends ActivityInstrumentationTestCase2<LoginAc
     }
 
     @Given("^I have a LoginActivity")
-    public void I_have_a_LoginActivity() {
+    public void iHaveALoginActivity() {
         assertNotNull(getActivity());
     }
 
     @When("^I don't have public/private key pair yet")
-    public void I_dont_have_key_pair_yet() {
+    public void iDontHaveKeyPairYet() {
     }
 
     @Then("^the app should generate a public/private key pair")
-    public void The_app_should_generate_key_pair() {
+    public void theAppShouldGenerateKeyPair() {
 
     }
 
