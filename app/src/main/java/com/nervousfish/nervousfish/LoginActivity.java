@@ -9,6 +9,7 @@ import android.widget.EditText;
 /**
  * Demo Login activity class
  */
+@SuppressWarnings("PMD")
 public class LoginActivity extends Activity {
 
     private static final String DEMO_EMAIL = "espresso@spoon.com";
