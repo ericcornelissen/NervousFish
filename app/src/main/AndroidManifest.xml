@@ -23,5 +23,7 @@
         <!-- This is an example Cucumber class that can be deleted safely after we're accustomed to using Cucumber -->
         <activity android:name=".LoginActivity"></activity>
     </application>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
 </manifest>
