@@ -1,5 +1,6 @@
-package com.nervousfish.nervousfish.service_locator;
+package com.nervousfish.nervousfish.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView lv;
     private List<String> contacts = new ArrayList<>();
     private IServiceLocator serviceLocator;
+
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -32,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.serviceLocator = ServiceLocatorCreator.newInstance();
+        final Intent intent = getIntent();
+        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -5,7 +5,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.side_activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.R;
 
 import org.hamcrest.Description;

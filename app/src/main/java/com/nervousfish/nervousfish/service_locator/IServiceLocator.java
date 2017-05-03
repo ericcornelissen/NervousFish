@@ -9,10 +9,12 @@ import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 
+import java.io.Serializable;
+
 /**
  * Provides the interface that should be implemented by all Service Locators.
  */
-public interface IServiceLocator {
+public interface IServiceLocator extends Serializable {
     IDatabase getDatabase();
     IKeyGenerator getKeyGenerator();
     IEncryptor getEncryptor();

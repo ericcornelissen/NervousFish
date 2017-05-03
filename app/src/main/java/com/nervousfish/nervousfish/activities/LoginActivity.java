@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.side_activities;
+package com.nervousfish.nervousfish.activities;
 
 
 import android.app.Activity;
