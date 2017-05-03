@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Retrieves the contacts and put them in the contacts list.
+     */
     public void getContacts() {
         contacts.add("Eric");
         contacts.add("Kilian");
