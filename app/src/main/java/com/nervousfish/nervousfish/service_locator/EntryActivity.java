@@ -10,14 +10,8 @@ import com.nervousfish.nervousfish.activities.MainActivity;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class EntryActivity extends Activity {
-
-    /**
-     * Prevent instantiation from non-subclasses from outside the package.
-     */
-    protected EntryActivity() {
-        super();
-    }
     /**
      * Creates the new activity, should only be called by Android
      *

@@ -20,16 +20,10 @@ import java.util.List;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class MainActivity extends AppCompatActivity {
 
     private final List<String> contacts = new ArrayList<>();
-
-    /**
-     * Prevent instantiation from non-subclasses from outside the package.
-     */
-    protected MainActivity() {
-        super();
-    }
 
     /**
      * Creates the new activity, should only be called by Android
@@ -70,7 +64,7 @@ public final class MainActivity extends AppCompatActivity {
         //Retrieve the contacts from the database
         getContacts();
 
-        lv.setAdapter(new ArrayAdapter<String>(this,
+        lv.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, contacts));
 
     }
@@ -78,7 +72,7 @@ public final class MainActivity extends AppCompatActivity {
     /**
      * Temporary method for filling the listview with some friends.
      */
-    public void getContacts() {
+    private void getContacts() {
         contacts.add("Eric");
         contacts.add("Kilian");
         contacts.add("Joost");

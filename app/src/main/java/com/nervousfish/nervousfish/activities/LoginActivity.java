@@ -16,17 +16,8 @@ import com.nervousfish.nervousfish.R;
 @SuppressWarnings("PMD")
 public final class LoginActivity extends Activity {
 
-    private final String dummyPass = "12345";
-
     private EditText mPassword;
     private View mError;
-
-    /**
-     * Prevent instantiation from non-subclasses from outside the package.
-     */
-    protected LoginActivity() {
-        super();
-    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -60,6 +51,7 @@ public final class LoginActivity extends Activity {
             final Intent k = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(k);
         } else {
+            final String dummyPass = "12345";
             final boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
             if (wrongPassword) {
                 mError.setVisibility(View.VISIBLE);
