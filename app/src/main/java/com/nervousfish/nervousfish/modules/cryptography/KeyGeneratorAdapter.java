@@ -25,6 +25,6 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private KeyGeneratorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
+        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
     }
 }

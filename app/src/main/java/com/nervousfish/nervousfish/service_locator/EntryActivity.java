@@ -15,7 +15,7 @@ public final class EntryActivity extends Activity {
     /**
      * Prevent instantiation from non-subclasses from outside the package.
      */
-    private EntryActivity() {
+    protected EntryActivity() {
         super();
     }
     /**

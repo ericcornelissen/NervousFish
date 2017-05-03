@@ -38,7 +38,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
         super(LoginActivity.class);
     }
 
-    private static Matcher<? super View> hasErrorText(String expectedError) {
+    private static Matcher<? super View> hasErrorText(final String expectedError) {
         return new ErrorTextMatcher(expectedError);
     }
 

@@ -25,6 +25,6 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private AndroidFileSystemAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
+        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
     }
 }

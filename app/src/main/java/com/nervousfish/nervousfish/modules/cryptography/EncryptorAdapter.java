@@ -27,6 +27,6 @@ public final class EncryptorAdapter implements IEncryptor {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private EncryptorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
+        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
     }
 }

@@ -25,6 +25,6 @@ public final class Constants implements IConstants {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
+        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
     }
 }

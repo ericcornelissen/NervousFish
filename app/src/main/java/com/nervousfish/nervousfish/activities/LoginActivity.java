@@ -23,7 +23,7 @@ public final class LoginActivity extends Activity {
     /**
      * Prevent instantiation from non-subclasses from outside the package.
      */
-    private LoginActivity() {
+    protected LoginActivity() {
         super();
     }
 

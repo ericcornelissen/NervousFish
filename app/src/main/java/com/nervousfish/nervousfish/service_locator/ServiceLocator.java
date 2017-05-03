@@ -12,7 +12,7 @@ import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 /**
  * Manages all modules and provides access to them.
  */
-public final class ServiceLocator implements IServiceLocator {
+final class ServiceLocator implements IServiceLocator {
     private final IDatabase database;
     private final IKeyGenerator keyGenerator;
     private final IEncryptor encryptor;

@@ -25,6 +25,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
+        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
     }
 }

@@ -6,5 +6,5 @@ import com.nervousfish.nervousfish.modules.IModule;
  * Defines a module used for pairing using NFC that can be used by a service locator.
  */
 
-public interface INFCHandler  extends IModule {
+public interface INFCHandler extends IModule {
 }

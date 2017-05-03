@@ -5,9 +5,9 @@ import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
-import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
+import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
+import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 
 /**
  * Used to make a new Service Locator.
@@ -15,14 +15,6 @@ import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
  */
 final class ServiceLocatorCreator implements IServiceLocatorCreator {
     private final IServiceLocator serviceLocator;
-
-    /**
-     * Creates a new {@link IServiceLocator}
-     * @return An interface containing the methods that may be used on the newly constructed {@link IServiceLocator}
-     */
-    static IServiceLocator newInstance() {
-        return new ServiceLocatorCreator().serviceLocator;
-    }
 
     /**
      * Prevent initialization from other classes
@@ -34,13 +26,19 @@ final class ServiceLocatorCreator implements IServiceLocatorCreator {
                 EncryptorAdapter.newInstance(this).get(),
                 AndroidFileSystemAdapter.newInstance(this).get(),
                 Constants.newInstance(this).get(),
-                new IBluetoothHandler() {
-                },
-                new INFCHandler() {
-                },
-                new IQRHandler() {
-                }
+                DummyBluetoothHandler.newInstance(this).get(),
+                DummyNFCHandler.newInstance(this).get(),
+                DummyQRHandler.newInstance(this).get()
         );
+    }
+
+    /**
+     * Creates a new {@link IServiceLocator}
+     *
+     * @return An interface containing the methods that may be used on the newly constructed {@link IServiceLocator}
+     */
+    static IServiceLocator newInstance() {
+        return new ServiceLocatorCreator().serviceLocator;
     }
 
     /**
