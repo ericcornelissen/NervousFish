@@ -13,7 +13,7 @@ import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
  * Used to make a new Service Locator.
  * We use this class so that all modules of the ServiceLocator are initialized (they must be final) and all modules have a reference to a reference to the service locator
  */
-class ServiceLocatorCreator implements IServiceLocatorCreator {
+final class ServiceLocatorCreator implements IServiceLocatorCreator {
     private final IServiceLocator serviceLocator;
 
     /**
@@ -21,7 +21,7 @@ class ServiceLocatorCreator implements IServiceLocatorCreator {
      * @return An interface containing the methods that may be used on the newly constructed {@link IServiceLocator}
      */
     static IServiceLocator newInstance() {
-        return (new ServiceLocatorCreator()).serviceLocator;
+        return new ServiceLocatorCreator().serviceLocator;
     }
 
     /**

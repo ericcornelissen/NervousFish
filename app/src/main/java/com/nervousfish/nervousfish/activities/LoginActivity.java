@@ -12,13 +12,20 @@ import com.nervousfish.nervousfish.R;
  * Demo Login activity class
  */
 @SuppressWarnings("PMD")
-public class LoginActivity extends Activity {
+public final class LoginActivity extends Activity {
 
     private static final String DEMO_EMAIL = "espresso@spoon.com";
     private static final String DEMO_PASSWORD = "lemoncake";
 
     private EditText mEmail, mPassword;
     private View mError;
+
+    /**
+     * Prevent instantiation
+     */
+    private LoginActivity() {
+        super();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

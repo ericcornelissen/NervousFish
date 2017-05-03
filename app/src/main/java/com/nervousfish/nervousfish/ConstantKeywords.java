@@ -5,4 +5,11 @@ package com.nervousfish.nervousfish;
  */
 public final class ConstantKeywords {
     public static final String SERVICE_LOCATOR = "a";
+
+    /**
+     * Prevent instantiation
+     */
+    private ConstantKeywords() {
+
+    }
 }

@@ -20,11 +20,16 @@ import java.util.List;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
-public class MainActivity extends AppCompatActivity {
+public final class MainActivity extends AppCompatActivity {
 
-    private ListView lv;
-    private List<String> contacts = new ArrayList<>();
-    private IServiceLocator serviceLocator;
+    private final List<String> contacts = new ArrayList<>();
+
+    /**
+     * Prevent instantiation
+     */
+    private MainActivity() {
+        super();
+    }
 
     /**
      * Creates the new activity, should only be called by Android
@@ -38,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+        // Example use
+        serviceLocator.getConstants();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        lv = (ListView) findViewById(R.id.listView);
+        final ListView lv = (ListView) findViewById(R.id.listView);
 
         //Retrieve the contacts from the database
         getContacts();

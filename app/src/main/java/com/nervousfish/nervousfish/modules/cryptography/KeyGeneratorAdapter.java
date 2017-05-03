@@ -12,18 +12,19 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an {@link IServiceLocatorCreator}
      * can access the new module to create the new {@link IServiceLocator}.
      *
-     * @param serviceLocatorBridge The service locator bridge that creates the new service locator
+     * @param serviceLocatorCreator The service locator bridge that creates the new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<KeyGeneratorAdapter> newInstance(IServiceLocatorCreator serviceLocatorBridge) {
-        return new ModuleWrapper<>(new KeyGeneratorAdapter(serviceLocatorBridge));
+    public static ModuleWrapper<KeyGeneratorAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
+        return new ModuleWrapper<>(new KeyGeneratorAdapter(serviceLocatorCreator));
     }
 
     /**
      * Prevents construction from outside the class.
-     * @param serviceLocatorBridge The object responsible for creating the service locator
+     * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    private KeyGeneratorAdapter(IServiceLocatorCreator serviceLocatorBridge) {
-        final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private KeyGeneratorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
+        // final IServiceLocator serviceLocator = serviceLocatorBridge.getServiceLocator();
     }
 }

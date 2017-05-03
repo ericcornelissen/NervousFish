@@ -20,6 +20,17 @@ task checkstyle(type: Checkstyle) {
     classpath = files()
 }
 
+task checkstyleTest(type: Checkstyle) {
+    configFile file("$configDir/checkstyle/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/androidTest/**'
+    exclude '**/test/**'
+    classpath = files()
+}
+
 checkstyle {
     toolVersion = "6.0"
 }
