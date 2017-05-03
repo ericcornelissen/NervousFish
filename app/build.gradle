@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
 apply from: '../config/quality.gradle'
 
 android {
@@ -40,6 +41,30 @@ android {
     lintOptions {
         disable 'GoogleAppIndexingWarning'
     }
+}
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['**/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class'
+            ])
+    sourceDirectories = files(['src/main/java'])
+    executionData = files("$buildDir/jacoco/testDebug.exec")
 }
 
 dependencies {
