@@ -15,7 +15,7 @@ import com.nervousfish.nervousfish.R;
 @SuppressWarnings("PMD")
 public final class LoginActivity extends Activity {
 
-    private final String DUMMY_PASS = "12345";
+    private final String dummyPass = "12345";
 
     private EditText mPassword;
     private View mError;
@@ -59,7 +59,7 @@ public final class LoginActivity extends Activity {
             Intent k = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(k);
         } else {
-            boolean wrongPassword = !mPassword.getText().toString().equals(DUMMY_PASS);
+            boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
             if (wrongPassword) {
                 mError.setVisibility(View.VISIBLE);
             } else {

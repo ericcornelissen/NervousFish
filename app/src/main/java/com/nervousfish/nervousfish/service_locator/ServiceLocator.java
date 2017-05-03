@@ -33,6 +33,7 @@ final class ServiceLocator implements IServiceLocator {
      * @param nfcHandler The {@link INFCHandler} module
      * @param qrHandler The {@link IQRHandler} module
      */
+    @SuppressWarnings("checkstyle:parameternumber")
     ServiceLocator(
             final IDatabase database,
             final IKeyGenerator keyGenerator,

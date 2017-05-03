@@ -21,18 +21,16 @@ task checkstyle(type: Checkstyle) {
 }
 
 task checkstyleTest(type: Checkstyle) {
-    configFile file("$configDir/checkstyle/checkstyle.xml")
+    configFile file("$configDir/checkstyle/checkstyleTest.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
-    exclude '**/androidTest/**'
-    exclude '**/test/**'
     classpath = files()
 }
 
 checkstyle {
-    toolVersion = "6.0"
+    toolVersion = "7.7"
 }
 
 task findbugs(type: FindBugs) {
