@@ -10,6 +10,16 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 public final class EncryptorAdapter implements IEncryptor {
 
     /**
+     * Prevents construction from outside the class.
+     *
+     * @param serviceLocatorCreator The object responsible for creating the service locator
+     */
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private EncryptorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
+        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+    }
+
+    /**
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an {@link IServiceLocatorCreator}
      * can access the new module to create the new {@link IServiceLocator}.
      *
@@ -18,15 +28,5 @@ public final class EncryptorAdapter implements IEncryptor {
      */
     public static ModuleWrapper<EncryptorAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new EncryptorAdapter(serviceLocatorCreator));
-    }
-
-    /**
-     * Prevents construction from outside the class.
-     *
-     * @param serviceLocatorCreator The object responsible for creating the service locator
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private EncryptorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
     }
 }

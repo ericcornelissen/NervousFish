@@ -28,18 +28,18 @@ public final class LoginActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login);
 
         mPassword = (EditText) findViewById(R.id.password);
 
-        View submitButton = findViewById(R.id.submit);
+        final View submitButton = findViewById(R.id.submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (mPassword.getError() == null) {
                     validateAccount();
                 }
@@ -53,18 +53,18 @@ public final class LoginActivity extends Activity {
         }
 
         // TODO: have an error when empty, don't accept it
-        boolean skipPassword = mPassword.getText().toString().isEmpty();
+        final boolean skipPassword = mPassword.getText().toString().isEmpty();
         if (skipPassword) {
             mError.setVisibility(View.GONE);
-            Intent k = new Intent(LoginActivity.this, MainActivity.class);
+            final Intent k = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(k);
         } else {
-            boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
+            final boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
             if (wrongPassword) {
                 mError.setVisibility(View.VISIBLE);
             } else {
                 mError.setVisibility(View.GONE);
-                Intent k = new Intent(LoginActivity.this, MainActivity.class);
+                final Intent k = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(k);
             }
         }
