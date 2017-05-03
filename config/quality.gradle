@@ -65,6 +65,7 @@ task pmd(type: Pmd) {
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
+    exclude '**/test/**'
 
     reports {
         xml.enabled = false

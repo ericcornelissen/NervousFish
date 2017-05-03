@@ -25,9 +25,9 @@ public final class MainActivity extends AppCompatActivity {
     private final List<String> contacts = new ArrayList<>();
 
     /**
-     * Prevent instantiation
+     * Prevent instantiation from non-subclasses from outside the package.
      */
-    private MainActivity() {
+    protected MainActivity() {
         super();
     }
 

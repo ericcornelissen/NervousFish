@@ -13,7 +13,7 @@ import com.nervousfish.nervousfish.activities.MainActivity;
 public final class EntryActivity extends Activity {
 
     /**
-     * Prevent instantiation
+     * Prevent instantiation from non-subclasses from outside the package.
      */
     private EntryActivity() {
         super();

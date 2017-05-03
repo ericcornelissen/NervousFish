@@ -22,7 +22,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- This is an example Cucumber class that can be deleted safely after we're accustomed to using Cucumber -->
-        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.LoginActivity" />
     </application>
 
 </manifest>
