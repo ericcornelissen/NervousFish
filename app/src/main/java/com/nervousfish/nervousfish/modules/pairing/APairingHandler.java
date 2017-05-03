@@ -9,7 +9,7 @@ abstract class APairingHandler {
     /**
      * Prevent instatiation from non-subclasses outside the package
      */
-    @SuppressWarnings("PMD.UncommentedEmptyConstructor")
-    protected APairingHandler() {
+    APairingHandler() {
+        // Prevent instatiation from non-subclasses outside the package
     }
 }

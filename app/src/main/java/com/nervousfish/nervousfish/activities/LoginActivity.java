@@ -10,7 +10,8 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.R;
 
 /**
- * Demo Login activity class
+ * Demo Login activity class. All warnings are suppressed because this is a demo class that can be deleted
+ * after we're comfortable writing Cucumber tests.
  */
 @SuppressWarnings("PMD")
 public final class LoginActivity extends Activity {
