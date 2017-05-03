@@ -1,28 +1,25 @@
 Feature: Login
-  Perform login on email and password are inputted
+  Perform login when a password is entered
 
-  Scenario Outline: Input email and password in wrong format
+  Scenario Outline: Input password and go to MainActivity or not
     Given I have a LoginActivity
-    When I input email <email>
-    And I input password "<password>"
+    When I input password "<password>"
     And I press submit button
-    Then I should see error on the <view>
+    Then I <should> continue to the MainActivity
 
     Examples:
-      | email | password  | view  |
-      | test  | lemoncake | email |
-      | test@test.com || password |
+      | password  | should |
+      | 59505  | false |
+      | 12345  | true |
+      | 23235  | false |
 
+  Scenario Outline: Check that wrong password gives error
+      Given I have a LoginActivity
+      When I input password "<password>"
+      And I press submit button
+      Then I should see an auth error
 
-  Scenario Outline: Input email and password in correct format
-    Given I have a LoginActivity
-    When I input email <email>
-    And I input password "<password>"
-    And I press submit button
-    Then I should <see> auth error
-
-    Examples:
-      | email              | password   | see   |
-      | espresso@spoon.com | bananacake | true  |
-      | espresso@spoon.com | lemoncake  | false |
-      | latte@spoon.com    | lemoncake  | true  |
+      Examples:
+        | password  |
+        | 75757  |
+        | 30572  |
