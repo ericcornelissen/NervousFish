@@ -1,6 +1,8 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.IContact;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -8,8 +10,12 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +24,8 @@ import java.util.List;
  */
 public final class GsonDatabaseAdapter implements IDatabase {
 
-    final IConstants constants;
+    private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
+    private final IConstants constants;
 
     /**
      * Prevents construction from outside the class.
@@ -48,32 +55,86 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public final void addContact(IContact contact) {
-        // TODO: To be implemented
+    public final void addContact(final Contact contact) {
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final Gson gson = new Gson();
+        final List<Contact> contacts = this.getAllContacts();
+        contacts.add(contact);
+
+        try {
+            final FileWriter fileWriter = new FileWriter(contactsPath);
+            gson.toJson(contacts, fileWriter);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void deleteContact(IContact contact) {
-        // TODO: To be implemented
+    public final void deleteContact(final Contact contact) throws IllegalArgumentException {
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final Gson gson = new Gson();
+        final List<Contact> contacts = this.getAllContacts();
+        final int lengthBefore = contacts.size();
+        contacts.remove(contact);
+
+        if (contacts.size() == lengthBefore) {
+            throw new IllegalArgumentException("Contact not found in database");
+        }
+
+        try {
+            final FileWriter fileWriter = new FileWriter(contactsPath);
+            gson.toJson(contacts, fileWriter);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final List<IContact> getAllContacts() {
-        return new ArrayList<IContact>();
+    public final List<Contact> getAllContacts() {
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final Gson gson = new Gson();
+
+        try {
+            final Reader reader = new FileReader(contactsPath);
+            return gson.fromJson(reader, TYPE_CONTACT_LIST);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<Contact>();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void updateContact(IContact oldContact, IContact newContact) {
-        // TODO: To be implemented
+    public final void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException {
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final Gson gson = new Gson();
+        final List<Contact> contacts = this.getAllContacts();
+        final int lengthBefore = contacts.size();
+        contacts.remove(oldContact);
+
+        if (contacts.size() == lengthBefore) {
+            throw new IllegalArgumentException("Contact not found in database");
+        }
+
+        contacts.add(newContact);
+        try {
+            final FileWriter fileWriter = new FileWriter(contactsPath);
+            gson.toJson(contacts, fileWriter);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -89,12 +150,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * if the contacts section of the database already exists.
      */
     private void initializeContacts() {
-        final String constantsPath = constants.getDatabaseContactsPath();
-        final File file = new File(constantsPath);
+        final String contactsPath = constants.getDatabaseContactsPath();
+        final File file = new File(contactsPath);
         if (!file.exists()) {
             try {
                 final BufferedWriter bufferedWriter =
-                        new BufferedWriter(new FileWriter(constantsPath));
+                        new BufferedWriter(new FileWriter(contactsPath));
                 bufferedWriter.write("[]");
                 bufferedWriter.close();
             } catch (IOException e) {

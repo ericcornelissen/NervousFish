@@ -1,9 +1,11 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import java.io.Serializable;
+
 /**
  * A Java object representation (POJO) of a contact.
  */
-public final class Contact implements IContact {
+public final class Contact implements Serializable {
 
     public final String name;
     public final IKey publicKey;

@@ -1,6 +1,8 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.IContact;
+import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -35,14 +37,17 @@ public class DatabaseTest {
 
     @Test
     public void testAddContactWriteToDatabase() throws Exception {
-        IContact contact = mock(IContact.class);
+        IKey key = new SimpleKey("key");
+        Contact contact = new Contact("Zoidberg", key);
+
         database.addContact(contact);
         assertEquals(21 + 21, 42);
     }
 
     @Test
     public void testDeleteContactRemovesContactFromDatabase() {
-        IContact contact = mock(IContact.class);
+        IKey key = new SimpleKey("key");
+        Contact contact = new Contact("Zoidberg", key);
         // TODO: Mock the contact to be in the database
 
         database.deleteContact(contact);
@@ -51,22 +56,25 @@ public class DatabaseTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testDeleteContactThrowsWhenContactNotInDatabase() {
-        IContact contact = mock(IContact.class);
+        IKey key = new SimpleKey("key");
+        Contact contact = new Contact("Zoidberg", key);
         database.deleteContact(contact);
     }
 
     @Test
     public void testGetAllContactsReturnsListOfAllContacts() {
-        List<IContact> contacts = database.getAllContacts();
-        assertEquals(contacts, new ArrayList<IContact>());
+        List<Contact> contacts = database.getAllContacts();
+        assertEquals(contacts, new ArrayList<Contact>());
     }
 
     @Test
     public void testImplementedWritesToDatabase() {
-        IContact oldContact = mock(IContact.class);
+        IKey keyA = new SimpleKey("keyA");
+        Contact oldContact = new Contact("Zoidberg", keyA);
         // TODO: Mock the contact to be in the database
 
-        IContact newContact = mock(IContact.class);
+        IKey keyB = new SimpleKey("keyB");
+        Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
         assertEquals(9000 + 1, 9001);
@@ -74,8 +82,10 @@ public class DatabaseTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testImplementedThrowsWhenOldContactNotInDatabase() {
-        IContact oldContact = mock(IContact.class);
-        IContact newContact = mock(IContact.class);
+        IKey keyA = new SimpleKey("keyA");
+        Contact oldContact = new Contact("Zoidberg", keyA);
+        IKey keyB = new SimpleKey("keyB");
+        Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
         assertEquals(9000 + 1, 9001);
