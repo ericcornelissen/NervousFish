@@ -3,8 +3,12 @@ package com.nervousfish.nervousfish;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,6 +20,17 @@ public class BluetoothConnectionActivity extends Activity {
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int REQUEST_CODE_CHECK_BLUETOOTH_STATE = 101;
     private Set<BluetoothDevice> pairedDevices;
+    private Set<BluetoothDevice> discoveredDevices;
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                discoveredDevices.add(device);
+            }
+        }
+    };
 
     /**
      * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
@@ -24,7 +39,18 @@ public class BluetoothConnectionActivity extends Activity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
+        } else {
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(broadcastReceiver, filter);
         }
+    }
+
+    /**
+     * Deletes bluetoothadapter and unregisters broadcastreceiver
+     */
+    public void breakDown() {
+        unregisterReceiver(broadcastReceiver);
+        bluetoothAdapter = null;
     }
 
     /**
@@ -51,6 +77,28 @@ public class BluetoothConnectionActivity extends Activity {
     public void queryPairedDevices() {
         pairedDevices = bluetoothAdapter.getBondedDevices();
     }
+
+    /**
+     * Starts Discovering bluetooth devices
+     */
+    public void discoverDevices() {
+        discoveredDevices = new HashSet<BluetoothDevice>();
+
+        if(bluetoothAdapter.isDiscovering()) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+        bluetoothAdapter.startDiscovery();
+    }
+
+    /**
+     * Stops discovering bluetooth devices.
+     */
+    public void stopDiscovering() {
+        if(bluetoothAdapter.isDiscovering()) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
