@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
+apply plugin: 'coveralls'
 apply from: '../config/quality.gradle'
 
 android {
@@ -52,9 +53,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest"
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
     reports {
-        xml.enabled = false
         csv.enabled false
-        html.destination "${buildDir}/jacocoHtml"
+        html.enabled true
+        xml.enabled true
     }
     classDirectories = fileTree(
             dir: './build/intermediates/classes/debug',
