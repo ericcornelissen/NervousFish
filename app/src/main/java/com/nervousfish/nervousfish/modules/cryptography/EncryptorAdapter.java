@@ -1,13 +1,18 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An adapter to the default Java class for encrypting messages
  */
 public final class EncryptorAdapter implements IEncryptor {
+    final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
@@ -16,7 +21,8 @@ public final class EncryptorAdapter implements IEncryptor {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private EncryptorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -28,5 +34,15 @@ public final class EncryptorAdapter implements IEncryptor {
      */
     public static ModuleWrapper<EncryptorAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new EncryptorAdapter(serviceLocatorCreator));
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param event Indicates that the {@link SLReadyEvent} happened
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+
     }
 }

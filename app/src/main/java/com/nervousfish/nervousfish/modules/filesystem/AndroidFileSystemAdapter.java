@@ -1,13 +1,18 @@
 package com.nervousfish.nervousfish.modules.filesystem;
 
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An adapter to the default Android file system
  */
 public final class AndroidFileSystemAdapter implements IFileSystem {
+    final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
@@ -15,7 +20,8 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private AndroidFileSystemAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -27,5 +33,15 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     public static ModuleWrapper<AndroidFileSystemAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocatorCreator));
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param event Indicates that the {@link SLReadyEvent} happened
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+
     }
 }

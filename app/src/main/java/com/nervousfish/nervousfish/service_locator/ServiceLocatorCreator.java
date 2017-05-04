@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.service_locator;
 
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
@@ -8,6 +9,8 @@ import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Used to make a new Service Locator.
@@ -38,7 +41,9 @@ final class ServiceLocatorCreator implements IServiceLocatorCreator {
      * @return An interface containing the methods that may be used on the newly constructed {@link IServiceLocator}
      */
     static IServiceLocator newInstance() {
-        return new ServiceLocatorCreator().serviceLocator;
+        final IServiceLocator tmp = new ServiceLocatorCreator().serviceLocator;
+        EventBus.getDefault().post(new SLReadyEvent());
+        return tmp;
     }
 
     /**

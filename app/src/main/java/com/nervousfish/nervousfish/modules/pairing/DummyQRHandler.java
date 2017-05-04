@@ -1,13 +1,18 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An handler doing nothing.
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
+    final IServiceLocatorCreator serviceLocatorCreator;
     /**
      * Prevents construction from outside the class.
      *
@@ -16,7 +21,8 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private DummyQRHandler(final IServiceLocatorCreator serviceLocatorCreator) {
         super();
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -28,5 +34,15 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      */
     public static ModuleWrapper<DummyQRHandler> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new DummyQRHandler(serviceLocatorCreator));
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param event Indicates that the {@link SLReadyEvent} happened
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+
     }
 }

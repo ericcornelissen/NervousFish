@@ -1,13 +1,18 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An adapter to the Gson database library
  */
 public final class GsonDatabaseAdapter implements IDatabase {
+    final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
@@ -15,7 +20,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -27,5 +33,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     public static ModuleWrapper<GsonDatabaseAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocatorCreator));
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param event Indicates that the {@link SLReadyEvent} happened
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+
     }
 }

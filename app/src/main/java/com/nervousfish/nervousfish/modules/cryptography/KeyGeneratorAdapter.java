@@ -1,13 +1,18 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
@@ -15,7 +20,8 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private KeyGeneratorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -27,5 +33,15 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      */
     public static ModuleWrapper<KeyGeneratorAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new KeyGeneratorAdapter(serviceLocatorCreator));
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param event Indicates that the {@link SLReadyEvent} happened
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+
     }
 }
