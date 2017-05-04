@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 public final class BaseTest {
 
     /**
-     * Simple constructor for the BaseTest class
+     * Simple constructor for the BaseTest class.
      */
     private BaseTest() {
         // Prevents instantiation
@@ -25,7 +25,7 @@ public final class BaseTest {
      * @param args  The arguments that should be passed to the constructor
      * @return A new instance of clazz
      */
-    protected static Object accessConstructor(final Class<?> clazz, final Object... args) {
+    public static Object accessConstructor(final Class<?> clazz, final Object... args) {
         try {
             final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             // Assuming a single constructor
@@ -47,7 +47,7 @@ public final class BaseTest {
      * @param args        The arguments of the method
      * @return The result of the method
      */
-    protected static Object accessMethod(final Object object, final String method_name, final Object... args) {
+    public static Object accessMethod(final Object object, final String method_name, final Object... args) {
         try {
             final Method[] methods = object.getClass().getDeclaredMethods();
             for (Method method : methods) {
@@ -69,7 +69,7 @@ public final class BaseTest {
      * @param field_name The name of the field
      * @param value      The new value of the field
      */
-    protected static void setField(final Object object, final String field_name, final Object value) {
+    public static void setField(final Object object, final String field_name, final Object value) {
         try {
             final Field field = object.getClass().getDeclaredField(field_name);
             field.setAccessible(true);
@@ -86,7 +86,7 @@ public final class BaseTest {
      * @param object     The object owning the method
      * @param field_name The name of the field
      */
-    protected static Object getField(final Object object, final String field_name) {
+    public static Object getField(final Object object, final String field_name) {
         try {
             final Field field = object.getClass().getDeclaredField(field_name);
             field.setAccessible(true);
@@ -96,4 +96,5 @@ public final class BaseTest {
         }
         throw new RuntimeException();
     }
+
 }

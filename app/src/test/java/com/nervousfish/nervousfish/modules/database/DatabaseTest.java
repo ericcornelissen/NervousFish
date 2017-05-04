@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.database;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,7 +25,7 @@ public class DatabaseTest {
     IServiceLocator serviceLocator = mock(IServiceLocator.class);
     IConstants constants = mock(IConstants.class);
 
-    private IDatabase database;
+    IDatabase database;
 
     @Before
     public void setup() {
@@ -32,7 +34,7 @@ public class DatabaseTest {
         when(constants.getDatabaseContactsPath()).thenReturn("temp_contacts.json");
         when(constants.getDatabaseUserdataPath()).thenReturn("temp_userdata.json");
 
-        database = new GsonDatabaseAdapter(serviceLocatorCreator);
+        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
     }
 
     @Test
