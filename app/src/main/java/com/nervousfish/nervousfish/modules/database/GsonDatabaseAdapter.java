@@ -1,8 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.IContact;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -47,15 +45,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Contact addContact(String name, IKey key) {
-        return new Contact("name", key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void deleteContact(final int id) {
+    public void addContact(IContact contact) {
         // TODO: To be implemented
     }
 
@@ -63,25 +53,24 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Contact getContact(final int id) {
-        final IKey key = new SimpleKey("key");
-        return new Contact("name", key);
+    public void deleteContact(IContact contact) {
+        // TODO: To be implemented
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Contact> getAllContacts() {
-        return new ArrayList<Contact>();
+    public List<IContact> getAllContacts() {
+        return new ArrayList<IContact>();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Contact updateContact(final int id, final String name, final IKey key) {
-        return new Contact("name", key);
+    public void updateContact(IContact oldContact, IContact newContact) {
+        // TODO: To be implemented
     }
 
     /**

@@ -9,8 +9,8 @@ public final class RSAKey implements IKey {
 
     public final static String type = "RSA";
 
-    public BigInteger exponent;
-    public BigInteger modulus;
+    public final BigInteger exponent;
+    public final BigInteger modulus;
 
     /**
      * Constructor for a RSA key.
@@ -28,14 +28,14 @@ public final class RSAKey implements IKey {
      */
     @Override
     public String getString() {
-        return null;
+        return this.modulus.toString() + " " + this.exponent.toString();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || this.getClass() != o.getClass()) {
             return false;
         }

@@ -7,7 +7,7 @@ public final class SimpleKey implements IKey {
 
     public final static String type = "simple";
 
-    public String key;
+    public final String key;
 
     /**
      * Constructor for a simple key.
@@ -30,7 +30,7 @@ public final class SimpleKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
