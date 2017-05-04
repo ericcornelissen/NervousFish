@@ -7,4 +7,5 @@ import com.nervousfish.nervousfish.modules.IModule;
  */
 
 public interface IDatabase extends IModule {
+    void initializeDatabaseFiles();
 }

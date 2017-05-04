@@ -17,6 +17,7 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,6 +36,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
+
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         this.constants = serviceLocator.getConstants();
     }
@@ -53,13 +55,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
     /**
      * Will initialize the database files for accountInformation and contacts list.
      */
-    private void initializeDatabaseFiles() {
+    public void initializeDatabaseFiles() {
         try {
-            //Initialize the account information file
-            BufferedWriter bufferedWriter = new BufferedWriter(
-                    new FileWriter(constants.getAccountInformationFileName()));
-            bufferedWriter.write("[]");
-            bufferedWriter.close();
+            File f = new File(constants.getAccountInformationFileName());
+            if(!f.exists()) {
+                //Initialize the account information file
+                BufferedWriter bufferedWriter = new BufferedWriter(
+                        new FileWriter(constants.getAccountInformationFileName()));
+                bufferedWriter.write("[]");
+                bufferedWriter.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

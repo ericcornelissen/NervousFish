@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 /**
  * Demo Login activity class. All warnings are suppressed because this is a demo class that can be deleted
@@ -37,6 +39,11 @@ public final class LoginActivity extends Activity {
                 }
             }
         });
+
+        final Intent intent = getIntent();
+        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+        serviceLocator.getDatabase().initializeDatabaseFiles();
     }
 
     private void validateAccount() {

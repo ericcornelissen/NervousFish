@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 
 /**
@@ -22,7 +23,7 @@ public final class EntryActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         final IServiceLocator serviceLocator = ServiceLocatorCreator.newInstance();
-        final Intent intent = new Intent(this, MainActivity.class);
+        final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
     }
