@@ -73,9 +73,6 @@ Severity: EASY
         <!-- See http://checkstyle.sourceforge.net/config_naming.html -->
         <module name="ConstantName" />
         <module name="LocalFinalVariableName" />
-        <module name="FinalLocalVariable">
-            <property name="tokens" value="VARIABLE_DEF,PARAMETER_DEF"/>
-        </module>
         <module name="LocalVariableName" />
         <module name="MemberName" />
         <module name="MethodName">
@@ -165,22 +162,10 @@ Severity: EASY
         <!-- See http://checkstyle.sourceforge.net/config_coding.html -->
         <module name="EmptyStatement" />
         <module name="EqualsHashCode" />
-        <module name="EqualsAvoidNull"/>
         <module name="HiddenField">
             <property name="severity" value="ignore" />
         </module>
-        <module name="DeclarationOrder"/>
         <module name="IllegalInstantiation" />
-        <module name="IllegalCatch"/>
-        <module name="IllegalThrows"/>
-        <module name="IllegalToken">
-            <property name="tokens" value="LITERAL_NATIVE"/>
-        </module>
-        <module name="IllegalTokenText">
-            <property name="tokens" value="STRING_LITERAL"/>
-            <property name="format" value="a href"/>
-        </module>
-
         <module name="InnerAssignment" />
         <module name="MagicNumber">
             <property name="severity" value="ignore" />
@@ -188,7 +173,6 @@ Severity: EASY
         <module name="MissingSwitchDefault">
             <property name="severity" value="ignore" />
         </module>
-        <module name="DefaultComesLast"/>
         <module name="SimplifyBooleanExpression" />
         <module name="SimplifyBooleanReturn" />
 
@@ -216,8 +200,6 @@ Severity: EASY
             <property name="severity" value="info" />
         </module>
         <module name="UpperEll" />
-        <module name="ModifiedControlVariable"/>
-        <module name="RequireThis"/>
 
         <module name="SuppressWarningsHolder" />
 

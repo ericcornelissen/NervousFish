@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.activities;
 
 
 import android.app.Activity;
@@ -7,30 +7,31 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.nervousfish.nervousfish.R;
+
 /**
- * Demo Login activity class
+ * Demo Login activity class. All warnings are suppressed because this is a demo class that can be deleted
+ * after we're comfortable writing Cucumber tests.
  */
 @SuppressWarnings("PMD")
-public class LoginActivity extends Activity {
-
-    private final String DUMMY_PASS = "12345";
+public final class LoginActivity extends Activity {
 
     private EditText mPassword;
     private View mError;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login);
 
         mPassword = (EditText) findViewById(R.id.password);
 
-        View submitButton = findViewById(R.id.submit);
+        final View submitButton = findViewById(R.id.submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (mPassword.getError() == null) {
                     validateAccount();
                 }
@@ -44,18 +45,19 @@ public class LoginActivity extends Activity {
         }
 
         // TODO: have an error when empty, don't accept it
-        boolean skipPassword = mPassword.getText().toString().isEmpty();
+        final boolean skipPassword = mPassword.getText().toString().isEmpty();
         if (skipPassword) {
             mError.setVisibility(View.GONE);
-            Intent k = new Intent(LoginActivity.this, MainActivity.class);
+            final Intent k = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(k);
         } else {
-            boolean wrongPassword = !mPassword.getText().toString().equals(DUMMY_PASS);
+            final String dummyPass = "12345";
+            final boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
             if (wrongPassword) {
                 mError.setVisibility(View.VISIBLE);
             } else {
                 mError.setVisibility(View.GONE);
-                Intent k = new Intent(LoginActivity.this, MainActivity.class);
+                final Intent k = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(k);
             }
         }

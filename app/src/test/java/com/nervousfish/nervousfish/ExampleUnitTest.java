@@ -38,7 +38,6 @@ public class ExampleUnitTest {
     @Test
     public void bar() {
         when(sample.foo()).thenReturn(5);
-        ;
         assertEquals(new SampleClass(sample).get(), 5);
     }
 }

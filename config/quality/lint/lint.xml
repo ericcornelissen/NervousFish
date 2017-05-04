@@ -16,7 +16,7 @@
   -->
 
 <lint>
-    <issue id="AdapterViewChildren" severity="ignore" />
+    <!--<issue id="AdapterViewChildren" severity="ignore" />
     <issue id="AllowBackup" severity="ignore" />
     <issue id="AlwaysShowAction" severity="ignore" />
     <issue id="ButtonCase" severity="ignore" />
@@ -166,5 +166,5 @@
     <issue id="WrongCase" severity="ignore" />
     <issue id="WrongFolder" severity="ignore" />
     <issue id="WrongManifestParent" severity="ignore" />
-    <issue id="WrongViewCast" severity="ignore" />
+    <issue id="WrongViewCast" severity="ignore" />-->
 </lint>
