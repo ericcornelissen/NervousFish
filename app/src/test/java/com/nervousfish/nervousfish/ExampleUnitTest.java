@@ -31,12 +31,7 @@ public class ExampleUnitTest extends BaseTest {
     public void bar() {
         when(sample.foo()).thenReturn(5);
         assertEquals(new SampleClass(sample).get(), 5);
-        Constants constants = (Constants) accessConstructor(Constants.class, new IServiceLocatorCreator() {
-            @Override
-            public IServiceLocator getServiceLocator() {
-                return null;
-            }
-        });
+        Constants constants = (Constants) accessConstructor(Constants.class, mock(IServiceLocatorCreator.class));
     }
 
     private interface ISample {
