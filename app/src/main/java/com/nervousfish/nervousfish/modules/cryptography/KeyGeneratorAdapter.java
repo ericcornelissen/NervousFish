@@ -42,7 +42,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @return a randomly generated KeyPair
      */
     public static KeyPair generateRandomKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
+        final KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
         k.initialize(2048);
 
         return k.generateKeyPair();
@@ -50,27 +50,27 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
 
     /**
      * Gets from the parameter 'kp' the public key and makes a RSAPublicKeySpec out of it.
-     * @param kp the KeyPair with the public key
+     * @param keyPair the KeyPair with the public key
      * @return the RSAPublicKeySpec
      */
-    public static RSAPublicKeySpec getPublicKeySpec(KeyPair kp) throws NoSuchAlgorithmException,
+    public static RSAPublicKeySpec getPublicKeySpec(final KeyPair keyPair) throws NoSuchAlgorithmException,
             InvalidKeySpecException {
-        KeyFactory fact = KeyFactory.getInstance("RSA");
+        final KeyFactory fact = KeyFactory.getInstance("RSA");
 
-        return fact.getKeySpec(kp.getPublic(),
+        return fact.getKeySpec(keyPair.getPublic(),
                 RSAPublicKeySpec.class);
     }
 
     /**
      * Gets from the parameter 'kp' the private key and makes a RSAPrivateKeySpec out of it.
-     * @param kp the KeyPair with the private key
+     * @param keyPair the KeyPair with the private key
      * @return the RSAPrivateKeySpec
      */
-    public static RSAPrivateKeySpec getPrivateKeySpec(KeyPair kp) throws NoSuchAlgorithmException,
+    public static RSAPrivateKeySpec getPrivateKeySpec(final KeyPair keyPair) throws NoSuchAlgorithmException,
             InvalidKeySpecException {
-        KeyFactory fact = KeyFactory.getInstance("RSA");
+        final KeyFactory fact = KeyFactory.getInstance("RSA");
 
-        return fact.getKeySpec(kp.getPrivate(),
+        return fact.getKeySpec(keyPair.getPrivate(),
                 RSAPrivateKeySpec.class);
     }
 }
