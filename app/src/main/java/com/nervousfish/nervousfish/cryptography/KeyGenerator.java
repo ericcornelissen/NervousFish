@@ -17,8 +17,8 @@ public class KeyGenerator {
     public static KeyPair generateRandomKeyPair() {
         try {
             KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
-
             k.initialize(2048);
+
             return k.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
