@@ -12,16 +12,21 @@ public abstract class BaseTest {
 
     /**
      * Creates a new instance of a class that has an inaccessible constructor (eg private)
+     * Note that there should be a single constructor in the class
      *
      * @param clazz The class that should be instantiated
+     * @param args  The arguments that should be passed to the constructor
      * @return A new instance of clazz
      */
-    public Object accessConstructor(final Class<?> clazz) {
+    protected Object accessConstructor(final Class<?> clazz, final Object... args) {
         try {
-            final Constructor<?> constructor = clazz.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            return constructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+            // Assuming a single constructor
+            for (Constructor<?> constructor : constructors) {
+                constructor.setAccessible(true);
+                return constructor.newInstance(args);
+            }
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         throw new RuntimeException();
@@ -35,9 +40,9 @@ public abstract class BaseTest {
      * @param args        The arguments of the method
      * @return The result of the method
      */
-    public Object accessMethod(final Object object, final String method_name, final Object... args) {
+    protected Object accessMethod(final Object object, final String method_name, final Object... args) {
         try {
-            final Method[] methods = object.getClass().getMethods();
+            final Method[] methods = object.getClass().getDeclaredMethods();
             for (Method method : methods) {
                 if (method.getName().equals(method_name)) {
                     method.setAccessible(true);
@@ -57,9 +62,9 @@ public abstract class BaseTest {
      * @param field_name The name of the field
      * @param value      The new value of the field
      */
-    public void setField(final Object object, final String field_name, final Object value) {
+    protected void setField(final Object object, final String field_name, final Object value) {
         try {
-            final Field field = object.getClass().getField(field_name);
+            final Field field = object.getClass().getDeclaredField(field_name);
             field.setAccessible(true);
             field.set(object, value);
         } catch (IllegalAccessException | NoSuchFieldException e) {
@@ -74,9 +79,9 @@ public abstract class BaseTest {
      * @param object     The object owning the method
      * @param field_name The name of the field
      */
-    public Object getField(final Object object, final String field_name) {
+    protected Object getField(final Object object, final String field_name) {
         try {
-            final Field field = object.getClass().getField(field_name);
+            final Field field = object.getClass().getDeclaredField(field_name);
             field.setAccessible(true);
             return field.get(object);
         } catch (IllegalAccessException | NoSuchFieldException e) {

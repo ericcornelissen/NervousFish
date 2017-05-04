@@ -1,6 +1,8 @@
 package com.nervousfish.nervousfish;
 
 import com.nervousfish.nervousfish.modules.constants.Constants;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
 import org.junit.Test;
 
@@ -17,7 +19,7 @@ import static org.mockito.Mockito.when;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @SuppressWarnings("PMD")
-public class ExampleUnitTest {
+public class ExampleUnitTest extends BaseTest {
     ISample sample = mock(ISample.class);
 
     @Test
@@ -29,7 +31,12 @@ public class ExampleUnitTest {
     public void bar() {
         when(sample.foo()).thenReturn(5);
         assertEquals(new SampleClass(sample).get(), 5);
-        Constants constants = (Constants) accessInstance(Constants.class);
+        Constants constants = (Constants) accessConstructor(Constants.class, new IServiceLocatorCreator() {
+            @Override
+            public IServiceLocator getServiceLocator() {
+                return null;
+            }
+        });
     }
 
     private interface ISample {
