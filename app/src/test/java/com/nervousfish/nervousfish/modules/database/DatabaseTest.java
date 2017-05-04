@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -31,7 +32,7 @@ public class DatabaseTest {
     @Test
     public void exampleTest() throws Exception {
         Contact contact = database.getContact(1);
-        assertEquals(contact, new Contact("name", "key"));
+        assertEquals(contact, new Contact("name", new SimpleKey("key")));
     }
 
 }

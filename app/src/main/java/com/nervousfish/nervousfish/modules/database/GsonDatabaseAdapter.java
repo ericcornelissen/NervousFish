@@ -1,6 +1,8 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -45,8 +47,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Contact addContact(String name, String key) {
-        return new Contact("name", "key");
+    public Contact addContact(String name, IKey key) {
+        return new Contact("name", key);
     }
 
     /**
@@ -62,7 +64,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public Contact getContact(final int id) {
-        return new Contact("name", "key");
+        final IKey key = new SimpleKey("key");
+        return new Contact("name", key);
     }
 
     /**
@@ -77,8 +80,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Contact updateContact(final int id, final String name, final String key) {
-        return new Contact("name", "key");
+    public Contact updateContact(final int id, final String name, final IKey key) {
+        return new Contact("name", key);
     }
 
     /**

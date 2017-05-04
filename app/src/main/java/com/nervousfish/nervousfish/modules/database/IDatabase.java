@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.IModule;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface IDatabase extends IModule {
      * @param key The new key for the contact.
      * @return The new {@link Contact} object.
      */
-    Contact addContact(final String name, final String key);
+    Contact addContact(final String name, final IKey key);
 
     /**
      * Delete a contact from the database.
@@ -49,6 +50,6 @@ public interface IDatabase extends IModule {
      * @param key The new key for the contact.
      * @return A new {@link Contact} object with the updated details.
      */
-    Contact updateContact(final int id, final String name, final String key);
+    Contact updateContact(final int id, final String name, final IKey key);
 
 }
