@@ -34,7 +34,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
-    GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
+    private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         this.constants = serviceLocator.getConstants();
     }
@@ -87,6 +87,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return accountArray;
     }
 
+    /**
+     * Creates an Account object from the JsonObject corresponding with
+     * the elements needed for an Account. These are a name, public and private key.
+     * @param jsonObject the JsonObject representing the Account
+     * @return an Account object
+     */
     private Account createAccountFromJsonObject(JsonObject jsonObject) {
         JsonObject publicKeyJson = jsonObject.get("publicKey").getAsJsonObject();
         IKey publicKey = createKeyFromJsonObject(publicKeyJson);
@@ -97,6 +103,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return new Account(jsonObject.get("name").getAsString(), publicKey, privateKey);
     }
 
+    /**
+     * Creates an IKey object from the JsonObject corresponding with
+     * the elements needed for an IKey. These are different for different types of keys.
+     * @param jsonObject the JsonObject representing the IKey
+     * @return an IKey object
+     */
     private IKey createKeyFromJsonObject(JsonObject jsonObject) {
         if(jsonObject.get("type").getAsString().equals("RSA")) {
             return new RSAKey(jsonObject.get("modulus").getAsBigInteger(),
