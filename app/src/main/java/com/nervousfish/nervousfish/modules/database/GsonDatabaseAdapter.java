@@ -7,6 +7,7 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         this.constants = serviceLocator.getConstants();
+
+        this.initializeDatabase();
     }
 
     /**
@@ -45,7 +48,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void addContact(IContact contact) {
+    public final void addContact(IContact contact) {
         // TODO: To be implemented
     }
 
@@ -53,7 +56,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void deleteContact(IContact contact) {
+    public final void deleteContact(IContact contact) {
         // TODO: To be implemented
     }
 
@@ -61,7 +64,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public List<IContact> getAllContacts() {
+    public final List<IContact> getAllContacts() {
         return new ArrayList<IContact>();
     }
 
@@ -69,7 +72,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void updateContact(IContact oldContact, IContact newContact) {
+    public final void updateContact(IContact oldContact, IContact newContact) {
         // TODO: To be implemented
     }
 
@@ -77,13 +80,45 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * Initialize the database.
      */
     private void initializeDatabase() {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(
-                    new FileWriter(constants.getAccountInformationFileName()));
-            bufferedWriter.write("[]");
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        this.initializeContacts();
+        this.initializeUserdata();
+    }
+
+    /**
+     * Initialize the contacts in the database. This does nothing
+     * if the contacts section of the database already exists.
+     */
+    private void initializeContacts() {
+        final String constantsPath = constants.getDatabaseContactsPath();
+        final File file = new File(constantsPath);
+        if (!file.exists()) {
+            try {
+                final BufferedWriter bufferedWriter =
+                        new BufferedWriter(new FileWriter(constantsPath));
+                bufferedWriter.write("[]");
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Initialize the userdata in the database. This does nothing
+     * if the userdata section of the database already exists.
+     */
+    private void initializeUserdata() {
+        final String userdataPath = constants.getDatabaseUserdataPath();
+        final File file = new File(userdataPath);
+        if (!file.exists()) {
+            try {
+                final BufferedWriter bufferedWriter =
+                        new BufferedWriter(new FileWriter(userdataPath));
+                bufferedWriter.write("[]");
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -1,8 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IContact;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -29,6 +27,8 @@ public class DatabaseTest {
     public void setup() {
         when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
+        when(constants.getDatabaseContactsPath()).thenReturn("temp_contacts.json");
+        when(constants.getDatabaseUserdataPath()).thenReturn("temp_userdata.json");
 
         database = new GsonDatabaseAdapter(serviceLocatorCreator);
     }
