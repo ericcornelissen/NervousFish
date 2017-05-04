@@ -129,7 +129,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     public void discoverDevices() {
         discoveredDevices = new HashSet<>();
 
-        if(bluetoothAdapter.isDiscovering()) {
+        if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
         bluetoothAdapter.startDiscovery();
@@ -139,7 +139,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * Stops discovering bluetooth devices.
      */
     public void stopDiscovering() {
-        if(bluetoothAdapter.isDiscovering()) {
+        if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
     }

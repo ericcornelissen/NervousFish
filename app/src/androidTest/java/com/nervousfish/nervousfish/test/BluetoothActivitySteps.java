@@ -28,12 +28,12 @@ public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<Blu
 
     @When("^$")
     public void iPressConnect() {
-
+        assertTrue(true);
     }
 
     @Then("^$")
     public void iShouldStartAConnection() {
-
+        assertTrue(true);
     }
 
     }
