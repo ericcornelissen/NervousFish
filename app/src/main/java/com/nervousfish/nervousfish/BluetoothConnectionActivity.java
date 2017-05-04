@@ -13,6 +13,7 @@ import java.util.Set;
 
 /**
  * Created by Kilian on 2/05/2017.
+ * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
 
 public class BluetoothConnectionActivity extends Activity {
@@ -37,11 +38,21 @@ public class BluetoothConnectionActivity extends Activity {
      */
     public void setUp() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter == null) {
+        if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
         } else {
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(broadcastReceiver, filter);
+            enableBluetooth();
+
+            // Proceed by first checking the already bonded devices list
+            // to see if the intended partner device has already been bonded to
+           queryPairedDevices();
+
+            // Something like if pairedDevices.contains(whatWeWant) do
+            // Find out the MAC address and connect to it (while canceling the discovery of course)
+
+            checkBluetoothState();
         }
     }
 
@@ -57,7 +68,7 @@ public class BluetoothConnectionActivity extends Activity {
      * Enables bluetooth.
      */
     public void enableBluetooth() {
-        if(!bluetoothAdapter.isEnabled()) {
+        if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
         }
@@ -102,10 +113,11 @@ public class BluetoothConnectionActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
+        switch (requestCode) {
             case    REQUEST_CODE_ENABLE_BLUETOOTH:
 
                 break;
+            default: break;
         }
     }
 
