@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -23,6 +22,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int REQUEST_CODE_CHECK_BLUETOOTH_STATE = 101;
     private Set<BluetoothDevice> pairedDevices;
+    private Set<BluetoothDevice> discoveredDevices;
 
     /**
      * {@inheritDoc}
@@ -127,7 +127,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * Starts Discovering bluetooth devices
      */
     public void discoverDevices() {
-        discoveredDevices = new HashSet<BluetoothDevice>();
+        discoveredDevices = new HashSet<>();
 
         if(bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
