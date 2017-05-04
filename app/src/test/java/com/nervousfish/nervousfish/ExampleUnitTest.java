@@ -1,9 +1,8 @@
 package com.nervousfish.nervousfish;
 
 import org.junit.Test;
-import org.mockito.Mock;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +38,6 @@ public class ExampleUnitTest {
     @Test
     public void bar() {
         when(sample.foo()).thenReturn(5);
-        ;
         assertEquals(new SampleClass(sample).get(), 5);
     }
 }

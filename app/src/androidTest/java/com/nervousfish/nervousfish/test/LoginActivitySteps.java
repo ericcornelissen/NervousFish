@@ -1,12 +1,17 @@
 package com.nervousfish.nervousfish.test;
 
 
+import android.app.Activity;
+import android.support.test.espresso.core.deps.guava.collect.Iterables;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.LoginActivity;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.MainActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -24,7 +29,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.not;
 
 @SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
@@ -34,45 +38,53 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
         super(LoginActivity.class);
     }
 
+    private static Matcher<? super View> hasErrorText(final String expectedError) {
+        return new ErrorTextMatcher(expectedError);
+    }
+
     @Given("^I have a LoginActivity")
-    public void I_have_a_LoginActivity() {
+    public void iHaveALoginActivity() {
         assertNotNull(getActivity());
     }
 
-    @When("^I input email (\\S+)$")
-    public void I_input_email(final String email) {
-        onView(withId(R.id.email)).perform(typeText(email));
-    }
-
     @When("^I input password \"(.*?)\"$")
-    public void I_input_password(final String password) {
+    public void iInputPassword(final String password) {
         onView(withId(R.id.password)).perform(typeText(password));
     }
 
     @When("^I press submit button$")
-    public void I_press_submit_button() {
+    public void iPressSubmit() {
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
     }
 
-    @Then("^I should see error on the (\\S+)$")
-    public void I_should_see_error_on_the_editTextView(final String viewName) {
-        int viewId = (viewName.equals("email")) ? R.id.email : R.id.password;
-        int messageId = (viewName.equals("email")) ? R.string.msg_email_error : R.string.msg_password_error;
-
-        onView(withId(viewId)).check(matches(hasErrorText(getActivity().getString(messageId))));
-    }
-
-    @Then("^I should (true|false) auth error$")
-    public void I_should_see_auth_error(boolean shouldSeeError) {
-        if (shouldSeeError) {
-            onView(withId(R.id.error)).check(matches(isDisplayed()));
+    @Then("^I (true|false) continue to the MainActivity$")
+    public void iShouldContinueToNextActivity(boolean continuesToNextActivity) {
+        if (continuesToNextActivity) {
+            assertEquals(getCurrentActivity().getClass(), MainActivity.class);
         } else {
-            onView(withId(R.id.error)).check(matches(not(isDisplayed())));
+            assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
         }
     }
 
-    private static Matcher<? super View> hasErrorText(String expectedError) {
-        return new ErrorTextMatcher(expectedError);
+    @Then("^I should see an auth error$")
+    public void iShouldSeeAuthError() {
+        onView(withId(R.id.error)).check(matches(isDisplayed()));
+    }
+
+    private Activity getCurrentActivity() {
+        getInstrumentation().waitForIdleSync();
+        final Activity[] activity = new Activity[1];
+        try {
+            runTestOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+                    activity[0] = Iterables.getOnlyElement(activities);
+                }});
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return activity[0];
     }
 
     /**
@@ -88,7 +100,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
 
         @Override
         public boolean matchesSafely(View view) {
-            if(!(view instanceof EditText)) {
+            if (!(view instanceof EditText)) {
                 return false;
             }
 
