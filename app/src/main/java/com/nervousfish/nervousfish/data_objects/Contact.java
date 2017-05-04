@@ -13,4 +13,15 @@ public final class Contact {
         this.publicKey = publicKey;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        Contact that = (Contact) o;
+        return this.name.equals(that.name)
+            &&  this.publicKey.equals(that.publicKey);
+    }
+
 }

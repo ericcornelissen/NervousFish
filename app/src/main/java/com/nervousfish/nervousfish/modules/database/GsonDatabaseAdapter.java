@@ -24,7 +24,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
+    GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         this.constants = serviceLocator.getConstants();
     }
