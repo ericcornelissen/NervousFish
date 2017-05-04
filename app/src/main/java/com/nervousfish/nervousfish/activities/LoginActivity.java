@@ -48,7 +48,7 @@ public final class LoginActivity extends Activity {
         final boolean skipPassword = mPassword.getText().toString().isEmpty();
         if (skipPassword) {
             mError.setVisibility(View.GONE);
-            final Intent k = new Intent(LoginActivity.this, MainActivity.class);
+            final Intent k = new Intent(this, MainActivity.class);
             startActivity(k);
         } else {
             final String dummyPass = "12345";
@@ -57,7 +57,7 @@ public final class LoginActivity extends Activity {
                 mError.setVisibility(View.VISIBLE);
             } else {
                 mError.setVisibility(View.GONE);
-                final Intent k = new Intent(LoginActivity.this, MainActivity.class);
+                final Intent k = new Intent(this, MainActivity.class);
                 startActivity(k);
             }
         }
