@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @SuppressWarnings("PMD")
-public class ExampleUnitTest extends BaseTest {
+public class ExampleUnitTest {
     ISample sample = mock(ISample.class);
 
     @Test

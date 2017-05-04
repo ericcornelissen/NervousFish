@@ -8,7 +8,14 @@ import java.lang.reflect.Method;
 /**
  * The superclass of all tests
  */
-public abstract class BaseTest {
+public final class BaseTest {
+
+    /**
+     * Prevents instantiation
+     */
+    private BaseTest() {
+        // Prevents instantiation
+    }
 
     /**
      * Creates a new instance of a class that has an inaccessible constructor (eg private)
@@ -18,7 +25,7 @@ public abstract class BaseTest {
      * @param args  The arguments that should be passed to the constructor
      * @return A new instance of clazz
      */
-    protected Object accessConstructor(final Class<?> clazz, final Object... args) {
+    protected static Object accessConstructor(final Class<?> clazz, final Object... args) {
         try {
             final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             // Assuming a single constructor
@@ -40,7 +47,7 @@ public abstract class BaseTest {
      * @param args        The arguments of the method
      * @return The result of the method
      */
-    protected Object accessMethod(final Object object, final String method_name, final Object... args) {
+    protected static Object accessMethod(final Object object, final String method_name, final Object... args) {
         try {
             final Method[] methods = object.getClass().getDeclaredMethods();
             for (Method method : methods) {
@@ -62,7 +69,7 @@ public abstract class BaseTest {
      * @param field_name The name of the field
      * @param value      The new value of the field
      */
-    protected void setField(final Object object, final String field_name, final Object value) {
+    protected static void setField(final Object object, final String field_name, final Object value) {
         try {
             final Field field = object.getClass().getDeclaredField(field_name);
             field.setAccessible(true);
@@ -79,7 +86,7 @@ public abstract class BaseTest {
      * @param object     The object owning the method
      * @param field_name The name of the field
      */
-    protected Object getField(final Object object, final String field_name) {
+    protected static Object getField(final Object object, final String field_name) {
         try {
             final Field field = object.getClass().getDeclaredField(field_name);
             field.setAccessible(true);
