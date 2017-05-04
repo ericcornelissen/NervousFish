@@ -1,13 +1,23 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * An adapter to the Gson database library
  */
 public final class GsonDatabaseAdapter implements IDatabase {
+    final IConstants constants;
 
     /**
      * Prevents construction from outside the class.
@@ -15,7 +25,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.constants = serviceLocator.getConstants();
     }
 
     /**
@@ -27,5 +38,20 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     public static ModuleWrapper<GsonDatabaseAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocatorCreator));
+    }
+
+    /**
+     * Will initialize the database files for accountInformation and contacts list.
+     */
+    private void initializeDatabaseFiles() {
+        try {
+            //Initialize the account information file
+            BufferedWriter bufferedWriter = new BufferedWriter(
+                    new FileWriter(constants.getAccountInformationFileName()));
+            bufferedWriter.write("[]");
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

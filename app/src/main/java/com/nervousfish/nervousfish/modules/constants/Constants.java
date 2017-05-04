@@ -9,6 +9,8 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
  */
 public final class Constants implements IConstants {
 
+    private final static String ACCOUNT_INFORMATION_FILENAME = "accountInformation.json";
+
     /**
      * Prevents construction from outside the class.
      * @param serviceLocatorCreator The object responsible for creating the service locator
@@ -27,5 +29,14 @@ public final class Constants implements IConstants {
      */
     public static ModuleWrapper<Constants> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new Constants(serviceLocatorCreator));
+    }
+
+    /**
+     * Returns the constant with the account information filename, used in the database.
+     * @return the account information filename
+     */
+    @Override
+    public String getAccountInformationFileName() {
+        return ACCOUNT_INFORMATION_FILENAME;
     }
 }
