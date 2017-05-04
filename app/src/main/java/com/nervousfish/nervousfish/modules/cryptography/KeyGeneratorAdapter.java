@@ -41,16 +41,11 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * Generates a random KeyPair with the RSA algorithm.
      * @return a randomly generated KeyPair
      */
-    public static KeyPair generateRandomKeyPair() {
-        try {
-            KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
-            k.initialize(2048);
+    public static KeyPair generateRandomKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
+        k.initialize(2048);
 
-            return k.generateKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return k.generateKeyPair();
     }
 
     /**
@@ -58,16 +53,12 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @param kp the KeyPair with the public key
      * @return the RSAPublicKeySpec
      */
-    public static RSAPublicKeySpec getPublicKeySpec(KeyPair kp) {
-        try {
-            KeyFactory fact = KeyFactory.getInstance("RSA");
+    public static RSAPublicKeySpec getPublicKeySpec(KeyPair kp) throws NoSuchAlgorithmException,
+            InvalidKeySpecException {
+        KeyFactory fact = KeyFactory.getInstance("RSA");
 
-            return fact.getKeySpec(kp.getPublic(),
-                    RSAPublicKeySpec.class);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return fact.getKeySpec(kp.getPublic(),
+                RSAPublicKeySpec.class);
     }
 
     /**
@@ -75,15 +66,11 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @param kp the KeyPair with the private key
      * @return the RSAPrivateKeySpec
      */
-    public static RSAPrivateKeySpec getPrivateKeySpec(KeyPair kp) {
-        try {
-            KeyFactory fact = KeyFactory.getInstance("RSA");
+    public static RSAPrivateKeySpec getPrivateKeySpec(KeyPair kp) throws NoSuchAlgorithmException,
+            InvalidKeySpecException {
+        KeyFactory fact = KeyFactory.getInstance("RSA");
 
-            return fact.getKeySpec(kp.getPrivate(),
-                    RSAPrivateKeySpec.class);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return fact.getKeySpec(kp.getPrivate(),
+                RSAPrivateKeySpec.class);
     }
 }
