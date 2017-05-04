@@ -27,7 +27,7 @@ public class KeyGenerator {
     }
 
     /**
-     * Gets from kp the public key and makes a RSAPublicKeySpec out of it.
+     * Gets from the parameter 'kp' the public key and makes a RSAPublicKeySpec out of it.
      * @param kp the KeyPair with the public key
      * @return the RSAPublicKeySpec
      */
@@ -44,7 +44,7 @@ public class KeyGenerator {
     }
 
     /**
-     * Gets from kp the private key and makes a RSAPrivateKeySpec out of it.
+     * Gets from the parameter 'kp' the private key and makes a RSAPrivateKeySpec out of it.
      * @param kp the KeyPair with the private key
      * @return the RSAPrivateKeySpec
      */
