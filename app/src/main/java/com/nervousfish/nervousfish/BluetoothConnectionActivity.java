@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -32,18 +33,16 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(mReceiver, filter);
+        registerReceiver(broadcastReceiver, filter);
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Discovery has found a device. Get the BluetoothDevice
-                // object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                //do something with device.getAddress() etc.
+                discoveredDevices.add(device);
             }
         }
     };
@@ -56,7 +55,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         super.onDestroy();
 
         // Don't forget to unregister the ACTION_FOUND receiver.
-        unregisterReceiver(mReceiver);
+        breakDown();
     }
 
     /**
@@ -67,6 +66,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
         } else {
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(broadcastReceiver, filter);
             enableBluetooth();
 
             // Proceed by first checking the already bonded devices list
@@ -79,14 +80,22 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             checkBluetoothState();
 
             // start discovering
-            bluetoothAdapter.startDiscovery();
+            discoverDevices();
 
             // code that handles discovered devices
 
             // cancel discovery before starting up connection!
-            bluetoothAdapter.cancelDiscovery();
+           stopDiscovering();
 
         }
+    }
+
+    /**
+     * Deletes bluetoothadapter and unregisters broadcastreceiver
+     */
+    public void breakDown() {
+        unregisterReceiver(broadcastReceiver);
+        bluetoothAdapter = null;
     }
 
     /**
@@ -113,6 +122,28 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     public void queryPairedDevices() {
         pairedDevices = bluetoothAdapter.getBondedDevices();
     }
+
+    /**
+     * Starts Discovering bluetooth devices
+     */
+    public void discoverDevices() {
+        discoveredDevices = new HashSet<BluetoothDevice>();
+
+        if(bluetoothAdapter.isDiscovering()) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+        bluetoothAdapter.startDiscovery();
+    }
+
+    /**
+     * Stops discovering bluetooth devices.
+     */
+    public void stopDiscovering() {
+        if(bluetoothAdapter.isDiscovering()) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+    }
+
 
     /**
      * {@inheritDoc}
