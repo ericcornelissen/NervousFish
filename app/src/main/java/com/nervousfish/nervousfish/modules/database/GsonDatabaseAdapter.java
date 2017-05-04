@@ -42,21 +42,50 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
-     * Get a list of all contacts in the database.
-     *
-     * @return A {@link List} of {@link Contact Contacts}.
+     * {@inheritDoc}
      */
-    public List<Contact> getContacts() {
-        List<Contact> contacts = new ArrayList<Contact>();
-        return contacts;
+    @Override
+    public Contact addContact(String name, String key) {
+        return new Contact("name", "key");
     }
 
     /**
-     * Will initialize the database files for accountInformation and contacts list.
+     * {@inheritDoc}
      */
-    private void initializeDatabaseFiles() {
+    @Override
+    public void deleteContact(final int id) {
+        // TODO: To be implemented
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Contact getContact(final int id) {
+        return new Contact("name", "key");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Contact> getAllContacts() {
+        return new ArrayList<Contact>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Contact updateContact(final int id, final String name, final String key) {
+        return new Contact("name", "key");
+    }
+
+    /**
+     * Initialize the database.
+     */
+    private void initializeDatabase() {
         try {
-            //Initialize the account information file
             BufferedWriter bufferedWriter = new BufferedWriter(
                     new FileWriter(constants.getAccountInformationFileName()));
             bufferedWriter.write("[]");

@@ -5,10 +5,10 @@ package com.nervousfish.nervousfish.data_objects;
  */
 public final class Contact {
 
-    public String name;
-    public IKey publicKey;
+    public final String name;
+    public final String publicKey;
 
-    public Contact(final String name, final IKey publicKey) {
+    public Contact(final String name, final String publicKey) {
         this.name = name;
         this.publicKey = publicKey;
     }
