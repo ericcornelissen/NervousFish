@@ -24,6 +24,7 @@ import java.util.List;
 public final class MainActivity extends AppCompatActivity {
 
     private final List<String> contacts = new ArrayList<>();
+    @SuppressWarnings("PMD.SingularField")
     private IServiceLocator serviceLocator;
 
     /**

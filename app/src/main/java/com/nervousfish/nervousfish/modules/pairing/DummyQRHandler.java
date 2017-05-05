@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 /**
@@ -14,6 +13,7 @@ import org.greenrobot.eventbus.Subscribe;
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
     @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
+
     /**
      * Prevents construction from outside the class.
      *

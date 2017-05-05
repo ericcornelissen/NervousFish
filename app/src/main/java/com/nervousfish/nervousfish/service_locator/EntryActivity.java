@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.LoginActivity;
-import com.nervousfish.nervousfish.activities.MainActivity;
 
 /**
  * The main activity class that shows a list of all people with their public keys

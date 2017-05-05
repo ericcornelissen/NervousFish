@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 /**
@@ -17,6 +16,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     /**
      * Prevents construction from outside the class.
+     *
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
