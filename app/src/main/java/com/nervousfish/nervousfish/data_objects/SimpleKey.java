@@ -7,7 +7,6 @@ public final class SimpleKey implements IKey {
 
     private final static String TYPE = "simple";
 
-    public final String type = "simple";
     public final String key;
 
     /**
@@ -23,7 +22,7 @@ public final class SimpleKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public String getString() {
+    public String getKey() {
         return this.key;
     }
 

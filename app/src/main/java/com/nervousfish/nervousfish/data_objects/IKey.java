@@ -10,7 +10,7 @@ public interface IKey {
      *
      * @return The key as a {@link String}.
      */
-    String getString();
+    String getKey();
 
     /**
      * Get a string representation of the key type.

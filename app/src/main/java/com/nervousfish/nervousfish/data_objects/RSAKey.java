@@ -9,7 +9,6 @@ public final class RSAKey implements IKey {
 
     private final static String TYPE = "RSA";
 
-    public final String type = "RSA";
     public final String exponent;
     public final String modulus;
 
@@ -28,7 +27,7 @@ public final class RSAKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public String getString() {
+    public String getKey() {
         return this.modulus + " " + this.exponent;
     }
 

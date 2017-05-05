@@ -12,7 +12,6 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,6 +27,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
     private final IConstants constants;
+    private final GsonBuilder gsonBuilder = new GsonBuilder()
+            .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
+    private final Gson gsonParser = this.gsonBuilder.create();
 
     /**
      * Prevents construction from outside the class.
@@ -59,16 +61,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final void addContact(final Contact contact) {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final GsonBuilder builder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
-        final Gson parser = builder.create();
 
+        // Get the list of contacts and add the new contact
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
+        // Update the database
         try {
             final FileWriter fileWriter = new FileWriter(contactsPath);
-            parser.toJson(contacts, fileWriter);
+            this.gsonParser.toJson(contacts, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,21 +82,21 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final void deleteContact(final Contact contact) throws IllegalArgumentException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final GsonBuilder builder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
-        final Gson parser = builder.create();
 
+        // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(contact);
 
+        // Throw if the contact to remove is not found
         if (contacts.size() == lengthBefore) {
             throw new IllegalArgumentException("Contact not found in database");
         }
 
+        // Update the database
         try {
             final FileWriter fileWriter = new FileWriter(contactsPath);
-            parser.toJson(contacts, fileWriter);
+            this.gsonParser.toJson(contacts, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,13 +109,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final List<Contact> getAllContacts() {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final GsonBuilder builder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
-        final Gson parser = builder.create();
 
         try {
             final Reader reader = new FileReader(contactsPath);
-            List<Contact> contacts = parser.fromJson(reader, TYPE_CONTACT_LIST);
+            List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
             reader.close();
             return contacts;
         } catch (IOException e) {
@@ -131,22 +129,22 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final GsonBuilder builder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
-        final Gson parser = builder.create();
 
+        // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(oldContact);
 
+        // Throw if the contact to update is not found
         if (contacts.size() == lengthBefore) {
             throw new IllegalArgumentException("Contact not found in database");
         }
 
+        // Add the new contact and update the database
         contacts.add(newContact);
         try {
             final FileWriter fileWriter = new FileWriter(contactsPath);
-            parser.toJson(contacts, fileWriter);
+            this.gsonParser.toJson(contacts, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
