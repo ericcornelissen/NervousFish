@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public final class Contact implements Serializable {
 
-    public final String name;
-    public final IKey publicKey;
+    private final String name;
+    private final IKey publicKey;
 
     /**
      * Simple constructor for the Contact POJO.
@@ -19,6 +19,20 @@ public final class Contact implements Serializable {
     public Contact(final String name, final IKey publicKey) {
         this.name = name;
         this.publicKey = publicKey;
+    }
+
+    /**
+     * Get the name of the {@link Contact}.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Get the public key of the {@link Contact}.
+     */
+    public IKey getPublicKey() {
+        return this.publicKey;
     }
 
     /**
