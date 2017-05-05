@@ -8,9 +8,11 @@ import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,20 +23,31 @@ import static org.mockito.Mockito.when;
 
 public class DatabaseTest {
 
-    IServiceLocatorCreator serviceLocatorCreator = mock(IServiceLocatorCreator.class);
-    IServiceLocator serviceLocator = mock(IServiceLocator.class);
-    IConstants constants = mock(IConstants.class);
+    private final static String CONTACTS_PATH = "temp_contacts.json";
+    private final static String USERDATA_PATH = "temp_userdata.json";
 
-    IDatabase database;
+    private IServiceLocatorCreator serviceLocatorCreator = mock(IServiceLocatorCreator.class);
+    private IServiceLocator serviceLocator = mock(IServiceLocator.class);
+    private IConstants constants = mock(IConstants.class);
+
+    private IDatabase database;
 
     @Before
     public void setup() {
         when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
-        when(constants.getDatabaseContactsPath()).thenReturn("temp_contacts.json");
-        when(constants.getDatabaseUserdataPath()).thenReturn("temp_userdata.json");
+        when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
+        when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
         this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
+    }
+
+    @After
+    public void tearDown() {
+        File contactsFile = new File(CONTACTS_PATH);
+        contactsFile.delete();
+        File userdataFile = new File(USERDATA_PATH);
+        userdataFile.delete();
     }
 
     @Test
@@ -66,7 +79,7 @@ public class DatabaseTest {
     @Test
     public void testGetAllContactsReturnsListOfAllContacts() {
         List<Contact> contacts = database.getAllContacts();
-        assertEquals(contacts, new ArrayList<Contact>());
+        assertEquals(new ArrayList<Contact>(), contacts);
     }
 
     @Test

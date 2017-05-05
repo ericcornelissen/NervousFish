@@ -12,4 +12,11 @@ public interface IKey {
      */
     String getString();
 
+    /**
+     * Get a string representation of the key type.
+     *
+     * @return The type.
+     */
+    String getType();
+
 }

@@ -1,8 +1,10 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -57,13 +59,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final void addContact(final Contact contact) {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final Gson gson = new Gson();
+        final GsonBuilder builder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
+        final Gson parser = builder.create();
+
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
         try {
             final FileWriter fileWriter = new FileWriter(contactsPath);
-            gson.toJson(contacts, fileWriter);
+            parser.toJson(contacts, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,7 +81,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final void deleteContact(final Contact contact) throws IllegalArgumentException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final Gson gson = new Gson();
+        final GsonBuilder builder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
+        final Gson parser = builder.create();
+
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(contact);
@@ -87,7 +95,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         try {
             final FileWriter fileWriter = new FileWriter(contactsPath);
-            gson.toJson(contacts, fileWriter);
+            parser.toJson(contacts, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,13 +108,18 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final List<Contact> getAllContacts() {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final Gson gson = new Gson();
+        final GsonBuilder builder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
+        final Gson parser = builder.create();
 
         try {
             final Reader reader = new FileReader(contactsPath);
-            return gson.fromJson(reader, TYPE_CONTACT_LIST);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            List<Contact> contacts = parser.fromJson(reader, TYPE_CONTACT_LIST);
+            reader.close();
+            return contacts;
+        } catch (IOException e) {
+            // Contacts file not found, create a new file
+            this.initializeContacts();
         }
 
         return new ArrayList<Contact>();
@@ -118,7 +131,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public final void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final Gson gson = new Gson();
+        final GsonBuilder builder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
+        final Gson parser = builder.create();
+
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(oldContact);
@@ -130,7 +146,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         contacts.add(newContact);
         try {
             final FileWriter fileWriter = new FileWriter(contactsPath);
-            gson.toJson(contacts, fileWriter);
+            parser.toJson(contacts, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -5,8 +5,9 @@ package com.nervousfish.nervousfish.data_objects;
  */
 public final class SimpleKey implements IKey {
 
-    public final static String type = "simple";
+    private final static String TYPE = "simple";
 
+    public final String type = "simple";
     public final String key;
 
     /**
@@ -24,6 +25,14 @@ public final class SimpleKey implements IKey {
     @Override
     public String getString() {
         return this.key;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getType() {
+        return SimpleKey.TYPE;
     }
 
     /**

@@ -7,10 +7,11 @@ import java.math.BigInteger;
  */
 public final class RSAKey implements IKey {
 
-    public final static String type = "RSA";
+    private final static String TYPE = "RSA";
 
-    public final BigInteger exponent;
-    public final BigInteger modulus;
+    public final String type = "RSA";
+    public final String exponent;
+    public final String modulus;
 
     /**
      * Constructor for a RSA key.
@@ -18,7 +19,7 @@ public final class RSAKey implements IKey {
      * @param modulus The modules of the RSA key.
      * @param exponent The exponent of the RSA key.
      */
-    public RSAKey(final BigInteger modulus, final BigInteger exponent) {
+    public RSAKey(final String modulus, final String exponent) {
         this.modulus = modulus;
         this.exponent = exponent;
     }
@@ -28,7 +29,15 @@ public final class RSAKey implements IKey {
      */
     @Override
     public String getString() {
-        return this.modulus.toString() + " " + this.exponent.toString();
+        return this.modulus + " " + this.exponent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getType() {
+        return RSAKey.TYPE;
     }
 
     /**
