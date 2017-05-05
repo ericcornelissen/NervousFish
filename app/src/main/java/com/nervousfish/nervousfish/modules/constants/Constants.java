@@ -21,7 +21,7 @@ public final class Constants implements IConstants {
      */
     private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

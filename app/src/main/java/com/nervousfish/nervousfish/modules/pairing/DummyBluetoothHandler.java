@@ -22,7 +22,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     private DummyBluetoothHandler(final IServiceLocatorCreator serviceLocatorCreator) {
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

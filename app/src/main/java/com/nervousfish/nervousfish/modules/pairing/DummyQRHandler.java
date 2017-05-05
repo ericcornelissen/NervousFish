@@ -22,7 +22,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     private DummyQRHandler(final IServiceLocatorCreator serviceLocatorCreator) {
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

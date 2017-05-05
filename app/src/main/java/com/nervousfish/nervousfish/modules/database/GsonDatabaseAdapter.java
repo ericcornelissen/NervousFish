@@ -21,7 +21,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

@@ -22,7 +22,7 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
     private DummyNFCHandler(final IServiceLocatorCreator serviceLocatorCreator) {
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

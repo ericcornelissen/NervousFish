@@ -21,7 +21,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      */
     private KeyGeneratorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

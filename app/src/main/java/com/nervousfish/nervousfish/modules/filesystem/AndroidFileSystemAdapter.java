@@ -21,7 +21,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     private AndroidFileSystemAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**

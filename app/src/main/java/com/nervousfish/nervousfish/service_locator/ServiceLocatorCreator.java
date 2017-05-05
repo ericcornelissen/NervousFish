@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.service_locator;
 
 import com.nervousfish.nervousfish.events.SLReadyEvent;
+import com.nervousfish.nervousfish.modules.IModule;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
@@ -51,5 +52,13 @@ final class ServiceLocatorCreator implements IServiceLocatorCreator {
      */
     public IServiceLocator getServiceLocator() {
         return this.serviceLocator;
+    }
+
+    /**
+     * Registers the class specified to the EventBus
+     * @param object The Object that should be registed to the EventBus
+     */
+    public void registerToEventBus(final Object object) {
+        EventBus.getDefault().register(object);
     }
 }

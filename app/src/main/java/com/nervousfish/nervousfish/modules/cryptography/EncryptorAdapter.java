@@ -22,7 +22,7 @@ public final class EncryptorAdapter implements IEncryptor {
      */
     private EncryptorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
-        EventBus.getDefault().register(this);
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**
