@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DatabaseTest {
+public class GsonDatabaseAdapterTest {
 
     private final static String CONTACTS_PATH = "temp_contacts.json";
     private final static String USERDATA_PATH = "temp_userdata.json";
