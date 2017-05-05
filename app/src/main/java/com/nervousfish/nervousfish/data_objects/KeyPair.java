@@ -4,7 +4,7 @@ package com.nervousfish.nervousfish.data_objects;
  * KeyPair POJO which keeps a public and private key.
  */
 
-public class KeyPair {
+public final class KeyPair {
 
     private final IKey publicKey;
     private final IKey privateKey;
@@ -25,7 +25,7 @@ public class KeyPair {
      * @return the public key as IKey
      */
     public IKey getPublicKey() {
-        return publicKey;
+        return this.publicKey;
     }
 
     /**
@@ -33,6 +33,6 @@ public class KeyPair {
      * @return the private key as IKey
      */
     public IKey getPrivateKey() {
-        return privateKey;
+        return this.privateKey;
     }
 }

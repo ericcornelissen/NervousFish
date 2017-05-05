@@ -43,14 +43,14 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @return a randomly generated KeyPair
      */
     public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        final KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
-        k.initialize(2048);
+        final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
 
-        final java.security.KeyPair keyPair = k.generateKeyPair();
-        final KeyFactory fact = KeyFactory.getInstance("RSA");
-        final RSAPublicKeySpec publicKeySpec = fact.getKeySpec(keyPair.getPublic(),
+        final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        final RSAPublicKeySpec publicKeySpec = keyFactory.getKeySpec(keyPair.getPublic(),
                 RSAPublicKeySpec.class);
-        final RSAPrivateKeySpec privateKeySpec = fact.getKeySpec(keyPair.getPrivate(),
+        final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
                 RSAPrivateKeySpec.class);
 
         final RSAKey rsaPublicKey = new RSAKey(publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
