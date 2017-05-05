@@ -6,20 +6,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * The superclass of all tests
+ * Provides Powermock-functionality to tests.
  */
 public final class BaseTest {
 
     /**
-     * Prevents instantiation
+     * Simple constructor for the BaseTest class
      */
     private BaseTest() {
         // Prevents instantiation
     }
 
     /**
-     * Creates a new instance of a class that has an inaccessible constructor (eg private)
-     * Note that there should be a single constructor in the class
+     * Creates a new instance of a class that has an inaccessible constructor (e.g. private).
+     * Note that there should be a single constructor in the class.
      *
      * @param clazz The class that should be instantiated
      * @param args  The arguments that should be passed to the constructor
@@ -40,7 +40,7 @@ public final class BaseTest {
     }
 
     /**
-     * Executes an inaccessible method on an object (eg private method)
+     * Executes an inaccessible method on an object (e.g. private method).
      *
      * @param object      The object owning the method
      * @param method_name The name of the method
@@ -63,7 +63,7 @@ public final class BaseTest {
     }
 
     /**
-     * Sets the value of an inaccessible field on an object (eg private field)
+     * Sets the value of an inaccessible field on an object (e.g. private field).
      *
      * @param object     The object owning the method
      * @param field_name The name of the field
@@ -81,7 +81,7 @@ public final class BaseTest {
     }
 
     /**
-     * Gets the value of an inaccessible field on an object (eg private field)
+     * Gets the value of an inaccessible field on an object (e.g. private field).
      *
      * @param object     The object owning the method
      * @param field_name The name of the field
