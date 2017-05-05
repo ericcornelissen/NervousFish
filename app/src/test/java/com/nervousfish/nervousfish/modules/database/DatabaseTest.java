@@ -90,13 +90,30 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testGetAllContactsReturnsListOfAllContacts() throws IOException {
+    public void testGetAllContactsReturnsListOfAllContactsWith1Contact() throws IOException {
         write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
 
         IKey key = new SimpleKey("key");
         Contact contact = new Contact("Zoidberg", key);
         List<Contact> expected = new ArrayList<Contact>();
         expected.add(contact);
+
+        List<Contact> actual = database.getAllContacts();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetAllContactsReturnsListOfAllContactsWith2Contacts() throws IOException {
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"ABABAB\"}}," +
+                "{\"name\":\"Fry\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"BABABA\"}}]", CONTACTS_PATH);
+
+        IKey zoidbergsDey = new SimpleKey("ABABAB");
+        Contact zoidberg = new Contact("Zoidberg", zoidbergsDey);
+        IKey frysKey = new SimpleKey("BABABA");
+        Contact fry = new Contact("Fry", frysKey);
+        List<Contact> expected = new ArrayList<Contact>();
+        expected.add(zoidberg);
+        expected.add(fry);
 
         List<Contact> actual = database.getAllContacts();
         assertEquals(expected, actual);
@@ -118,7 +135,7 @@ public class DatabaseTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testImplementedThrowsWhenOldContactNotInDatabase() throws IOException {
+    public void testUpdateContactThrowsWhenOldContactNotInDatabase() throws IOException {
         IKey keyA = new SimpleKey("keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
         IKey keyB = new SimpleKey("keyB");
