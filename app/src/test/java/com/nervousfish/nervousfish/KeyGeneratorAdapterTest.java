@@ -23,6 +23,7 @@ public class KeyGeneratorAdapterTest {
 
         assertEquals(RSAKey.class, keyPair.publicKey.getClass());
         assertEquals(RSAKey.class, keyPair.privateKey.getClass());
-        assertEquals(((RSAKey) keyPair.privateKey).modulus, ((RSAKey) keyPair.publicKey).modulus);
+        assertEquals(((RSAKey) keyPair.privateKey).getKey().split(" ")[0],
+                ((RSAKey) keyPair.publicKey).getKey().split(" ")[0]);
     }
 }

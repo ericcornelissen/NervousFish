@@ -17,6 +17,7 @@
     <rule ref="rulesets/java/controversial.xml" >
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
+	<exclude name="OnlyOneReturn" />
     </rule>
     <rule ref="rulesets/java/coupling.xml" >
         <exclude name="LawOfDemeter" />
