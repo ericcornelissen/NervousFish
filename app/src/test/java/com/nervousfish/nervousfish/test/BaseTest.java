@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
