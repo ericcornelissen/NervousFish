@@ -61,7 +61,7 @@ public class GsonDatabaseAdapterTest {
         Contact contact = new Contact("Zoidberg", key);
 
         database.addContact(contact);
-        assertEquals(21 + 21, 42);
+        assertEquals("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]\n", read(CONTACTS_PATH));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class GsonDatabaseAdapterTest {
         Contact zoidberg = new Contact("Zoidberg", zoidbergsDey);
         IKey frysKey = new SimpleKey("BABABA");
         Contact fry = new Contact("Fry", frysKey);
-        List<Contact> expected = new ArrayList<Contact>();
+        List<Contact> expected = new ArrayList<>();
         expected.add(zoidberg);
         expected.add(fry);
 
