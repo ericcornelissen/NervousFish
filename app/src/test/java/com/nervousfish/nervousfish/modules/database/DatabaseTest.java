@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.modules.database;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -12,7 +11,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,10 +68,12 @@ public class DatabaseTest {
     public void testDeleteContactRemovesContactFromDatabase() {
         IKey key = new SimpleKey("key");
         Contact contact = new Contact("Zoidberg", key);
-        // TODO: Mock the contact to be in the database
+
+        // Add the contact to remove from the database
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
 
         database.deleteContact(contact);
-        assertEquals(21 + 21, 42);
+        assertEquals("[]\n", read(CONTACTS_PATH));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -77,22 +84,37 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testGetAllContactsReturnsListOfAllContacts() {
+    public void testGetAllContactsReturnsEmptyListWhenThereAreNoContacts() {
         List<Contact> contacts = database.getAllContacts();
         assertEquals(new ArrayList<Contact>(), contacts);
+    }
+
+    @Test
+    public void testGetAllContactsReturnsListOfAllContacts() {
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
+
+        IKey key = new SimpleKey("key");
+        Contact contact = new Contact("Zoidberg", key);
+        List<Contact> expected = new ArrayList<Contact>();
+        expected.add(contact);
+
+        List<Contact> actual = database.getAllContacts();
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testImplementedWritesToDatabase() {
         IKey keyA = new SimpleKey("keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
-        // TODO: Mock the contact to be in the database
+
+        // Add the contact to remove from the database
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"keyA\"}}]", CONTACTS_PATH);
 
         IKey keyB = new SimpleKey("keyB");
         Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
-        assertEquals(9000 + 1, 9001);
+        assertEquals("[{\"name\":\"not Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"keyB\"}}]\n", read(CONTACTS_PATH));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -104,6 +126,36 @@ public class DatabaseTest {
 
         database.updateContact(oldContact, newContact);
         assertEquals(9000 + 1, 9001);
+    }
+
+
+    private void write(final String data, final String filePath) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            writer.write(data);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String read(final String filePath) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+            String line = reader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
+            while (line != null) {
+                stringBuilder.append(line).append("\n");
+                line = reader.readLine();
+            }
+
+            reader.close();
+            return stringBuilder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

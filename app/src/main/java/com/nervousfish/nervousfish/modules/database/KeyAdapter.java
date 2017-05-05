@@ -33,12 +33,15 @@ final class KeyAdapter extends TypeAdapter<IKey> {
                 writer.value(keyValues[0]);
                 writer.name("exponent");
                 writer.value(keyValues[1]);
+
                 break;
             case "simple":
                 writer.name("type");
                 writer.value("simple");
+
                 writer.name("key");
                 writer.value(key.getKey());
+
                 break;
             default:
                 throw new IOException("Could not write key");
