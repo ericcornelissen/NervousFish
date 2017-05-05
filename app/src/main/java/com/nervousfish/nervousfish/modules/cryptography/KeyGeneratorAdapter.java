@@ -1,29 +1,35 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import java.security.KeyFactory;
-import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    @SuppressWarnings("PMD.SingularField")
+    private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
+     *
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     private KeyGeneratorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**
@@ -41,36 +47,29 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * Generates a random KeyPair with the RSA algorithm.
      * @return a randomly generated KeyPair
      */
-    public static KeyPair generateRandomKeyPair() throws NoSuchAlgorithmException {
-        final KeyPairGenerator k = KeyPairGenerator.getInstance("RSA");
-        k.initialize(2048);
+    public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
 
-        return k.generateKeyPair();
-    }
-
-    /**
-     * Gets from the parameter 'kp' the public key and makes a RSAPublicKeySpec out of it.
-     * @param keyPair the KeyPair with the public key
-     * @return the RSAPublicKeySpec
-     */
-    public static RSAPublicKeySpec getPublicKeySpec(final KeyPair keyPair) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
-        final KeyFactory fact = KeyFactory.getInstance("RSA");
-
-        return fact.getKeySpec(keyPair.getPublic(),
+        final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        final RSAPublicKeySpec publicKeySpec = keyFactory.getKeySpec(keyPair.getPublic(),
                 RSAPublicKeySpec.class);
+        final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
+                RSAPrivateKeySpec.class);
+
+        final RSAKey rsaPublicKey = new RSAKey(publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
+        final RSAKey rsaPrivateKey = new RSAKey(privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
+
+        return new KeyPair(rsaPublicKey, rsaPrivateKey);
     }
 
     /**
-     * Gets from the parameter 'kp' the private key and makes a RSAPrivateKeySpec out of it.
-     * @param keyPair the KeyPair with the private key
-     * @return the RSAPrivateKeySpec
+     * {@inheritDoc}
      */
-    public static RSAPrivateKeySpec getPrivateKeySpec(final KeyPair keyPair) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
-        final KeyFactory fact = KeyFactory.getInstance("RSA");
-
-        return fact.getKeySpec(keyPair.getPrivate(),
-                RSAPrivateKeySpec.class);
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+        // Here you can get modules from the service locator
     }
 }

@@ -17,6 +17,12 @@
     <rule ref="rulesets/java/controversial.xml" >
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
+	<!-- Mostly for efficiency purposes multiple returns is useful -->
+	<exclude name="OnlyOneReturn" />
+        <!-- Very useful in C++, but not in Java -->
+        <exclude name="DataflowAnomalyAnalysis" />
+        <!-- Many classes don't need an explicit empty constructor (like activities) -->
+        <exclude name="AtLeastOneConstructor" />
     </rule>
     <rule ref="rulesets/java/coupling.xml" >
         <exclude name="LawOfDemeter" />
