@@ -175,7 +175,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addAccount(final Account account) throws IOException {
-        final String accountPath = this.constants.getDatabaseContactsPath();
+        final String accountsPath = this.constants.getDatabaseUserdataPath();
 
         // Get the list of accounts and add the new account
         final List<Account> accounts = this.getAccounts();
@@ -183,7 +183,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Update the database
         final BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(accountPath), "UTF-8"));
+                new OutputStreamWriter(new FileOutputStream(accountsPath), "UTF-8"));
         this.gsonParser.toJson(accounts, writer);
         writer.close();
     }
@@ -228,9 +228,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Add the new contact and update the database
         accounts.add(newAccount);
-        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final String accountsPath = this.constants.getDatabaseUserdataPath();
         final BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
+                new OutputStreamWriter(new FileOutputStream(accountsPath), UTF_8));
         this.gsonParser.toJson(accounts, writer);
         writer.close();
     }

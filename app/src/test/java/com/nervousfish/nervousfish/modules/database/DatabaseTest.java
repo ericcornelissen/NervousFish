@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -133,6 +135,48 @@ public class DatabaseTest {
     public void testGetAccountEmpty() throws IOException {
         List<Account> actual = database.getAccounts();
         assertEquals(new ArrayList<Account>(), actual);
+    }
+
+    @Test
+    public void testAddAccount() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Account newAccount = new Account("CoolGuy", pubKey, privKey);
+        database.addAccount(newAccount);
+
+        List<Account> actual = database.getAccounts();
+        assertTrue(newAccount.equals(actual.get(0)));
+    }
+
+    @Test
+    public void testUpdateAccount() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Account newAccount = new Account("CoolGuy", pubKey, privKey);
+        database.addAccount(newAccount);
+
+        Account newAccountUpdate = new Account("OtherName", pubKey, privKey);
+        database.updateAccount(newAccount, newAccountUpdate);
+        List<Account> actual = database.getAccounts();
+
+        assertFalse(newAccount.equals(actual.get(0)));
+        assertTrue(newAccountUpdate.equals(actual.get(0)));
+        assertEquals(1, actual.size());
+    }
+
+    @Test
+    public void testDeleteAccount() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Account newAccount = new Account("CoolGuy", pubKey, privKey);
+        database.addAccount(newAccount);
+
+        List<Account> actual = database.getAccounts();
+        assertEquals(1, actual.size());
+        database.deleteAccount(newAccount);
+        actual = database.getAccounts();
+
+        assertEquals(0, actual.size());
     }
 
     private void write(final String data, final String filePath) {
