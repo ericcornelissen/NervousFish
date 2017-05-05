@@ -12,13 +12,12 @@ import org.greenrobot.eventbus.Subscribe;
  * An adapter to the Gson database library
  */
 public final class GsonDatabaseAdapter implements IDatabase {
-    final IServiceLocatorCreator serviceLocatorCreator;
+    private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         EventBus.getDefault().register(this);
@@ -37,7 +36,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     /**
      * {@inheritDoc}
-     * @param event Indicates that the {@link SLReadyEvent} happened
      */
     @Subscribe
     @Override

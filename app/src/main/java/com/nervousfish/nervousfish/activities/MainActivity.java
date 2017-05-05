@@ -38,6 +38,9 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
+        // Example use
+        serviceLocator.getConstants();
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

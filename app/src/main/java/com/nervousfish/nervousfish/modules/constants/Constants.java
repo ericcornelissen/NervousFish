@@ -12,13 +12,13 @@ import org.greenrobot.eventbus.Subscribe;
  * Contains the main constants
  */
 public final class Constants implements IConstants {
-    final IServiceLocatorCreator serviceLocatorCreator;
+    @SuppressWarnings("pmd.unusedprivatefield")
+    private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         EventBus.getDefault().register(this);
@@ -37,7 +37,6 @@ public final class Constants implements IConstants {
 
     /**
      * {@inheritDoc}
-     * @param event Indicates that the {@link SLReadyEvent} happened
      */
     @Subscribe
     @Override
