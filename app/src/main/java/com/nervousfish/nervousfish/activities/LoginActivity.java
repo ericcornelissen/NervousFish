@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 /**
  * Demo Login activity class. All warnings are suppressed because this is a demo class that can be deleted
@@ -18,10 +20,14 @@ public final class LoginActivity extends Activity {
 
     private EditText mPassword;
     private View mError;
+    private IServiceLocator serviceLocator;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Intent intent = getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         setContentView(R.layout.login);
 
@@ -48,8 +54,9 @@ public final class LoginActivity extends Activity {
         final boolean skipPassword = mPassword.getText().toString().isEmpty();
         if (skipPassword) {
             mError.setVisibility(View.GONE);
-            final Intent k = new Intent(this, MainActivity.class);
-            startActivity(k);
+            final Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            startActivity(intent);
         } else {
             final String dummyPass = "12345";
             final boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
@@ -57,8 +64,9 @@ public final class LoginActivity extends Activity {
                 mError.setVisibility(View.VISIBLE);
             } else {
                 mError.setVisibility(View.GONE);
-                final Intent k = new Intent(this, MainActivity.class);
-                startActivity(k);
+                final Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+                startActivity(intent);
             }
         }
     }

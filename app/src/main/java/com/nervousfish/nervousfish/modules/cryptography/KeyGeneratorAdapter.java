@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.modules.cryptography;
 
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -12,19 +13,23 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    @SuppressWarnings("PMD.SingularField")
+    private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
+     *
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     private KeyGeneratorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        // final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        this.serviceLocatorCreator.registerToEventBus(this);
     }
 
     /**
@@ -57,5 +62,14 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final RSAKey rsaPrivateKey = new RSAKey(privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
         return new KeyPair(rsaPublicKey, rsaPrivateKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+        // Here you can get modules from the service locator
     }
 }
