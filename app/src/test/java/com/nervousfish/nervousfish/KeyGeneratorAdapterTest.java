@@ -21,9 +21,9 @@ public class KeyGeneratorAdapterTest {
     public void generateRandomKeyPairTest() throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeyPair keyPair = KeyGeneratorAdapter.generateRSAKeyPair();
 
-        assertEquals(RSAKey.class, keyPair.publicKey.getClass());
-        assertEquals(RSAKey.class, keyPair.privateKey.getClass());
-        assertEquals(((RSAKey) keyPair.privateKey).getKey().split(" ")[0],
-                ((RSAKey) keyPair.publicKey).getKey().split(" ")[0]);
+        assertEquals(RSAKey.class, keyPair.getPublicKey().getClass());
+        assertEquals(RSAKey.class, keyPair.getPrivateKey().getClass());
+        assertEquals(((RSAKey) keyPair.getPrivateKey()).getKey().split(" ")[0],
+                ((RSAKey) keyPair.getPublicKey()).getKey().split(" ")[0]);
     }
 }
