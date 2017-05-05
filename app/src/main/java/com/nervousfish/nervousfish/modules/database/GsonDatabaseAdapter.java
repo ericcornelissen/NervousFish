@@ -18,6 +18,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         contacts.add(contact);
 
         // Update the database
-        final BufferedWriter writer = new BufferedWriter(
+        final Writer writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), "UTF-8"));
         this.gsonParser.toJson(contacts, writer);
         writer.close();
@@ -99,7 +101,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Update the database
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final BufferedWriter writer = new BufferedWriter(
+        final Writer writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
         this.gsonParser.toJson(contacts, writer);
         writer.close();
@@ -112,7 +114,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     public List<Contact> getAllContacts() throws IOException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
 
-        final BufferedReader reader = new BufferedReader(
+        final Reader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(contactsPath), UTF_8));
         final List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
         reader.close();
@@ -137,7 +139,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         // Add the new contact and update the database
         contacts.add(newContact);
         final String contactsPath = this.constants.getDatabaseContactsPath();
-        final BufferedWriter writer = new BufferedWriter(
+        final Writer writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
         this.gsonParser.toJson(contacts, writer);
         writer.close();
@@ -159,7 +161,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String contactsPath = constants.getDatabaseContactsPath();
         final File file = new File(contactsPath);
         if (!file.exists()) {
-            final BufferedWriter writer = new BufferedWriter(
+            final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
             writer.write("[]");
             writer.close();
@@ -174,7 +176,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String userdataPath = constants.getDatabaseUserdataPath();
         final File file = new File(userdataPath);
         if (!file.exists()) {
-            final BufferedWriter writer = new BufferedWriter(
+            final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(userdataPath), UTF_8));
             writer.write("[]");
             writer.close();

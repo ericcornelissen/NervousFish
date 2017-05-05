@@ -1,7 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
 /**
- * Simple variant of {@link IKey}.
+ * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
  */
 public final class SimpleKey implements IKey {
 

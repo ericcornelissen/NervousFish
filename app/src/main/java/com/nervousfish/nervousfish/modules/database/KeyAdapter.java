@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.database;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -30,7 +31,7 @@ final class KeyAdapter extends TypeAdapter<IKey> {
     public void write(final JsonWriter writer, final IKey key) throws IOException {
         writer.beginObject();
         switch (key.getType()) {
-            case "RSA":
+            case ConstantKeywords.RSA_KEY:
                 writer.name("type");
                 writer.value("RSA");
 
@@ -73,7 +74,7 @@ final class KeyAdapter extends TypeAdapter<IKey> {
 
         final String type = keyMap.get("type");
         switch (type) {
-            case "RSA":
+            case ConstantKeywords.RSA_KEY:
                 return new RSAKey(keyMap.get("modulus"), keyMap.get("exponent"));
             case "simple":
                 return new SimpleKey(keyMap.get("key"));
