@@ -38,10 +38,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
-
-    private final GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-    private final Gson gsonParser = this.gsonBuilder.create();
     private IConstants constants; // Can't be final because it cannot be set in the constructor atm...
 
     /**
@@ -52,6 +48,18 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    /**
+     * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
+     * {@link IServiceLocatorCreator} can access the new module to create the new
+     * {@link IServiceLocator}.
+     *
+     * @param serviceLocatorCreator The service locator bridge that creates the new service locator
+     * @return A wrapper around a newly created instance of this class
+     */
+    public static ModuleWrapper<GsonDatabaseAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
+        return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocatorCreator));
     }
 
     /**
@@ -72,32 +80,24 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
-     * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
-     * {@link IServiceLocatorCreator} can access the new module to create the new
-     * {@link IServiceLocator}.
-     *
-     * @param serviceLocatorCreator The service locator bridge that creates the new service locator
-     * @return A wrapper around a newly created instance of this class
-     */
-    public static ModuleWrapper<GsonDatabaseAdapter> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
-        return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocatorCreator));
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
-        final String contactsPath = this.constants.getDatabaseContactsPath();
-
         // Get the list of contacts and add the new contact
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
         // Update the database
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
+        final String contactsPath = this.constants.getDatabaseContactsPath();
         final Writer writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), "UTF-8"));
-        this.gsonParser.toJson(contacts, writer);
+
+        gsonParser.toJson(contacts, writer);
         writer.close();
     }
 
@@ -117,10 +117,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
 
         // Update the database
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
         final String contactsPath = this.constants.getDatabaseContactsPath();
         final Writer writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
-        this.gsonParser.toJson(contacts, writer);
+
+        gsonParser.toJson(contacts, writer);
         writer.close();
     }
 
@@ -129,12 +134,17 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public List<Contact> getAllContacts() throws IOException {
-        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
 
+        final String contactsPath = this.constants.getDatabaseContactsPath();
         final Reader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(contactsPath), UTF_8));
-        final List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
+
+        final List<Contact> contacts = gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
         reader.close();
+
         return contacts;
     }
 
@@ -153,12 +163,18 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException("Contact not found in database");
         }
 
-        // Add the new contact and update the database
         contacts.add(newContact);
+
+        // Update the database
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
         final String contactsPath = this.constants.getDatabaseContactsPath();
         final Writer writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
-        this.gsonParser.toJson(contacts, writer);
+
+        gsonParser.toJson(contacts, writer);
         writer.close();
     }
 
