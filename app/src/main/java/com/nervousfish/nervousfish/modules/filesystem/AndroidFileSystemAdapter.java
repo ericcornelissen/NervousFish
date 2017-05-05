@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
  * An adapter to the default Android file system
  */
 public final class AndroidFileSystemAdapter implements IFileSystem {
+    @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**

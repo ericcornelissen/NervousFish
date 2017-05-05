@@ -7,11 +7,4 @@ package com.nervousfish.nervousfish.events;
  * {@link com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator} is ready to be used.
  */
 public class SLReadyEvent {
-
-    /**
-     * Constructs a new SLReadyEvent
-     */
-    public SLReadyEvent() {
-        // No implementation needed
-    }
 }

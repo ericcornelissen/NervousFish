@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
  * An adapter to the default Java class for encrypting messages
  */
 public final class EncryptorAdapter implements IEncryptor {
+    @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**

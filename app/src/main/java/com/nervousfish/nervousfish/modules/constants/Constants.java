@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
  * Contains the main constants
  */
 public final class Constants implements IConstants {
-    @SuppressWarnings("pmd.unusedprivatefield")
+    @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**

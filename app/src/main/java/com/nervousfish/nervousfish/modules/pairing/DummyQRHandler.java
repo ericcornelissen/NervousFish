@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
  * An handler doing nothing.
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
+    @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
     /**
      * Prevents construction from outside the class.

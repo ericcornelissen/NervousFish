@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
  * An handler doing nothing.
  */
 public final class DummyNFCHandler extends APairingHandler implements INFCHandler {
+    @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
     /**
      * Prevents construction from outside the class.

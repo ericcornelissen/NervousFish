@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    @SuppressWarnings("PMD")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
