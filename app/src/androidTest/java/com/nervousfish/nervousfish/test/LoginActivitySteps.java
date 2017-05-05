@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.test;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
@@ -9,13 +10,17 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
+import org.mockito.Mockito;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -32,10 +37,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
-public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginActivity> {
+public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    public LoginActivitySteps(LoginActivity activityClass) {
-        super(LoginActivity.class);
+    public LoginActivitySteps(EntryActivity activityClass) {
+        super(EntryActivity.class);
     }
 
     private static Matcher<? super View> hasErrorText(final String expectedError) {

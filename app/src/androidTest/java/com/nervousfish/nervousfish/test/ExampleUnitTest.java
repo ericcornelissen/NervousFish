@@ -1,11 +1,15 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.test;
+
+import android.support.test.runner.AndroidJUnit4;
+import android.support.test.runner.AndroidJUnitRunner;
 
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
-import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,8 +20,9 @@ import static org.mockito.Mockito.when;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @SuppressWarnings("PMD")
+@RunWith(AndroidJUnit4.class)
 public class ExampleUnitTest {
-    ISample sample = mock(ISample.class);
+    ISample sample = Mockito.mock(ISample.class);
 
     @Test
     public void addition_isCorrect() throws Exception {
@@ -26,9 +31,9 @@ public class ExampleUnitTest {
 
     @Test
     public void bar() {
-        when(sample.foo()).thenReturn(5);
-        assertEquals(new SampleClass(sample).get(), 5);
-        Constants constants = (Constants) accessConstructor(Constants.class, mock(IServiceLocatorCreator.class));
+        Mockito.when(sample.foo()).thenReturn(5);
+        assertEquals(new SampleClass(sample).get(), 4);
+        Constants constants = (Constants) BaseTest.accessConstructor(Constants.class, Mockito.mock(IServiceLocatorCreator.class));
     }
 
     private interface ISample {
