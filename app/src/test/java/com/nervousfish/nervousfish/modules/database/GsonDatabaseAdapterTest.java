@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.database;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
@@ -45,6 +46,7 @@ public class GsonDatabaseAdapterTest {
         when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
         this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
+        this.database.onSLReadyEvent(mock(SLReadyEvent.class));
     }
 
     @After

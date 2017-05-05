@@ -24,6 +24,8 @@ import java.util.List;
 public final class MainActivity extends AppCompatActivity {
 
     private final List<String> contacts = new ArrayList<>();
+    @SuppressWarnings("PMD.SingularField")
+    private IServiceLocator serviceLocator;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -36,10 +38,10 @@ public final class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final Intent intent = getIntent();
-        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Example use
-        serviceLocator.getConstants();
+        this.serviceLocator.getConstants();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

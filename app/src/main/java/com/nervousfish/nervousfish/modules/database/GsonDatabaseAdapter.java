@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -24,6 +25,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -32,10 +35,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
-    private final IConstants constants;
+
+    @SuppressWarnings("PMD.SingularField")
+    private final IServiceLocatorCreator serviceLocatorCreator;
+
     private final GsonBuilder gsonBuilder = new GsonBuilder()
             .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
     private final Gson gsonParser = this.gsonBuilder.create();
+    private IConstants constants; // Can't be final because it cannot be set in the constructor atm...
 
     /**
      * Prevents construction from outside the class.
@@ -43,6 +50,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
+        this.serviceLocatorCreator = serviceLocatorCreator;
+        this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         this.constants = serviceLocator.getConstants();
 

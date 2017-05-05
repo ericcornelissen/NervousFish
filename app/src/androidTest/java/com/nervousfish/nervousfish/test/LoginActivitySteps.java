@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -32,10 +33,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
-public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginActivity> {
+public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    public LoginActivitySteps(LoginActivity activityClass) {
-        super(LoginActivity.class);
+    public LoginActivitySteps(EntryActivity activityClass) {
+        super(EntryActivity.class);
     }
 
     private static Matcher<? super View> hasErrorText(final String expectedError) {
@@ -80,7 +81,8 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
                 public void run() {
                     java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
                     activity[0] = Iterables.getOnlyElement(activities);
-                }});
+                }
+            });
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
