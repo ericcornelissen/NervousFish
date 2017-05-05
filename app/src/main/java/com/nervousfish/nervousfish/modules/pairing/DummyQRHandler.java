@@ -43,6 +43,6 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     @Subscribe
     @Override
     public void onSLReadyEvent(final SLReadyEvent event) {
-
+        // Here you can get modules from the service locator
     }
 }

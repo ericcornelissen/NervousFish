@@ -17,6 +17,8 @@
     <rule ref="rulesets/java/controversial.xml" >
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
+        <!-- Very useful in C++, but not in Java -->
+        <exclude name="DataflowAnomalyAnalysis" />
     </rule>
     <rule ref="rulesets/java/coupling.xml" >
         <exclude name="LawOfDemeter" />
