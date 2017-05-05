@@ -1,5 +1,11 @@
 package com.nervousfish.nervousfish;
 
+import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +27,12 @@ public class BluetoothConnectionServiceTest {
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
 
-    private DummyBluetoothHandler bConService;
+    private IBluetoothHandler bConService;
 
     @Before
     public void setup() {
         when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
-        when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
-        when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
         this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, serviceLocatorCreator);
         this.bConService.onSLReadyEvent(mock(SLReadyEvent.class));
