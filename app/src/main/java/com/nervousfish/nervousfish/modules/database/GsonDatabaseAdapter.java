@@ -76,6 +76,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocatorCreator));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addContact(final Contact contact) throws IOException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
@@ -118,40 +121,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public List<Contact> getAllContacts() throws IOException {
-        final String contactsPath = this.constants.getDatabaseContactsPath();
-
-        final BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(contactsPath), UTF_8));
-        final List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
-        reader.close();
-        return contacts;
-    }
-
-    /**
-     * Will get account info from the file and return as an Account[].
-     * @return an Account array
-     */
-    @Override
-    public Account getAccount() {
-        try {
-            final String accountPath = this.constants.getDatabaseUserdataPath();
-
-            final BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(accountPath), UTF_8));
-            final Account account = this.gsonParser.fromJson(reader, TYPE_ACCOUNT_INFORMATION);
-            reader.close();
-            return account;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
@@ -169,6 +138,100 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
         this.gsonParser.toJson(contacts, writer);
+        writer.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Contact> getAllContacts() throws IOException {
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+
+        final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(contactsPath), UTF_8));
+        final List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
+        reader.close();
+        return contacts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Account> getAccounts() throws IOException {
+        final String accountPath = this.constants.getDatabaseUserdataPath();
+
+        final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(accountPath), UTF_8));
+        final List<Account> account = this.gsonParser.fromJson(reader, TYPE_ACCOUNT_INFORMATION);
+        reader.close();
+
+        return account;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addAccount(final Account account) throws IOException {
+        final String accountPath = this.constants.getDatabaseContactsPath();
+
+        // Get the list of accounts and add the new account
+        final List<Account> accounts = this.getAccounts();
+        accounts.add(account);
+
+        // Update the database
+        final BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(accountPath), "UTF-8"));
+        this.gsonParser.toJson(accounts, writer);
+        writer.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteAccount(final Account account) throws IllegalArgumentException, IOException {
+        // Get the list of contacts
+        final List<Account> accounts = this.getAccounts();
+        final int lengthBefore = accounts.size();
+        accounts.remove(account);
+
+        // Throw if the contact to remove is not found
+        if (accounts.size() == lengthBefore) {
+            throw new IllegalArgumentException("Contact not found in database");
+        }
+
+        // Update the database
+        final String accountsPath = this.constants.getDatabaseUserdataPath();
+        final BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(accountsPath), UTF_8));
+        this.gsonParser.toJson(accounts, writer);
+        writer.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateAccount(final Account oldAccount, final Account newAccount) throws IllegalArgumentException, IOException {
+        // Get the list of contacts
+        final List<Account> accounts = this.getAccounts();
+        final int lengthBefore = accounts.size();
+        accounts.remove(oldAccount);
+
+        // Throw if the contact to update is not found
+        if (accounts.size() == lengthBefore) {
+            throw new IllegalArgumentException("Contact not found in database");
+        }
+
+        // Add the new contact and update the database
+        accounts.add(newAccount);
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
+        this.gsonParser.toJson(accounts, writer);
         writer.close();
     }
 

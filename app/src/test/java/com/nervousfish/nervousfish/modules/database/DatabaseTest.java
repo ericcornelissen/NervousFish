@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.nervousfish.nervousfish.data_objects.Account;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -128,6 +129,11 @@ public class DatabaseTest {
         assertEquals(9000 + 1, 9001);
     }
 
+    @Test
+    public void testGetAccountEmpty() throws IOException {
+        List<Account> actual = database.getAccounts();
+        assertEquals(new ArrayList<Account>(), actual);
+    }
 
     private void write(final String data, final String filePath) {
         try {

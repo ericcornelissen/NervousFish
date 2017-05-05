@@ -29,20 +29,6 @@ public interface IDatabase extends IModule {
     void deleteContact(final Contact contact) throws IllegalArgumentException, IOException;
 
     /**
-     * Get a list of all contacts in the database.
-     *
-     * @return A {@link List} of {@link Contact Contacts}.
-     */
-    List<Contact> getAllContacts() throws IOException;
-
-    /**
-     * Get the Account object with user information.
-     *
-     * @return A {@link Account account}.
-     */
-    Account getAccount();
-
-    /**
      * Update an existing contact in the database.
      *
      * @param oldContact The old {@link Contact} to be updated.
@@ -50,4 +36,42 @@ public interface IDatabase extends IModule {
      * @throws IllegalArgumentException When {@code oldContact} is not in the database.
      */
     void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException;
+
+    /**
+     * Get a list of all contacts in the database.
+     *
+     * @return A {@link List} of {@link Contact Contacts}.
+     */
+    List<Contact> getAllContacts() throws IOException;
+
+    /**
+     * Get the Account list with user information.
+     *
+     * @return A {@link List} of {@link Account Accounts}.
+     */
+    List<Account> getAccounts() throws IOException;
+
+    /**
+     * Add a new account in the database.
+     *
+     * @param account The {@link Account} to add to the database.
+     */
+    void addAccount(final Account account) throws IOException;
+
+    /**
+     * Delete an account from the database.
+     *
+     * @param account The {@link Account} to remove from the database.
+     * @throws IllegalArgumentException When {@code account} is not in the database.
+     */
+    void deleteAccount(final Account account) throws IllegalArgumentException, IOException;
+
+    /**
+     * Update an existing account in the database.
+     *
+     * @param oldAccount The old {@link Account} to be updated.
+     * @param newAccount The new {@link Account} details.
+     * @throws IllegalArgumentException When {@code oldAccount} is not in the database.
+     */
+    void updateAccount(final Account oldAccount, final Account newAccount) throws IllegalArgumentException, IOException;
 }
