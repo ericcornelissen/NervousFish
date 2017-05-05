@@ -13,9 +13,18 @@ import static org.mockito.Mockito.when;
  */
 @SuppressWarnings("PMD")
 public class ExampleUnitTest {
+    ISample sample = mock(ISample.class);
+
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+    }
+
+    @Test
+    public void bar() {
+        when(sample.foo()).thenReturn(5);
+        ;
+        assertEquals(new SampleClass(sample).get(), 5);
     }
 
     private interface ISample {
@@ -24,6 +33,7 @@ public class ExampleUnitTest {
 
     private class SampleClass {
         private final int tmp;
+
         private SampleClass(ISample sample) {
             tmp = sample.foo();
         }
@@ -31,14 +41,5 @@ public class ExampleUnitTest {
         private int get() {
             return tmp;
         }
-    }
-
-    ISample sample = mock(ISample.class);
-
-    @Test
-    public void bar() {
-        when(sample.foo()).thenReturn(5);
-        ;
-        assertEquals(new SampleClass(sample).get(), 5);
     }
 }
