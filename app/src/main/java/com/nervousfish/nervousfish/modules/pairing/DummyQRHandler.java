@@ -12,13 +12,12 @@ import org.greenrobot.eventbus.Subscribe;
  * An handler doing nothing.
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
-    final IServiceLocatorCreator serviceLocatorCreator;
+    private final IServiceLocatorCreator serviceLocatorCreator;
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     private DummyQRHandler(final IServiceLocatorCreator serviceLocatorCreator) {
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
@@ -38,7 +37,6 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
 
     /**
      * {@inheritDoc}
-     * @param event Indicates that the {@link SLReadyEvent} happened
      */
     @Subscribe
     @Override

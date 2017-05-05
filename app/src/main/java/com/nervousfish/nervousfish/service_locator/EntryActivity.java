@@ -21,7 +21,7 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final IServiceLocator serviceLocator = ServiceLocatorCreator.newInstance();
+        final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance();
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
