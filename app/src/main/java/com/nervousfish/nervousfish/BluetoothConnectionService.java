@@ -133,11 +133,9 @@ public class BluetoothConnectionService extends AppCompatActivity {
         Log.d(TAG, "connect to: " + device);
 
         // Cancel any thread attempting to make a connection
-        if (mState == STATE_CONNECTING) {
-            if (connectThread != null) {
+        if (mState == STATE_CONNECTING && connectThread != null) {
                 connectThread.cancel();
                 connectThread = null;
-            }
         }
 
         // Cancel any thread currently running a connection
@@ -234,7 +232,7 @@ public class BluetoothConnectionService extends AppCompatActivity {
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+            if (mState != STATE_CONNECTED) {return;}
             r = connectedThread;
         }
         // Perform the write unsynchronized
@@ -298,8 +296,8 @@ public class BluetoothConnectionService extends AppCompatActivity {
         }
 
         public void run() {
-            Log.d(TAG, "Socket Type: " + socketType +
-                    "BEGIN mAcceptThread" + this);
+            Log.d(TAG, "Socket Type: " + socketType
+                    + "BEGIN mAcceptThread" + this);
             setName("AcceptThread" + socketType);
 
             BluetoothSocket socket = null;
@@ -333,6 +331,8 @@ public class BluetoothConnectionService extends AppCompatActivity {
                                 } catch (IOException e) {
                                     Log.e(TAG, "Could not close unwanted socket", e);
                                 }
+                                break;
+                            default: //nothing
                                 break;
                         }
                     }
@@ -402,8 +402,9 @@ public class BluetoothConnectionService extends AppCompatActivity {
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() " + socketType +
-                            " socket during connection failure", e2);
+                    Log.e(TAG, "unable to close() " + socketType
+                            + " socket during connection failure",
+                            e2);
                 }
                 connectionFailed();
                 return;
