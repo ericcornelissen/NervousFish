@@ -39,11 +39,6 @@ public final class LoginActivity extends Activity {
                 }
             }
         });
-
-        final Intent intent = getIntent();
-        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
-        serviceLocator.getDatabase().initializeDatabaseFiles();
     }
 
     private void validateAccount() {

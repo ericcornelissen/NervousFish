@@ -39,6 +39,7 @@ captures/
 .idea/tasks.xml
 .idea/gradle.xml
 .idea/markdown-navigator.xml
+.idea/qaplug_profiles.xml
 .idea/misc.xml
 .idea/vcs.xml
 .idea/dictionaries
@@ -58,3 +59,7 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+
+# Test generated files
+temp_contacts.json
+temp_userdata.json
