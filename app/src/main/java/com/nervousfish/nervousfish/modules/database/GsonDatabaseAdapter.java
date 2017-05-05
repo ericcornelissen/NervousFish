@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
  * An adapter to the Gson database library
  */
 public final class GsonDatabaseAdapter implements IDatabase {
-    @SuppressWarnings("PMD")
+    @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**

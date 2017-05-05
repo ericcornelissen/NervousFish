@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
  * Contains the main constants
  */
 public final class Constants implements IConstants {
-    @SuppressWarnings("PMD")
+    @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
