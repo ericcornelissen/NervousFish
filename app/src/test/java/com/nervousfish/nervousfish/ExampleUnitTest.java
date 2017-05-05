@@ -1,7 +1,15 @@
 package com.nervousfish.nervousfish;
 
+import com.nervousfish.nervousfish.modules.constants.Constants;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
+
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,8 +31,8 @@ public class ExampleUnitTest {
     @Test
     public void bar() {
         when(sample.foo()).thenReturn(5);
-        ;
         assertEquals(new SampleClass(sample).get(), 5);
+        Constants constants = (Constants) accessConstructor(Constants.class, mock(IServiceLocatorCreator.class));
     }
 
     private interface ISample {

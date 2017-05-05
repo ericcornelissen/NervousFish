@@ -9,9 +9,9 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.LoginActivity;
-import com.nervousfish.nervousfish.MainActivity;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.MainActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -36,6 +36,10 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
 
     public LoginActivitySteps(LoginActivity activityClass) {
         super(LoginActivity.class);
+    }
+
+    private static Matcher<? super View> hasErrorText(final String expectedError) {
+        return new ErrorTextMatcher(expectedError);
     }
 
     @Given("^I have a LoginActivity")
@@ -81,10 +85,6 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginAc
             throwable.printStackTrace();
         }
         return activity[0];
-    }
-
-    private static Matcher<? super View> hasErrorText(String expectedError) {
-        return new ErrorTextMatcher(expectedError);
     }
 
     /**
