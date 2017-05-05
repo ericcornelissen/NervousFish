@@ -2,7 +2,7 @@ package com.nervousfish.nervousfish.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.nervousfish.nervousfish.BluetoothConnectionActivity;
+import com.nervousfish.nervousfish.BluetoothConnectionService;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -15,13 +15,13 @@ import cucumber.api.java.en.When;
 
 @SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
-public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<BluetoothConnectionActivity> {
+public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<BluetoothConnectionService> {
 
-    public BluetoothActivitySteps(Class<BluetoothConnectionActivity> activityClass) {
-        super(BluetoothConnectionActivity.class);
+    public BluetoothActivitySteps(Class<BluetoothConnectionService> activityClass) {
+        super(BluetoothConnectionService.class);
     }
 
-    @Given("^I have a BluetoothConnectionActivity and don't have an established connection nor any pairing$")
+    @Given("^I have a BluetoothConnectionService and don't have an established connection nor any pairing$")
     public void iHaveABluetoothConnectionActivityWithoutAConnection() {
         assertNotNull(getActivity());
     }
