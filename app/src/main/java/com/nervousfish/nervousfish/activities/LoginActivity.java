@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 /**
  * Demo Login activity class. All warnings are suppressed because this is a demo class that can be deleted

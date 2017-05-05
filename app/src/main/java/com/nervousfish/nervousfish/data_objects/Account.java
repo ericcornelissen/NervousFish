@@ -29,4 +29,12 @@ public class Account {
                 && this.publicKey.equals(that.publicKey)
                 && this.privateKey.equals(that.privateKey);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode() + this.publicKey.hashCode() + this.privateKey.hashCode();
+    }
 }

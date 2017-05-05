@@ -2,12 +2,8 @@ package com.nervousfish.nervousfish.modules.database;
 
 import com.google.gson.Gson;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.nervousfish.nervousfish.data_objects.Account;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -20,10 +16,7 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -41,10 +34,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
     private final static Type TYPE_ACCOUNT_INFORMATION = new TypeToken<ArrayList<Account>>(){}.getType();
+    private final static String CONTACT_NOT_FOUND = "Contact not found in database";
     private final IConstants constants;
     private final GsonBuilder gsonBuilder = new GsonBuilder()
             .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
     private final Gson gsonParser = this.gsonBuilder.create();
+
 
     /**
      * Prevents construction from outside the class.
@@ -106,7 +101,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Throw if the contact to remove is not found
         if (contacts.size() == lengthBefore) {
-            throw new IllegalArgumentException("Contact not found in database");
+            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
         // Update the database
@@ -129,7 +124,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Throw if the contact to update is not found
         if (contacts.size() == lengthBefore) {
-            throw new IllegalArgumentException("Contact not found in database");
+            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
         // Add the new contact and update the database
@@ -200,7 +195,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Throw if the contact to remove is not found
         if (accounts.size() == lengthBefore) {
-            throw new IllegalArgumentException("Contact not found in database");
+            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
         // Update the database
@@ -223,7 +218,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Throw if the contact to update is not found
         if (accounts.size() == lengthBefore) {
-            throw new IllegalArgumentException("Contact not found in database");
+            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
         // Add the new contact and update the database
