@@ -8,13 +8,20 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
  */
 final class KeyAdapter extends TypeAdapter<IKey> {
+
+    /**
+     * Constructor for the {@code KeyAdapter} class.
+     */
+    KeyAdapter() {
+        super();
+    }
 
     /**
      * {@inheritDoc}
@@ -54,7 +61,7 @@ final class KeyAdapter extends TypeAdapter<IKey> {
      */
     @Override
     public IKey read(final JsonReader reader) throws IOException {
-        final Map<String, String> keyMap = new HashMap<>();
+        final Map<String, String> keyMap = new ConcurrentHashMap<>();
 
         reader.beginObject();
         while (reader.hasNext()) {

@@ -65,7 +65,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testDeleteContactRemovesContactFromDatabase() {
+    public void testDeleteContactRemovesContactFromDatabase() throws IOException {
         IKey key = new SimpleKey("key");
         Contact contact = new Contact("Zoidberg", key);
 
@@ -77,20 +77,20 @@ public class DatabaseTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testDeleteContactThrowsWhenContactNotInDatabase() {
+    public void testDeleteContactThrowsWhenContactNotInDatabase() throws IOException {
         IKey key = new SimpleKey("key");
         Contact contact = new Contact("Zoidberg", key);
         database.deleteContact(contact);
     }
 
     @Test
-    public void testGetAllContactsReturnsEmptyListWhenThereAreNoContacts() {
+    public void testGetAllContactsReturnsEmptyListWhenThereAreNoContacts() throws IOException {
         List<Contact> contacts = database.getAllContacts();
         assertEquals(new ArrayList<Contact>(), contacts);
     }
 
     @Test
-    public void testGetAllContactsReturnsListOfAllContacts() {
+    public void testGetAllContactsReturnsListOfAllContacts() throws IOException {
         write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
 
         IKey key = new SimpleKey("key");
@@ -103,7 +103,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testImplementedWritesToDatabase() {
+    public void testImplementedWritesToDatabase() throws IOException {
         IKey keyA = new SimpleKey("keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
 
@@ -118,7 +118,7 @@ public class DatabaseTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testImplementedThrowsWhenOldContactNotInDatabase() {
+    public void testImplementedThrowsWhenOldContactNotInDatabase() throws IOException {
         IKey keyA = new SimpleKey("keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
         IKey keyB = new SimpleKey("keyB");

@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.database;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.IModule;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface IDatabase extends IModule {
      *
      * @param contact The {@link Contact} to add to the database.
      */
-    void addContact(final Contact contact);
+    void addContact(final Contact contact) throws IOException;
 
     /**
      * Delete a contact from the database.
@@ -24,14 +25,14 @@ public interface IDatabase extends IModule {
      * @param contact The {@link Contact} to remove from the database.
      * @throws IllegalArgumentException When {@code contact} is not in the database.
      */
-    void deleteContact(final Contact contact) throws IllegalArgumentException;
+    void deleteContact(final Contact contact) throws IllegalArgumentException, IOException;
 
     /**
      * Get a list of all contacts in the database.
      *
      * @return A {@link List} of {@link Contact Contacts}.
      */
-    List<Contact> getAllContacts();
+    List<Contact> getAllContacts() throws IOException;
 
     /**
      * Update an existing contact in the database.
@@ -40,6 +41,6 @@ public interface IDatabase extends IModule {
      * @param newContact The new {@link Contact} details.
      * @throws IllegalArgumentException When {@code oldContact} is not in the database.
      */
-    void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException;
+    void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException;
 
 }

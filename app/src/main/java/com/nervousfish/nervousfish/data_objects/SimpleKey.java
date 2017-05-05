@@ -47,4 +47,12 @@ public final class SimpleKey implements IKey {
         return this.key.equals(that.key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.getKey().hashCode();
+    }
+
 }

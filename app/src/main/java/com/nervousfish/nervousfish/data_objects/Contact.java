@@ -25,7 +25,7 @@ public final class Contact implements Serializable {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
@@ -33,6 +33,14 @@ public final class Contact implements Serializable {
         final Contact that = (Contact) o;
         return this.name.equals(that.name)
             && this.publicKey.equals(that.publicKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode() + this.publicKey.hashCode();
     }
 
 }

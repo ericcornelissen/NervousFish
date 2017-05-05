@@ -10,15 +10,19 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * An adapter to the GSON database library
@@ -40,7 +44,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         this.constants = serviceLocator.getConstants();
 
-        this.initializeDatabase();
+        try {
+            this.initializeDatabase();
+        } catch (final IOException e) {
+            // TODO: Handle failure
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -59,7 +68,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public final void addContact(final Contact contact) {
+    public void addContact(final Contact contact) throws IOException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
 
         // Get the list of contacts and add the new contact
@@ -67,22 +76,17 @@ public final class GsonDatabaseAdapter implements IDatabase {
         contacts.add(contact);
 
         // Update the database
-        try {
-            final FileWriter fileWriter = new FileWriter(contactsPath);
-            this.gsonParser.toJson(contacts, fileWriter);
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(contactsPath), "UTF-8"));
+        this.gsonParser.toJson(contacts, writer);
+        writer.close();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void deleteContact(final Contact contact) throws IllegalArgumentException {
-        final String contactsPath = this.constants.getDatabaseContactsPath();
-
+    public void deleteContact(final Contact contact) throws IllegalArgumentException, IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
@@ -94,42 +98,32 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
 
         // Update the database
-        try {
-            final FileWriter fileWriter = new FileWriter(contactsPath);
-            this.gsonParser.toJson(contacts, fileWriter);
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
+        this.gsonParser.toJson(contacts, writer);
+        writer.close();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final List<Contact> getAllContacts() {
+    public List<Contact> getAllContacts() throws IOException {
         final String contactsPath = this.constants.getDatabaseContactsPath();
 
-        try {
-            final Reader reader = new FileReader(contactsPath);
-            List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
-            reader.close();
-            return contacts;
-        } catch (IOException e) {
-            // Contacts file not found, create a new file
-            this.initializeContacts();
-        }
-
-        return new ArrayList<Contact>();
+        final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(contactsPath), UTF_8));
+        final List<Contact> contacts = this.gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
+        reader.close();
+        return contacts;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException {
-        final String contactsPath = this.constants.getDatabaseContactsPath();
-
+    public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
@@ -142,19 +136,17 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Add the new contact and update the database
         contacts.add(newContact);
-        try {
-            final FileWriter fileWriter = new FileWriter(contactsPath);
-            this.gsonParser.toJson(contacts, fileWriter);
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final String contactsPath = this.constants.getDatabaseContactsPath();
+        final BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
+        this.gsonParser.toJson(contacts, writer);
+        writer.close();
     }
 
     /**
      * Initialize the database.
      */
-    private void initializeDatabase() {
+    private void initializeDatabase() throws IOException {
         this.initializeContacts();
         this.initializeUserdata();
     }
@@ -163,18 +155,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * Initialize the contacts in the database. This does nothing
      * if the contacts section of the database already exists.
      */
-    private void initializeContacts() {
+    private void initializeContacts() throws IOException {
         final String contactsPath = constants.getDatabaseContactsPath();
         final File file = new File(contactsPath);
         if (!file.exists()) {
-            try {
-                final BufferedWriter bufferedWriter =
-                        new BufferedWriter(new FileWriter(contactsPath));
-                bufferedWriter.write("[]");
-                bufferedWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            final BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
+            writer.write("[]");
+            writer.close();
         }
     }
 
@@ -182,18 +170,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * Initialize the userdata in the database. This does nothing
      * if the userdata section of the database already exists.
      */
-    private void initializeUserdata() {
+    private void initializeUserdata() throws IOException {
         final String userdataPath = constants.getDatabaseUserdataPath();
         final File file = new File(userdataPath);
         if (!file.exists()) {
-            try {
-                final BufferedWriter bufferedWriter =
-                        new BufferedWriter(new FileWriter(userdataPath));
-                bufferedWriter.write("[]");
-                bufferedWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            final BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(userdataPath), UTF_8));
+            writer.write("[]");
+            writer.close();
         }
     }
 

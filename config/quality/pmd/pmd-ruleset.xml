@@ -17,6 +17,7 @@
     <rule ref="rulesets/java/controversial.xml" >
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
+        <exclude name="OnlyOneReturn" />
     </rule>
     <rule ref="rulesets/java/coupling.xml" >
         <exclude name="LawOfDemeter" />
@@ -34,6 +35,8 @@
     <rule ref="rulesets/java/logging-java.xml">
         <!-- This rule wasn't working properly and given errors in every var call info -->
         <exclude name="GuardLogStatementJavaUtil" />
+        <!-- May be applicable once there is a propper logger -->
+        <exclude name="AvoidPrintStackTrace" />
     </rule>
     <rule ref="rulesets/java/naming.xml">
         <exclude name="AbstractNaming" />

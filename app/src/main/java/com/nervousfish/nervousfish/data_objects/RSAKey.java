@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import java.math.BigInteger;
-
 /**
  * RSA variant of {@link IKey}.
  */
@@ -51,6 +49,14 @@ public final class RSAKey implements IKey {
         final RSAKey that = (RSAKey) o;
         return this.modulus.equals(that.modulus)
             && this.exponent.equals(that.exponent);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.getKey().hashCode();
     }
 
 }
