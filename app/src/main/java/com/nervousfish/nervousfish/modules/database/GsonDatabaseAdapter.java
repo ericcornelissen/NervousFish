@@ -34,7 +34,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
     private final IConstants constants;
     private final GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeHierarchyAdapter(IKey.class, new KeyAdapter());
+            .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
     private final Gson gsonParser = this.gsonBuilder.create();
 
     /**

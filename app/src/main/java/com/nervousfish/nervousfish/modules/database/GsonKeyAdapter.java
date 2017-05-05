@@ -15,12 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
  */
-final class KeyAdapter extends TypeAdapter<IKey> {
+final class GsonKeyAdapter extends TypeAdapter<IKey> {
+
+    private final static String KEY_TYPE_FIELD = "_type";
 
     /**
-     * Constructor for the {@code KeyAdapter} class.
+     * Constructor for the {@code GsonKeyAdapter} class.
      */
-    KeyAdapter() {
+    GsonKeyAdapter() {
         super();
     }
 
@@ -32,19 +34,19 @@ final class KeyAdapter extends TypeAdapter<IKey> {
         writer.beginObject();
         switch (key.getType()) {
             case ConstantKeywords.RSA_KEY:
-                writer.name("type");
+                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
                 writer.value("RSA");
 
                 final String keyValue = key.getKey();
                 final String[] keyValues = keyValue.split(" ");
-                writer.name("modules");
+                writer.name("modulus");
                 writer.value(keyValues[0]);
                 writer.name("exponent");
                 writer.value(keyValues[1]);
 
                 break;
             case "simple":
-                writer.name("type");
+                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
                 writer.value("simple");
 
                 writer.name("key");
@@ -72,7 +74,7 @@ final class KeyAdapter extends TypeAdapter<IKey> {
         }
         reader.endObject();
 
-        final String type = keyMap.get("type");
+        final String type = keyMap.get(GsonKeyAdapter.KEY_TYPE_FIELD);
         switch (type) {
             case ConstantKeywords.RSA_KEY:
                 return new RSAKey(keyMap.get("modulus"), keyMap.get("exponent"));

@@ -70,7 +70,7 @@ public class DatabaseTest {
         Contact contact = new Contact("Zoidberg", key);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
 
         database.deleteContact(contact);
         assertEquals("[]\n", read(CONTACTS_PATH));
@@ -91,7 +91,7 @@ public class DatabaseTest {
 
     @Test
     public void testGetAllContactsReturnsListOfAllContacts() throws IOException {
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
 
         IKey key = new SimpleKey("key");
         Contact contact = new Contact("Zoidberg", key);
@@ -108,13 +108,13 @@ public class DatabaseTest {
         Contact oldContact = new Contact("Zoidberg", keyA);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"keyA\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"keyA\"}}]", CONTACTS_PATH);
 
         IKey keyB = new SimpleKey("keyB");
         Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
-        assertEquals("[{\"name\":\"not Zoidberg\",\"publicKey\":{\"type\":\"simple\",\"key\":\"keyB\"}}]\n", read(CONTACTS_PATH));
+        assertEquals("[{\"name\":\"not Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"keyB\"}}]\n", read(CONTACTS_PATH));
     }
 
     @Test(expected=IllegalArgumentException.class)
