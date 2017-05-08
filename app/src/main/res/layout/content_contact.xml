@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/seaNervousFish" />
+                android:src="@drawable/seabackflipped" />
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
@@ -30,14 +30,12 @@
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="33dp">
 
-                <android.support.v4.widget.CircleImageView
+                <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/nervousFishPlaceholderPerson"
-                    app:civ_border_color="@android:color/white"
-                    app:civ_border_width="4dp" />
+                    android:src="@drawable/personplaceholder" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,7 +65,7 @@
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="495dp"
+                android:layout_height="250dp"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="8dp" />
 

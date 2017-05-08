@@ -6,6 +6,7 @@
     <string name="password">Password</string>
     <string name="submit">Submit</string>
 
+    <string name="title_activity_contact">Contact</string>
     <string name="msg_email_error">Please enter your email</string>
     <string name="msg_password_error">Please enter your password</string>
     <string name="msg_mismatch">Your password is wrong</string>
