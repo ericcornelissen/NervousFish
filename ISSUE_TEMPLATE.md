@@ -13,7 +13,7 @@ This issue demands
 [//]: # "Specify in more detail what this issue adds to the repository."
 
 ## Why
-This issue is need for the project because 
+This issue is needed for the project because 
 [//]: # "Specify in more detail why this issue is needed in the project."
 
 ## How
