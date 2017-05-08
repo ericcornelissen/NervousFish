@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The ContactActivity shows the contacts information and his public keys.
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class ContactActivity extends AppCompatActivity {
@@ -57,9 +57,9 @@ public final class ContactActivity extends AppCompatActivity {
      * Temporary method for filling the listview with some keys.
      */
     private void getKeys() {
-        keys.add("Email");
+        keys.add("Gmail");
         keys.add("FTP server");
-        keys.add("Joost");
-        keys.add("Stas");
+        keys.add("Web server");
+        keys.add("Hotmail");
     }
 }
