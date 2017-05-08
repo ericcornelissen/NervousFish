@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.nervousfish.nervousfish.events.SLReadyEvent;
@@ -30,6 +32,11 @@ import java.util.UUID;
 
 public class BluetoothConnectionService implements IBluetoothHandler {
 
+    // Message types sent from the BluetoothChatService Handler
+    public static final int MESSAGE_STATE_CHANGE = 1;
+    public static final int MESSAGE_READ = 2;
+    public static final int MESSAGE_DEVICE_NAME = 3;
+
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
@@ -44,12 +51,12 @@ public class BluetoothConnectionService implements IBluetoothHandler {
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
     private final BluetoothAdapter bluetoothAdapter;
-    private final Handler mHandler; // handler that gets info from Bluetooth service;
+    private final Handler handler; // handler that gets info from Bluetooth service;
     private AcceptThread secureAcceptThread;
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
     private int mState;
-    private final int mNewState; // temp final for pmd
+    private int mNewState;
 
 
     /**
@@ -59,7 +66,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private BluetoothConnectionService(final Handler handler, final IServiceLocatorCreator serviceLocatorCreator) {
-        mHandler = handler;
+        this.handler = handler;
         mState = STATE_NONE;
         mNewState = mState;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -76,6 +83,18 @@ public class BluetoothConnectionService implements IBluetoothHandler {
      */
     public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocatorCreator serviceLocatorCreator) {
         return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocatorCreator));
+    }
+
+    /**
+     * Update UI title according to the current state of the chat connection
+     */
+    private synchronized void updateUserInterfaceTitle() {
+        mState = getState();
+        Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
+        mNewState = mState;
+
+        // Give the new state to the Handler so the UI Activity can update
+        handler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
     }
 
     /**
@@ -103,7 +122,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
                 secureAcceptThread = new AcceptThread();
                 secureAcceptThread.start();
             }
-            // TODO: Update UI title
+            updateUserInterfaceTitle();
         }
     }
 
@@ -132,7 +151,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
             // Start the thread to connect with the given device
             connectThread = new ConnectThread(device);
             connectThread.start();
-            // TODO: Update UI title
+            updateUserInterfaceTitle();
         }
     }
 
@@ -169,9 +188,14 @@ public class BluetoothConnectionService implements IBluetoothHandler {
             connectedThread = new ConnectedThread(socket);
             connectedThread.start();
 
-            // TODO: Send the name of the connected device back to the UI Activity using the handler
+            // Send the name of the connected device back to the UI Activity
+            Message msg = handler.obtainMessage(MESSAGE_DEVICE_NAME);
+            Bundle bundle = new Bundle();
+            bundle.putString("device_name", device.getName());
+            msg.setData(bundle);
+            handler.sendMessage(msg);
 
-            // TODO: Update UI title
+            updateUserInterfaceTitle();
         }
     }
 
@@ -198,7 +222,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
             }
 
             mState = STATE_NONE;
-            // TODO: Update UI title
+            updateUserInterfaceTitle();
         }
     }
 
@@ -229,7 +253,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
         // TODO: Send a failure message back to the Activity using the handler
 
         mState = STATE_NONE;
-        // TODO: Update UI title
+        updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
         this.start();
@@ -242,7 +266,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
         // TODO: Send a failure message back to the Activity using the handler
 
         mState = STATE_NONE;
-        // TODO: Update UI title
+        updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
         this.start();
@@ -454,7 +478,8 @@ public class BluetoothConnectionService implements IBluetoothHandler {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
 
-                    // TODO: Send the obtained bytes to the UI Activity
+                    handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+                            .sendToTarget();
 
                 } catch (final IOException e) {
                     Log.e(TAG, "disconnected", e);
@@ -472,13 +497,11 @@ public class BluetoothConnectionService implements IBluetoothHandler {
         public void write(final byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-
-                // TODO: Share the sent message back to the UI Activity
-
             } catch (final IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
         }
+
 
         public void cancel() {
             try {

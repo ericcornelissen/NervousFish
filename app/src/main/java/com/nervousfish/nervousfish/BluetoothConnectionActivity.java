@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -17,9 +20,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Set;
 
 /**
@@ -35,6 +42,12 @@ import java.util.Set;
 // 6) Will be larger when implemented
 
 public class BluetoothConnectionActivity extends AppCompatActivity {
+
+    // Message types sent from the BluetoothChatService Handler
+    public static final int MESSAGE_STATE_CHANGE = 1;
+    public static final int MESSAGE_READ = 2;
+    public static final int MESSAGE_DEVICE_NAME = 3;
+
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
     //Request codes
@@ -51,6 +64,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     private ArrayAdapter<String> newDevicesArrayAdapter;
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
     private IServiceLocator serviceLocator;
+    private String connectedDeviceName = null; //string of the connected device name
 
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -328,5 +342,53 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    /**
+     * The Handler that gets information back from the BluetoothChatService
+     */
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothConnectionService.STATE_CONNECTED:
+                            //TODO: do iets met connected met evt device name
+                            break;
+                        case BluetoothConnectionService.STATE_CONNECTING:
+                            //TODO: do iets met connecting
+                            break;
+                        case BluetoothConnectionService.STATE_LISTEN:
+                        case BluetoothConnectionService.STATE_NONE:
+                            //TODO: do iets met not connected
+                            break;
+                    }
+                    break;
+                case MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    ByteArrayInputStream in = new ByteArrayInputStream(readBuf);
+                    ObjectInputStream is = null;
+                    Contact temp = null;
+                    try {
+                        is = new ObjectInputStream(in);
+                        temp = (Contact) is.readObject();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (temp != null) {
+                        //TODO: save the contact in the db
+                    }
+                    break;
+                case MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    connectedDeviceName = msg.getData().getString("device_name");
+                    //TODO: iets met de device name???
+                    break;
+            }
+        }
+    };
 
 }
