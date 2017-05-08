@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -23,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -147,6 +150,53 @@ public class GsonDatabaseAdapterTest {
         assertEquals(9000 + 1, 9001);
     }
 
+    @Test
+    public void testGetProfileEmpty() throws IOException {
+        List<Profile> actual = database.getProfiles();
+        assertEquals(new ArrayList<Profile>(), actual);
+    }
+
+    @Test
+    public void testAddProfile() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        database.addProfile(newProfile);
+
+        List<Profile> actual = database.getProfiles();
+        assertTrue(newProfile.equals(actual.get(0)));
+    }
+
+    @Test
+    public void testUpdateProfile() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        database.addProfile(newProfile);
+
+        Profile newProfileUpdate = new Profile("OtherName", pubKey, privKey);
+        database.updateProfile(newProfile, newProfileUpdate);
+        List<Profile> actual = database.getProfiles();
+
+        assertFalse(newProfile.equals(actual.get(0)));
+        assertTrue(newProfileUpdate.equals(actual.get(0)));
+        assertEquals(1, actual.size());
+    }
+
+    @Test
+    public void testDeleteProfile() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        database.addProfile(newProfile);
+
+        List<Profile> actual = database.getProfiles();
+        assertEquals(1, actual.size());
+        database.deleteProfile(newProfile);
+        actual = database.getProfiles();
+
+        assertEquals(0, actual.size());
+    }
 
     private void write(final String data, final String filePath) {
         try {
