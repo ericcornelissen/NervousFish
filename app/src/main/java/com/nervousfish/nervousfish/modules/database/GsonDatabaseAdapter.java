@@ -33,7 +33,9 @@ import org.greenrobot.eventbus.Subscribe;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * An adapter to the GSON database library
+ * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
+ * DatabaseHandler has a lot of methods by nature and refractoring it to multiple classes or single
+ * methods with more logic would make the class only less understandable.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
