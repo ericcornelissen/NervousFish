@@ -39,7 +39,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
-    private final static Type TYPE_PROFILE_INFORMATION = new TypeToken<ArrayList<Profile>>(){}.getType();
+    private final static Type TYPE_PROFILE_List = new TypeToken<ArrayList<Profile>>(){}.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
@@ -194,7 +194,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         final BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(profilesPath), UTF_8));
-        final List<Profile> profile = gsonParser.fromJson(reader, TYPE_PROFILE_INFORMATION);
+        final List<Profile> profile = gsonParser.fromJson(reader, TYPE_PROFILE_List);
         reader.close();
 
         return profile;
