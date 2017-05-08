@@ -35,14 +35,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * An adapter to the GSON database library
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
     private final static Type TYPE_ACCOUNT_INFORMATION = new TypeToken<ArrayList<Account>>(){}.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
-    private final GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-    private final Gson gsonParser = this.gsonBuilder.create();
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
     private IConstants constants; // Can't be final because it cannot be set in the constructor atm...
@@ -54,16 +52,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
-        final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
-        this.constants = serviceLocator.getConstants();
-
-        try {
-            this.initializeDatabase();
-        } catch (final IOException e) {
-            // TODO: Handle failure
-            e.printStackTrace();
-        }
-
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
     }
@@ -162,12 +150,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
         // Add the new contact and update the database
         contacts.add(newContact);
         final String contactsPath = this.constants.getDatabaseContactsPath();
         final BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(contactsPath), UTF_8));
-        this.gsonParser.toJson(contacts, writer);
+        gsonParser.toJson(contacts, writer);
         writer.close();
     }
 
@@ -197,9 +188,13 @@ public final class GsonDatabaseAdapter implements IDatabase {
     public List<Account> getAccounts() throws IOException {
         final String accountPath = this.constants.getDatabaseUserdataPath();
 
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
         final BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(accountPath), UTF_8));
-        final List<Account> account = this.gsonParser.fromJson(reader, TYPE_ACCOUNT_INFORMATION);
+        final List<Account> account = gsonParser.fromJson(reader, TYPE_ACCOUNT_INFORMATION);
         reader.close();
 
         return account;
@@ -216,10 +211,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final List<Account> accounts = this.getAccounts();
         accounts.add(account);
 
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
         // Update the database
         final BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(accountsPath), "UTF-8"));
-        this.gsonParser.toJson(accounts, writer);
+        gsonParser.toJson(accounts, writer);
         writer.close();
     }
 
@@ -238,11 +237,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
         // Update the database
         final String accountsPath = this.constants.getDatabaseUserdataPath();
         final BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(accountsPath), UTF_8));
-        this.gsonParser.toJson(accounts, writer);
+        gsonParser.toJson(accounts, writer);
         writer.close();
     }
 
@@ -261,12 +264,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
         // Add the new contact and update the database
         accounts.add(newAccount);
         final String accountsPath = this.constants.getDatabaseUserdataPath();
         final BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(accountsPath), UTF_8));
-        this.gsonParser.toJson(accounts, writer);
+        gsonParser.toJson(accounts, writer);
         writer.close();
     }
 
