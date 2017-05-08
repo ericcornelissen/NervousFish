@@ -2,7 +2,7 @@ package com.nervousfish.nervousfish.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.nervousfish.nervousfish.BluetoothConnectionService;
+import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;

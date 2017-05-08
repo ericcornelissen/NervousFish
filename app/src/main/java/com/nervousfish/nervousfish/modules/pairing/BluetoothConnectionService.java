@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -8,9 +8,9 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.nervousfish.nervousfish.events.SLReadyEvent;
-import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
+import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,13 +58,24 @@ public class BluetoothConnectionService implements IBluetoothHandler {
      * @param handler               A Handler to send messages back to the UI Activity
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
-    public BluetoothConnectionService(final Handler handler, final IServiceLocatorCreator serviceLocatorCreator) {
+    private BluetoothConnectionService(final Handler handler, final IServiceLocatorCreator serviceLocatorCreator) {
         mHandler = handler;
         mState = STATE_NONE;
         mNewState = mState;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    /**
+     * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an {@link IServiceLocatorCreator}
+     * can access the new module to create the new {@link IServiceLocator}.
+     *
+     * @param serviceLocatorCreator The service locator bridge that creates the new service locator
+     * @return A wrapper around a newly created instance of this class
+     */
+    public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocatorCreator serviceLocatorCreator) {
+        return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocatorCreator));
     }
 
     /**
