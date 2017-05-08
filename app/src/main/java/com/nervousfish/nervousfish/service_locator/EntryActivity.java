@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.MainActivity;
 
 /**
  * The main activity class that shows a list of all people with their public keys
@@ -23,7 +24,7 @@ public final class EntryActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance();
-        final Intent intent = new Intent(this, ContactActivity.class);
+        final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
     }
