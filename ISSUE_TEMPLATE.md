@@ -9,15 +9,15 @@
 The user story for the issue.
 
 ## What
-This issue adds
+This issue demands 
 [//]: # "Specify in more detail what this issue adds to the repository."
 
 ## Why
-This issue is need for the project because
+This issue is need for the project because 
 [//]: # "Specify in more detail why this issue is needed in the project."
 
 ## How
-This feature can be added by
+This feature can be added by 
 [//]: # "Specify in general terms how this feature can be added."
 
 ## Definition of done
