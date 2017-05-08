@@ -17,8 +17,8 @@
     <rule ref="rulesets/java/controversial.xml" >
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
-	<!-- Mostly for efficiency purposes multiple returns is useful -->
-	<exclude name="OnlyOneReturn" />
+        <!-- Multiple returns are allowed in some cases, but have to be used with caution -->
+        <exclude name="OnlyOneReturn" />
         <!-- Very useful in C++, but not in Java -->
         <exclude name="DataflowAnomalyAnalysis" />
         <!-- Many classes don't need an explicit empty constructor (like activities) -->
@@ -40,6 +40,8 @@
     <rule ref="rulesets/java/logging-java.xml">
         <!-- This rule wasn't working properly and given errors in every var call info -->
         <exclude name="GuardLogStatementJavaUtil" />
+        <!-- May be applicable once there is a propper logger -->
+        <exclude name="AvoidPrintStackTrace" />
     </rule>
     <rule ref="rulesets/java/naming.xml">
         <exclude name="AbstractNaming" />
