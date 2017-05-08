@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.database;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -14,12 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
  */
-final class KeyAdapter extends TypeAdapter<IKey> {
+final class GsonKeyAdapter extends TypeAdapter<IKey> {
+
+    private final static String KEY_TYPE_FIELD = "_type";
 
     /**
-     * Constructor for the {@code KeyAdapter} class.
+     * Constructor for the {@code GsonKeyAdapter} class.
      */
-    KeyAdapter() {
+    GsonKeyAdapter() {
         super();
     }
 
@@ -30,20 +33,20 @@ final class KeyAdapter extends TypeAdapter<IKey> {
     public void write(final JsonWriter writer, final IKey key) throws IOException {
         writer.beginObject();
         switch (key.getType()) {
-            case "RSA":
-                writer.name("type");
+            case ConstantKeywords.RSA_KEY:
+                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
                 writer.value("RSA");
 
                 final String keyValue = key.getKey();
                 final String[] keyValues = keyValue.split(" ");
-                writer.name("modules");
+                writer.name("modulus");
                 writer.value(keyValues[0]);
                 writer.name("exponent");
                 writer.value(keyValues[1]);
 
                 break;
             case "simple":
-                writer.name("type");
+                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
                 writer.value("simple");
 
                 writer.name("key");
@@ -71,9 +74,9 @@ final class KeyAdapter extends TypeAdapter<IKey> {
         }
         reader.endObject();
 
-        final String type = keyMap.get("type");
+        final String type = keyMap.get(GsonKeyAdapter.KEY_TYPE_FIELD);
         switch (type) {
-            case "RSA":
+            case ConstantKeywords.RSA_KEY:
                 return new RSAKey(keyMap.get("modulus"), keyMap.get("exponent"));
             case "simple":
                 return new SimpleKey(keyMap.get("key"));

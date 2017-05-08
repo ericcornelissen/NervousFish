@@ -1,13 +1,13 @@
 package com.nervousfish.nervousfish.data_objects;
 
 /**
- * Simple variant of {@link IKey}.
+ * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
  */
 public final class SimpleKey implements IKey {
 
     private final static String TYPE = "simple";
 
-    public final String key;
+    private final String key;
 
     /**
      * Constructor for a simple key.

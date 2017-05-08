@@ -1,14 +1,16 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
+
 /**
  * RSA variant of {@link IKey}.
  */
 public final class RSAKey implements IKey {
 
-    private final static String TYPE = "RSA";
+    private final static String TYPE = ConstantKeywords.RSA_KEY;
 
-    public final String exponent;
-    public final String modulus;
+    private final String exponent;
+    private final String modulus;
 
     /**
      * Constructor for a RSA key.
