@@ -1,6 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.Account;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.IModule;
 
@@ -45,33 +45,33 @@ public interface IDatabase extends IModule {
     List<Contact> getAllContacts() throws IOException;
 
     /**
-     * Get the Account list with user information.
+     * Get the Profile list with user information.
      *
-     * @return A {@link List} of {@link Account Accounts}.
+     * @return A {@link List} of {@link Profile Profiles}.
      */
-    List<Account> getAccounts() throws IOException;
+    List<Profile> getProfiles() throws IOException;
 
     /**
-     * Add a new account in the database.
+     * Add a new profile in the database.
      *
-     * @param account The {@link Account} to add to the database.
+     * @param profile The {@link Profile} to add to the database.
      */
-    void addAccount(final Account account) throws IOException;
+    void addProfile(final Profile profile) throws IOException;
 
     /**
-     * Delete an account from the database.
+     * Delete an profile from the database.
      *
-     * @param account The {@link Account} to remove from the database.
-     * @throws IllegalArgumentException When {@code account} is not in the database.
+     * @param profile The {@link Profile} to remove from the database.
+     * @throws IllegalArgumentException When {@code profile} is not in the database.
      */
-    void deleteAccount(final Account account) throws IllegalArgumentException, IOException;
+    void deleteProfile(final Profile profile) throws IllegalArgumentException, IOException;
 
     /**
-     * Update an existing account in the database.
+     * Update an existing profile in the database.
      *
-     * @param oldAccount The old {@link Account} to be updated.
-     * @param newAccount The new {@link Account} details.
-     * @throws IllegalArgumentException When {@code oldAccount} is not in the database.
+     * @param oldProfile The old {@link Profile} to be updated.
+     * @param newProfile The new {@link Profile} details.
+     * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
-    void updateAccount(final Account oldAccount, final Account newAccount) throws IllegalArgumentException, IOException;
+    void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException;
 }

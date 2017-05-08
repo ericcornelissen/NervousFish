@@ -2,7 +2,7 @@ package com.nervousfish.nervousfish.modules.database;
 
 import com.google.gson.Gson;
 
-import com.nervousfish.nervousfish.data_objects.Account;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -39,7 +39,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
-    private final static Type TYPE_ACCOUNT_INFORMATION = new TypeToken<ArrayList<Account>>(){}.getType();
+    private final static Type TYPE_PROFILE_INFORMATION = new TypeToken<ArrayList<Profile>>(){}.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
@@ -185,31 +185,31 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public List<Account> getAccounts() throws IOException {
-        final String accountPath = this.constants.getDatabaseUserdataPath();
+    public List<Profile> getProfiles() throws IOException {
+        final String profilesPath = this.constants.getDatabaseUserdataPath();
 
         final GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         final BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(accountPath), UTF_8));
-        final List<Account> account = gsonParser.fromJson(reader, TYPE_ACCOUNT_INFORMATION);
+                new InputStreamReader(new FileInputStream(profilesPath), UTF_8));
+        final List<Profile> profile = gsonParser.fromJson(reader, TYPE_PROFILE_INFORMATION);
         reader.close();
 
-        return account;
+        return profile;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addAccount(final Account account) throws IOException {
-        final String accountsPath = this.constants.getDatabaseUserdataPath();
+    public void addProfile(final Profile profile) throws IOException {
+        final String profilesPath = this.constants.getDatabaseUserdataPath();
 
-        // Get the list of accounts and add the new account
-        final List<Account> accounts = this.getAccounts();
-        accounts.add(account);
+        // Get the list of profiles and add the new profile
+        final List<Profile> profiles = this.getProfiles();
+        profiles.add(profile);
 
         final GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
@@ -217,8 +217,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         // Update the database
         final BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(accountsPath), "UTF-8"));
-        gsonParser.toJson(accounts, writer);
+                new OutputStreamWriter(new FileOutputStream(profilesPath), "UTF-8"));
+        gsonParser.toJson(profiles, writer);
         writer.close();
     }
 
@@ -226,14 +226,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void deleteAccount(final Account account) throws IllegalArgumentException, IOException {
+    public void deleteProfile(final Profile profile) throws IllegalArgumentException, IOException {
         // Get the list of contacts
-        final List<Account> accounts = this.getAccounts();
-        final int lengthBefore = accounts.size();
-        accounts.remove(account);
+        final List<Profile> profiles = this.getProfiles();
+        final int lengthBefore = profiles.size();
+        profiles.remove(profile);
 
         // Throw if the contact to remove is not found
-        if (accounts.size() == lengthBefore) {
+        if (profiles.size() == lengthBefore) {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
@@ -242,10 +242,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final Gson gsonParser = gsonBuilder.create();
 
         // Update the database
-        final String accountsPath = this.constants.getDatabaseUserdataPath();
+        final String profilesPath = this.constants.getDatabaseUserdataPath();
         final BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(accountsPath), UTF_8));
-        gsonParser.toJson(accounts, writer);
+                new OutputStreamWriter(new FileOutputStream(profilesPath), UTF_8));
+        gsonParser.toJson(profiles, writer);
         writer.close();
     }
 
@@ -253,14 +253,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void updateAccount(final Account oldAccount, final Account newAccount) throws IllegalArgumentException, IOException {
+    public void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException {
         // Get the list of contacts
-        final List<Account> accounts = this.getAccounts();
-        final int lengthBefore = accounts.size();
-        accounts.remove(oldAccount);
+        final List<Profile> profiles = this.getProfiles();
+        final int lengthBefore = profiles.size();
+        profiles.remove(oldProfile);
 
         // Throw if the contact to update is not found
-        if (accounts.size() == lengthBefore) {
+        if (profiles.size() == lengthBefore) {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
@@ -269,11 +269,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final Gson gsonParser = gsonBuilder.create();
 
         // Add the new contact and update the database
-        accounts.add(newAccount);
-        final String accountsPath = this.constants.getDatabaseUserdataPath();
+        profiles.add(newProfile);
+        final String profilesPath = this.constants.getDatabaseUserdataPath();
         final BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(accountsPath), UTF_8));
-        gsonParser.toJson(accounts, writer);
+                new OutputStreamWriter(new FileOutputStream(profilesPath), UTF_8));
+        gsonParser.toJson(profiles, writer);
         writer.close();
     }
 

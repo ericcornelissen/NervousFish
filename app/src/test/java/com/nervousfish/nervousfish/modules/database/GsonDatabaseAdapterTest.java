@@ -1,6 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.Account;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -151,49 +151,49 @@ public class GsonDatabaseAdapterTest {
     }
 
     @Test
-    public void testGetAccountEmpty() throws IOException {
-        List<Account> actual = database.getAccounts();
-        assertEquals(new ArrayList<Account>(), actual);
+    public void testGetProfileEmpty() throws IOException {
+        List<Profile> actual = database.getProfiles();
+        assertEquals(new ArrayList<Profile>(), actual);
     }
 
     @Test
-    public void testAddAccount() throws IOException {
+    public void testAddProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Account newAccount = new Account("CoolGuy", pubKey, privKey);
-        database.addAccount(newAccount);
+        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        database.addProfile(newProfile);
 
-        List<Account> actual = database.getAccounts();
-        assertTrue(newAccount.equals(actual.get(0)));
+        List<Profile> actual = database.getProfiles();
+        assertTrue(newProfile.equals(actual.get(0)));
     }
 
     @Test
-    public void testUpdateAccount() throws IOException {
+    public void testUpdateProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Account newAccount = new Account("CoolGuy", pubKey, privKey);
-        database.addAccount(newAccount);
+        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        database.addProfile(newProfile);
 
-        Account newAccountUpdate = new Account("OtherName", pubKey, privKey);
-        database.updateAccount(newAccount, newAccountUpdate);
-        List<Account> actual = database.getAccounts();
+        Profile newProfileUpdate = new Profile("OtherName", pubKey, privKey);
+        database.updateProfile(newProfile, newProfileUpdate);
+        List<Profile> actual = database.getProfiles();
 
-        assertFalse(newAccount.equals(actual.get(0)));
-        assertTrue(newAccountUpdate.equals(actual.get(0)));
+        assertFalse(newProfile.equals(actual.get(0)));
+        assertTrue(newProfileUpdate.equals(actual.get(0)));
         assertEquals(1, actual.size());
     }
 
     @Test
-    public void testDeleteAccount() throws IOException {
+    public void testDeleteProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Account newAccount = new Account("CoolGuy", pubKey, privKey);
-        database.addAccount(newAccount);
+        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        database.addProfile(newProfile);
 
-        List<Account> actual = database.getAccounts();
+        List<Profile> actual = database.getProfiles();
         assertEquals(1, actual.size());
-        database.deleteAccount(newAccount);
-        actual = database.getAccounts();
+        database.deleteProfile(newProfile);
+        actual = database.getProfiles();
 
         assertEquals(0, actual.size());
     }
