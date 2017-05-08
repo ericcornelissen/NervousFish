@@ -55,7 +55,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest"
     reports {
         csv.enabled false
         html.enabled true
+        html.destination "${buildDir}/reports/jacoco/test/html"
         xml.enabled true
+        xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     }
     classDirectories = fileTree(
             dir: './build/intermediates/classes/debug',
