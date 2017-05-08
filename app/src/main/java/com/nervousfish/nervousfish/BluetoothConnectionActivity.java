@@ -177,6 +177,16 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
 
     }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Don't forget to unregister the ACTION_FOUND receiver.
+        breakDown();
+    }
 
     /**
      * {@inheritDoc}
@@ -192,12 +202,12 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // Don't forget to unregister the ACTION_FOUND receiver.
-        breakDown();
+    public void onStop() {
+        super.onStop();
+        bluetoothConnectionService.stop();
     }
+
+
 
     /**
      * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
