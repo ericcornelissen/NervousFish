@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 
-import com.nervousfish.nervousfish.BluetoothConnectionService;
+import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -14,10 +14,6 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.internal.invocation.MockitoMethod;
-import org.mockito.internal.matchers.Any;
-import org.mockito.internal.matchers.NotNull;
 
 
 import java.io.IOException;

@@ -17,10 +17,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE;
+import java.util.Set;
 
 /**
  * Created by Kilian on 2/05/2017.
@@ -45,8 +45,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     private static final int DISCOVERABILITY_TIME = 300;
 
     private BluetoothAdapter bluetoothAdapter;
+    private BluetoothConnectionService bluetoothConnectionService;
+    private Set<BluetoothDevice> newDevices;
+    private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> newDevicesArrayAdapter;
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
+    private IServiceLocator serviceLocator;
+
 
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -56,6 +61,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                    newDevices.add(device);
                     newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
                 // When discovery is finished, change the Activity title
@@ -78,21 +84,29 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             = new AdapterView.OnItemClickListener() {
         public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
             // Cancel discovery because it's costly and we're about to connect
-            bluetoothAdapter.cancelDiscovery();
+            stopDiscovering();
 
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
             final String address = info.substring(info.length() - 17);
+            BluetoothDevice device = getDevice(address);
+            bluetoothConnectionService.connect(device);
+
 
             // Create the result Intent and include the MAC address
             final Intent intent = new Intent();
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
 
+
             // Set result and finish this Activity
             setResult(Activity.RESULT_OK, intent);
             finish();
+
         }
     };
+
+
+
 
     /**
      * {@inheritDoc}
@@ -112,15 +126,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-        // Sets up the bluetooth adapter & enable bluetooth
+        // SetUp bluetooth adapter
         setUp();
-
-
 
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         // TODO: replace all the resources in the code below (All the R.something.something references)
-        final ArrayAdapter<String> pairedDevicesArrayAdapter =
+        pairedDevicesArrayAdapter =
                 new ArrayAdapter<>(this, R.layout.content_main);
         newDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.content_main);
 
@@ -130,15 +142,20 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
             @Override
             public void onClick(final View v) {
-                queryPairedDevices();
+
                 discoverDevices();
             }
         });
+
+
 
         // Find and set up the ListView for paired devices
         final ListView pairedListView = (ListView) findViewById(R.id.toolbar);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
+
+        // Get the Paired Devices list
+        queryPairedDevices();
 
         // Find and set up the ListView for newly discovered devices
         final ListView newDevicesListView = (ListView) findViewById(R.id.toolbar);
@@ -151,7 +168,24 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(broadcastReceiver, filter);
 
+        // Get the serviceLocator.
+        final Intent intent = getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
+        // Get the BluetoothConnectionService.
+        this.bluetoothConnectionService = (BluetoothConnectionService) serviceLocator.getBluetoothHandler();
+
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        enableBluetooth();
+        bluetoothConnectionService.start();
     }
 
     /**
@@ -173,8 +207,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
             throw new UnsupportedOperationException();
-        } else {
-            enableBluetooth();
         }
     }
 
@@ -250,6 +282,24 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         startActivity(discoverableIntent);
     }
 
+    /**
+     * Gets the device corresponding to the address from either the paired or the new devices.
+     * @param address The MAC address corresponding to the device to be found
+     * @return The BLuetoothDevice corresponding to the mac address.
+     */
+    private BluetoothDevice getDevice(String address) {
+        for(BluetoothDevice device: pairedDevices) {
+            if(device.getAddress().equals(address)) {
+                return device;
+            }
+        }
+        for(BluetoothDevice device: newDevices) {
+            if(device.getAddress().equals(address)) {
+                return device;
+            }
+        }
+        return null;
+    }
 
     /**
      * {@inheritDoc}
@@ -259,6 +309,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_ENABLE_BLUETOOTH:
                 if (resultCode == RESULT_OK) {
+                    bluetoothConnectionService.start();
                     return;
                 }
                 break;

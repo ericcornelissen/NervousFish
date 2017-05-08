@@ -1,11 +1,14 @@
 package com.nervousfish.nervousfish.service_locator;
 
+import android.os.Handler;
+
 import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
+import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
@@ -29,7 +32,8 @@ final class ServiceLocatorCreator implements IServiceLocatorCreator {
                 EncryptorAdapter.newInstance(this).get(),
                 AndroidFileSystemAdapter.newInstance(this).get(),
                 Constants.newInstance(this).get(),
-                DummyBluetoothHandler.newInstance(this).get(),
+                //TODO: create handler for Bluetooth connection
+                BluetoothConnectionService.newInstance(new Handler(), this).get(),
                 DummyNFCHandler.newInstance(this).get(),
                 DummyQRHandler.newInstance(this).get()
         );
