@@ -411,7 +411,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
-        public ConnectedThread(final BluetoothSocket socket) {
+        ConnectedThread(final BluetoothSocket socket) {
             super();
 
             Log.d(TAG, "create ConnectedThread: " + "Secure");
