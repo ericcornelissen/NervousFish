@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
+apply plugin: 'cobertura'
 apply plugin: 'coveralls'
 apply from: '../config/quality.gradle'
 
@@ -44,31 +44,7 @@ android {
     }
 }
 
-jacoco {
-    toolVersion = "0.7.6.201602180812"
-    reportsDir = file("$buildDir/reports/jacoco")
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest") {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
-    reports {
-        csv.enabled false
-        html.enabled true
-        html.destination "${buildDir}/reports/jacoco/test/html"
-        xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-    }
-    classDirectories = fileTree(
-            dir: './build/intermediates/classes/debug',
-            excludes: ['**/R*.class',
-                       '**/*$InjectAdapter.class',
-                       '**/*$ModuleAdapter.class',
-                       '**/*$ViewInjector*.class'
-            ])
-    sourceDirectories = files(['src/main/java'])
-    executionData = files('build/jacoco/testDebugUnitTest.exec')
-}
+cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'

@@ -33,7 +33,7 @@ before_script:
 
 # Upload test report to coveralls
 after_success:
-  - ./gradlew jacocoTestReport coveralls
+  - ./gradlew cobertura coveralls
 
 # Manage caching
 before_cache:
