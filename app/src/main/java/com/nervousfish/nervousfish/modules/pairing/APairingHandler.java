@@ -31,33 +31,47 @@ abstract class APairingHandler {
     }
 
     /**
-     *
+     * Luxury method that calls writeContact() for each contact of the database.
      * @throws IOException When deserialization doesn't go well.
      */
     public void writeAllContacts() throws IOException {
         List<Contact> list = database.getAllContacts();
         for (Contact e: list) {
-            byte[] bytes = null;
-            ByteArrayOutputStream bos = null;
-            ObjectOutputStream oos = null;
-            try {
-                bos = new ByteArrayOutputStream();
-                oos = new ObjectOutputStream(bos);
-                oos.writeObject(e);
-                oos.flush();
-                bytes = bos.toByteArray();
-            } finally {
-                if (oos != null) {
-                    oos.close();
-                }
-                if (bos != null) {
-                    bos.close();
-                }
-            }
-            write(bytes);
+            writeContact(e);
         }
     }
 
+    /**
+     * Serializes a contact object and writes it, which is implemented in the specific subclass.
+     * @param contact contact to serialize
+     * @throws IOException When deserialization doesn't go well.
+     */
+    public void writeContact(Contact contact) throws IOException {
+        byte[] bytes = null;
+        ByteArrayOutputStream bos = null;
+        ObjectOutputStream oos = null;
+        try {
+            bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(contact);
+            oos.flush();
+            bytes = bos.toByteArray();
+        } finally {
+            if (oos != null) {
+                oos.close();
+            }
+            if (bos != null) {
+                bos.close();
+            }
+        }
+        write(bytes);
+    }
+
+    /**
+     * Deserializes a contact through a byte array and sends it to the database.
+     * @param bytes byte array representing a contact
+     * @return Whether or not the process finished successfully
+     */
     public boolean saveContact(final byte[] bytes){
         Contact contact = null;
         ByteArrayInputStream bis = null;
