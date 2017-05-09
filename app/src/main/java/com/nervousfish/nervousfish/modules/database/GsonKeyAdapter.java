@@ -31,9 +31,18 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      */
     @Override
     public void write(final JsonWriter writer, final IKey key) throws IOException {
+        writer.beginArray();
+
+        // First write the key type
+        final String keyType = key.getType();
+        writer.value(keyType);
+
+        // Then write the rest of the key
         writer.beginObject();
         key.writeJSON(writer);
         writer.endObject();
+
+        writer.endArray();
     }
 
     /**
@@ -41,25 +50,25 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      */
     @Override
     public IKey read(final JsonReader reader) throws IOException {
-        final Map<String, String> keyMap = new ConcurrentHashMap<>();
-
+        reader.beginArray();
+        final String type = reader.nextString();
         reader.beginObject();
-        while (reader.hasNext()) {
-            final String name = reader.nextName();
-            final String value = reader.nextString();
-            keyMap.put(name, value);
-        }
-        reader.endObject();
 
-        final String type = keyMap.get(GsonKeyAdapter.KEY_TYPE_FIELD);
+        IKey key;
         switch (type) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKey(keyMap.get("modulus"), keyMap.get("exponent"));
+                key = RSAKey.fromJSON(reader);
+                break;
             case "simple":
-                return new SimpleKey(keyMap.get("key"));
+                key = SimpleKey.fromJSON(reader);
+                break;
             default:
                 throw new IOException("Could not read key");
         }
+
+        reader.endObject();
+        reader.endArray();
+        return key;
     }
 
 }

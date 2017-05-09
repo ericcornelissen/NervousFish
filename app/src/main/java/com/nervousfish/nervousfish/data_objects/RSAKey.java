@@ -1,9 +1,12 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * RSA variant of {@link IKey}.
@@ -27,6 +30,28 @@ public final class RSAKey implements IKey {
     }
 
     /**
+     * Create a new RSAKey given a {@link JsonReader}.
+     *
+     * @param reader The {@link JsonReader} to read with.
+     * @return An {@link IKey} representing the JSON key.
+     * @throws IOException When the {@link JsonReader} throws an {@link IOException}.
+     */
+    static public IKey fromJSON(final JsonReader reader) throws IOException {
+        final Map<String, String> map = new ConcurrentHashMap<>();
+        reader.beginObject();
+        while (reader.hasNext()) {
+            final String name = reader.nextName();
+            final String value = reader.nextString();
+            map.put(name, value);
+        }
+        reader.endObject();
+
+        final String modulus = map.get("modules");
+        final String exponent = map.get("exponent");
+        return new RSAKey(modulus, exponent);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -47,12 +72,8 @@ public final class RSAKey implements IKey {
      */
     @Override
     public void writeJSON(final JsonWriter writer) throws IOException {
-        writer.name("_type");
-        writer.value("RSA");
-        writer.name("modulus");
-        writer.value(this.modulus);
-        writer.name("exponent");
-        writer.value(this.exponent);
+        writer.name("modulus").value(this.modulus);
+        writer.name("exponent").value(this.exponent);
     }
 
     /**

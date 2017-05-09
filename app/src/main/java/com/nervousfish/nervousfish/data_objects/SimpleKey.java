@@ -1,8 +1,11 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
@@ -20,6 +23,19 @@ public final class SimpleKey implements IKey {
      */
     public SimpleKey(final String key) {
         this.key = key;
+    }
+
+    /**
+     * Create a new RSAKey given a {@link JsonReader}.
+     *
+     * @param reader The {@link JsonReader} to read with.
+     * @return An {@link IKey} representing the JSON key.
+     * @throws IOException When the {@link JsonReader} throws an {@link IOException}.
+     */
+    static public IKey fromJSON(final JsonReader reader) throws IOException {
+        reader.nextName();
+        final String key = reader.nextString();
+        return new SimpleKey(key);
     }
 
     /**
@@ -43,10 +59,7 @@ public final class SimpleKey implements IKey {
      */
     @Override
     public void writeJSON(final JsonWriter writer) throws IOException {
-        writer.name("_type");
-        writer.value("simple");
-        writer.name("key");
-        writer.value(this.key);
+        writer.name("key").value(this.key);
     }
 
     /**
