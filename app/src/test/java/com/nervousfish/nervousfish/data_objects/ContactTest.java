@@ -67,7 +67,7 @@ public class ContactTest {
 
     @Test
     public void testHashCodeNotNull() {
-        Contact contact = new Contact("Stas", this.key);
+        Contact contact = new Contact("Kilian", this.key);
         assertNotNull(contact.hashCode());
     }
 
