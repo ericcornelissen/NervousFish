@@ -54,8 +54,8 @@ public class Profile {
 
         final Profile that = (Profile) o;
         return this.name.equals(that.name)
-                && this.publicKey.equals(that.publicKey)
-                && this.privateKey.equals(that.privateKey);
+            && this.publicKey.equals(that.publicKey)
+            && this.privateKey.equals(that.privateKey);
     }
 
     /**
