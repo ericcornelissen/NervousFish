@@ -12,10 +12,9 @@
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="8dp" />
+        android:layout_width="@dimen/contacts_list_width"
+        android:layout_height="@dimen/contacts_list_height"
+        android:layout_marginTop="@dimen/contacts_list_margin_top" />
 
 
 </merge>
