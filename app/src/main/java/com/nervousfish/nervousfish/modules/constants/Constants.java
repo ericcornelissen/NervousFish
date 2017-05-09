@@ -6,12 +6,14 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class implementing the main constants for the application.
  */
 public final class Constants implements IConstants {
-
+    private final Logger logger = LoggerFactory.getLogger("Constants");
     private final static String DB_USERDATA_PATH = "accountInformation.json";
     private final static String DB_CONTACTS_PATH = "contacts.json";
 
@@ -26,6 +28,7 @@ public final class Constants implements IConstants {
     private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+        logger.info("Initialized");
     }
 
     /**

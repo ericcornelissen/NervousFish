@@ -7,11 +7,16 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The main activity class that shows a list of all people with their public keys
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class EntryActivity extends Activity {
+    private final Logger logger = LoggerFactory.getLogger("EntryActivity");
+
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -20,6 +25,8 @@ public final class EntryActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        logger.info("EntryActivity entered");
 
         final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance();
 

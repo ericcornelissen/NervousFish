@@ -6,11 +6,14 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An adapter to the default Android file system
  */
 public final class AndroidFileSystemAdapter implements IFileSystem {
+    private final Logger logger = LoggerFactory.getLogger("AndroidFileSystemAdapter");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -22,6 +25,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     private AndroidFileSystemAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+        logger.info("Initialized");
     }
 
     /**

@@ -6,11 +6,14 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An handler doing nothing.
  */
 public final class DummyNFCHandler extends APairingHandler implements INFCHandler {
+    private final Logger logger = LoggerFactory.getLogger("DummyNFCHandler");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -23,6 +26,7 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+        logger.info("Initialized");
     }
 
     /**

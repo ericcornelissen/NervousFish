@@ -6,11 +6,14 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An handler doing nothing.
  */
 public final class DummyBluetoothHandler extends APairingHandler implements IBluetoothHandler {
+    private final Logger logger = LoggerFactory.getLogger("DummyBluetoothHandler");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -23,6 +26,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+        logger.info("Initialized");
     }
 
     /**

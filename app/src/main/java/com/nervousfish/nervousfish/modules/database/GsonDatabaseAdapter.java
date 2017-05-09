@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -39,7 +41,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
-
+    private final Logger logger = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>(){}.getType();
     private final static Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>(){}.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
@@ -56,6 +58,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+        logger.info("Initialized");
     }
 
     /**

@@ -14,6 +14,9 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,7 @@ import java.util.List;
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class MainActivity extends AppCompatActivity {
-
+    private final Logger logger = LoggerFactory.getLogger("MainActivity");
     private final List<String> contacts = new ArrayList<>();
     @SuppressWarnings("PMD.SingularField")
     private IServiceLocator serviceLocator;
@@ -36,6 +39,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        logger.info("MainActivity entered");
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -65,6 +69,7 @@ public final class MainActivity extends AppCompatActivity {
 
         //Retrieve the contacts from the database
         getContacts();
+        logger.info("Contacts retrieved from database");
 
         lv.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, contacts));
