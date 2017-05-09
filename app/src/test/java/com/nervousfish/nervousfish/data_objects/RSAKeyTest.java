@@ -49,6 +49,13 @@ public class RSAKeyTest {
     }
 
     @Test
+    public void testEqualsReturnsFalseForDifferentKeyTypes() {
+        IKey keyA = new RSAKey("foo", "bar");
+        IKey keyB = new SimpleKey("Hello world!");
+        assertFalse(keyA.equals(keyB));
+    }
+
+    @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
         IKey keyA = new RSAKey("foo", "bar");
         IKey keyB = new RSAKey("hello", "world");
