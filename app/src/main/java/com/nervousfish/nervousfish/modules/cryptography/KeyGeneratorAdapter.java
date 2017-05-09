@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
-    private final Logger logger = LoggerFactory.getLogger("Constants");
+    private final Logger logger = LoggerFactory.getLogger("KeyGeneratorAdapter");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
