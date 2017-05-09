@@ -15,8 +15,6 @@ import java.io.IOException;
  */
 final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
-    private final static String KEY_TYPE_FIELD = "_type";
-
     /**
      * Constructor for the {@code GsonKeyAdapter} class.
      */
@@ -47,12 +45,13 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidFinalLocalVariable") // final IKey key is actually useful here
     public IKey read(final JsonReader reader) throws IOException {
         reader.beginArray();
         final String type = reader.nextString();
         reader.beginObject();
 
-        IKey key;
+        final IKey key;
         switch (type) {
             case ConstantKeywords.RSA_KEY:
                 key = RSAKey.fromJSON(reader);
