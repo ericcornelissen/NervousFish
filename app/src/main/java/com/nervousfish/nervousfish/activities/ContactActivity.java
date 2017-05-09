@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * The ContactActivity shows the contacts information and his public keys.
  */
-@SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class ContactActivity extends AppCompatActivity {
 
     private final List<String> keys = new ArrayList<>();
