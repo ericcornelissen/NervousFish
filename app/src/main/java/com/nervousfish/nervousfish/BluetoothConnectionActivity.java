@@ -80,7 +80,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 }
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                setProgressBarIndeterminateVisibility(false);
                 setTitle("select_device");
                 if (newDevicesArrayAdapter.getCount() == 0) {
                     final String noDevices = "none_found";
@@ -133,8 +132,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, filter);
 
-        // Setup the window
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         // setContentView(R.layout.activity_device_list);
 
         // Set result CANCELED in case the user backs out
@@ -148,7 +145,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // TODO: replace all the resources in the code below (All the R.something.something references)
         pairedDevicesArrayAdapter =
                 new ArrayAdapter<>(this, R.layout.content_main);
-        newDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.content_main);
+        newDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.content_main);
 
         // Initializes the button for discovering devices
         final Button discoveryButton = (Button) findViewById(R.id.fab);
@@ -275,8 +272,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      */
     public void discoverDevices() {
 
-        // Indicate scanning in the title
-        setProgressBarIndeterminateVisibility(true);
         setTitle("scanning");
 
         // Turn on sub-title for new devices
@@ -368,18 +363,17 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     ByteArrayInputStream in = new ByteArrayInputStream(readBuf);
-                    ObjectInputStream is = null;
+                    ObjectInputStream is;
                     Contact temp = null;
                     try {
                         is = new ObjectInputStream(in);
                         temp = (Contact) is.readObject();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
+                    } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                     if (temp != null) {
-                        //TODO: save the contact in the db
+                        // TODO: save the contact in the db
+                        // see APairingHandler saveContact(bytes)
                     }
                     break;
                 case MESSAGE_DEVICE_NAME:

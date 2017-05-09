@@ -20,9 +20,14 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private DummyBluetoothHandler(final IServiceLocatorCreator serviceLocatorCreator) {
-        super();
+        super(serviceLocatorCreator);
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    @Override
+    public void write(byte[] buffer) {
+
     }
 
     /**
