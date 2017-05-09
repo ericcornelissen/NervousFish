@@ -12,8 +12,8 @@ import org.greenrobot.eventbus.Subscribe;
  */
 public final class Constants implements IConstants {
 
-    private final static String DB_USERDATA_PATH = "accountInformation.json";
-    private final static String DB_CONTACTS_PATH = "contacts.json";
+    private final static String DB_USERDATA_PATH = "/accountInformation.json";
+    private final static String DB_CONTACTS_PATH = "/contacts.json";
     private String fileDir;
 
     @SuppressWarnings("PMD.SingularField")
