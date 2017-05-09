@@ -21,4 +21,18 @@ public interface IConstants extends IModule {
      */
     String getDatabaseUserdataPath();
 
+    /**
+     * Get the path to the file directory of the database.
+     *
+     * @return A {@link String} of the path.
+     */
+    String getFileDir();
+
+    /**
+     * Get the path to the file directory.
+     *
+     * @param FileDir the path to the file directory
+     */
+    void setFileDir(String FileDir);
+
 }

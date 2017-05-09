@@ -40,8 +40,9 @@ final class ServiceLocatorCreator implements IServiceLocatorCreator {
      *
      * @return An interface containing the methods that may be used on the newly constructed {@link IServiceLocator}
      */
-    static IServiceLocator createInstance() {
+    static IServiceLocator createInstance(final String filePath) {
         final IServiceLocator tmp = new ServiceLocatorCreator().serviceLocator;
+        tmp.getConstants().setFileDir(filePath);
         EventBus.getDefault().post(new SLReadyEvent());
         return tmp;
     }
