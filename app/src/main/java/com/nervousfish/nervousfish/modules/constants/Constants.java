@@ -8,19 +8,33 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.greenrobot.eventbus.Subscribe;
 
 /**
- * Contains the main constants
+ * Class implementing the main constants for the application.
  */
 public final class Constants implements IConstants {
+
+    private final static String DB_USERDATA_PATH = "accountInformation.json";
+    private final static String DB_CONTACTS_PATH = "contacts.json";
+
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
     /**
      * Prevents construction from outside the class.
+     *
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Subscribe
+    @Override
+    public void onSLReadyEvent(final SLReadyEvent event) {
+        // Here you can get modules from the service locator
     }
 
     /**
@@ -37,9 +51,17 @@ public final class Constants implements IConstants {
     /**
      * {@inheritDoc}
      */
-    @Subscribe
     @Override
-    public void onSLReadyEvent(final SLReadyEvent event) {
-        // Here you can get modules from the service locator
+    public String getDatabaseContactsPath() {
+        return Constants.DB_CONTACTS_PATH;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDatabaseUserdataPath() {
+        return Constants.DB_USERDATA_PATH;
+    }
+
 }
