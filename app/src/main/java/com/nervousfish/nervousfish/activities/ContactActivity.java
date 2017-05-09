@@ -20,6 +20,7 @@ import java.util.List;
 public final class ContactActivity extends AppCompatActivity {
 
     private final List<String> keys = new ArrayList<>();
+    //In the future we will use this field more than once
     @SuppressWarnings("PMD.SingularField")
     private IServiceLocator serviceLocator;
 

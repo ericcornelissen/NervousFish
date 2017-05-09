@@ -30,20 +30,20 @@
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="33dp">
+                android:padding="@dimen/contact_picture_name_padding">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="@dimen/contact_picture_width"
+                    android:layout_height="@dimen/contact_picture_height"
                     android:src="@drawable/personplaceholder" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/contact_name_margin"
                     android:text="@string/contact_title"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/contact_name_size"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -65,9 +65,8 @@
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="8dp" />
+                android:layout_height="@dimen/contact_keys_list_height"
+                android:layout_marginTop="@dimen/contact_keys_list_margin_top" />
 
         </LinearLayout>
 
