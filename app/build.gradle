@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'cobertura'
-apply plugin: 'coveralls'
+apply plugin: 'com.github.kt3k.coveralls'
 apply from: '../config/quality.gradle'
 
 android {
