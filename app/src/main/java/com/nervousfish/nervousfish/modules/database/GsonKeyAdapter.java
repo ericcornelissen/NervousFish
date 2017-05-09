@@ -32,30 +32,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
     @Override
     public void write(final JsonWriter writer, final IKey key) throws IOException {
         writer.beginObject();
-        switch (key.getType()) {
-            case ConstantKeywords.RSA_KEY:
-                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
-                writer.value("RSA");
-
-                final String keyValue = key.getKey();
-                final String[] keyValues = keyValue.split(" ");
-                writer.name("modulus");
-                writer.value(keyValues[0]);
-                writer.name("exponent");
-                writer.value(keyValues[1]);
-
-                break;
-            case "simple":
-                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
-                writer.value("simple");
-
-                writer.name("key");
-                writer.value(key.getKey());
-
-                break;
-            default:
-                throw new IOException("Could not write key");
-        }
+        key.writeJSON(writer);
         writer.endObject();
     }
 

@@ -1,5 +1,9 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
+
 /**
  * The interface for the standard Java representation of a (public/private) key.
  */
@@ -15,8 +19,13 @@ public interface IKey {
     /**
      * Get a string representation of the key type.
      *
-     * @return The type.
+     * @return The key type.
      */
     String getType();
+
+    /**
+     * Write the key to a {@link JsonWriter}.
+     */
+    void writeJSON(final JsonWriter writer) throws IOException;
 
 }

@@ -1,5 +1,9 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
+
 /**
  * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
  */
@@ -32,6 +36,17 @@ public final class SimpleKey implements IKey {
     @Override
     public String getType() {
         return SimpleKey.TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeJSON(final JsonWriter writer) throws IOException {
+        writer.name("_type");
+        writer.value("simple");
+        writer.name("key");
+        writer.value(this.key);
     }
 
     /**

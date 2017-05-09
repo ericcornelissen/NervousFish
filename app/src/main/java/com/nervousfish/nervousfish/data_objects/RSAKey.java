@@ -1,6 +1,9 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
+
+import java.io.IOException;
 
 /**
  * RSA variant of {@link IKey}.
@@ -37,6 +40,19 @@ public final class RSAKey implements IKey {
     @Override
     public String getType() {
         return RSAKey.TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeJSON(final JsonWriter writer) throws IOException {
+        writer.name("_type");
+        writer.value("RSA");
+        writer.name("modulus");
+        writer.value(this.modulus);
+        writer.name("exponent");
+        writer.value(this.exponent);
     }
 
     /**
