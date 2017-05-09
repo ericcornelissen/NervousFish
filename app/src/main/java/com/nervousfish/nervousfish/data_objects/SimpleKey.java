@@ -26,7 +26,7 @@ public final class SimpleKey implements IKey {
     }
 
     /**
-     * Create a new RSAKey given a {@link JsonReader}.
+     * Create a new SimpleKey given a {@link JsonReader}.
      *
      * @param reader The {@link JsonReader} to read with.
      * @return An {@link IKey} representing the JSON key.
@@ -58,7 +58,7 @@ public final class SimpleKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public void writeJSON(final JsonWriter writer) throws IOException {
+    public void toJSON(final JsonWriter writer) throws IOException {
         writer.name("key").value(this.key);
     }
 

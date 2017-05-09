@@ -9,8 +9,6 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
@@ -39,7 +37,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
         // Then write the rest of the key
         writer.beginObject();
-        key.writeJSON(writer);
+        key.toJSON(writer);
         writer.endObject();
 
         writer.endArray();

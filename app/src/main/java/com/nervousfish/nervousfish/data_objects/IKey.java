@@ -27,6 +27,6 @@ public interface IKey {
     /**
      * Write the key to a {@link JsonWriter}.
      */
-    void writeJSON(final JsonWriter writer) throws IOException;
+    void toJSON(final JsonWriter writer) throws IOException;
 
 }

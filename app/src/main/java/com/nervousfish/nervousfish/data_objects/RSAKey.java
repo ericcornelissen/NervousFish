@@ -71,7 +71,7 @@ public final class RSAKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public void writeJSON(final JsonWriter writer) throws IOException {
+    public void toJSON(final JsonWriter writer) throws IOException {
         writer.name("modulus").value(this.modulus);
         writer.name("exponent").value(this.exponent);
     }
