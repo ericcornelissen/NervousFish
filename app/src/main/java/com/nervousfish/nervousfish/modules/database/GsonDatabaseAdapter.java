@@ -34,10 +34,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
 
-    private final static Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>() {
-    }.getType();
-    private final static Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>() {
-    }.getType();
+    private final static Type TYPE_CONTACT_LIST =
+            new TypeToken<ArrayList<Contact>>() {
+            }.getType();
+    private final static Type TYPE_PROFILE_LIST =
+            new TypeToken<ArrayList<Profile>>() {
+            }.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
     private final String contactsPath;
     private final String profilesPath;
