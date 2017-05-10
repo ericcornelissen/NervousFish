@@ -1,6 +1,9 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A Java object representation (POJO) of a contact.
@@ -8,17 +11,28 @@ import java.io.Serializable;
 public final class Contact implements Serializable {
 
     private final String name;
-    private final IKey publicKey;
+    private final List<IKey> keys = new ArrayList<IKey>();
 
     /**
-     * Simple constructor for the Contact POJO.
+     * Constructor for the {@link Contact} POJO for a single {@link IKey}.
      *
-     * @param name The name of the contact
-     * @param publicKey The public key of the contact
+     * @param name The name of the {@link Contact}
+     * @param key The {@link IKey} to initialize the {@link Contact} with
      */
-    public Contact(final String name, final IKey publicKey) {
+    public Contact(final String name, final IKey key) {
         this.name = name;
-        this.publicKey = publicKey;
+        this.keys.add(key);
+    }
+
+    /**
+     * Constructor for the {@link Contact} POJO for multiple {@link IKey}s.
+     *
+     * @param name The name of the {@link Contact}
+     * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
+     */
+    public Contact(final String name, final Collection<IKey> keys) {
+        this.name = name;
+        this.keys.addAll(keys);
     }
 
     /**
@@ -31,8 +45,8 @@ public final class Contact implements Serializable {
     /**
      * Get the public key of the {@link Contact}.
      */
-    public IKey getPublicKey() {
-        return this.publicKey;
+    public List<IKey> getKeys() {
+        return this.keys;
     }
 
     /**
@@ -46,7 +60,7 @@ public final class Contact implements Serializable {
 
         final Contact that = (Contact) o;
         return this.name.equals(that.name)
-            && this.publicKey.equals(that.publicKey);
+            && this.keys.equals(that.keys);
     }
 
     /**
@@ -54,7 +68,7 @@ public final class Contact implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.publicKey.hashCode();
+        return this.name.hashCode() + this.keys.hashCode();
     }
 
 }
