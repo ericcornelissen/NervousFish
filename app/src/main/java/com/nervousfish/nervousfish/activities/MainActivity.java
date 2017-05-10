@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,10 +15,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +32,7 @@ import java.util.List;
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class MainActivity extends AppCompatActivity {
 
-    private final List<Contact> contacts = new ArrayList<>();
+    private IServiceLocator serviceLocator;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -59,22 +64,43 @@ public final class MainActivity extends AppCompatActivity {
 
         final ListView lv = (ListView) findViewById(R.id.listView);
 
-        //Retrieve the contacts from the database
-        getContacts();
+        final Intent intent = getIntent();
+        serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        lv.setAdapter(new ContactListAdapter(this, contacts));
+        fillDatabaseWithDemoData();
+
+        try {
+            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     /**
-     * Temporary method for filling the listview with some friends.
+     * Temporarily fill the database with demo data for development.
      */
-    private void getContacts() {
-        contacts.add(new Contact("Eric", new SimpleKey("4y5uh4334j43j034934j634096j3409j63409")));
-        contacts.add(new Contact("Joost", new SimpleKey("vmiadofjaei3jrioejsOJi9oidnicjPShljKDHf")));
-        contacts.add(new Contact("Stas", new SimpleKey("soai4ha4iluhak4djnfuiqnu3na;kjhdf9jdo;i")));
-        contacts.add(new Contact("Kilian", new SimpleKey("u09srtjs0r9gjs09rjg09egrjeag90rjeg90a")));
-        contacts.add(new Contact("Cornel", new SimpleKey("5hu94h4ju64j6234h6l2h46ljk2h34jkl624")));
+    private void fillDatabaseWithDemoData() {
+        IDatabase database = serviceLocator.getDatabase();
+        try {
+            Contact c = new Contact("Eric", new SimpleKey("jdfs09jdfs09jfs0djfds9jfsd0"));
+            database.deleteContact(c);
+            database.addContact(c);
+            c = new Contact("Stas", new SimpleKey("4ji395j495i34j5934ij534i"));
+            database.deleteContact(c);
+            database.addContact(c);
+            c = new Contact("Joost", new SimpleKey("dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+            database.deleteContact(c);
+            database.addContact(c);
+            c = new Contact("Kilian", new SimpleKey("sdjnefiniwfnfejewjnwnkenfk32"));
+            database.deleteContact(c);
+            database.addContact(c);
+            c = new Contact("Cornel", new SimpleKey("nr23uinr3uin2o3uin23oi4un234ijn"));
+            database.deleteContact(c);
+            database.addContact(c);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
