@@ -47,6 +47,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
+    private static final int MESSAGE_DUPLICATE_NAME = 3;
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
@@ -374,6 +375,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                         // see APairingHandler saveContact(bytes)
                     }
                     break;
+                case MESSAGE_DUPLICATE_NAME:
+                    // TODO: show an appropriate error
             }
         }
     };

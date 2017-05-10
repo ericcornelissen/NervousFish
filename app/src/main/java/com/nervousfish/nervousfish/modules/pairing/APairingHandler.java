@@ -34,7 +34,7 @@ abstract class APairingHandler {
      * Luxury method that calls writeContact() for each contact of the database.
      * @throws IOException When deserialization doesn't go well.
      */
-    public void writeAllContacts() throws IOException {
+    void writeAllContacts() throws IOException {
         List<Contact> list = database.getAllContacts();
         for (Contact e: list) {
             writeContact(e);
@@ -46,7 +46,7 @@ abstract class APairingHandler {
      * @param contact contact to serialize
      * @throws IOException When deserialization doesn't go well.
      */
-    public void writeContact(Contact contact) throws IOException {
+    void writeContact(Contact contact) throws IOException {
         byte[] bytes = null;
         ByteArrayOutputStream bos = null;
         ObjectOutputStream oos = null;
@@ -70,10 +70,10 @@ abstract class APairingHandler {
     /**
      * Checks if a name of a given contact exists in the database.
      * @param contact A contact object
-     * @return whether a contact with the same exists in the database
+     * @return true when a contact with the same exists in the database
      * @throws IOException When database fails to respond
      */
-    public boolean checkExists(Contact contact) throws IOException {
+    boolean checkExists(Contact contact) throws IOException {
         String name = contact.getName();
         List<Contact> list = database.getAllContacts();
         for (Contact e: list) {
@@ -90,7 +90,7 @@ abstract class APairingHandler {
      * @param bytes byte array representing a contact
      * @return Whether or not the process finished successfully
      */
-    public boolean saveContact(final byte[] bytes){
+    boolean saveContact(final byte[] bytes){
         Contact contact = null;
         ByteArrayInputStream bis = null;
         ObjectInputStream ois = null;

@@ -35,6 +35,7 @@ public class BluetoothConnectionService extends APairingHandler implements IBlue
     // Message types sent from the BluetoothChatService Handler
     private static final int MESSAGE_STATE_CHANGE = 1;
     private static final int MESSAGE_READ = 2;
+    private static final int MESSAGE_DUPLICATE_NAME = 3;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -238,7 +239,8 @@ public class BluetoothConnectionService extends APairingHandler implements IBlue
 
     @Override
     void showWarning() {
-
+        handler.obtainMessage(MESSAGE_DUPLICATE_NAME)
+                .sendToTarget();
     }
 
     /**
