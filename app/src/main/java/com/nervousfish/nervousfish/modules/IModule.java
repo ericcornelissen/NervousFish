@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.modules;
 
-import com.nervousfish.nervousfish.events.SLReadyEvent;
-
 import java.io.Serializable;
 
 /**
@@ -9,9 +7,4 @@ import java.io.Serializable;
  */
 
 public interface IModule extends Serializable {
-    /**
-     * Called when the service locator is ready to be used
-     * @param event Indicates that the {@link SLReadyEvent} happened
-     */
-    void onSLReadyEvent(final SLReadyEvent event);
 }
