@@ -11,8 +11,8 @@ public final class KeyPair {
     /**
      * The constructor for the {@link KeyPair}.
      *
-     * @param publicKey The public key.
-     * @param privateKey The private key.
+     * @param publicKey  The publicKey of the KeyPair.
+     * @param privateKey The privateKey of the KeyPair.
      */
     public KeyPair(final IKey publicKey, final IKey privateKey) {
         this.publicKey = publicKey;
@@ -48,7 +48,7 @@ public final class KeyPair {
 
         final KeyPair that = (KeyPair) o;
         return this.publicKey.equals(that.publicKey)
-            && this.privateKey.equals(that.privateKey);
+                && this.privateKey.equals(that.privateKey);
     }
 
     /**
