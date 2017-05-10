@@ -27,8 +27,8 @@ public final class EntryActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         logger.info("EntryActivity entered");
-
-        final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance();
+        final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance(
+                getFilesDir().getPath());
 
         final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);

@@ -14,8 +14,9 @@ import org.slf4j.LoggerFactory;
  */
 public final class Constants implements IConstants {
     private final Logger logger = LoggerFactory.getLogger("Constants");
-    private final static String DB_USERDATA_PATH = "accountInformation.json";
-    private final static String DB_CONTACTS_PATH = "contacts.json";
+    private final static String DB_USERDATA_PATH = "/accountInformation.json";
+    private final static String DB_CONTACTS_PATH = "/contacts.json";
+    private String fileDir;
 
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
@@ -56,7 +57,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseContactsPath() {
-        return Constants.DB_CONTACTS_PATH;
+        return getFileDir() + Constants.DB_CONTACTS_PATH;
     }
 
     /**
@@ -64,7 +65,23 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseUserdataPath() {
-        return Constants.DB_USERDATA_PATH;
+        return getFileDir() + Constants.DB_USERDATA_PATH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFileDir() {
+        return this.fileDir;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFileDir(final String FileDir) {
+        this.fileDir = FileDir;
     }
 
 }
