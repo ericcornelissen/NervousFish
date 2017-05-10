@@ -25,4 +25,11 @@ public interface IServiceLocator extends Serializable {
     INFCHandler getNFCHandler();
     IQRHandler getQRHandler();
 
+    /**
+     * Registers the class specified to the EventBus
+     *
+     * @param object The Object that should be registed to the EventBus
+     */
+    void registerToEventBus(final Object object);
+
 }
