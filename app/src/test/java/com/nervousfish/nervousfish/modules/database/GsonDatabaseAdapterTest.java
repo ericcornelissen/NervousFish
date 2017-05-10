@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -160,7 +161,8 @@ public class GsonDatabaseAdapterTest {
     public void testAddProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
         List<Profile> actual = database.getProfiles();
@@ -171,10 +173,11 @@ public class GsonDatabaseAdapterTest {
     public void testUpdateProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
-        Profile newProfileUpdate = new Profile("OtherName", pubKey, privKey);
+        Profile newProfileUpdate = new Profile("OtherName", keyPair);
         database.updateProfile(newProfile, newProfileUpdate);
         List<Profile> actual = database.getProfiles();
 
@@ -187,7 +190,8 @@ public class GsonDatabaseAdapterTest {
     public void testDeleteProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
         List<Profile> actual = database.getProfiles();
