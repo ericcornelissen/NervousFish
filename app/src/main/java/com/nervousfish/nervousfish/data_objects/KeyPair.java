@@ -22,7 +22,8 @@ public final class KeyPair {
 
     /**
      * Returns the public key of this KeyPair.
-     * @return the public key as IKey
+     *
+     * @return the public key as IKey.
      */
     public IKey getPublicKey() {
         return this.publicKey;
@@ -30,9 +31,33 @@ public final class KeyPair {
 
     /**
      * Returns the private key of this KeyPair.
-     * @return the private key as IKey
+     *
+     * @return the private key as IKey.
      */
     public IKey getPrivateKey() {
         return this.privateKey;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        final KeyPair that = (KeyPair) o;
+        return this.publicKey.equals(that.publicKey)
+            && this.privateKey.equals(that.privateKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.publicKey.hashCode() + this.privateKey.hashCode();
+    }
+
 }
