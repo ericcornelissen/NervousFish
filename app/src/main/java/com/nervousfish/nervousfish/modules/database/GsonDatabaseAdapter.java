@@ -39,11 +39,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final static Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>() {
     }.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
-    @SuppressWarnings("PMD.SingularField")
     private final IConstants constants;
     private final String contactsPath;
     private final String profilesPath;
-
 
     /**
      * Prevents construction from outside the class.
@@ -284,11 +282,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * if the userdata section of the database already exists.
      */
     private void initializeUserdata() throws IOException {
-        final String userdataPath = constants.getDatabaseUserdataPath();
-        final File file = new File(userdataPath);
+        final File file = new File(profilesPath);
         if (!file.exists()) {
             final Writer writer = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(userdataPath), UTF_8));
+                    new OutputStreamWriter(new FileOutputStream(profilesPath), UTF_8));
             writer.write("[]");
             writer.close();
         }
