@@ -120,6 +120,12 @@ final class ServiceLocator implements IServiceLocator {
         EventBus.getDefault().register(object);
     }
 
+    /**
+     * Checks if the module is initialized and throws an error otherwise.
+     *
+     * @param module     The module to check
+     * @param moduleName The name of the module
+     */
     private void checkModule(final IModule module, final String moduleName) {
         if (module == null) {
             // TODO: log this when the logging branch is merged
@@ -133,6 +139,7 @@ final class ServiceLocator implements IServiceLocator {
     private class ModuleNotFoundException extends RuntimeException {
         /**
          * Constructs a new exception to make clear that a module was requested before it was initialized.
+         *
          * @param message A message describing in more detail what happened
          */
         ModuleNotFoundException(final String message) {
