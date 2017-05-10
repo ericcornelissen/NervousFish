@@ -49,8 +49,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
         final IConstants constants = serviceLocator.getConstants();
 
