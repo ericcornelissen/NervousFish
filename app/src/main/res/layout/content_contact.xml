@@ -38,6 +38,7 @@
                     android:src="@drawable/personplaceholder" />
 
                 <TextView
+                    android:id="@+id/contact_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/contact_name_margin"

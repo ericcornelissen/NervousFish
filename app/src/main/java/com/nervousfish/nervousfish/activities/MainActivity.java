@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
-        intent.putExtra("contact", this.contacts.get(index));
+        intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
 
