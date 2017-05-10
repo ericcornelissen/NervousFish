@@ -67,6 +67,18 @@ abstract class APairingHandler {
         write(bytes);
     }
 
+    public boolean checkExists(Contact contact) throws IOException {
+        String name = contact.getName();
+        List<Contact> list = database.getAllContacts();
+        for (Contact e: list) {
+            if (e.getName().equals(name)) {
+                showWarning();
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Deserializes a contact through a byte array and sends it to the database.
      * @param bytes byte array representing a contact
@@ -112,9 +124,14 @@ abstract class APairingHandler {
     }
 
     /**
-     * Write to the connected Device via outputstream.
+     * Abstract method in order to write to the connected Device via outputstream.
      *
      * @param buffer The bytes to write
      */
-    public abstract void write(final byte[] buffer);
+    abstract void write(final byte[] buffer);
+
+    /**
+     * Abstract method that handles warnings/errors and shows them to the user.
+     */
+    abstract void showWarning();
 }

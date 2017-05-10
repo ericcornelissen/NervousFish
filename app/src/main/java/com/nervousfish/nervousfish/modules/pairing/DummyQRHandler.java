@@ -20,9 +20,19 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private DummyQRHandler(final IServiceLocatorCreator serviceLocatorCreator) {
-        super();
+        super(serviceLocatorCreator);
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    @Override
+    void write(byte[] buffer) {
+
+    }
+
+    @Override
+    void showWarning() {
+
     }
 
     /**

@@ -20,9 +20,19 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private DummyNFCHandler(final IServiceLocatorCreator serviceLocatorCreator) {
-        super();
+        super(serviceLocatorCreator);
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
+    }
+
+    @Override
+    void write(byte[] buffer) {
+
+    }
+
+    @Override
+    void showWarning() {
+
     }
 
     /**
