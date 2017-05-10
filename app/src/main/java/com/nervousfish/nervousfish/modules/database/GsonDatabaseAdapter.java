@@ -79,8 +79,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final IServiceLocator serviceLocator = serviceLocatorCreator.getServiceLocator();
         final IConstants constants = serviceLocator.getConstants();
 
-        contactsPath = constants.getFileDir() + constants.getDatabaseContactsPath();
-        profilesPath = constants.getFileDir() + constants.getDatabaseUserdataPath();
+        contactsPath = constants.getDatabaseContactsPath();
+        profilesPath = constants.getDatabaseUserdataPath();
 
         try {
             this.initializeDatabase();

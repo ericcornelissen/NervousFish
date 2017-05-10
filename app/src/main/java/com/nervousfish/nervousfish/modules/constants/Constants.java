@@ -54,7 +54,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseContactsPath() {
-        return Constants.DB_CONTACTS_PATH;
+        return getFileDir() + Constants.DB_CONTACTS_PATH;
     }
 
     /**
@@ -62,7 +62,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseUserdataPath() {
-        return Constants.DB_USERDATA_PATH;
+        return getFileDir() + Constants.DB_USERDATA_PATH;
     }
 
     /**
