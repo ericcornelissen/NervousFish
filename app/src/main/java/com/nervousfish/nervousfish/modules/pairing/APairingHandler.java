@@ -67,6 +67,12 @@ abstract class APairingHandler {
         write(bytes);
     }
 
+    /**
+     * Checks if a name of a given contact exists in the database.
+     * @param contact A contact object
+     * @return whether a contact with the same exists in the database
+     * @throws IOException When database fails to respond
+     */
     public boolean checkExists(Contact contact) throws IOException {
         String name = contact.getName();
         List<Contact> list = database.getAllContacts();

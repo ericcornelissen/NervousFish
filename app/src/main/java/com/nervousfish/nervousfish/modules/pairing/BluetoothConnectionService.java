@@ -30,12 +30,11 @@ import java.util.UUID;
 // 4) Suggested use by Android Bluetooth Manual
 // 5) explained where used
 
-public class BluetoothConnectionService implements IBluetoothHandler {
+public class BluetoothConnectionService extends APairingHandler implements IBluetoothHandler {
 
     // Message types sent from the BluetoothChatService Handler
-    public static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_READ = 2;
-    public static final int MESSAGE_DEVICE_NAME = 3;
+    private static final int MESSAGE_STATE_CHANGE = 1;
+    private static final int MESSAGE_READ = 2;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -66,6 +65,7 @@ public class BluetoothConnectionService implements IBluetoothHandler {
      * @param serviceLocatorCreator The object responsible for creating the service locator
      */
     private BluetoothConnectionService(final Handler handler, final IServiceLocatorCreator serviceLocatorCreator) {
+        super(serviceLocatorCreator);
         this.handler = handler;
         mState = STATE_NONE;
         mNewState = mState;
@@ -98,9 +98,9 @@ public class BluetoothConnectionService implements IBluetoothHandler {
     }
 
     /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
+     * {@inheritDoc}
      */
+    @Override
     public void start() {
         Log.d(TAG, "start");
 
@@ -128,10 +128,9 @@ public class BluetoothConnectionService implements IBluetoothHandler {
 
 
     /**
-     * Start the ConnectThread to initiate a connection to a remote device.
-     *
-     * @param device The BluetoothDevice to connect
+     * {@inheritDoc}
      */
+    @Override
     public void connect(final BluetoothDevice device) {
         Log.d(TAG, "connect to: " + device);
 
@@ -156,12 +155,9 @@ public class BluetoothConnectionService implements IBluetoothHandler {
     }
 
     /**
-     * Start the ConnectedThread to begin managing a Bluetooth connection
-     *
-     * @param socket The BluetoothSocket on which the connection was made
-     * @param device The BluetoothDevice that has been connected
+     * {@inheritDoc}
      */
-    public  void connected(final BluetoothSocket socket, final BluetoothDevice
+    public void connected(final BluetoothSocket socket, final BluetoothDevice
             device) {
         Log.d(TAG, "connected, Socket Type:" + "Secure");
 
@@ -188,19 +184,12 @@ public class BluetoothConnectionService implements IBluetoothHandler {
             connectedThread = new ConnectedThread(socket);
             connectedThread.start();
 
-            // Send the name of the connected device back to the UI Activity
-            Message msg = handler.obtainMessage(MESSAGE_DEVICE_NAME);
-            Bundle bundle = new Bundle();
-            bundle.putString("device_name", device.getName());
-            msg.setData(bundle);
-            handler.sendMessage(msg);
-
             updateUserInterfaceTitle();
         }
     }
 
     /**
-     * Stop all threads
+     * {@inheritDoc}
      */
     public void stop() {
         Log.d(TAG, "stop");
@@ -238,12 +227,18 @@ public class BluetoothConnectionService implements IBluetoothHandler {
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
             if (mState != STATE_CONNECTED) {
+                showWarning();
                 return;
             }
             ready = connectedThread;
         }
         // Perform the write unsynchronized
         ready.write(output);
+    }
+
+    @Override
+    void showWarning() {
+
     }
 
     /**
@@ -480,6 +475,8 @@ public class BluetoothConnectionService implements IBluetoothHandler {
 
                     handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
+
+                    saveContact(buffer);
 
                 } catch (final IOException e) {
                     Log.e(TAG, "disconnected", e);

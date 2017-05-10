@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import java.io.ByteArrayInputStream;
@@ -46,7 +47,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
-    public static final int MESSAGE_DEVICE_NAME = 3;
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
@@ -58,7 +58,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     private static final int DISCOVERABILITY_TIME = 300;
 
     private BluetoothAdapter bluetoothAdapter;
-    private BluetoothConnectionService bluetoothConnectionService;
+    private IBluetoothHandler bluetoothConnectionService;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> newDevicesArrayAdapter;
@@ -184,9 +184,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the BluetoothConnectionService.
-        this.bluetoothConnectionService = (BluetoothConnectionService) serviceLocator.getBluetoothHandler();
-
-
+        this.bluetoothConnectionService = serviceLocator.getBluetoothHandler();
     }
     /**
      * {@inheritDoc}
@@ -375,11 +373,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                         // TODO: save the contact in the db
                         // see APairingHandler saveContact(bytes)
                     }
-                    break;
-                case MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    connectedDeviceName = msg.getData().getString("device_name");
-                    //TODO: iets met de device name???
                     break;
             }
         }
