@@ -136,7 +136,6 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         if (contact != null) {
             final TextView name = (TextView) v.findViewById(R.id.name);
-            final TextView pubKey = (TextView) v.findViewById(R.id.pubKeySnippet);
 
             if (name != null) {
                 name.setText(contact.getName());
