@@ -144,8 +144,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // one for newly discovered devices
         // TODO: replace all the resources in the code below (All the R.something.something references)
         pairedDevicesArrayAdapter =
-                new ArrayAdapter<>(this, R.layout.content_main);
-        newDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.content_main);
+                new ArrayAdapter<>(this, R.layout.activity_bluetoothconection);
+        newDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.activity_bluetoothconection);
 
         // Initializes the button for discovering devices
         final Button discoveryButton = (Button) findViewById(R.id.fab);
@@ -161,7 +161,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
 
         // Find and set up the ListView for paired devices
-        final ListView pairedListView = (ListView) findViewById(R.id.toolbar);
+        final ListView pairedListView = (ListView) findViewById(R.id.pairedlist);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -169,7 +169,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         queryPairedDevices();
 
         // Find and set up the ListView for newly discovered devices
-        final ListView newDevicesListView = (ListView) findViewById(R.id.toolbar);
+        final ListView newDevicesListView = (ListView) findViewById(R.id.discoveredlist);
         newDevicesListView.setAdapter(newDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
