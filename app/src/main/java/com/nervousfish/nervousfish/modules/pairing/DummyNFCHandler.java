@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * An handler doing nothing.
  */
 public final class DummyNFCHandler extends APairingHandler implements INFCHandler {
-    private final Logger logger = LoggerFactory.getLogger("DummyNFCHandler");
+    private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -26,7 +26,7 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
-        logger.info("Initialized");
+        LOGGER.info("Initialized");
     }
 
     /**

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * An adapter to the default Android file system
  */
 public final class AndroidFileSystemAdapter implements IFileSystem {
-    private final Logger logger = LoggerFactory.getLogger("AndroidFileSystemAdapter");
+    private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -25,7 +25,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     private AndroidFileSystemAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
-        logger.info("Initialized");
+        LOGGER.info("Initialized");
     }
 
     /**

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("PMD")
 public final class LoginActivity extends Activity {
-    private final Logger logger = LoggerFactory.getLogger("LoginActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private EditText mPassword;
     private View mError;
     private IServiceLocator serviceLocator;
@@ -29,7 +29,7 @@ public final class LoginActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        logger.info("LoginActivity entered");
+        LOGGER.info("LoginActivity entered");
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -42,7 +42,7 @@ public final class LoginActivity extends Activity {
 
             @Override
             public void onClick(final View v) {
-                logger.info("submitButton clicked");
+                LOGGER.info("submitButton clicked");
                 if (mPassword.getError() == null) {
                     validateAccount();
                 }
@@ -58,7 +58,7 @@ public final class LoginActivity extends Activity {
         // TODO: have an error when empty, don't accept it
         final boolean skipPassword = mPassword.getText().toString().isEmpty();
         if (skipPassword) {
-            logger.warn("Password skipped!");
+            LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
             final Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
@@ -67,10 +67,10 @@ public final class LoginActivity extends Activity {
             final String dummyPass = "12345";
             final boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
             if (wrongPassword) {
-                logger.warn("Password incorrect!");
+                LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);
             } else {
-                logger.info("Password correct");
+                LOGGER.info("Password correct");
                 mError.setVisibility(View.GONE);
                 final Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);

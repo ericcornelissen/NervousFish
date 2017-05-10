@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * An handler doing nothing.
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
-    private final Logger logger = LoggerFactory.getLogger("DummyQRHandler");
+    private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -26,7 +26,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
         super();
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
-        logger.info("Initialized");
+        LOGGER.info("Initialized");
     }
 
     /**

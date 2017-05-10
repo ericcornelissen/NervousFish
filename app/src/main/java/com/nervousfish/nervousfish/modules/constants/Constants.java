@@ -16,7 +16,7 @@ public final class Constants implements IConstants {
     private final static String DB_USERDATA_PATH = "/accountInformation.json";
     private final static String DB_CONTACTS_PATH = "/contacts.json";
 
-    private final Logger logger = LoggerFactory.getLogger("Constants");
+    private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private String fileDir;
 
     @SuppressWarnings("PMD.SingularField")
@@ -30,7 +30,7 @@ public final class Constants implements IConstants {
     private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
-        logger.info("Initialized");
+        LOGGER.info("Initialized");
     }
 
     /**

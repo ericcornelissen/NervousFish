@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * An adapter to the default Java class for encrypting messages
  */
 public final class EncryptorAdapter implements IEncryptor {
-    private final Logger logger = LoggerFactory.getLogger("EncryptorAdapter");
+    private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
 
@@ -25,7 +25,7 @@ public final class EncryptorAdapter implements IEncryptor {
     private EncryptorAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
-        logger.info("Initialized");
+        LOGGER.info("Initialized");
     }
 
     /**

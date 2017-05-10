@@ -45,7 +45,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final static Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>(){}.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
 
-    private final Logger logger = LoggerFactory.getLogger("GsonDatabaseAdapter");
+    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     @SuppressWarnings("PMD.SingularField")
     private final IServiceLocatorCreator serviceLocatorCreator;
     private String contactsPath;
@@ -59,7 +59,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private GsonDatabaseAdapter(final IServiceLocatorCreator serviceLocatorCreator) {
         this.serviceLocatorCreator = serviceLocatorCreator;
         this.serviceLocatorCreator.registerToEventBus(this);
-        logger.info("Initialized");
+        LOGGER.info("Initialized");
     }
 
     /**

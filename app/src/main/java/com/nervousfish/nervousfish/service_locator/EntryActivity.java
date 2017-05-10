@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class EntryActivity extends Activity {
-    private final Logger logger = LoggerFactory.getLogger("EntryActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("EntryActivity");
 
     /**
      * Creates the new activity, should only be called by Android
@@ -26,7 +26,7 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        logger.info("EntryActivity entered");
+        LOGGER.info("EntryActivity entered");
         final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance(
                 getFilesDir().getPath());
 
