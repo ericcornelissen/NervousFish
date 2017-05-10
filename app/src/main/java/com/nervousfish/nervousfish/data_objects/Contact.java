@@ -16,8 +16,8 @@ public final class Contact implements Serializable {
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
      *
-     * @param name The name of the {@link Contact}
-     * @param key The {@link IKey} to initialize the {@link Contact} with
+     * @param name      The name of the {@link Contact}
+     * @param key       The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final IKey key) {
         this.name = name;
@@ -60,7 +60,7 @@ public final class Contact implements Serializable {
 
         final Contact that = (Contact) o;
         return this.name.equals(that.name)
-            && this.keys.equals(that.keys);
+                && this.keys.equals(that.keys);
     }
 
     /**

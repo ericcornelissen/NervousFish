@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -7,7 +8,6 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +36,6 @@ public class GsonDatabaseAdapterTest {
     private final static String CONTACTS_PATH = "temp_contacts.json";
     private final static String USERDATA_PATH = "temp_userdata.json";
 
-    private IServiceLocatorCreator serviceLocatorCreator = mock(IServiceLocatorCreator.class);
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
 
@@ -44,14 +43,12 @@ public class GsonDatabaseAdapterTest {
 
     @Before
     public void setup() {
-        when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
         when(constants.getFileDir()).thenReturn("");
         when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
         when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
-        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
-        this.database.onSLReadyEvent(mock(SLReadyEvent.class));
+        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
     }
 
     @After
@@ -205,7 +202,8 @@ public class GsonDatabaseAdapterTest {
     public void testAddProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
         List<Profile> actual = database.getProfiles();
@@ -216,10 +214,11 @@ public class GsonDatabaseAdapterTest {
     public void testUpdateProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
-        Profile newProfileUpdate = new Profile("OtherName", pubKey, privKey);
+        Profile newProfileUpdate = new Profile("OtherName", keyPair);
         database.updateProfile(newProfile, newProfileUpdate);
         List<Profile> actual = database.getProfiles();
 
@@ -232,7 +231,8 @@ public class GsonDatabaseAdapterTest {
     public void testDeleteProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
         IKey privKey = new SimpleKey("privKey");
-        Profile newProfile = new Profile("CoolGuy", pubKey, privKey);
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
         List<Profile> actual = database.getProfiles();

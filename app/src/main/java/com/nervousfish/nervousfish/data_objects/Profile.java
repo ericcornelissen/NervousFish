@@ -6,41 +6,51 @@ package com.nervousfish.nervousfish.data_objects;
 public class Profile {
 
     private final String name;
-    private final IKey publicKey;
-    private final IKey privateKey;
+    private final KeyPair keyPair;
 
     /**
-     * A constructor for the {@link Profile} class.
+     * The constructor for the {@link Profile} class.
      *
-     * @param name - the name belonging to the Profile
-     * @param publicKey - the public key
-     * @param privateKey - the private key
+     * @param name the name belonging to the Profile
+     * @param keyPair the public/private key-pair
      */
-    public Profile(final String name, final IKey publicKey, final IKey privateKey) {
+    public Profile(final String name, final KeyPair keyPair) {
         this.name = name;
-        this.publicKey = publicKey;
-        this.privateKey = privateKey;
+        this.keyPair = keyPair;
     }
 
     /**
      * Get the name of the {@link Profile}.
+     *
+     * @return The name.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Get the public key of the {@link Profile}.
+     * Get the {@link KeyPair} of the {@link Profile}.
+     *
+     * @return The {@link KeyPair}.
+     */
+    public KeyPair getKeyPair() { return this.keyPair; }
+
+    /**
+     * Get the public {@link IKey} of the {@link Profile}.
+     *
+     * @return The public {@link IKey}.
      */
     public IKey getPublicKey() {
-        return this.publicKey;
+        return this.keyPair.getPublicKey();
     }
 
     /**
-     * Get the private key of the {@link Profile}.
+     * Get the private {@link IKey} of the {@link Profile}.
+     *
+     * @return The private {@link IKey}.
      */
     public IKey getPrivateKey() {
-        return this.privateKey;
+        return this.keyPair.getPrivateKey();
     }
 
     /**
@@ -54,8 +64,7 @@ public class Profile {
 
         final Profile that = (Profile) o;
         return this.name.equals(that.name)
-            && this.publicKey.equals(that.publicKey)
-            && this.privateKey.equals(that.privateKey);
+            && this.keyPair.equals(that.keyPair);
     }
 
     /**
@@ -63,7 +72,7 @@ public class Profile {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.publicKey.hashCode() + this.privateKey.hashCode();
+        return this.name.hashCode() + this.keyPair.hashCode();
     }
 
 }
