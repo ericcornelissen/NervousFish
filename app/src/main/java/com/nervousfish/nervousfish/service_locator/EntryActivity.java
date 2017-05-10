@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 
 /**
@@ -25,7 +24,7 @@ public final class EntryActivity extends Activity {
         final IServiceLocator serviceLocator = ServiceLocatorCreator.createInstance(
                 getFilesDir().getPath());
 
-        final Intent intent = new Intent(this, ContactActivity.class);
+        final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
     }

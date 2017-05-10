@@ -1,14 +1,17 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 
 import java.util.ArrayList;
@@ -51,12 +54,24 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         final ListView lv = (ListView) findViewById(R.id.listView);
+        final Intent mainActivityIntent = getIntent();
 
         //Retrieve the contacts from the database
         getContacts();
 
-        lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, contacts));
+        final ArrayAdapter<String> adapterView = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, contacts);
+        lv.setAdapter(adapterView);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                final Intent intent = new Intent(MainActivity.this,ContactActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
+                        mainActivityIntent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+                startActivity(intent);
+            }
+        });
 
     }
 

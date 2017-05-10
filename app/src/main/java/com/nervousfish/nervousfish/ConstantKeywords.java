@@ -6,7 +6,6 @@ package com.nervousfish.nervousfish;
 public final class ConstantKeywords {
 
     public static final String SERVICE_LOCATOR = "Service Locator";
-    public static final String PREVIOUS_ACTIVITY = "Previous activity";
     public static final String RSA_KEY = "RSA";
 
     /**
