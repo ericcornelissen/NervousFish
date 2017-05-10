@@ -7,7 +7,6 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +34,6 @@ public class GsonDatabaseAdapterTest {
     private final static String CONTACTS_PATH = "temp_contacts.json";
     private final static String USERDATA_PATH = "temp_userdata.json";
 
-    private IServiceLocatorCreator serviceLocatorCreator = mock(IServiceLocatorCreator.class);
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
 
@@ -43,13 +41,11 @@ public class GsonDatabaseAdapterTest {
 
     @Before
     public void setup() {
-        when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
         when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
         when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
-        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
-        this.database.onSLReadyEvent(mock(SLReadyEvent.class));
+        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
     }
 
     @After

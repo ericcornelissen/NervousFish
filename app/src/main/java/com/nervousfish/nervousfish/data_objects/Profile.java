@@ -11,8 +11,9 @@ public class Profile {
 
     /**
      * A constructor for the Profile class.
-     * @param name - the name belonging to the Profile
-     * @param publicKey - the public key
+     *
+     * @param name       - the name belonging to the Profile
+     * @param publicKey  - the public key
      * @param privateKey - the private key
      */
     public Profile(final String name, final IKey publicKey, final IKey privateKey) {
