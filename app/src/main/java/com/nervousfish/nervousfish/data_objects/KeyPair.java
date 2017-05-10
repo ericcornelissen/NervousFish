@@ -3,16 +3,15 @@ package com.nervousfish.nervousfish.data_objects;
 /**
  * KeyPair POJO which keeps a public and private key.
  */
-
 public final class KeyPair {
 
     private final IKey publicKey;
     private final IKey privateKey;
 
     /**
-     * Constructor for the KeyPair.
+     * The constructor for the {@link KeyPair}.
      *
-     * @param publicKey The publicKey of the KeyPair.
+     * @param publicKey  The publicKey of the KeyPair.
      * @param privateKey The privateKey of the KeyPair.
      */
     public KeyPair(final IKey publicKey, final IKey privateKey) {
@@ -21,18 +20,18 @@ public final class KeyPair {
     }
 
     /**
-     * Returns the public key of this KeyPair.
+     * Returns the public key of the {@link KeyPair}.
      *
-     * @return the public key as IKey.
+     * @return the public {@link IKey}.
      */
     public IKey getPublicKey() {
         return this.publicKey;
     }
 
     /**
-     * Returns the private key of this KeyPair.
+     * Returns the private key of the {@link KeyPair}.
      *
-     * @return the private key as IKey.
+     * @return the private {@link IKey}.
      */
     public IKey getPrivateKey() {
         return this.privateKey;
@@ -49,7 +48,7 @@ public final class KeyPair {
 
         final KeyPair that = (KeyPair) o;
         return this.publicKey.equals(that.publicKey)
-            && this.privateKey.equals(that.privateKey);
+                && this.privateKey.equals(that.privateKey);
     }
 
     /**
