@@ -12,8 +12,8 @@
         android:id="@+id/listView"
         android:divider="@color/colorAccent"
         android:dividerHeight="0.5dp"
-        android:layout_width="@dimen/contacts_list_width"
-        android:layout_height="@dimen/contacts_list_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/contacts_list_margin_top" />
 
 
