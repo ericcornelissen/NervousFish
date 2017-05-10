@@ -87,7 +87,7 @@ public final class MainActivity extends AppCompatActivity {
             final Contact c = new Contact("Joost", new SimpleKey("dnfh4nl4jknlkjnr4j34klnk3j4nl"));
             final Contact d = new Contact("Kilian", new SimpleKey("sdjnefiniwfnfejewjnwnkenfk32"));
             final Contact e = new Contact("Cornel", new SimpleKey("nr23uinr3uin2o3uin23oi4un234ijn"));
-            if(!database.getAllContacts().isEmpty()) {
+            if (!database.getAllContacts().isEmpty()) {
                 database.deleteContact(a);
                 database.deleteContact(b);
                 database.deleteContact(c);
@@ -108,13 +108,14 @@ public final class MainActivity extends AppCompatActivity {
 /**
  * An Adapter which converts a list with contacts into List entries.
  */
-class ContactListAdapter extends ArrayAdapter<Contact> {
+final class ContactListAdapter extends ArrayAdapter<Contact> {
 
     private final static int MAX_SNIPPET_SIZE = 30;
+
     /**
      * Create and initialize a ContactListAdapter.
      *
-     * @param context the Context where the ListView is created
+     * @param context  the Context where the ListView is created
      * @param contacts the list with contacts
      */
     ContactListAdapter(final Context context, final List<Contact> contacts) {
@@ -146,7 +147,7 @@ class ContactListAdapter extends ArrayAdapter<Contact> {
 
             if (pubKey != null) {
                 final String publicKey = contact.getPublicKey().getKey();
-                if(publicKey.length() > MAX_SNIPPET_SIZE) {
+                if (publicKey.length() > MAX_SNIPPET_SIZE) {
                     final String pubKeySnippet = contact.getPublicKey().getKey().substring(0, 30) + "...";
                     pubKey.setText(pubKeySnippet);
                 } else {
