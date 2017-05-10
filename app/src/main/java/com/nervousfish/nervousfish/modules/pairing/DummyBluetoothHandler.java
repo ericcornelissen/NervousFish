@@ -30,6 +30,11 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
 
     }
 
+    @Override
+    void showWarning() {
+
+    }
+
     /**
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an {@link IServiceLocatorCreator}
      * can access the new module to create the new {@link IServiceLocator}.
