@@ -1,13 +1,16 @@
 package com.nervousfish.nervousfish.modules.database;
 
+import com.google.gson.JsonSyntaxException;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
+import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,11 +23,13 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
-import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -59,6 +64,27 @@ public class GsonDatabaseAdapterTest {
         contactsFile.delete();
         File userdataFile = new File(USERDATA_PATH);
         userdataFile.delete();
+    }
+
+    @Test
+    public void testNewInstance() throws Exception {
+        ModuleWrapper<GsonDatabaseAdapter> wrapper = GsonDatabaseAdapter.newInstance(serviceLocatorCreator);
+        assertNotNull(wrapper);
+    }
+
+    @Test
+    public void testConstructorNotFailsWhenFileInitializationFails() {
+        IServiceLocatorCreator serviceLocatorCreator = mock(IServiceLocatorCreator.class);
+        IServiceLocator serviceLocator = mock(IServiceLocator.class);
+        IConstants constants = mock(IConstants.class);
+
+        when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
+        when(serviceLocator.getConstants()).thenReturn(constants);
+        when(constants.getDatabaseContactsPath()).thenReturn("!^~+/\\.txt"); // Invalid file name
+
+        IDatabase database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
+        database.onSLReadyEvent(mock(SLReadyEvent.class));
+        assertNotNull(database);
     }
 
     @Test
@@ -111,11 +137,11 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith2Contacts() throws IOException {
         write("[{\"name\":\"Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"ABABAB\"}]}," +
-                "{\"name\":\"Fry\",\"publicKey\":[\"simple\",{\"key\":\"BABABA\"}]}]", CONTACTS_PATH);
+                "{\"name\":\"Fry\",\"publicKey\":[\"RSA\",{\"modulus\":\"AA\",\"exponent\":\"BB\"}]}]", CONTACTS_PATH);
 
-        IKey zoidbergsDey = new SimpleKey("ABABAB");
-        Contact zoidberg = new Contact("Zoidberg", zoidbergsDey);
-        IKey frysKey = new SimpleKey("BABABA");
+        IKey zoidbergsKey = new SimpleKey("ABABAB");
+        Contact zoidberg = new Contact("Zoidberg", zoidbergsKey);
+        IKey frysKey = new RSAKey("AA", "BB");
         Contact fry = new Contact("Fry", frysKey);
         List<Contact> expected = new ArrayList<>();
         expected.add(zoidberg);
@@ -123,6 +149,12 @@ public class GsonDatabaseAdapterTest {
 
         List<Contact> actual = database.getAllContacts();
         assertEquals(expected, actual);
+    }
+
+    @Test(expected=JsonSyntaxException.class)
+    public void testGetAllContactsFailsForInvalidKeyType() throws IOException {
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":[\"not a valid key\",{\"key\":\"key\"}]}]", CONTACTS_PATH);
+        database.getAllContacts();
     }
 
     @Test
@@ -184,6 +216,16 @@ public class GsonDatabaseAdapterTest {
         assertEquals(1, actual.size());
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void testUpdateProfileThrowsWhenOldProfileNotInDatabase() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Profile oldProfile = new Profile("CoolGuy", pubKey, privKey);
+
+        Profile newProfile = new Profile("OtherName", pubKey, privKey);
+        database.updateProfile(oldProfile, newProfile);
+    }
+
     @Test
     public void testDeleteProfile() throws IOException {
         IKey pubKey = new SimpleKey("PubKey");
@@ -197,6 +239,14 @@ public class GsonDatabaseAdapterTest {
         actual = database.getProfiles();
 
         assertEquals(0, actual.size());
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testDeleteProfileThrowsWhenProfileNotInDatabase() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        Profile profile = new Profile("CoolGuy", pubKey, privKey);
+        database.deleteProfile(profile);
     }
 
     private void write(final String data, final String filePath) {

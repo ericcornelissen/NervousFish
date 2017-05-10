@@ -38,15 +38,13 @@ public final class RSAKey implements IKey {
      */
     static public IKey fromJSON(final JsonReader reader) throws IOException {
         final Map<String, String> map = new ConcurrentHashMap<>();
-        reader.beginObject();
         while (reader.hasNext()) {
             final String name = reader.nextName();
             final String value = reader.nextString();
             map.put(name, value);
         }
-        reader.endObject();
 
-        final String modulus = map.get("modules");
+        final String modulus = map.get("modulus");
         final String exponent = map.get("exponent");
         return new RSAKey(modulus, exponent);
     }
