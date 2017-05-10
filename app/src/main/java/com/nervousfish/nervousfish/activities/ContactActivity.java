@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public final class ContactActivity extends AppCompatActivity {
     /**
      * Creates the new activity, should only be called by Android
      *
-     * @param savedInstanceState Don't touch this
+     * @param savedInstanceState The saved state of the instance.
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -29,33 +31,30 @@ public final class ContactActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_contact);
         final Intent intent = this.getIntent();
 
-        this.setName(intent);
-        this.setKeys();
+        final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        this.setName(contact);
+        this.setKeys(contact);
     }
 
     /**
-     * Set the name of the {@link com.nervousfish.nervousfish.data_objects.Contact} to the
-     * {@link ContactActivity}.
+     * Set the name of the {@link Contact} to the {@link ContactActivity}.
      *
-     * @param intent The intent with which the Activity was called.
+     * @param contact The {@link Contact}.
      */
-    private void setName(final Intent intent) {
-        final String name = (String) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+    private void setName(final Contact contact) {
         final TextView tv = (TextView) this.findViewById(R.id.contact_name);
-        tv.setText(name);
+        tv.setText(contact.getName());
     }
 
     /**
-     * Set the keys of the {@link com.nervousfish.nervousfish.data_objects.Contact} to the
-     * {@link ContactActivity}.
+     * Set the keys of the {@link Contact} to the {@link ContactActivity}.
+     *
+     * @param contact The {@link Contact}.
      */
-    private void setKeys() {
-        // Temporary solution to having some keys here...
+    private void setKeys(final Contact contact) {
         final List<String> keys = new ArrayList<>();
-        keys.add("Gmail");
-        keys.add("FTP server");
-        keys.add("Web server");
-        keys.add("Hotmail");
+        final IKey key = contact.getPublicKey();
+        keys.add(key.getKey());
 
         final ListView lv = (ListView) this.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<>(this,

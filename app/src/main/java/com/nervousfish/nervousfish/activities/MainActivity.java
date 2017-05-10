@@ -84,7 +84,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
-        intent.putExtra(ConstantKeywords.CONTACT, "Average Joe");
+        intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
 

@@ -3,11 +3,12 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * The interface for the standard Java representation of a (public/private) key.
  */
-public interface IKey {
+public interface IKey extends Serializable {
 
     /**
      * Get a string representation of a key.
