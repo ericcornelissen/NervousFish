@@ -14,5 +14,4 @@
         android:layout_height="@dimen/contacts_list_height"
         android:layout_marginTop="@dimen/contacts_list_margin_top" />
 
-
 </merge>

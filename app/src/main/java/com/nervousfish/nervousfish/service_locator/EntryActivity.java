@@ -12,6 +12,7 @@ import com.nervousfish.nervousfish.activities.LoginActivity;
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class EntryActivity extends Activity {
+
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -27,4 +28,5 @@ public final class EntryActivity extends Activity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
     }
+
 }
