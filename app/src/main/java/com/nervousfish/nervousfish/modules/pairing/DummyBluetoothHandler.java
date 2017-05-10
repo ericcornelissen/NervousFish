@@ -13,6 +13,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     private DummyBluetoothHandler(final IServiceLocator serviceLocator) {
         super();
     }

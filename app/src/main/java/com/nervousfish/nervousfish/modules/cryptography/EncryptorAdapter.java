@@ -13,6 +13,7 @@ public final class EncryptorAdapter implements IEncryptor {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
     }
 

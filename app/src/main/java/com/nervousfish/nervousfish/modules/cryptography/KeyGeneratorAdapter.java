@@ -22,6 +22,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     private KeyGeneratorAdapter(final IServiceLocator serviceLocator) {
     }
 

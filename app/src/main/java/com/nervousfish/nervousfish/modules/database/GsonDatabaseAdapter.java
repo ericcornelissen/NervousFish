@@ -39,6 +39,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final static Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>() {
     }.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
+    @SuppressWarnings("PMD.SingularField") // This constants will be used later on probably
     private final IConstants constants;
     private final String contactsPath;
     private final String profilesPath;
@@ -48,6 +49,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
         this.constants = serviceLocator.getConstants();
 

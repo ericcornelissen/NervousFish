@@ -17,6 +17,7 @@ public final class Constants implements IConstants {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     private Constants(final IServiceLocator serviceLocator) {
     }
 
