@@ -46,6 +46,7 @@ public class GsonDatabaseAdapterTest {
     public void setup() {
         when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
+        when(constants.getFileDir()).thenReturn("");
         when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
         when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
