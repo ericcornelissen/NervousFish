@@ -38,10 +38,6 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
-
-    lintOptions {
-        disable 'GoogleAppIndexingWarning'
-    }
 }
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report

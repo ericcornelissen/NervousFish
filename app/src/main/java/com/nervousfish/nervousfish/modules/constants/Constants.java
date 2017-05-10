@@ -13,9 +13,10 @@ import org.slf4j.LoggerFactory;
  * Class implementing the main constants for the application.
  */
 public final class Constants implements IConstants {
-    private final Logger logger = LoggerFactory.getLogger("Constants");
     private final static String DB_USERDATA_PATH = "/accountInformation.json";
     private final static String DB_CONTACTS_PATH = "/contacts.json";
+
+    private final Logger logger = LoggerFactory.getLogger("Constants");
     private String fileDir;
 
     @SuppressWarnings("PMD.SingularField")
