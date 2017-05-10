@@ -2,8 +2,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="contact_picture_width">100dp</dimen>
     <dimen name="contact_picture_height">100dp</dimen>
-    <!--<dimen name="contact_picture_name_padding">33dp</dimen>-->
-    <!--<dimen name="contact_name_margin">8dp</dimen>-->
     <dimen name="contact_name_size">21sp</dimen>
     <dimen name="contact_keys_list_height">250dp</dimen>
     <dimen name="contact_keys_list_margin_top">8dp</dimen>
