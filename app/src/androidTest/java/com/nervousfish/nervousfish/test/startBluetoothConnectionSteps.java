@@ -9,6 +9,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -25,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class startBluetoothConnectionSteps extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    public startBluetoothConnectionSteps(Class<MainActivity> activityClass) {
+    public startBluetoothConnectionSteps(EntryActivity activityClass) {
         super(MainActivity.class);
     }
 

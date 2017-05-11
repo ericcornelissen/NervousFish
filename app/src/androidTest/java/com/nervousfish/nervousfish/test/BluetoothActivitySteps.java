@@ -5,6 +5,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.After;
@@ -26,7 +27,7 @@ public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<Blu
 
     private Activity mActivity = null;
 
-    public BluetoothActivitySteps(Class<BluetoothConnectionService> activityClass) {
+    public BluetoothActivitySteps(EntryActivity activityClass) {
         super(BluetoothConnectionActivity.class);
     }
 
