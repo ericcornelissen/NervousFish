@@ -33,7 +33,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public void connect(BluetoothDevice device) {
+    public void connect(final BluetoothDevice device) {
 
     }
 
@@ -43,7 +43,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public void connected(BluetoothSocket socket, BluetoothDevice device) {
+    public void connected(final BluetoothSocket socket, final BluetoothDevice device) {
 
     }
 
@@ -53,7 +53,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    void write(byte[] buffer) {
+    void write(final byte[] buffer) {
 
     }
 

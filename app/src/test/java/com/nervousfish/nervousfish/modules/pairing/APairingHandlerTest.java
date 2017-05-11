@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -36,10 +33,10 @@ public class APairingHandlerTest {
         /**
          * Prevent instatiation from non-subclasses outside the package
          *
-         * @param serviceLocatorCreator bump
+         * @param serviceLocator bump
          */
-        PairingHandler(IServiceLocatorCreator serviceLocatorCreator) {
-            super(serviceLocatorCreator);
+        PairingHandler(IServiceLocator serviceLocator) {
+            super(serviceLocator);
         }
 
         @Override
@@ -78,12 +75,10 @@ public class APairingHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        IServiceLocatorCreator creator = mock(IServiceLocatorCreator.class);
         IServiceLocator serviceLocator = mock(IServiceLocator.class);
-        when(creator.getServiceLocator()).thenReturn(serviceLocator);
         database = mock(IDatabase.class);
         when(serviceLocator.getDatabase()).thenReturn(database);
-        tmp = new PairingHandler(creator);
+        tmp = new PairingHandler(serviceLocator);
         phspy = spy(tmp);
     }
 

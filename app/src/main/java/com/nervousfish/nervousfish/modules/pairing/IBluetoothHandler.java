@@ -36,5 +36,5 @@ public interface IBluetoothHandler extends IModule {
     /**
      * Stop all threads
      */
-    public void stop();
+    void stop();
 }

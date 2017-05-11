@@ -33,8 +33,8 @@ abstract class APairingHandler {
      * @throws IOException When deserialization doesn't go well.
      */
     void writeAllContacts() throws IOException {
-        List<Contact> list = database.getAllContacts();
-        for (Contact e: list) {
+        final List<Contact> list = database.getAllContacts();
+        for (final Contact e: list) {
             writeContact(e);
         }
     }
@@ -44,7 +44,7 @@ abstract class APairingHandler {
      * @param contact contact to serialize
      * @throws IOException When deserialization doesn't go well.
      */
-    void writeContact(Contact contact) throws IOException {
+    void writeContact(final Contact contact) throws IOException {
         byte[] bytes = null;
         ByteArrayOutputStream bos = null;
         ObjectOutputStream oos = null;
@@ -71,10 +71,10 @@ abstract class APairingHandler {
      * @return true when a contact with the same exists in the database
      * @throws IOException When database fails to respond
      */
-    boolean checkExists(Contact contact) throws IOException {
-        String name = contact.getName();
-        List<Contact> list = database.getAllContacts();
-        for (Contact e: list) {
+    boolean checkExists(final Contact contact) throws IOException {
+        final String name = contact.getName();
+        final List<Contact> list = database.getAllContacts();
+        for (final Contact e: list) {
             if (e.getName().equals(name)) {
                 showWarning();
                 return true;
@@ -96,31 +96,31 @@ abstract class APairingHandler {
             bis = new ByteArrayInputStream(bytes);
             ois = new ObjectInputStream(bis);
             contact = (Contact) ois.readObject();
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             e.printStackTrace();
             return false;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             return false;
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
             if (ois != null) {
                 try {
                     ois.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
         }
         try {
             database.addContact(contact);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             return false;
         }

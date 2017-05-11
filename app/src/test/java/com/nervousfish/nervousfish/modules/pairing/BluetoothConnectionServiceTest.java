@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
-import static com.nervousfish.nervousfish.BaseTest.accessMethod;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,45 +43,45 @@ public class BluetoothConnectionServiceTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        when(accessMethod(bConService, "connectionFailed", new Object[0])).thenThrow(IOException.class); //this probably won't work
+        //when(accessMethod(bConService, "connectionFailed", new Object[0])).thenThrow(IOException.class); //this probably won't work
 
-        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
-        this.bConService2 = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
-        this.bConService3 = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
+        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Handler(), mock(IServiceLocator.class), mock(BluetoothAdapter.class));
+        //this.bConService2 = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
+        //this.bConService3 = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
 
     }
 
     @After
     public void tearDown() {
-        accessMethod(bConService, "stop", new Object[0]);
-        accessMethod(bConService2, "stop", new Object[0]);
-        accessMethod(bConService3, "stop", new Object[0]);
+        //accessMethod(bConService, "stop", new Object[0]);
+        //accessMethod(bConService2, "stop", new Object[0]);
+        //accessMethod(bConService3, "stop", new Object[0]);
     }
 
 
     @Test
     public void newInstance() throws Exception {
-
+        accessConstructor(BluetoothConnectionService.class, new Handler(), mock(IServiceLocator.class), mock(BluetoothAdapter.class));
     }
 
     @Test
     public void start() throws Exception {
-
+        bConService.start();
     }
 
     @Test
     public void connect() throws Exception {
-
+        bConService.connect(mock(BluetoothDevice.class));
     }
 
     @Test
     public void connected() throws Exception {
-
+        bConService.connect(mock(BluetoothDevice.class));
     }
 
     @Test
     public void stop() throws Exception {
-
+        bConService.stop();
     }
 
     @Test

@@ -58,12 +58,12 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @param handler        A Handler to send messages back to the UI Activity
      * @param serviceLocator The object responsible for creating the service locator
      */
-    private BluetoothConnectionService(final Handler handler, final IServiceLocator serviceLocator) {
+    private BluetoothConnectionService(final Handler handler, final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
         super(serviceLocator);
         this.handler = handler;
         mState = STATE_NONE;
         mNewState = mState;
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.bluetoothAdapter = bluetoothAdapter;
     }
 
     /**
@@ -73,20 +73,22 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @param serviceLocator The service locator bridge that creates the new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocator));
+    public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
+        return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocator, bluetoothAdapter));
     }
 
     /**
      * Update UI title according to the current state of the chat connection
      */
-    private synchronized void updateUserInterfaceTitle() {
-        mState = getState();
-        Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
-        mNewState = mState;
+    private void updateUserInterfaceTitle() {
+        synchronized (this) {
+            mState = getState();
+            Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
+            mNewState = mState;
 
-        // Give the new state to the Handler so the UI Activity can update
-        handler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
+            // Give the new state to the Handler so the UI Activity can update
+            handler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
+        }
     }
 
     /**
