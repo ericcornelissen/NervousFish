@@ -10,7 +10,6 @@ import com.nervousfish.nervousfish.activities.LoginActivity;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
-@SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class EntryActivity extends Activity {
 
     /**
@@ -22,7 +21,8 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final IServiceLocator serviceLocator = new ServiceLocator();
+        final String androidFileDir = this.getFilesDir().getPath();
+        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
 
         final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
