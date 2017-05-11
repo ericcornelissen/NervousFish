@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -130,14 +131,15 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
     /**
      * {@inheritDoc}
      */
+    @NonNull
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
 
         View v = convertView;
 
         if (v == null) {
             final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, null);
+            v = vi.inflate(R.layout.contact_list_entry, parent);
         }
 
         final Contact contact = getItem(position);

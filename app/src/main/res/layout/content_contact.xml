@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -46,24 +47,31 @@
                 android:layout_height="wrap_content" />
 
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="@dimen/contact_picture_width"
-                android:layout_height="@dimen/contact_picture_height"
-                android:layout_centerHorizontal="true"
-                android:contentDescription="@string/contact_title"
-                android:src="@drawable/personplaceholder" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/contact_title"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/contact_name_size"
-                android:textStyle="bold"
-                android:layout_below="@+id/imageView3"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp" />
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/contact_picture_name_padding"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/contact_picture_width"
+                    android:layout_height="@dimen/contact_picture_height"
+                    android:src="@drawable/personplaceholder"
+                    android:contentDescription="@string/contact_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contact_name_margin"
+                    android:text="@string/contact_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/contact_name_size"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
