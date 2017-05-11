@@ -29,7 +29,6 @@ import java.util.Hashtable;
 /**
  * Generates a QR code
  */
-
 public class QRGeneratorActivity extends Activity {
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
@@ -52,11 +51,11 @@ public class QRGeneratorActivity extends Activity {
      * @param publicKey The public key that's about to be converted to QR code
      * @return The bitmap being the QR code
      */
-    public static Bitmap encode(String publicKey) {
-        QRCodeWriter qrWriter = new QRCodeWriter();
+    public static Bitmap encode(final String publicKey) {
+        final QRCodeWriter qrWriter = new QRCodeWriter();
         Bitmap bitmap = null;
         try {
-            BitMatrix matrix = qrWriter.encode(publicKey, BarcodeFormat.QR_CODE, QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT);
+            final BitMatrix matrix = qrWriter.encode(publicKey, BarcodeFormat.QR_CODE, QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT);
             bitmap = Bitmap.createBitmap(QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT, Bitmap.Config.RGB_565);
             for(int x = 0; x< QRCODE_IMAGE_WIDTH; x++) {
                 for(int y = 0; y<QRCODE_IMAGE_HEIGHT; y++) {
@@ -67,7 +66,7 @@ public class QRGeneratorActivity extends Activity {
                     bitmap.setPixel(x, y, color);
                 }
             }
-        } catch (WriterException e) {
+        } catch (final WriterException e) {
             e.printStackTrace();
         }
         return bitmap;
@@ -79,30 +78,30 @@ public class QRGeneratorActivity extends Activity {
      * @param QRCode The QR code as a bitmap
      * @return The decoded public key.
      */
-    public static String decode(Bitmap QRCode) {
+    public static String decode(final Bitmap QRCode) {
 
-        Reader qrReader = new MultiFormatReader();
+        final Reader qrReader = new MultiFormatReader();
 
         int[] intArray = new int[QRCode.getWidth()*QRCode.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
         QRCode.getPixels(intArray, 0, QRCode.getWidth(), 0, 0, QRCode.getWidth(), QRCode.getHeight());
 
-        LuminanceSource source = new RGBLuminanceSource(QRCode.getWidth(), QRCode.getHeight(), intArray);
-        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+        final LuminanceSource source = new RGBLuminanceSource(QRCode.getWidth(), QRCode.getHeight(), intArray);
+        final BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         String publicKey = "";
 
         try {
             Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<>();
             decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
-            Result decoded = qrReader.decode(bitmap, decodeHints);
+            final Result decoded = qrReader.decode(bitmap, decodeHints);
             publicKey = decoded.getText();
-        } catch (NotFoundException e) {
+        } catch (final NotFoundException e) {
             Log.d("QRGenerator", "Not Found Exception " + e.getMessage());
             e.printStackTrace();
-        } catch (ChecksumException e) {
+        } catch (final ChecksumException e) {
             Log.d("QRGenerator", "Checksum Exception " + e.getMessage());
             e.printStackTrace();
-        } catch (FormatException e) {
+        } catch (final FormatException e) {
             Log.d("QRGenerator", "Format Exception " + e.getMessage());
             e.printStackTrace();
         }
