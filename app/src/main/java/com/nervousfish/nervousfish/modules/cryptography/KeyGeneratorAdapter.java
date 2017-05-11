@@ -5,6 +5,9 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -16,14 +19,17 @@ import java.security.spec.RSAPublicKeySpec;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
 
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    // This servicelocator will be used later on probably
     private KeyGeneratorAdapter(final IServiceLocator serviceLocator) {
+        LOGGER.info("Initialized");
     }
 
     /**
