@@ -1,14 +1,21 @@
 package com.nervousfish.nervousfish.test;
 
+import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.nervousfish.nervousfish.BluetoothConnectionActivity;
+import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by Kilian on 3/05/2017.
@@ -18,16 +25,32 @@ import cucumber.api.java.en.When;
 @CucumberOptions(features = "features")
 public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<BluetoothConnectionActivity> {
 
-    public BluetoothActivitySteps(Class<BluetoothConnectionService> activityClass) {
+    private Activity mActivity = null;
+
+    public BluetoothActivitySteps(EntryActivity activityClass) {
         super(BluetoothConnectionActivity.class);
     }
 
-    @Given("^I have a BluetoothConnectionService and don't have an established connection nor any pairing$")
-    public void iHaveABluetoothConnectionActivityWithoutAConnection() {
-        assertNotNull(getActivity());
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        mActivity = getActivity(); // Start Activity before each test scenario
+        assertNotNull(mActivity);
     }
 
-    @When("^$")
+    @After
+    public void tearDown() throws Exception {
+        getActivity().finish();
+        super.tearDown(); // This step scrubs everything in this class so always call it last
+    }
+
+    @Given("^I have a BluetoothConnectionActivity and don't have an established connection$")
+    public void iHaveABluetoothConnectionActivityWithoutAConnection() {
+        assertNotNull(getActivity());
+
+    }
+
+    @When("^When I'm in the MainActivity and the connect button is pressed")
     public void iPressConnect() {
         assertTrue(true);
     }
@@ -37,4 +60,4 @@ public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<Blu
         assertTrue(true);
     }
 
-    }
+}

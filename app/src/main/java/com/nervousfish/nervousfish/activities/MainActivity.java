@@ -51,8 +51,7 @@ public final class MainActivity extends AppCompatActivity {
             @SuppressWarnings("PMD.MethodCommentRequirement")
             @Override
             public void onClick(final View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startBluetoothPairing();
             }
         });
 
@@ -73,6 +72,12 @@ public final class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private void startBluetoothPairing() {
+        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        startActivity(intent);
     }
 
     /**
