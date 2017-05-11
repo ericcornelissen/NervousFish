@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 
 
 @RunWith(AndroidJUnit4.class)
+@SuppressWarnings("PMD")
 public class QRGeneratorActivityTest {
 
     private final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0" +
@@ -24,22 +25,22 @@ public class QRGeneratorActivityTest {
     @Test
     public void testEncodeAsExpected() throws Exception{
 
-        Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
+        final Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
 
 
-        String result = QRGeneratorActivity.decode(QRcode);
+        final String result = QRGeneratorActivity.decode(QRcode);
         assertEquals(publicKey, result);
     }
 
     @Test
     public void testWidthIsAsExpected() throws Exception{
-        Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
+        final Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
         assertEquals(QRCODE_IMAGE_WIDTH, QRcode.getWidth());
     }
 
     @Test
     public void testHeightIsAsExpected() throws Exception{
-        Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
+        final Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }
 

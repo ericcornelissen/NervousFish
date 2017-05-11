@@ -33,17 +33,7 @@ public class QRGeneratorActivity extends Activity {
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
 
-    /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState Don't touch this
-     */
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
+ 
 
     /**
      *
