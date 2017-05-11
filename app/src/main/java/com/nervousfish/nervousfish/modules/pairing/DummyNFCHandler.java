@@ -17,14 +17,21 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
         super(serviceLocator);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param buffer The bytes to write
+     */
     @Override
     void write(final byte[] buffer) {
-
+        //needs to be implemented
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     void showWarning() {
-
+        //needs to be implemented
     }
 
     /**
