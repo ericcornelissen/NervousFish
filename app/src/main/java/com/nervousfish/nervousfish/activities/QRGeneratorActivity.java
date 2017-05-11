@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.util.Log;
 
 
@@ -33,7 +32,6 @@ public class QRGeneratorActivity extends Activity {
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
 
- 
 
     /**
      *
