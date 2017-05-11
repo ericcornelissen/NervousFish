@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.service_locator;
 
-import com.nervousfish.nervousfish.modules.IModule;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
@@ -24,6 +23,8 @@ import org.greenrobot.eventbus.EventBus;
  * Manages all modules and provides access to them.
  */
 final class ServiceLocator implements IServiceLocator {
+
+    private final String androidFilesDir;
     private final IDatabase database;
     private final IKeyGenerator keyGenerator;
     private final IEncryptor encryptor;
@@ -36,8 +37,8 @@ final class ServiceLocator implements IServiceLocator {
     /**
      * Package-private constructor of the service locator
      */
-    @SuppressWarnings("checkstyle:parameternumber")
-    ServiceLocator() {
+    ServiceLocator(final String androidFilesDir) {
+        this.androidFilesDir = androidFilesDir;
         this.constants = Constants.newInstance(this).get();
         this.fileSystem = AndroidFileSystemAdapter.newInstance(this).get();
         this.database = GsonDatabaseAdapter.newInstance(this).get();
@@ -51,64 +52,81 @@ final class ServiceLocator implements IServiceLocator {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public String getAndroidFilesDir() {
+        this.assertExists(this.androidFilesDir, "androidFileDir");
+        return this.androidFilesDir;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public IDatabase getDatabase() {
-        checkModule(this.database, "database");
+        this.assertExists(this.database, "database");
         return this.database;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IKeyGenerator getKeyGenerator() {
-        checkModule(this.keyGenerator, "keyGenerator");
+        this.assertExists(this.keyGenerator, "keyGenerator");
         return this.keyGenerator;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IEncryptor getEncryptor() {
-        checkModule(this.encryptor, "encryptor");
+        this.assertExists(this.encryptor, "encryptor");
         return this.encryptor;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IFileSystem getFileSystem() {
-        checkModule(this.fileSystem, "fileSystem");
+        this.assertExists(this.fileSystem, "fileSystem");
         return this.fileSystem;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IConstants getConstants() {
-        checkModule(this.constants, "constants");
+        this.assertExists(this.constants, "constants");
         return this.constants;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IBluetoothHandler getBluetoothHandler() {
-        checkModule(this.bluetoothHandler, "bluetoothHandler");
+        this.assertExists(this.bluetoothHandler, "bluetoothHandler");
         return this.bluetoothHandler;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public INFCHandler getNFCHandler() {
-        checkModule(this.nfcHandler, "nfcHandler");
+        this.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public IQRHandler getQRHandler() {
-        checkModule(this.qrHandler, "qrHandler");
+        this.assertExists(this.qrHandler, "qrHandler");
         return this.qrHandler;
     }
 
@@ -123,13 +141,13 @@ final class ServiceLocator implements IServiceLocator {
     /**
      * Checks if the module is initialized and throws an error otherwise.
      *
-     * @param module     The module to check
-     * @param moduleName The name of the module
+     * @param object The object to check
+     * @param name   The name of the object
      */
-    private void checkModule(final IModule module, final String moduleName) {
-        if (module == null) {
+    private void assertExists(final Object object, final String name) {
+        if (object == null) {
             // TODO: log this when the logging branch is merged
-            throw new ModuleNotFoundException("The module \"" + moduleName + "\" is used before it is defined");
+            throw new ModuleNotFoundException("The module \"" + name + "\" is used before it is defined");
         }
     }
 
@@ -137,6 +155,7 @@ final class ServiceLocator implements IServiceLocator {
      * Thrown when a module was called before it was initialized.
      */
     private class ModuleNotFoundException extends RuntimeException {
+
         /**
          * Constructs a new exception to make clear that a module was requested before it was initialized.
          *
@@ -145,5 +164,7 @@ final class ServiceLocator implements IServiceLocator {
         ModuleNotFoundException(final String message) {
             super(message);
         }
+
     }
+
 }
