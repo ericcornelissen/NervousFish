@@ -2,11 +2,11 @@ package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +34,6 @@ public class GsonDatabaseAdapterTest {
     private final static String CONTACTS_PATH = "temp_contacts.json";
     private final static String USERDATA_PATH = "temp_userdata.json";
 
-    private IServiceLocatorCreator serviceLocatorCreator = mock(IServiceLocatorCreator.class);
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
 
@@ -40,13 +41,12 @@ public class GsonDatabaseAdapterTest {
 
     @Before
     public void setup() {
-        when(serviceLocatorCreator.getServiceLocator()).thenReturn(serviceLocator);
         when(serviceLocator.getConstants()).thenReturn(constants);
+        when(constants.getFileDir()).thenReturn("");
         when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
         when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
-        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocatorCreator);
-        this.database.onSLReadyEvent(mock(SLReadyEvent.class));
+        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
     }
 
     @After
@@ -63,7 +63,7 @@ public class GsonDatabaseAdapterTest {
         Contact contact = new Contact("Zoidberg", key);
 
         database.addContact(contact);
-        assertEquals("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]\n", read(CONTACTS_PATH));
+        assertEquals("[{\"name\":\"Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"key\"}]}]\n", read(CONTACTS_PATH));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class GsonDatabaseAdapterTest {
         Contact contact = new Contact("Zoidberg", key);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"key\"}]}]", CONTACTS_PATH);
 
         database.deleteContact(contact);
         assertEquals("[]\n", read(CONTACTS_PATH));
@@ -93,7 +93,7 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith1Contact() throws IOException {
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"key\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"key\"}]}]", CONTACTS_PATH);
 
         IKey key = new SimpleKey("key");
         Contact contact = new Contact("Zoidberg", key);
@@ -106,8 +106,8 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith2Contacts() throws IOException {
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"ABABAB\"}}," +
-                "{\"name\":\"Fry\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"BABABA\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"ABABAB\"}]}," +
+                "{\"name\":\"Fry\",\"publicKey\":[\"simple\",{\"key\":\"BABABA\"}]}]", CONTACTS_PATH);
 
         IKey zoidbergsDey = new SimpleKey("ABABAB");
         Contact zoidberg = new Contact("Zoidberg", zoidbergsDey);
@@ -127,13 +127,13 @@ public class GsonDatabaseAdapterTest {
         Contact oldContact = new Contact("Zoidberg", keyA);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"keyA\"}}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"keyA\"}]}]", CONTACTS_PATH);
 
         IKey keyB = new SimpleKey("keyB");
         Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
-        assertEquals("[{\"name\":\"not Zoidberg\",\"publicKey\":{\"_type\":\"simple\",\"key\":\"keyB\"}}]\n", read(CONTACTS_PATH));
+        assertEquals("[{\"name\":\"not Zoidberg\",\"publicKey\":[\"simple\",{\"key\":\"keyB\"}]}]\n", read(CONTACTS_PATH));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -147,6 +147,56 @@ public class GsonDatabaseAdapterTest {
         assertEquals(9000 + 1, 9001);
     }
 
+    @Test
+    public void testGetProfileEmpty() throws IOException {
+        List<Profile> actual = database.getProfiles();
+        assertEquals(new ArrayList<Profile>(), actual);
+    }
+
+    @Test
+    public void testAddProfile() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
+        database.addProfile(newProfile);
+
+        List<Profile> actual = database.getProfiles();
+        assertTrue(newProfile.equals(actual.get(0)));
+    }
+
+    @Test
+    public void testUpdateProfile() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
+        database.addProfile(newProfile);
+
+        Profile newProfileUpdate = new Profile("OtherName", keyPair);
+        database.updateProfile(newProfile, newProfileUpdate);
+        List<Profile> actual = database.getProfiles();
+
+        assertFalse(newProfile.equals(actual.get(0)));
+        assertTrue(newProfileUpdate.equals(actual.get(0)));
+        assertEquals(1, actual.size());
+    }
+
+    @Test
+    public void testDeleteProfile() throws IOException {
+        IKey pubKey = new SimpleKey("PubKey");
+        IKey privKey = new SimpleKey("privKey");
+        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        Profile newProfile = new Profile("CoolGuy", keyPair);
+        database.addProfile(newProfile);
+
+        List<Profile> actual = database.getProfiles();
+        assertEquals(1, actual.size());
+        database.deleteProfile(newProfile);
+        actual = database.getProfiles();
+
+        assertEquals(0, actual.size());
+    }
 
     private void write(final String data, final String filePath) {
         try {

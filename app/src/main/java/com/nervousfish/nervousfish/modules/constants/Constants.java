@@ -1,51 +1,35 @@
 package com.nervousfish.nervousfish.modules.constants;
 
-import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
-
-import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Class implementing the main constants for the application.
  */
 public final class Constants implements IConstants {
 
-    private final static String DB_USERDATA_PATH = "accountInformation.json";
-    private final static String DB_CONTACTS_PATH = "contacts.json";
-
-    @SuppressWarnings("PMD.SingularField")
-    private final IServiceLocatorCreator serviceLocatorCreator;
+    private final static String DB_USERDATA_PATH = "/accountInformation.json";
+    private final static String DB_CONTACTS_PATH = "/contacts.json";
+    private String fileDir;
 
     /**
      * Prevents construction from outside the class.
      *
-     * @param serviceLocatorCreator The object responsible for creating the service locator
+     * @param serviceLocator Can be used to get access to other modules
      */
-    private Constants(final IServiceLocatorCreator serviceLocatorCreator) {
-        this.serviceLocatorCreator = serviceLocatorCreator;
-        this.serviceLocatorCreator.registerToEventBus(this);
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
+    private Constants(final IServiceLocator serviceLocator) {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Subscribe
-    @Override
-    public void onSLReadyEvent(final SLReadyEvent event) {
-        // Here you can get modules from the service locator
-    }
-
-    /**
-     * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an {@link IServiceLocatorCreator}
-     * can access the new module to create the new {@link IServiceLocator}.
+     * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
+     * {@link IServiceLocator}
      *
-     * @param serviceLocatorCreator The service locator bridge that creates the new service locator
+     * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<Constants> newInstance(final IServiceLocatorCreator serviceLocatorCreator) {
-        return new ModuleWrapper<>(new Constants(serviceLocatorCreator));
+    public static ModuleWrapper<Constants> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new Constants(serviceLocator));
     }
 
     /**
@@ -53,7 +37,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseContactsPath() {
-        return Constants.DB_CONTACTS_PATH;
+        return getFileDir() + Constants.DB_CONTACTS_PATH;
     }
 
     /**
@@ -61,7 +45,23 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseUserdataPath() {
-        return Constants.DB_USERDATA_PATH;
+        return getFileDir() + Constants.DB_USERDATA_PATH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFileDir() {
+        return this.fileDir;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFileDir(final String FileDir) {
+        this.fileDir = FileDir;
     }
 
 }

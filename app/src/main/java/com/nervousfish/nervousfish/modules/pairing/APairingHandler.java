@@ -2,7 +2,7 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.service_locator.IServiceLocatorCreator;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,17 +17,15 @@ import java.util.List;
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 abstract class APairingHandler {
 
-    private final IServiceLocatorCreator serviceLocatorCreator;
     private final IDatabase database;
 
     /**
-     * Prevent instatiation from non-subclasses outside the package
+     * Prevent instantiation by other classes outside it's package
+     * @param serviceLocator
      */
-    APairingHandler(IServiceLocatorCreator serviceLocatorCreator) {
-        // Prevent instatiation from non-subclasses outside the package
-        this.serviceLocatorCreator = serviceLocatorCreator;
-        this.serviceLocatorCreator.registerToEventBus(this);
-        database = this.serviceLocatorCreator.getServiceLocator().getDatabase();
+    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
+    APairingHandler(final IServiceLocator serviceLocator) {
+        database = serviceLocator.getDatabase();
     }
 
     /**

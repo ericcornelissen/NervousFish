@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.IModule;
 
 import java.io.IOException;
@@ -28,13 +29,6 @@ public interface IDatabase extends IModule {
     void deleteContact(final Contact contact) throws IllegalArgumentException, IOException;
 
     /**
-     * Get a list of all contacts in the database.
-     *
-     * @return A {@link List} of {@link Contact Contacts}.
-     */
-    List<Contact> getAllContacts() throws IOException;
-
-    /**
      * Update an existing contact in the database.
      *
      * @param oldContact The old {@link Contact} to be updated.
@@ -43,4 +37,41 @@ public interface IDatabase extends IModule {
      */
     void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException;
 
+    /**
+     * Get a list of all contacts in the database.
+     *
+     * @return A {@link List} of {@link Contact Contacts}.
+     */
+    List<Contact> getAllContacts() throws IOException;
+
+    /**
+     * Get the Profile list with user information.
+     *
+     * @return A {@link List} of {@link Profile Profiles}.
+     */
+    List<Profile> getProfiles() throws IOException;
+
+    /**
+     * Add a new profile in the database.
+     *
+     * @param profile The {@link Profile} to add to the database.
+     */
+    void addProfile(final Profile profile) throws IOException;
+
+    /**
+     * Delete an profile from the database.
+     *
+     * @param profile The {@link Profile} to remove from the database.
+     * @throws IllegalArgumentException When {@code profile} is not in the database.
+     */
+    void deleteProfile(final Profile profile) throws IllegalArgumentException, IOException;
+
+    /**
+     * Update an existing profile in the database.
+     *
+     * @param oldProfile The old {@link Profile} to be updated.
+     * @param newProfile The new {@link Profile} details.
+     * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
+     */
+    void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException;
 }

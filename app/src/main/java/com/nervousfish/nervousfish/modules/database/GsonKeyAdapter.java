@@ -9,15 +9,11 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
  */
 final class GsonKeyAdapter extends TypeAdapter<IKey> {
-
-    private final static String KEY_TYPE_FIELD = "_type";
 
     /**
      * Constructor for the {@code GsonKeyAdapter} class.
@@ -31,58 +27,45 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      */
     @Override
     public void write(final JsonWriter writer, final IKey key) throws IOException {
+        writer.beginArray();
+
+        // First write the key type
+        final String keyType = key.getType();
+        writer.value(keyType);
+
+        // Then write the rest of the key
         writer.beginObject();
-        switch (key.getType()) {
-            case ConstantKeywords.RSA_KEY:
-                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
-                writer.value("RSA");
-
-                final String keyValue = key.getKey();
-                final String[] keyValues = keyValue.split(" ");
-                writer.name("modulus");
-                writer.value(keyValues[0]);
-                writer.name("exponent");
-                writer.value(keyValues[1]);
-
-                break;
-            case "simple":
-                writer.name(GsonKeyAdapter.KEY_TYPE_FIELD);
-                writer.value("simple");
-
-                writer.name("key");
-                writer.value(key.getKey());
-
-                break;
-            default:
-                throw new IOException("Could not write key");
-        }
+        key.toJSON(writer);
         writer.endObject();
+
+        writer.endArray();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidFinalLocalVariable") // final IKey key is actually useful here
     public IKey read(final JsonReader reader) throws IOException {
-        final Map<String, String> keyMap = new ConcurrentHashMap<>();
-
+        reader.beginArray();
+        final String type = reader.nextString();
         reader.beginObject();
-        while (reader.hasNext()) {
-            final String name = reader.nextName();
-            final String value = reader.nextString();
-            keyMap.put(name, value);
-        }
-        reader.endObject();
 
-        final String type = keyMap.get(GsonKeyAdapter.KEY_TYPE_FIELD);
+        final IKey key;
         switch (type) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKey(keyMap.get("modulus"), keyMap.get("exponent"));
+                key = RSAKey.fromJSON(reader);
+                break;
             case "simple":
-                return new SimpleKey(keyMap.get("key"));
+                key = SimpleKey.fromJSON(reader);
+                break;
             default:
                 throw new IOException("Could not read key");
         }
+
+        reader.endObject();
+        reader.endArray();
+        return key;
     }
 
 }

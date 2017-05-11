@@ -26,7 +26,7 @@ import java.util.UUID;
 // 4) Suggested use by Android Bluetooth Manual
 // 5) explained where used
 
-public final class BluetoothConnectionService extends APairingHandler implements IBluetoothHandler {
+public final class AndroidBluetoothAdapter extends APairingHandler implements IBluetoothHandler {
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -58,7 +58,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @param handler        A Handler to send messages back to the UI Activity
      * @param serviceLocator The object responsible for creating the service locator
      */
-    private BluetoothConnectionService(final Handler handler, final IServiceLocator serviceLocator) {
+    private AndroidBluetoothAdapter(final Handler handler, final IServiceLocator serviceLocator) {
         super(serviceLocator);
         this.handler = handler;
         mState = STATE_NONE;
@@ -73,8 +73,8 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @param serviceLocator The service locator bridge that creates the new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocator));
+    public static ModuleWrapper<AndroidBluetoothAdapter> newInstance(final Handler handler, final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new AndroidBluetoothAdapter(handler, serviceLocator));
     }
 
     /**
@@ -315,7 +315,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
 
                 // If a connection was accepted
                 if (socket != null) {
-                    synchronized (BluetoothConnectionService.this) {
+                    synchronized (AndroidBluetoothAdapter.this) {
                         switch (mState) {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
@@ -404,7 +404,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
 
             // Reset the ConnectThread because we're done
-            synchronized (BluetoothConnectionService.this) {
+            synchronized (AndroidBluetoothAdapter.this) {
                 connectThread = null;
             }
 

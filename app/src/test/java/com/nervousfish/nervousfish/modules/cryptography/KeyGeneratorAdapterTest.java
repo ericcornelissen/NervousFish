@@ -1,8 +1,7 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.modules.cryptography;
 
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
-import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ public class KeyGeneratorAdapterTest {
 
         assertEquals(RSAKey.class, keyPair.getPublicKey().getClass());
         assertEquals(RSAKey.class, keyPair.getPrivateKey().getClass());
-        assertEquals(((RSAKey) keyPair.getPrivateKey()).getKey().split(" ")[0],
-                ((RSAKey) keyPair.getPublicKey()).getKey().split(" ")[0]);
+        assertEquals((keyPair.getPrivateKey()).getKey().split(" ")[0],
+                (keyPair.getPublicKey()).getKey().split(" ")[0]);
     }
 }

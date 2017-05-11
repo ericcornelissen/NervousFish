@@ -10,10 +10,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,27 +45,89 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
-    private static final int MESSAGE_DUPLICATE_NAME = 3;
-
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
-
+    private static final int MESSAGE_DUPLICATE_NAME = 3;
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int REQUEST_CODE_CHECK_BLUETOOTH_STATE = 101;
 
     // Device is now discoverable for 300 seconds
     private static final int DISCOVERABILITY_TIME = 300;
-
+    /**
+     * The Handler that gets information back from the BluetoothChatService
+     */
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(final Message msg) {
+            switch (msg.what) {
+                case MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothConnectionService.STATE_CONNECTED:
+                            //TODO: do iets met connected met evt device name
+                            break;
+                        case BluetoothConnectionService.STATE_CONNECTING:
+                            //TODO: do iets met connecting
+                            break;
+                        case BluetoothConnectionService.STATE_LISTEN:
+                        case BluetoothConnectionService.STATE_NONE:
+                            //TODO: do iets met not connected
+                            break;
+                    }
+                    break;
+                case MESSAGE_READ:
+                    final byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    final ByteArrayInputStream in = new ByteArrayInputStream(readBuf);
+                    final ObjectInputStream is;
+                    Contact temp = null;
+                    try {
+                        is = new ObjectInputStream(in);
+                        temp = (Contact) is.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (temp != null) {
+                        // TODO: save the contact in the db
+                        // see APairingHandler saveContact(bytes)
+                    }
+                    break;
+                case MESSAGE_DUPLICATE_NAME:
+                    // TODO: show an appropriate error
+            }
+        }
+    };
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothConnectionService;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
+    /**
+     * The on-click listener for all devices in the ListViews
+     */
+    private final AdapterView.OnItemClickListener mDeviceClickListener
+            = new AdapterView.OnItemClickListener() {
+        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            stopDiscovering();
+
+            // Get the device MAC address, which is the last 17 chars in the View
+            final String info = ((TextView) v).getText().toString();
+            final String address = info.substring(info.length() - 17);
+            final BluetoothDevice device = getDevice(address);
+            bluetoothConnectionService.connect(device);
+
+
+            // Create the result Intent and include the MAC address
+            final Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+
+
+            // Set result and finish this Activity
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+
+        }
+    };
     private ArrayAdapter<String> newDevicesArrayAdapter;
-    private ArrayAdapter<String> pairedDevicesArrayAdapter;
-    private IServiceLocator serviceLocator;
-    private String connectedDeviceName = null; //string of the connected device name
-
-
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(final Context context, final Intent intent) {
@@ -90,37 +150,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         }
     };
-
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private final AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
-            stopDiscovering();
-
-            // Get the device MAC address, which is the last 17 chars in the View
-            final String info = ((TextView) v).getText().toString();
-            final String address = info.substring(info.length() - 17);
-            BluetoothDevice device = getDevice(address);
-            bluetoothConnectionService.connect(device);
-
-
-            // Create the result Intent and include the MAC address
-            final Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-
-        }
-    };
-
-
-
+    private ArrayAdapter<String> pairedDevicesArrayAdapter;
+    private IServiceLocator serviceLocator;
+    private String connectedDeviceName = null; //string of the connected device name
 
     /**
      * {@inheritDoc}
@@ -160,7 +192,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         });
 
 
-
         // Find and set up the ListView for paired devices
         final ListView pairedListView = (ListView) findViewById(R.id.pairedlist);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
@@ -175,7 +206,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
 
-
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(broadcastReceiver, filter);
@@ -187,6 +217,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // Get the BluetoothConnectionService.
         this.bluetoothConnectionService = serviceLocator.getBluetoothHandler();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -216,8 +247,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStop();
         bluetoothConnectionService.stop();
     }
-
-
 
     /**
      * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
@@ -260,8 +289,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * Lines up all paired devices.
      */
     public void queryPairedDevices() {
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        for(BluetoothDevice device: pairedDevices) {
+        final Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice device : pairedDevices) {
             pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
     }
@@ -295,24 +324,25 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * Sets the device to being discoverable.
      */
     public void setDiscoverable() {
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        final Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABILITY_TIME);
         startActivity(discoverableIntent);
     }
 
     /**
      * Gets the device corresponding to the address from either the paired or the new devices.
+     *
      * @param address The MAC address corresponding to the device to be found
      * @return The BLuetoothDevice corresponding to the mac address.
      */
-    private BluetoothDevice getDevice(String address) {
-        for(BluetoothDevice device: pairedDevices) {
-            if(device.getAddress().equals(address)) {
+    private BluetoothDevice getDevice(final String address) {
+        for (BluetoothDevice device : pairedDevices) {
+            if (device.getAddress().equals(address)) {
                 return device;
             }
         }
-        for(BluetoothDevice device: newDevices) {
-            if(device.getAddress().equals(address)) {
+        for (BluetoothDevice device : newDevices) {
+            if (device.getAddress().equals(address)) {
                 return device;
             }
         }
@@ -336,49 +366,5 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    /**
-     * The Handler that gets information back from the BluetoothChatService
-     */
-    private final Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothConnectionService.STATE_CONNECTED:
-                            //TODO: do iets met connected met evt device name
-                            break;
-                        case BluetoothConnectionService.STATE_CONNECTING:
-                            //TODO: do iets met connecting
-                            break;
-                        case BluetoothConnectionService.STATE_LISTEN:
-                        case BluetoothConnectionService.STATE_NONE:
-                            //TODO: do iets met not connected
-                            break;
-                    }
-                    break;
-                case MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    ByteArrayInputStream in = new ByteArrayInputStream(readBuf);
-                    ObjectInputStream is;
-                    Contact temp = null;
-                    try {
-                        is = new ObjectInputStream(in);
-                        temp = (Contact) is.readObject();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if (temp != null) {
-                        // TODO: save the contact in the db
-                        // see APairingHandler saveContact(bytes)
-                    }
-                    break;
-                case MESSAGE_DUPLICATE_NAME:
-                    // TODO: show an appropriate error
-            }
-        }
-    };
 
 }
