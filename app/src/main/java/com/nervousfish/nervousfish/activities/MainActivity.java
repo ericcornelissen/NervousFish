@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,9 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -29,6 +33,7 @@ import java.util.List;
  */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class MainActivity extends AppCompatActivity {
+    private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
     private IServiceLocator serviceLocator;
 
@@ -41,6 +46,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LOGGER.info("MainActivity created");
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -125,14 +131,15 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
     /**
      * {@inheritDoc}
      */
+    @NonNull
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
 
         View v = convertView;
 
         if (v == null) {
             final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, null);
+            v = vi.inflate(R.layout.contact_list_entry, parent);
         }
 
         final Contact contact = getItem(position);

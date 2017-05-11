@@ -3,11 +3,15 @@ package com.nervousfish.nervousfish.modules.constants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class implementing the main constants for the application.
  */
 public final class Constants implements IConstants {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private final static String DB_USERDATA_PATH = "/accountInformation.json";
     private final static String DB_CONTACTS_PATH = "/contacts.json";
     private final String androidFilesDir;
@@ -19,6 +23,7 @@ public final class Constants implements IConstants {
      */
     private Constants(final IServiceLocator serviceLocator) {
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
+        LOGGER.info("Initialized");
     }
 
     /**
