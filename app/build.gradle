@@ -3,10 +3,6 @@ apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 apply from: '../config/quality.gradle'
 
-repositories {
-    mavenCentral()
-}
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
