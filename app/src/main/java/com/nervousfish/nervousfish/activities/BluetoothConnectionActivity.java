@@ -177,7 +177,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, filter);
 
-         setContentView(R.layout.activity_bluetoothconection);
+        setContentView(R.layout.activity_bluetoothconection);
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
@@ -197,8 +197,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
-        // Get the Paired Devices list
-        queryPairedDevices();
+
 
         // Find and set up the ListView for newly discovered devices
         final ListView newDevicesListView = (ListView) findViewById(R.id.discoveredlist);
@@ -238,6 +237,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStart();
         enableBluetooth();
         bluetoothConnectionService.start();
+        // Get the Paired Devices list
+        queryPairedDevices();
         discoverDevices();
     }
 
@@ -257,7 +258,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
-            throw new UnsupportedOperationException();
+            setResult(Activity.RESULT_CANCELED);
+            finish();
         }
     }
 

@@ -9,13 +9,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Contains common methods shared by all pairing modules.
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
-abstract class APairingHandler {
+abstract class APairingHandler implements Serializable{
 
     private final IDatabase database;
 

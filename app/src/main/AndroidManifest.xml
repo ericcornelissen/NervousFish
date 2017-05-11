@@ -27,6 +27,7 @@
             android:name=".activities.ContactActivity"
             android:label="@string/title_activity_contact"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.BluetoothConnectionActivity" />
     </application>
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
