@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
-import android.util.Log;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -83,11 +82,11 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void updateUserInterfaceTitle() {
         synchronized (this) {
             mState = getState();
-            Log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
+            //log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
             mNewState = mState;
 
             // Give the new state to the Handler so the UI Activity can update
-            handler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
+            //handler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
         }
     }
 
@@ -96,7 +95,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      */
     @Override
     public void start() {
-        Log.d(TAG, "start");
+        //log start
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
@@ -126,7 +125,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      */
     @Override
     public void connect(final BluetoothDevice device) {
-        Log.d(TAG, "connect to: " + device);
+        ////log connect
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
@@ -153,7 +152,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      */
     public void connected(final BluetoothSocket socket, final BluetoothDevice
             device) {
-        Log.d(TAG, "connected, Socket Type:" + "Secure");
+        ////log connected
 
         synchronized (this) {
             // Cancel the thread that completed the connection
@@ -186,7 +185,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * {@inheritDoc}
      */
     public void stop() {
-        Log.d(TAG, "stop");
+        ////log stopped
 
         synchronized (this) {
             if (connectThread != null) {
@@ -232,8 +231,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
 
     @Override
     void showWarning() {
-        handler.obtainMessage(MESSAGE_DUPLICATE_NAME)
-                .sendToTarget();
+        // needs to be implemented later
     }
 
     /**
@@ -291,15 +289,14 @@ public final class BluetoothConnectionService extends APairingHandler implements
                         MY_UUID_SECURE);
 
             } catch (final IOException e) {
-                Log.e(TAG, "Socket Type: " + "Secure" + "listen() failed", e);
+                //log listening failed
             }
             serverSocket = tmp;
             mState = STATE_LISTEN;
         }
 
         public void run() {
-            Log.d(TAG, "Socket Type: " + "Secure"
-                    + "BEGIN mAcceptThread" + this);
+            //log begin listening
             setName("AcceptThread" + "Secure");
 
             BluetoothSocket socket = null;
@@ -311,7 +308,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                     // successful connection or an exception
                     socket = serverSocket.accept();
                 } catch (final IOException e) {
-                    Log.e(TAG, "Socket Type: " + "Secure" + "accept() failed", e);
+                    //log listening failed
                     break;
                 }
 
@@ -330,7 +327,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                                 try {
                                     socket.close();
                                 } catch (final IOException e) {
-                                    Log.e(TAG, "Could not close unwanted socket", e);
+                                    //log couldn't close unwanted socket
                                 }
                                 break;
                             default: //nothing
@@ -339,16 +336,15 @@ public final class BluetoothConnectionService extends APairingHandler implements
                     }
                 }
             }
-            Log.i(TAG, "END mAcceptThread, socket Type: " + "Secure");
-
+            //log end accept thread
         }
 
-        public void cancel() {
-            Log.d(TAG, "Socket Type" + "Secure" + "cancel " + this);
+        void cancel() {
+            //log cancelation of accept
             try {
                 serverSocket.close();
             } catch (final IOException e) {
-                Log.e(TAG, "Socket Type" + "Secure" + "close() of server failed", e);
+                //log close/server fail
             }
         }
     }
@@ -362,7 +358,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
-        public ConnectThread(final BluetoothDevice device) {
+        ConnectThread(final BluetoothDevice device) {
             super();
 
             mmDevice = device;
@@ -374,14 +370,14 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 tmp = device.createRfcommSocketToServiceRecord(
                         MY_UUID_SECURE);
             } catch (final IOException e) {
-                Log.e(TAG, "Socket Type: " + "Secure" + "create() failed", e);
+                //log connection failed
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN connectThread SocketType:" + "Secure");
+            //log connect thread started
             setName("ConnectThread" + "Secure");
 
             // Always cancel discovery because it will slow down a connection
@@ -397,9 +393,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 try {
                     mmSocket.close();
                 } catch (final IOException e2) {
-                    Log.e(TAG, "unable to close() " + "Secure"
-                                    + " socket during connection failure",
-                            e2);
+                    //log connection failure
                 }
                 connectionFailed();
                 return;
@@ -414,11 +408,11 @@ public final class BluetoothConnectionService extends APairingHandler implements
             connected(mmSocket, mmDevice);
         }
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (final IOException e) {
-                Log.e(TAG, "close() of connect " + "Secure" + " socket failed", e);
+                //log closing socket failed
             }
         }
     }
@@ -435,7 +429,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
         ConnectedThread(final BluetoothSocket socket) {
             super();
 
-            Log.d(TAG, "create ConnectedThread: " + "Secure");
+            //log connected Thread created
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -445,7 +439,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (final IOException e) {
-                Log.e(TAG, "temp sockets not created", e);
+                //log temporary socket failed to create
             }
 
             mmInStream = tmpIn;
@@ -454,23 +448,20 @@ public final class BluetoothConnectionService extends APairingHandler implements
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN connectedThread");
+            //log begin connected thread
             final byte[] buffer = new byte[1024];
-            int bytes;
 
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
+                    mmInStream.read(buffer);
 
-                    handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
 
                     saveContact(buffer);
 
                 } catch (final IOException e) {
-                    Log.e(TAG, "disconnected", e);
+                    //log disconnected
                     connectionLost();
                     break;
                 }
@@ -486,16 +477,16 @@ public final class BluetoothConnectionService extends APairingHandler implements
             try {
                 mmOutStream.write(buffer);
             } catch (final IOException e) {
-                Log.e(TAG, "Exception during write", e);
+                //log exception during writing
             }
         }
 
 
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (final IOException e) {
-                Log.e(TAG, "close() of connect socket failed", e);
+                //log closing connect socket failed
             }
         }
     }
