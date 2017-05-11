@@ -10,20 +10,19 @@ import org.slf4j.LoggerFactory;
  * Class implementing the main constants for the application.
  */
 public final class Constants implements IConstants {
-    private final static String DB_USERDATA_PATH = "/accountInformation.json";
-    private final static String DB_CONTACTS_PATH = "/contacts.json";
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
-    private String fileDir;
+    private final static String DB_USERDATA_PATH = "/accountInformation.json";
+    private final static String DB_CONTACTS_PATH = "/contacts.json";
+    private final String androidFilesDir;
 
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private Constants(final IServiceLocator serviceLocator) {
+        this.androidFilesDir = serviceLocator.getAndroidFilesDir();
         LOGGER.info("Initialized");
     }
 
@@ -43,7 +42,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseContactsPath() {
-        return getFileDir() + Constants.DB_CONTACTS_PATH;
+        return this.androidFilesDir + Constants.DB_CONTACTS_PATH;
     }
 
     /**
@@ -51,23 +50,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseUserdataPath() {
-        return getFileDir() + Constants.DB_USERDATA_PATH;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getFileDir() {
-        return this.fileDir;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setFileDir(final String FileDir) {
-        this.fileDir = FileDir;
+        return this.androidFilesDir + Constants.DB_USERDATA_PATH;
     }
 
 }
