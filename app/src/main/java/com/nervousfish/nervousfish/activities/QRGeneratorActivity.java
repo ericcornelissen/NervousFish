@@ -82,7 +82,7 @@ public class QRGeneratorActivity extends Activity {
 
         final Reader qrReader = new MultiFormatReader();
 
-        int[] intArray = new int[QRCode.getWidth()*QRCode.getHeight()];
+        final int[] intArray = new int[QRCode.getWidth()*QRCode.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
         QRCode.getPixels(intArray, 0, QRCode.getWidth(), 0, 0, QRCode.getWidth(), QRCode.getHeight());
 
@@ -91,7 +91,7 @@ public class QRGeneratorActivity extends Activity {
         String publicKey = "";
 
         try {
-            Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<>();
+            final Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<>();
             decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
             final Result decoded = qrReader.decode(bitmap, decodeHints);
             publicKey = decoded.getText();
