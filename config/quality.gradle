@@ -85,6 +85,7 @@ android {
         htmlReport true
         lintConfig file("$configDir/lint/lint.xml")
         htmlOutput file("$reportsDir/lint/lint-result.html")
+        disable "InvalidPackage", "GoogleAppIndexingWarning"
     }
 }
 
