@@ -53,8 +53,9 @@ public final class ContactActivity extends AppCompatActivity {
      */
     private void setKeys(final Contact contact) {
         final List<String> keys = new ArrayList<>();
-        final IKey key = contact.getPublicKey();
-        keys.add(key.getKey());
+        for (final IKey key : contact.getKeys()) {
+            keys.add(key.getKey());
+        }
 
         final ListView lv = (ListView) this.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<>(this,

@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.activities;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
 
-import java.util.ArrayList;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
@@ -21,7 +20,10 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -29,7 +31,8 @@ import java.util.List;
  */
 public final class MainActivity extends AppCompatActivity {
 
-    private final List<Contact> contacts = new ArrayList<>();
+    private IServiceLocator serviceLocator;
+    private List<Contact> contacts;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -39,13 +42,17 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        final Intent intent = getIntent();
+
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.setContentView(R.layout.activity_main);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        this.setSupportActionBar(toolbar);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             /**
              * {@inheritDoc}
              */
@@ -54,19 +61,25 @@ public final class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
+
         });
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+
+        try {
+            fillDatabaseWithDemoData();
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
         final ListView lv = (ListView) findViewById(R.id.listView);
-
-        //Retrieve the contacts from the database
-        getContacts();
-
-        lv.setAdapter(new ContactListAdapter(this, contacts));
+        lv.setAdapter(new ContactListAdapter(this, this.contacts));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             /**
              * {@inheritDoc}
              */
@@ -74,6 +87,7 @@ public final class MainActivity extends AppCompatActivity {
             public void onItemClick(final AdapterView<?> parent, final View view, final int index, final long id) {
                 openContact(index);
             }
+
         });
     }
 
@@ -89,32 +103,55 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Temporary method for filling the listview with some friends.
+     * Temporarily fill the database with demo data for development.
      */
-    private void getContacts() {
-        contacts.add(new Contact("Eric", new SimpleKey("4y5uh4334j43j034934j634096j3409j63409")));
-        contacts.add(new Contact("Joost", new SimpleKey("vmiadofjaei3jrioejsOJi9oidnicjPShljKDHf")));
-        contacts.add(new Contact("Stas", new SimpleKey("soai4ha4iluhak4djnfuiqnu3na;kjhdf9jdo;i")));
-        contacts.add(new Contact("Kilian", new SimpleKey("u09srtjs0r9gjs09rjg09egrjeag90rjeg90a")));
-        contacts.add(new Contact("Cornel", new SimpleKey("5hu94h4ju64j6234h6l2h46ljk2h34jkl624")));
+    private void fillDatabaseWithDemoData() throws IOException {
+        final IDatabase database = this.serviceLocator.getDatabase();
+        final Contact a = new Contact("Eric", new SimpleKey("jdfs09jdfs09jfs0djfds9jfsd0"));
+        final Contact b = new Contact("Stas", new SimpleKey("4ji395j495i34j5934ij534i"));
+        final Contact c = new Contact("Joost", new SimpleKey("dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+        final Contact d = new Contact("Kilian", new SimpleKey("sdjnefiniwfnfejewjnwnkenfk32"));
+        final Contact e = new Contact("Cornel", new SimpleKey("nr23uinr3uin2o3uin23oi4un234ijn"));
+        if (!database.getAllContacts().isEmpty()) {
+            database.deleteContact(a);
+            database.deleteContact(b);
+            database.deleteContact(c);
+            database.deleteContact(d);
+            database.deleteContact(e);
+        }
+        database.addContact(a);
+        database.addContact(b);
+        database.addContact(c);
+        database.addContact(d);
+        database.addContact(e);
     }
+
 }
 
+/**
+ * An Adapter which converts a list with contacts into List entries.
+ */
+final class ContactListAdapter extends ArrayAdapter<Contact> {
 
-class ContactListAdapter extends ArrayAdapter<Contact> {
-
-    public ContactListAdapter(final Context context, final List<Contact> items) {
-        super(context, 0, items);
+    /**
+     * Create and initialize a ContactListAdapter.
+     *
+     * @param context  the Context where the ListView is created
+     * @param contacts the list with contacts
+     */
+    ContactListAdapter(final Context context, final List<Contact> contacts) {
+        super(context, 0, contacts);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-
         View v = convertView;
 
         if (v == null) {
-            final LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
+            final LayoutInflater vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.contact_list_entry, null);
         }
 
@@ -122,20 +159,9 @@ class ContactListAdapter extends ArrayAdapter<Contact> {
 
         if (contact != null) {
             final TextView name = (TextView) v.findViewById(R.id.name);
-            final TextView pubKey = (TextView) v.findViewById(R.id.pubKeySnippet);
 
             if (name != null) {
                 name.setText(contact.getName());
-            }
-
-            if (pubKey != null) {
-                final String publicKey = contact.getPublicKey().getKey();
-                if(publicKey.length() > 30) {
-                    final String pubKeySnippet = contact.getPublicKey().getKey().substring(0, 30) + "...";
-                    pubKey.setText(pubKeySnippet);
-                } else {
-                    pubKey.setText(publicKey);
-                }
             }
         }
 
