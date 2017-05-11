@@ -10,13 +10,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,7 +34,7 @@ import java.util.Set;
  * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"PMD.UnusedLocalVariable", "PMD.UnusedPrivateField", "PMD.SingularField",
+@SuppressWarnings({"PMD.TooManyMethods","PMD.UnusedLocalVariable", "PMD.UnusedPrivateField", "PMD.SingularField",
         "PMD.AvoidFinalLocalVariable", "PMD.NullAssignment", "PMD.TooFewBranchesForASwitchStatement"})
 // 1 + 2 +3)because it's used for storing, later it will also be accessed
 // 4) This is taken from the Android manual on bluetooth :/
@@ -49,9 +46,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
-    private static final int MESSAGE_DUPLICATE_NAME = 3;
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
+    private static final int MESSAGE_DUPLICATE_NAME = 3;
+
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
@@ -78,6 +76,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                         case BluetoothConnectionService.STATE_NONE:
                             //TODO: do iets met not connected
                             break;
+                        default:
+                            break;
                     }
                     break;
                 case MESSAGE_READ:
@@ -99,6 +99,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                     break;
                 case MESSAGE_DUPLICATE_NAME:
                     // TODO: show an appropriate error
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -147,7 +150,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
             final String address = info.substring(info.length() - 17);
-            BluetoothDevice device = getDevice(address);
+            final BluetoothDevice device = getDevice(address);
             bluetoothConnectionService.connect(device);
 
 
