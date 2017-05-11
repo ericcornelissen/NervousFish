@@ -114,7 +114,6 @@ public final class MainActivity extends AppCompatActivity {
         keys.add(new SimpleKey("jdfs09jdfs09jfs0djfds9jfsd0"));
         keys.add(new SimpleKey("jasdgoijoiahl328hg09asdf322"));
         final Contact a = new Contact("Eric", keys);
-//        final Contact a = new Contact("Eric", new SimpleKey("jdfs09jdfs09jfs0djfds9jfsd0"));
         final Contact b = new Contact("Stas", new SimpleKey("4ji395j495i34j5934ij534i"));
         final Contact c = new Contact("Joost", new SimpleKey("dnfh4nl4jknlkjnr4j34klnk3j4nl"));
         final Contact d = new Contact("Kilian", new SimpleKey("sdjnefiniwfnfejewjnwnkenfk32"));
