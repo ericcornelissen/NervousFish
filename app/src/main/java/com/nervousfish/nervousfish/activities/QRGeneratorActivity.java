@@ -5,21 +5,28 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.FormatException;
 import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.datamatrix.DataMatrixReader;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.util.Hashtable;
 
 
 /**
@@ -49,7 +56,6 @@ public class QRGeneratorActivity extends Activity {
      * @return The bitmap being the QR code
      */
     public static Bitmap encode(String publicKey) {
-
         QRCodeWriter qrWriter = new QRCodeWriter();
         Bitmap bitmap = null;
         try {
@@ -77,7 +83,8 @@ public class QRGeneratorActivity extends Activity {
      * @return The decoded public key.
      */
     public static String decode(Bitmap QRCode) {
-        QRCodeReader qrReader = new QRCodeReader();
+
+        Reader qrReader = new MultiFormatReader();
 
         int[] intArray = new int[QRCode.getWidth()*QRCode.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
@@ -86,8 +93,11 @@ public class QRGeneratorActivity extends Activity {
         LuminanceSource source = new RGBLuminanceSource(QRCode.getWidth(), QRCode.getHeight(), intArray);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         String publicKey = "";
+
         try {
-            Result decoded = qrReader.decode(bitmap);
+            Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<DecodeHintType, Object>();
+            decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
+            Result decoded = qrReader.decode(bitmap, decodeHints);
             publicKey = decoded.getText();
         } catch (NotFoundException e) {
             e.printStackTrace();
