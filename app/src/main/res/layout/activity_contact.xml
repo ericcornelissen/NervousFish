@@ -27,7 +27,9 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                app:srcCompat="?attr/actionModeCloseDrawable" />
+                app:srcCompat="?attr/actionModeCloseDrawable"
+                android:contentDescription="@string/contact_title"
+                tools:targetApi="lollipop" />
 
             <TextView
                 android:id="@+id/toolbar_title"
