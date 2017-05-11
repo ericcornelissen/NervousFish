@@ -69,9 +69,7 @@ public final class MainActivity extends AppCompatActivity {
 
         final ListView lv = (ListView) findViewById(R.id.listView);
         final Intent mainActivityIntent = getIntent();
-
-        final Intent intent = getIntent();
-        serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        serviceLocator = (IServiceLocator) mainActivityIntent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         fillDatabaseWithDemoData();
 
@@ -79,8 +77,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 final Intent intent = new Intent(MainActivity.this,ContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                        mainActivityIntent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 startActivity(intent);
             }
         });
@@ -144,13 +141,13 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
      */
     @NonNull
     @Override
-    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
 
         View v = convertView;
 
         if (v == null) {
             final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, parent);
+            v = vi.inflate(R.layout.contact_list_entry, null);
         }
 
         final Contact contact = getItem(position);

@@ -2,16 +2,19 @@ package com.nervousfish.nervousfish.test;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
+import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -24,17 +27,15 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class ContactActivitySteps extends ActivityInstrumentationTestCase2<ContactActivity> {
+public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    public ContactActivitySteps(ContactActivity activityClass) {
-        super(ContactActivity.class);
+    private Activity parent = null;
+
+    public ContactActivitySteps(EntryActivity activityClass) {
+        super(EntryActivity.class);
     }
 
     private static Matcher<? super View> hasErrorText(final String expectedError) {
@@ -43,21 +44,27 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Conta
 
     @Given("^I am viewing the contact activity$")
     public void iAmViewingContactActivity() {
-        assertTrue(getCurrentActivity() instanceof ContactActivity);
+        assertNotNull(getActivity());
+
+        Intent intent = new Intent(getActivity(), ContactActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
+                getActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+        getActivity().startActivity(intent);
     }
 
     @When("^I press the back arrow$")
     public void iPressBackArrow() {
-        ImageButton button = (ImageButton) getCurrentActivity().findViewById(R.id.backButton);
-        button.performClick();
+        onView(withId(R.id.backButton)).perform(click());
     }
 
     @When("^I press the delete button$")
     public void iPressDeleteButton() {
+        onView(withId(R.id.deleteButton)).perform(click());
     }
 
     @Then("^I should go to the previous activity I visited$")
     public void iShouldGoToPreviousActivity() {
+        assertEquals(LoginActivity.class, getCurrentActivity().getClass());
     }
 
     @Then("^I should get a popup asking if I am sure to delete the contact$")

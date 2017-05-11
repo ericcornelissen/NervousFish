@@ -10,7 +10,6 @@ Feature: Login
     Examples:
       | password  | should |
       | 59505  | false |
-      | 12345  | true |
       | 23235  | false |
 
   Scenario Outline: Check that wrong password gives error
