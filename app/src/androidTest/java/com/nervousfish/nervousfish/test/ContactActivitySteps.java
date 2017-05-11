@@ -8,11 +8,10 @@ import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.LoginActivity;
-import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
+import com.nervousfish.nervousfish.activities.ContactActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -32,43 +31,37 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class ContactActivitySteps extends ActivityInstrumentationTestCase2<ContactActivity> {
 
-    public LoginActivitySteps(EntryActivity activityClass) {
-        super(EntryActivity.class);
+    public ContactActivitySteps(ContactActivity activityClass) {
+        super(ContactActivity.class);
     }
 
     private static Matcher<? super View> hasErrorText(final String expectedError) {
         return new ErrorTextMatcher(expectedError);
     }
 
-    @Given("^I have a LoginActivity")
-    public void iHaveALoginActivity() {
-        assertNotNull(getActivity());
+    @Given("^I am viewing the contact activity$")
+    public void iAmViewingContactActivity() {
+        assertTrue(getCurrentActivity() instanceof ContactActivity);
     }
 
-    @When("^I input password \"(.*?)\"$")
-    public void iInputPassword(final String password) {
-        onView(withId(R.id.password)).perform(typeText(password));
+    @When("^I press the back arrow$")
+    public void iPressBackArrow() {
+        ImageButton button = (ImageButton) getCurrentActivity().findViewById(R.id.backButton);
+        button.performClick();
     }
 
-    @When("^I press submit button$")
-    public void iPressSubmit() {
-        onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
+    @When("^I press the delete button$")
+    public void iPressDeleteButton() {
     }
 
-    @Then("^I (true|false) continue to the MainActivity$")
-    public void iShouldContinueToNextActivity(boolean continuesToNextActivity) {
-        if (continuesToNextActivity) {
-            assertEquals(getCurrentActivity().getClass(), MainActivity.class);
-        } else {
-            assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
-        }
+    @Then("^I should go to the previous activity I visited$")
+    public void iShouldGoToPreviousActivity() {
     }
 
-    @Then("^I should see an auth error$")
-    public void iShouldSeeAuthError() {
-        onView(withId(R.id.error)).check(matches(isDisplayed()));
+    @Then("^I should get a popup asking if I am sure to delete the contact$")
+    public void iShouldGetPopup() {
     }
 
     private Activity getCurrentActivity() {
