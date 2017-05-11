@@ -48,7 +48,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final String profilesPath;
 
     /**
-     * {@inheritDoc}
+     * Prevents construction from outside the class.
+     *
+     * @param serviceLocator Can be used to get access to other modules
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
@@ -274,11 +276,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeContacts() throws IOException {
         final File file = new File(this.contactsPath);
         if (!file.exists()) {
-            LOGGER.warn("Database didn't exist -> created a new one");
+            LOGGER.warn("Contacts part of the database didn't exist");
             final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(this.contactsPath), UTF_8));
             writer.write("[]");
             writer.close();
+            LOGGER.info("Created the contacts part of the database");
         }
     }
 
@@ -289,11 +292,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeUserdata() throws IOException {
         final File file = new File(profilesPath);
         if (!file.exists()) {
-            LOGGER.warn("Database didn't exist -> created a new one");
+            LOGGER.warn("User data part of the database didn't exist");
             final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(profilesPath), UTF_8));
             writer.write("[]");
             writer.close();
+            LOGGER.info("Created the user data part of the database");
         }
     }
 }

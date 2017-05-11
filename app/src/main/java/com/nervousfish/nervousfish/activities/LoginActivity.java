@@ -29,7 +29,7 @@ public final class LoginActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        LOGGER.info("LoginActivity entered");
+        LOGGER.info("LoginActivity created");
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -42,7 +42,7 @@ public final class LoginActivity extends Activity {
 
             @Override
             public void onClick(final View v) {
-                LOGGER.info("submitButton clicked");
+                LOGGER.info("Submit button clicked");
                 if (mPassword.getError() == null) {
                     validateAccount();
                 }

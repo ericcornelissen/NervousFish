@@ -26,7 +26,7 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LOGGER.info("EntryActivity entered");
+        LOGGER.info("EntryActivity created");
         final IServiceLocator serviceLocator = new ServiceLocator();
 
         final Intent intent = new Intent(this, LoginActivity.class);
