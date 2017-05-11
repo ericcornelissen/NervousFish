@@ -1,7 +1,7 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.IModule;
 
 import java.io.IOException;

@@ -39,10 +39,6 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
-
-    lintOptions {
-        disable 'GoogleAppIndexingWarning'
-    }
 }
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
@@ -52,6 +48,8 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+
 
     compile 'com.google.zxing:javase:3.3.0'
 
