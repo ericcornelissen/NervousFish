@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.activities;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -10,14 +10,18 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -45,8 +49,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
-    public static final String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final int MESSAGE_DUPLICATE_NAME = 3;
+
+    public static final String EXTRA_DEVICE_ADDRESS = "device_address";
+
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int REQUEST_CODE_CHECK_BLUETOOTH_STATE = 101;
@@ -100,34 +106,12 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     private IBluetoothHandler bluetoothConnectionService;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private final AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
-            stopDiscovering();
-
-            // Get the device MAC address, which is the last 17 chars in the View
-            final String info = ((TextView) v).getText().toString();
-            final String address = info.substring(info.length() - 17);
-            final BluetoothDevice device = getDevice(address);
-            bluetoothConnectionService.connect(device);
-
-
-            // Create the result Intent and include the MAC address
-            final Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-
-        }
-    };
     private ArrayAdapter<String> newDevicesArrayAdapter;
+    private ArrayAdapter<String> pairedDevicesArrayAdapter;
+    private IServiceLocator serviceLocator;
+    private String connectedDeviceName = null; //string of the connected device name
+
+
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(final Context context, final Intent intent) {
@@ -150,9 +134,37 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         }
     };
-    private ArrayAdapter<String> pairedDevicesArrayAdapter;
-    private IServiceLocator serviceLocator;
-    private String connectedDeviceName = null; //string of the connected device name
+
+    /**
+     * The on-click listener for all devices in the ListViews
+     */
+    private final AdapterView.OnItemClickListener mDeviceClickListener
+            = new AdapterView.OnItemClickListener() {
+        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            stopDiscovering();
+
+            // Get the device MAC address, which is the last 17 chars in the View
+            final String info = ((TextView) v).getText().toString();
+            final String address = info.substring(info.length() - 17);
+            BluetoothDevice device = getDevice(address);
+            bluetoothConnectionService.connect(device);
+
+
+            // Create the result Intent and include the MAC address
+            final Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+
+
+            // Set result and finish this Activity
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+
+        }
+    };
+
+
+
 
     /**
      * {@inheritDoc}
@@ -165,7 +177,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, filter);
 
-        // setContentView(R.layout.activity_device_list);
+         setContentView(R.layout.activity_bluetoothconection);
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
@@ -180,18 +192,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 new ArrayAdapter<>(this, R.layout.activity_bluetoothconection);
         newDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.activity_bluetoothconection);
 
-        // Initializes the button for discovering devices
-        final Button discoveryButton = (Button) findViewById(R.id.fab);
-        discoveryButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-
-                discoverDevices();
-            }
-        });
-
-
         // Find and set up the ListView for paired devices
         final ListView pairedListView = (ListView) findViewById(R.id.pairedlist);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
@@ -204,6 +204,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         final ListView newDevicesListView = (ListView) findViewById(R.id.discoveredlist);
         newDevicesListView.setAdapter(newDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
+
 
 
         // Register for broadcasts when discovery has finished
@@ -237,6 +238,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStart();
         enableBluetooth();
         bluetoothConnectionService.start();
+        discoverDevices();
     }
 
     /**
