@@ -2,16 +2,14 @@ package com.nervousfish.nervousfish.activities;
 
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Kilian on 11/05/2017.
- */
+
 @RunWith(AndroidJUnit4.class)
 public class QRGeneratorActivityTest {
 

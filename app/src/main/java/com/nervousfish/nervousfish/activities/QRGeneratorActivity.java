@@ -3,9 +3,9 @@ package com.nervousfish.nervousfish.activities;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -19,11 +19,8 @@ import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.datamatrix.DataMatrixReader;
-import com.google.zxing.qrcode.QRCodeReader;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.Hashtable;
@@ -95,15 +92,18 @@ public class QRGeneratorActivity extends Activity {
         String publicKey = "";
 
         try {
-            Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<DecodeHintType, Object>();
+            Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<>();
             decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
             Result decoded = qrReader.decode(bitmap, decodeHints);
             publicKey = decoded.getText();
         } catch (NotFoundException e) {
+            Log.d("QRGenerator", "Not Found Exception " + e.getMessage());
             e.printStackTrace();
         } catch (ChecksumException e) {
+            Log.d("QRGenerator", "Checksum Exception " + e.getMessage());
             e.printStackTrace();
         } catch (FormatException e) {
+            Log.d("QRGenerator", "Format Exception " + e.getMessage());
             e.printStackTrace();
         }
         return publicKey;
