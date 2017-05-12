@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 
-import com.nervousfish.nervousfish.AsynchTester;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -58,7 +57,7 @@ public class BluetoothConnectionServiceTest {
         assertEquals(0, bConService.getState());
     }
 
-    /**
+    /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
      * @throws Exception
@@ -66,20 +65,17 @@ public class BluetoothConnectionServiceTest {
     @Test(expected = NullPointerException.class)
     public void startThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "secureAcceptThread"));
-        AsynchTester aTester = new AsynchTester(new Runnable() {
+        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void run() {
-                bConService.start();
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
             }
         });
-
-        aTester.start();
-        aTester.test();
-
+        bConService.start();
         assertNotNull(getField(bConService, "secureAcceptThread"));
     }
 
-    /**
+    /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
      * @throws Exception
@@ -87,11 +83,18 @@ public class BluetoothConnectionServiceTest {
     @Test(expected = NullPointerException.class)
     public void connectThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "connectThread"));
+
+        ((Thread) getField(bConService, "connectThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
+            }
+        });
         bConService.connect(mock(BluetoothDevice.class));
         assertNotNull(getField(bConService, "connectThread"));
     }
 
-    /**
+    /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
      * @throws Exception
