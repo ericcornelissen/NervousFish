@@ -27,6 +27,7 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -192,8 +193,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // one for newly discovered devices
         // TODO: replace all the resources in the code below (All the R.something.something references)
         pairedDevicesArrayAdapter =
-                new ArrayAdapter<>(this, R.layout.activity_bluetoothconection);
-        newDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.activity_bluetoothconection);
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        newDevicesArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         // Find and set up the ListView for paired devices
         final ListView pairedListView = (ListView) findViewById(R.id.pairedlist);
@@ -219,6 +220,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Get the BluetoothConnectionService.
         this.bluetoothConnectionService = serviceLocator.getBluetoothHandler();
+
+        this.newDevices = new HashSet<BluetoothDevice>();
     }
 
     /**
@@ -296,7 +299,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * Lines up all paired devices.
      */
     public void queryPairedDevices() {
-        final Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        pairedDevices = bluetoothAdapter.getBondedDevices();
+        findViewById(R.id.pairedlist).setVisibility(View.VISIBLE);
         for (BluetoothDevice device : pairedDevices) {
             pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
