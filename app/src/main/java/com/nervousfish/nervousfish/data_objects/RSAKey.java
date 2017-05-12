@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class RSAKey implements IKey {
 
     private final static String TYPE = ConstantKeywords.RSA_KEY;
+    private final static String JSON_CONSTANT_EXPONENT = "exponent";
+    private final static String JSON_CONSTANT_MODULUS = "modulus";
 
     private final String exponent;
     private final String modulus;
@@ -38,16 +40,14 @@ public final class RSAKey implements IKey {
      */
     static public IKey fromJSON(final JsonReader reader) throws IOException {
         final Map<String, String> map = new ConcurrentHashMap<>();
-        reader.beginObject();
         while (reader.hasNext()) {
             final String name = reader.nextName();
             final String value = reader.nextString();
             map.put(name, value);
         }
-        reader.endObject();
 
-        final String modulus = map.get("modules");
-        final String exponent = map.get("exponent");
+        final String modulus = map.get(RSAKey.JSON_CONSTANT_MODULUS);
+        final String exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
         return new RSAKey(modulus, exponent);
     }
 
@@ -72,8 +72,8 @@ public final class RSAKey implements IKey {
      */
     @Override
     public void toJSON(final JsonWriter writer) throws IOException {
-        writer.name("modulus").value(this.modulus);
-        writer.name("exponent").value(this.exponent);
+        writer.name(RSAKey.JSON_CONSTANT_MODULUS).value(this.modulus);
+        writer.name(RSAKey.JSON_CONSTANT_EXPONENT).value(this.exponent);
     }
 
     /**
