@@ -3,36 +3,73 @@ package com.nervousfish.nervousfish.data_objects;
 /**
  * KeyPair POJO which keeps a public and private key.
  */
-
 public final class KeyPair {
 
+    private final String name;
     private final IKey publicKey;
     private final IKey privateKey;
 
     /**
-     * Constructor for the KeyPair.
+     * The constructor for the {@link KeyPair}.
      *
-     * @param publicKey The publicKey of the KeyPair.
-     * @param privateKey The privateKey of the KeyPair.
+     * @param name       The name for the {@link KeyPair}.
+     * @param publicKey  The publicKey of the {@link KeyPair}.
+     * @param privateKey The privateKey of the {@link KeyPair}.
      */
-    public KeyPair(final IKey publicKey, final IKey privateKey) {
+    public KeyPair(final String name, final IKey publicKey, final IKey privateKey) {
+        this.name = name;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
     }
 
     /**
-     * Returns the public key of this KeyPair.
-     * @return the public key as IKey
+     * Returns the name of the {@link KeyPair}.
+     *
+     * @return the name.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Returns the public key of the {@link KeyPair}.
+     *
+     * @return the public {@link IKey}.
      */
     public IKey getPublicKey() {
         return this.publicKey;
     }
 
     /**
-     * Returns the private key of this KeyPair.
-     * @return the private key as IKey
+     * Returns the private key of the {@link KeyPair}.
+     *
+     * @return the private {@link IKey}.
      */
     public IKey getPrivateKey() {
         return this.privateKey;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        final KeyPair that = (KeyPair) o;
+        return this.name.equals(that.name)
+                && this.publicKey.equals(that.publicKey)
+                && this.privateKey.equals(that.privateKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode() + this.publicKey.hashCode() + this.privateKey.hashCode();
+    }
+
 }
