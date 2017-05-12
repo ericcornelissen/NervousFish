@@ -1,8 +1,10 @@
-package com.nervousfish.nervousfish.activities;
+package com.nervousfish.nervousfish.test;
 
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
+
+import com.nervousfish.nervousfish.QRGenerator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +14,7 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 @SuppressWarnings("PMD")
-public class QRGeneratorActivityTest {
+public class QRGeneratorTest {
 
     private final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0" +
             "FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/" +
@@ -25,22 +27,22 @@ public class QRGeneratorActivityTest {
     @Test
     public void testEncodeAsExpected() throws Exception{
 
-        final Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
+        final Bitmap QRcode = QRGenerator.encode(publicKey);
 
 
-        final String result = QRGeneratorActivity.decode(QRcode);
+        final String result = QRGenerator.decode(QRcode);
         assertEquals(publicKey, result);
     }
 
     @Test
     public void testWidthIsAsExpected() throws Exception{
-        final Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
+        final Bitmap QRcode = QRGenerator.encode(publicKey);
         assertEquals(QRCODE_IMAGE_WIDTH, QRcode.getWidth());
     }
 
     @Test
     public void testHeightIsAsExpected() throws Exception{
-        final Bitmap QRcode = QRGeneratorActivity.encode(publicKey);
+        final Bitmap QRcode = QRGenerator.encode(publicKey);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }
 

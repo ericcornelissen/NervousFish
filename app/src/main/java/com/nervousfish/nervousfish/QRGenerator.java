@@ -1,6 +1,5 @@
-package com.nervousfish.nervousfish.activities;
+package com.nervousfish.nervousfish;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
@@ -28,11 +27,16 @@ import java.util.Hashtable;
 /**
  * Generates a QR code
  */
-@SuppressWarnings("PMD.UseUtilityClass")
-public class QRGeneratorActivity extends Activity {
+final public class QRGenerator {
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
 
+    /**
+     * Unused constructor for utility class
+     */
+    private QRGenerator() {
+        super();
+    }
 
     /**
      *
