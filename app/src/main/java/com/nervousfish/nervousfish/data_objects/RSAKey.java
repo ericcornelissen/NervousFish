@@ -21,7 +21,7 @@ public final class RSAKey implements IKey {
     /**
      * Constructor for a RSA key.
      *
-     * @param modulus The modules of the RSA key.
+     * @param modulus  The modules of the RSA key.
      * @param exponent The exponent of the RSA key.
      */
     public RSAKey(final String modulus, final String exponent) {
@@ -85,7 +85,7 @@ public final class RSAKey implements IKey {
 
         final RSAKey that = (RSAKey) o;
         return this.modulus.equals(that.modulus)
-            && this.exponent.equals(that.exponent);
+                && this.exponent.equals(that.exponent);
     }
 
     /**

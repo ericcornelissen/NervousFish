@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 public interface IServiceLocator extends Serializable {
 
+    String getAndroidFilesDir();
     IDatabase getDatabase();
     IKeyGenerator getKeyGenerator();
     IEncryptor getEncryptor();
@@ -24,5 +25,12 @@ public interface IServiceLocator extends Serializable {
     IBluetoothHandler getBluetoothHandler();
     INFCHandler getNFCHandler();
     IQRHandler getQRHandler();
+
+    /**
+     * Registers the class specified to the EventBus
+     *
+     * @param object The Object that should be registed to the EventBus
+     */
+    void registerToEventBus(final Object object);
 
 }
