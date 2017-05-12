@@ -1,11 +1,9 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
@@ -29,23 +27,13 @@ public final class SimpleKey implements IKey {
     }
 
     /**
-     * Create a new SimpleKey given a {@link JsonReader}.
+     * Constructor for a simple key given a {@link Map} of its values.
      *
-     * @param reader The {@link JsonReader} to read with.
-     * @return An {@link IKey} representing the JSON key.
-     * @throws IOException When the {@link JsonReader} throws an {@link IOException}.
+     * @param map A {@link Map} mapping {@link SimpleKey} attribute names to values.
      */
-    static public IKey fromJSON(final JsonReader reader) throws IOException {
-        final Map<String, String> map = new ConcurrentHashMap<>();
-        while (reader.hasNext()) {
-            final String name = reader.nextName();
-            final String value = reader.nextString();
-            map.put(name, value);
-        }
-
-        final String name = map.get("name");
-        final String key = map.get("key");
-        return new SimpleKey(name, key);
+    public SimpleKey(final Map<String, String> map) {
+        this.name = map.get("name");
+        this.key = map.get("key");
     }
 
     /**
