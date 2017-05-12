@@ -28,6 +28,7 @@ import java.util.Hashtable;
 /**
  * Generates a QR code
  */
+@SuppressWarnings("PMD.UseUtilityClass")
 public class QRGeneratorActivity extends Activity {
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
