@@ -63,7 +63,8 @@ public class GsonDatabaseAdapterTest {
         Contact contact = new Contact("Zoidberg", key);
 
         database.addContact(contact);
-        assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"key\"}]]}]\n", read(CONTACTS_PATH));
+        assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\"," +
+                "{\"name\":\"Webmail\",\"key\":\"key\"}]]}]\n", read(CONTACTS_PATH));
     }
 
     @Test
@@ -74,17 +75,17 @@ public class GsonDatabaseAdapterTest {
         Contact contact = new Contact("Zoidberg", keys);
 
         database.addContact(contact);
-        assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"keyA\"}]," +
-                "[\"simple\",{\"key\":\"keyB\"}]]}]\n", read(CONTACTS_PATH));
+        assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"keyA\"}]," +
+                "[\"simple\",{\"name\":\"Webserver\",\"key\":\"keyB\"}]]}]\n", read(CONTACTS_PATH));
     }
 
     @Test
     public void testDeleteContactWithSingleKeyRemovesContactFromDatabase() throws IOException {
-        IKey key = new SimpleKey("", "key");
+        IKey key = new SimpleKey("FTP", "key");
         Contact contact = new Contact("Zoidberg", key);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"key\"}]]}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"key\"}]]}]", CONTACTS_PATH);
 
         database.deleteContact(contact);
         assertEquals("[]\n", read(CONTACTS_PATH));
@@ -93,13 +94,13 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testDeleteContactWithMultipleKeysRemovesContactFromDatabase() throws IOException {
         Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("", "keyA"));
-        keys.add(new SimpleKey("", "keyB"));
+        keys.add(new SimpleKey("Webserver", "keyA"));
+        keys.add(new SimpleKey("Webmail", "keyB"));
         Contact contact = new Contact("Zoidberg", keys);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"keyA\"}]," +
-                "[\"simple\",{\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"Webserver\",\"key\":\"keyA\"}]," +
+                "[\"simple\",{\"name\":\"Webmail\",\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
 
         database.deleteContact(contact);
         assertEquals("[]\n", read(CONTACTS_PATH));
@@ -121,15 +122,15 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith1Contact() throws IOException {
         Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("", "keyA"));
-        keys.add(new SimpleKey("", "keyB"));
+        keys.add(new SimpleKey("FTP", "keyA"));
+        keys.add(new SimpleKey("Webmail", "keyB"));
         Contact contact = new Contact("Zoidberg", keys);
 
         List<Contact> expected = new ArrayList<>();
         expected.add(contact);
 
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"keyA\"}]," +
-                "[\"simple\",{\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"keyA\"}]," +
+                "[\"simple\",{\"name\":\"Webmail\",\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
 
         List<Contact> actual = database.getAllContacts();
         assertEquals(expected, actual);
@@ -137,9 +138,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testGetAllContactsReturnsContactWithMultipleKeys() throws IOException {
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"key\"}]]}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"key\"}]]}]", CONTACTS_PATH);
 
-        IKey key = new SimpleKey("", "key");
+        IKey key = new SimpleKey("FTP", "key");
         Contact contact = new Contact("Zoidberg", key);
         List<Contact> expected = new ArrayList<>();
         expected.add(contact);
@@ -150,12 +151,12 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith2Contacts() throws IOException {
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"ABABAB\"}]]}," +
-                "{\"name\":\"Fry\",\"keys\":[[\"simple\",{\"key\":\"BABABA\"}]]}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"ABABAB\"}]]}," +
+                "{\"name\":\"Fry\",\"keys\":[[\"simple\",{\"name\":\"Webmail\",\"key\":\"BABABA\"}]]}]", CONTACTS_PATH);
 
-        IKey zoidbergsDey = new SimpleKey("", "ABABAB");
-        Contact zoidberg = new Contact("Zoidberg", zoidbergsDey);
-        IKey frysKey = new SimpleKey("", "BABABA");
+        IKey zoidbergsKey = new SimpleKey("FTP", "ABABAB");
+        Contact zoidberg = new Contact("Zoidberg", zoidbergsKey);
+        IKey frysKey = new SimpleKey("Webmail", "BABABA");
         Contact fry = new Contact("Fry", frysKey);
         List<Contact> expected = new ArrayList<>();
         expected.add(zoidberg);
@@ -167,17 +168,19 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testImplementedWritesToDatabase() throws IOException {
-        IKey keyA = new SimpleKey("", "keyA");
+        IKey keyA = new SimpleKey("Webserver", "keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
 
         // Add the contact to remove from the database
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"keyA\"}]]}]", CONTACTS_PATH);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"Webserver\"," +
+                "\"key\":\"keyA\"}]]}]", CONTACTS_PATH);
 
-        IKey keyB = new SimpleKey("", "keyB");
+        IKey keyB = new SimpleKey("FTP", "keyB");
         Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
-        assertEquals("[{\"name\":\"not Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"keyB\"}]]}]\n", read(CONTACTS_PATH));
+        assertEquals("[{\"name\":\"not Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\"," +
+                "\"key\":\"keyB\"}]]}]\n", read(CONTACTS_PATH));
     }
 
     @Test(expected=IllegalArgumentException.class)

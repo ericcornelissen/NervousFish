@@ -4,6 +4,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
@@ -34,9 +36,18 @@ public final class SimpleKey implements IKey {
      * @throws IOException When the {@link JsonReader} throws an {@link IOException}.
      */
     static public IKey fromJSON(final JsonReader reader) throws IOException {
-        reader.nextName();
-        final String key = reader.nextString();
-        return new SimpleKey("", key);
+        final Map<String, String> map = new ConcurrentHashMap<>();
+        //reader.beginObject();
+        while (reader.hasNext()) {
+            final String name = reader.nextName();
+            final String value = reader.nextString();
+            map.put(name, value);
+        }
+        //reader.endObject();
+
+        final String name = map.get("name");
+        final String key = map.get("key");
+        return new SimpleKey(name, key);
     }
 
     /**
@@ -68,6 +79,7 @@ public final class SimpleKey implements IKey {
      */
     @Override
     public void toJSON(final JsonWriter writer) throws IOException {
+        writer.name("name").value(this.name);
         writer.name("key").value(this.key);
     }
 
