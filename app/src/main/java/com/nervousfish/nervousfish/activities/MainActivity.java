@@ -71,8 +71,6 @@ public final class MainActivity extends AppCompatActivity {
         final Intent mainActivityIntent = getIntent();
         serviceLocator = (IServiceLocator) mainActivityIntent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        fillDatabaseWithDemoData();
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -83,39 +81,35 @@ public final class MainActivity extends AppCompatActivity {
         });
 
         try {
+            fillDatabaseWithDemoData();
             lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to retrieve contacts from database", e);
         }
     }
 
     /**
      * Temporarily fill the database with demo data for development.
      */
-    private void fillDatabaseWithDemoData() {
+    private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = serviceLocator.getDatabase();
-        try {
-
-            final Contact a = new Contact("Eric", new SimpleKey("", "jdfs09jdfs09jfs0djfds9jfsd0"));
-            final Contact b = new Contact("Stas", new SimpleKey("", "4ji395j495i34j5934ij534i"));
-            final Contact c = new Contact("Joost", new SimpleKey("", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-            final Contact d = new Contact("Kilian", new SimpleKey("", "sdjnefiniwfnfejewjnwnkenfk32"));
-            final Contact e = new Contact("Cornel", new SimpleKey("", "nr23uinr3uin2o3uin23oi4un234ijn"));
-            if (!database.getAllContacts().isEmpty()) {
-                database.deleteContact(a);
-                database.deleteContact(b);
-                database.deleteContact(c);
-                database.deleteContact(d);
-                database.deleteContact(e);
-            }
-            database.addContact(a);
-            database.addContact(b);
-            database.addContact(c);
-            database.addContact(d);
-            database.addContact(e);
-        } catch (final IOException e) {
-            e.printStackTrace();
+        final Contact a = new Contact("Eric", new SimpleKey("", "jdfs09jdfs09jfs0djfds9jfsd0"));
+        final Contact b = new Contact("Stas", new SimpleKey("", "4ji395j495i34j5934ij534i"));
+        final Contact c = new Contact("Joost", new SimpleKey("", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+        final Contact d = new Contact("Kilian", new SimpleKey("", "sdjnefiniwfnfejewjnwnkenfk32"));
+        final Contact e = new Contact("Cornel", new SimpleKey("", "nr23uinr3uin2o3uin23oi4un234ijn"));
+        if (!database.getAllContacts().isEmpty()) {
+            database.deleteContact(a);
+            database.deleteContact(b);
+            database.deleteContact(c);
+            database.deleteContact(d);
+            database.deleteContact(e);
         }
+        database.addContact(a);
+        database.addContact(b);
+        database.addContact(c);
+        database.addContact(d);
+        database.addContact(e);
     }
 }
 
