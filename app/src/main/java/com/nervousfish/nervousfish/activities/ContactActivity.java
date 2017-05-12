@@ -44,10 +44,10 @@ public final class ContactActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Are you sure?")
-                        .setContentText("Won't be able to recover this contact!")
-                        .setCancelText("Cancel")
-                        .setConfirmText("Yes,delete it!")
+                        .setTitleText(getString(R.string.delete_popup_you_sure))
+                        .setContentText(getString(R.string.delete_popup_no_recovery))
+                        .setCancelText(getString(R.string.cancel))
+                        .setConfirmText(getString(R.string.yes_delete))
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(final SweetAlertDialog sDialog) {
