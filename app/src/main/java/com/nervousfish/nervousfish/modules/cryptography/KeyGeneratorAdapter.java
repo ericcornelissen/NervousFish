@@ -48,7 +48,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      *
      * @return a randomly generated KeyPair
      */
-    public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static KeyPair generateRSAKeyPair(final String name) throws NoSuchAlgorithmException, InvalidKeySpecException {
         final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
 
@@ -59,9 +59,9 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
                 RSAPrivateKeySpec.class);
 
-        final RSAKey rsaPublicKey = new RSAKey(publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
-        final RSAKey rsaPrivateKey = new RSAKey(privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
+        final RSAKey rsaPublicKey = new RSAKey(name, publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
+        final RSAKey rsaPrivateKey = new RSAKey(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
-        return new KeyPair(rsaPublicKey, rsaPrivateKey);
+        return new KeyPair(name, rsaPublicKey, rsaPrivateKey);
     }
 }
