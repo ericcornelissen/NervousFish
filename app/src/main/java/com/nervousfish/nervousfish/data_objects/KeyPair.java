@@ -5,18 +5,30 @@ package com.nervousfish.nervousfish.data_objects;
  */
 public final class KeyPair {
 
+    private final String name;
     private final IKey publicKey;
     private final IKey privateKey;
 
     /**
      * The constructor for the {@link KeyPair}.
      *
-     * @param publicKey  The publicKey of the KeyPair.
-     * @param privateKey The privateKey of the KeyPair.
+     * @param name       The name for the {@link KeyPair}.
+     * @param publicKey  The publicKey of the {@link KeyPair}.
+     * @param privateKey The privateKey of the {@link KeyPair}.
      */
-    public KeyPair(final IKey publicKey, final IKey privateKey) {
+    public KeyPair(final String name, final IKey publicKey, final IKey privateKey) {
+        this.name = name;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+    }
+
+    /**
+     * Returns the name of the {@link KeyPair}.
+     *
+     * @return the name.
+     */
+    public String getName() {
+        return this.name;
     }
 
     /**
@@ -47,7 +59,8 @@ public final class KeyPair {
         }
 
         final KeyPair that = (KeyPair) o;
-        return this.publicKey.equals(that.publicKey)
+        return this.name.equals(that.name)
+                && this.publicKey.equals(that.publicKey)
                 && this.privateKey.equals(that.privateKey);
     }
 
@@ -56,7 +69,7 @@ public final class KeyPair {
      */
     @Override
     public int hashCode() {
-        return this.publicKey.hashCode() + this.privateKey.hashCode();
+        return this.name.hashCode() + this.publicKey.hashCode() + this.privateKey.hashCode();
     }
 
 }
