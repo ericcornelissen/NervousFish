@@ -5,10 +5,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 
+import com.nervousfish.nervousfish.AsynchTester;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,24 +16,27 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static com.nervousfish.nervousfish.BaseTest.getField;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by stasp on 11-5-2017.
- */
+
 public class BluetoothConnectionServiceTest {
 
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private Handler handler = mock(Handler.class);
     private IConstants constants = mock(IConstants.class);
+    private BluetoothAdapter bAdapter =  mock(BluetoothAdapter.class);
     private BluetoothDevice device = mock(BluetoothDevice.class);
     private BluetoothSocket socket = mock(BluetoothSocket.class);
 
-    private IBluetoothHandler bConService;
-    private IBluetoothHandler bConService2;
-    private IBluetoothHandler bConService3;
+    private BluetoothConnectionService bConService;
+
+
 
     @Before
     public void setup() {
@@ -43,60 +46,88 @@ public class BluetoothConnectionServiceTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //when(accessMethod(bConService, "connectionFailed", new Object[0])).thenThrow(IOException.class); //this probably won't work
 
+        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, handler, serviceLocator, bAdapter);
+
+    }
+
+
+    @Test
+    public void newInstanceTest() throws Exception {
         this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Handler(), mock(IServiceLocator.class), mock(BluetoothAdapter.class));
-        //this.bConService2 = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
-        //this.bConService3 = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Object[]{handler ,serviceLocator});
-
+        assertEquals(0, bConService.getState());
     }
 
-    @After
-    public void tearDown() {
-        //accessMethod(bConService, "stop", new Object[0]);
-        //accessMethod(bConService2, "stop", new Object[0]);
-        //accessMethod(bConService3, "stop", new Object[0]);
+    /**
+     * This is done because all I can test is the creation of the necessary threads
+     * and not their functionality
+     * @throws Exception
+     */
+    @Test(expected = NullPointerException.class)
+    public void startThreadCreatedTest() throws Exception {
+        assertNull(getField(bConService, "secureAcceptThread"));
+        AsynchTester aTester = new AsynchTester(new Runnable() {
+            @Override
+            public void run() {
+                bConService.start();
+            }
+        });
+
+        aTester.start();
+        aTester.test();
+
+        assertNotNull(getField(bConService, "secureAcceptThread"));
     }
 
-
-    @Test
-    public void newInstance() throws Exception {
-        accessConstructor(BluetoothConnectionService.class, new Handler(), mock(IServiceLocator.class), mock(BluetoothAdapter.class));
-    }
-
-    @Test
-    public void start() throws Exception {
-        bConService.start();
-    }
-
-    @Test
-    public void connect() throws Exception {
+    /**
+     * This is done because all I can test is the creation of the necessary threads
+     * and not their functionality
+     * @throws Exception
+     */
+    @Test(expected = NullPointerException.class)
+    public void connectThreadCreatedTest() throws Exception {
+        assertNull(getField(bConService, "connectThread"));
         bConService.connect(mock(BluetoothDevice.class));
+        assertNotNull(getField(bConService, "connectThread"));
     }
 
-    @Test
-    public void connected() throws Exception {
+    /**
+     * This is done because all I can test is the creation of the necessary threads
+     * and not their functionality
+     * @throws Exception
+     */
+    /*@Test(expected = NullPointerException.class)
+    public void connectedThreadCreatedTest() throws Exception {
+        assertNull(getField(bConService, "connectedThread"));
         bConService.connect(mock(BluetoothDevice.class));
-    }
+        assertNotNull(getField(bConService, "connectedThread"));
+    }*/
 
     @Test
     public void stop() throws Exception {
         bConService.stop();
+        assertNull(getField(bConService, "secureAcceptThread"));
+        assertNull(getField(bConService, "connectThread"));
+        assertNull(getField(bConService, "connectedThread"));
     }
 
     @Test
     public void write() throws Exception {
-
+        bConService.write(new byte[]{});
+        // need to test this with mocks but
+        // bluetoothServiceConnection is final
     }
 
     @Test
     public void showWarning() throws Exception {
-
+        bConService.showWarning();
+        // can't test this as it isn't implemented yet
     }
 
     @Test
-    public void getState() throws Exception {
-
+    public void getStateNewInstanceTest() throws Exception {
+        assertEquals(0, bConService.getState());
     }
+
 
 }
