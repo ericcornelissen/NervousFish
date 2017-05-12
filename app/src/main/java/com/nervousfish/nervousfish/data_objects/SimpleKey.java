@@ -13,13 +13,16 @@ public final class SimpleKey implements IKey {
     private final static String TYPE = "simple";
 
     private final String key;
+    private final String name;
 
     /**
      * Constructor for a simple key.
      *
-     * @param key The key string.
+     * @param name The name for the key.
+     * @param key  The key string.
      */
-    public SimpleKey(final String key) {
+    public SimpleKey(final String name, final String key) {
+        this.name = name;
         this.key = key;
     }
 
@@ -33,7 +36,7 @@ public final class SimpleKey implements IKey {
     static public IKey fromJSON(final JsonReader reader) throws IOException {
         reader.nextName();
         final String key = reader.nextString();
-        return new SimpleKey(key);
+        return new SimpleKey("", key);
     }
 
     /**
@@ -42,6 +45,14 @@ public final class SimpleKey implements IKey {
     @Override
     public String getKey() {
         return this.key;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     /**
@@ -70,7 +81,8 @@ public final class SimpleKey implements IKey {
         }
 
         final SimpleKey that = (SimpleKey) o;
-        return this.key.equals(that.key);
+        return this.name.equals(that.name)
+                && this.key.equals(that.key);
     }
 
     /**
@@ -78,7 +90,7 @@ public final class SimpleKey implements IKey {
      */
     @Override
     public int hashCode() {
-        return this.getKey().hashCode();
+        return this.key.hashCode() + this.name.hashCode();
     }
 
 }
