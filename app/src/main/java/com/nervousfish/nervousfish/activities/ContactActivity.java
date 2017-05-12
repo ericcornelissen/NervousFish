@@ -32,7 +32,7 @@ public final class ContactActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_contact);
+        super.setContentView(R.layout.activity_contact);
         final Intent intent = this.getIntent();
 
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
