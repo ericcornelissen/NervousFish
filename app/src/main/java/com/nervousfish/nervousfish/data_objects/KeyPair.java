@@ -12,8 +12,9 @@ public final class KeyPair {
     /**
      * The constructor for the {@link KeyPair}.
      *
-     * @param publicKey  The publicKey of the KeyPair.
-     * @param privateKey The privateKey of the KeyPair.
+     * @param name       The name for the {@link KeyPair}.
+     * @param publicKey  The publicKey of the {@link KeyPair}.
+     * @param privateKey The privateKey of the {@link KeyPair}.
      */
     public KeyPair(final String name, final IKey publicKey, final IKey privateKey) {
         this.name = name;
