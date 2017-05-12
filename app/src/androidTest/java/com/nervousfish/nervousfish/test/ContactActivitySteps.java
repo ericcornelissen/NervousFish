@@ -14,6 +14,9 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import org.hamcrest.Description;
@@ -46,7 +49,11 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
     public void iAmViewingContactActivity() {
         assertNotNull(getActivity());
 
+        IKey key = new SimpleKey("key");
+        Contact contact = new Contact("Cornel",key );
+
         Intent intent = new Intent(getActivity(), ContactActivity.class);
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
