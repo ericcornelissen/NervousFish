@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -67,18 +68,25 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         final ListView lv = (ListView) findViewById(R.id.listView);
-
-        final Intent intent = getIntent();
-        serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        final Intent mainActivityIntent = getIntent();
+        serviceLocator = (IServiceLocator) mainActivityIntent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         fillDatabaseWithDemoData();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                final Intent intent = new Intent(MainActivity.this,ContactActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                startActivity(intent);
+            }
+        });
 
         try {
             lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
         } catch (final IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -136,7 +144,7 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         if (v == null) {
             final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, parent);
+            v = vi.inflate(R.layout.contact_list_entry, null);
         }
 
         final Contact contact = getItem(position);
