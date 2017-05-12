@@ -18,6 +18,13 @@ public interface IKey extends Serializable {
     String getKey();
 
     /**
+     * Get a string representing the name of the key.
+     *
+     * @return The key name.
+     */
+    String getName();
+
+    /**
      * Get a string representation of the key type.
      *
      * @return The key type.

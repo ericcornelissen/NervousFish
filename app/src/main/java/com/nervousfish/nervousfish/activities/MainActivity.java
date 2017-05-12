@@ -117,26 +117,30 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
-        final Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("jdfs09jdfs09jfs0djfds9jfsd0"));
-        keys.add(new SimpleKey("jasdgoijoiahl328hg09asdf322"));
-        final Contact a = new Contact("Eric", keys);
-        final Contact b = new Contact("Stas", new SimpleKey("4ji395j495i34j5934ij534i"));
-        final Contact c = new Contact("Joost", new SimpleKey("dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-        final Contact d = new Contact("Kilian", new SimpleKey("sdjnefiniwfnfejewjnwnkenfk32"));
-        final Contact e = new Contact("Cornel", new SimpleKey("nr23uinr3uin2o3uin23oi4un234ijn"));
-        if (!database.getAllContacts().isEmpty()) {
-            database.deleteContact(a);
-            database.deleteContact(b);
-            database.deleteContact(c);
-            database.deleteContact(d);
-            database.deleteContact(e);
+        try {
+            final Collection<IKey> keys = new ArrayList<>();
+            keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
+            keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
+            final Contact a = new Contact("Eric", keys);
+            final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
+            final Contact c = new Contact("Joost", new SimpleKey("Webmail", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+            final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+            final Contact e = new Contact("Cornel", new SimpleKey("Webmail", "nr23uinr3uin2o3uin23oi4un234ijn"));
+            if (!database.getAllContacts().isEmpty()) {
+                database.deleteContact(a);
+                database.deleteContact(b);
+                database.deleteContact(c);
+                database.deleteContact(d);
+                database.deleteContact(e);
+            }
+            database.addContact(a);
+            database.addContact(b);
+            database.addContact(c);
+            database.addContact(d);
+            database.addContact(e);
+        } catch (final IOException e) {
+            e.printStackTrace();
         }
-        database.addContact(a);
-        database.addContact(b);
-        database.addContact(c);
-        database.addContact(d);
-        database.addContact(e);
     }
 
 }

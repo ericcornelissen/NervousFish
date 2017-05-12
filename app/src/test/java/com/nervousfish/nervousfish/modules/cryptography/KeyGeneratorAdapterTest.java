@@ -14,16 +14,16 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test to check the methods from the KeyGeneratorAdapter class.
  */
-@SuppressWarnings("PMD")
 public class KeyGeneratorAdapterTest {
 
     @Test
     public void generateRandomKeyPairTest() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        KeyPair keyPair = KeyGeneratorAdapter.generateRSAKeyPair();
+        KeyPair keyPair = KeyGeneratorAdapter.generateRSAKeyPair("FTP");
 
         assertEquals(RSAKey.class, keyPair.getPublicKey().getClass());
         assertEquals(RSAKey.class, keyPair.getPrivateKey().getClass());
-        assertEquals(((RSAKey) keyPair.getPrivateKey()).getKey().split(" ")[0],
-                ((RSAKey) keyPair.getPublicKey()).getKey().split(" ")[0]);
+        assertEquals(keyPair.getPrivateKey().getKey().split(" ")[0],
+                keyPair.getPublicKey().getKey().split(" ")[0]);
     }
+
 }
