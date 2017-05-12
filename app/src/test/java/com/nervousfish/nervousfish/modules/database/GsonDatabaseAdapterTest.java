@@ -201,9 +201,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testAddProfile() throws IOException {
-        IKey publicKey = new SimpleKey("", "key");
-        IKey privateKey = new SimpleKey("", "yek");
-        KeyPair keyPair = new KeyPair(publicKey, privateKey);
+        IKey publicKey = new SimpleKey("Webserver", "key");
+        IKey privateKey = new SimpleKey("Webserver", "yek");
+        KeyPair keyPair = new KeyPair("Webserver", publicKey, privateKey);
         Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
@@ -213,9 +213,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testUpdateProfile() throws IOException {
-        IKey publicKey = new SimpleKey("", "key");
-        IKey privateKey = new SimpleKey("", "yek");
-        KeyPair keyPair = new KeyPair(publicKey, privateKey);
+        IKey publicKey = new SimpleKey("FTP", "key");
+        IKey privateKey = new SimpleKey("FTP", "yek");
+        KeyPair keyPair = new KeyPair("FTP", publicKey, privateKey);
         Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
@@ -230,9 +230,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testDeleteProfile() throws IOException {
-        IKey publicKey = new SimpleKey("", "key");
-        IKey privateKey = new SimpleKey("", "yek");
-        KeyPair keyPair = new KeyPair(publicKey, privateKey);
+        IKey publicKey = new SimpleKey("FTP", "key");
+        IKey privateKey = new SimpleKey("FTP", "yek");
+        KeyPair keyPair = new KeyPair("FTP", publicKey, privateKey);
         Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 

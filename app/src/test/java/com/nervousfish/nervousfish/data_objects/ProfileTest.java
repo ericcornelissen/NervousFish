@@ -15,7 +15,7 @@ public class ProfileTest {
 
     @Before
     public void setup() {
-        this.keyPair = new KeyPair(mock(IKey.class), mock(IKey.class));
+        this.keyPair = new KeyPair("Webserver", mock(IKey.class), mock(IKey.class));
     }
 
     @Test
