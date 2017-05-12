@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,6 +14,18 @@ public class SimpleKeyTest {
         public void testCanBeInstantiatedWithArbitraryValues() {
             IKey key = new SimpleKey("Webmail", "foobar");
             assertNotNull(key);
+        }
+
+        @Test
+        public void testGetNameReturnsNotNull() {
+            IKey key = new SimpleKey("FTP", "foobar");
+            assertNotNull(key.getName());
+        }
+
+        @Test
+        public void testGetNameReturnsProvidedName() {
+            IKey key = new SimpleKey("Webserver", "foobar");
+            assertEquals("Webserver", key.getName());
         }
 
         @Test

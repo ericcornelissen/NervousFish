@@ -34,6 +34,12 @@ public class ProfileTest {
     }
 
     @Test
+    public void testGetKeyPairReturnsTheKeyPair() {
+        Profile profile = new Profile("foo", this.keyPair);
+        assertEquals(this.keyPair, profile.getKeyPair());
+    }
+
+    @Test
     public void testGetPublicKeyReturnsThePublicKey() {
         Profile profile = new Profile("foo", this.keyPair);
         assertEquals(this.keyPair.getPublicKey(), profile.getPublicKey());

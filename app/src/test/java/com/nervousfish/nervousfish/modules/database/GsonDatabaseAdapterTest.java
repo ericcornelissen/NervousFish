@@ -4,6 +4,7 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -70,12 +71,12 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testAddContactWithMultipleKeysWriteToDatabase() throws Exception {
         Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("FTP", "keyA"));
+        keys.add(new RSAKey("FTP", "A", "B"));
         keys.add(new SimpleKey("Webserver", "keyB"));
         Contact contact = new Contact("Zoidberg", keys);
 
         database.addContact(contact);
-        assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"keyA\"}]," +
+        assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"RSA\",{\"name\":\"FTP\",\"modulus\":\"A\",\"exponent\":\"B\"}]," +
                 "[\"simple\",{\"name\":\"Webserver\",\"key\":\"keyB\"}]]}]\n", read(CONTACTS_PATH));
     }
 
@@ -151,10 +152,10 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith2Contacts() throws IOException {
-        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"ABABAB\"}]]}," +
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"RSA\",{\"name\":\"FTP\",\"modulus\":\"A\",\"exponent\":\"B\"}]]}," +
                 "{\"name\":\"Fry\",\"keys\":[[\"simple\",{\"name\":\"Webmail\",\"key\":\"BABABA\"}]]}]", CONTACTS_PATH);
 
-        IKey zoidbergsKey = new SimpleKey("FTP", "ABABAB");
+        IKey zoidbergsKey = new RSAKey("FTP", "A", "B");
         Contact zoidberg = new Contact("Zoidberg", zoidbergsKey);
         IKey frysKey = new SimpleKey("Webmail", "BABABA");
         Contact fry = new Contact("Fry", frysKey);

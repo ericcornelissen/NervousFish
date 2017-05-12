@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -24,6 +25,18 @@ public class KeyPairTest {
     public void testCanBeInstantiatedWithArbitraryValues() {
         KeyPair keyPair = new KeyPair("Webmail", this.publicKey, this.privateKey);
         assertNotNull(keyPair);
+    }
+
+    @Test
+    public void testGetNameReturnsNotNull() {
+        KeyPair key = new KeyPair("FTP", this.publicKey, this.privateKey);
+        assertNotNull(key.getName());
+    }
+
+    @Test
+    public void testGetNameReturnsProvidedName() {
+        KeyPair key = new KeyPair("Webserver", this.publicKey, this.privateKey);
+        assertEquals("Webserver", key.getName());
     }
 
     @Test

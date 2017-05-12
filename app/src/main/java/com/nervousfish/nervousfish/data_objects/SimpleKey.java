@@ -37,13 +37,11 @@ public final class SimpleKey implements IKey {
      */
     static public IKey fromJSON(final JsonReader reader) throws IOException {
         final Map<String, String> map = new ConcurrentHashMap<>();
-        //reader.beginObject();
         while (reader.hasNext()) {
             final String name = reader.nextName();
             final String value = reader.nextString();
             map.put(name, value);
         }
-        //reader.endObject();
 
         final String name = map.get("name");
         final String key = map.get("key");

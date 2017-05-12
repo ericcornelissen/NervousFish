@@ -19,6 +19,18 @@ public class RSAKeyTest {
     }
 
     @Test
+    public void testGetNameReturnsNotNull() {
+        IKey key = new RSAKey("FTP", "foo", "bar");
+        assertNotNull(key.getName());
+    }
+
+    @Test
+    public void testGetNameReturnsProvidedName() {
+        IKey key = new RSAKey("Webserver", "foo", "bar");
+        assertEquals("Webserver", key.getName());
+    }
+
+    @Test
     public void testGetKeyReturnsNotNull() {
         IKey key = new RSAKey("FTP", "foo", "bar");
         assertNotNull(key.getKey());
