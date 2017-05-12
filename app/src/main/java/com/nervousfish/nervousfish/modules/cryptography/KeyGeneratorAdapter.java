@@ -59,8 +59,8 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
                 RSAPrivateKeySpec.class);
 
-        final RSAKey rsaPublicKey = new RSAKey(publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
-        final RSAKey rsaPrivateKey = new RSAKey(privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
+        final RSAKey rsaPublicKey = new RSAKey("", publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
+        final RSAKey rsaPrivateKey = new RSAKey("", privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
         return new KeyPair(rsaPublicKey, rsaPrivateKey);
     }

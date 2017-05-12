@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.events.SLReadyEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -60,7 +59,7 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testAddContactWithSingleKeyWriteToDatabase() throws Exception {
-        IKey key = new SimpleKey("key");
+        IKey key = new SimpleKey("Webmail", "key");
         Contact contact = new Contact("Zoidberg", key);
 
         database.addContact(contact);
@@ -70,8 +69,8 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testAddContactWithMultipleKeysWriteToDatabase() throws Exception {
         Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("keyA"));
-        keys.add(new SimpleKey("keyB"));
+        keys.add(new SimpleKey("FTP", "keyA"));
+        keys.add(new SimpleKey("Webserver", "keyB"));
         Contact contact = new Contact("Zoidberg", keys);
 
         database.addContact(contact);
@@ -81,7 +80,7 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testDeleteContactWithSingleKeyRemovesContactFromDatabase() throws IOException {
-        IKey key = new SimpleKey("key");
+        IKey key = new SimpleKey("", "key");
         Contact contact = new Contact("Zoidberg", key);
 
         // Add the contact to remove from the database
@@ -94,8 +93,8 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testDeleteContactWithMultipleKeysRemovesContactFromDatabase() throws IOException {
         Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("keyA"));
-        keys.add(new SimpleKey("keyB"));
+        keys.add(new SimpleKey("", "keyA"));
+        keys.add(new SimpleKey("", "keyB"));
         Contact contact = new Contact("Zoidberg", keys);
 
         // Add the contact to remove from the database
@@ -108,7 +107,7 @@ public class GsonDatabaseAdapterTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testDeleteContactThrowsWhenContactNotInDatabase() throws IOException {
-        IKey key = new SimpleKey("key");
+        IKey key = new SimpleKey("Webserver", "key");
         Contact contact = new Contact("Zoidberg", key);
         database.deleteContact(contact);
     }
@@ -122,8 +121,8 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testGetAllContactsReturnsListOfAllContactsWith1Contact() throws IOException {
         Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("keyA"));
-        keys.add(new SimpleKey("keyB"));
+        keys.add(new SimpleKey("", "keyA"));
+        keys.add(new SimpleKey("", "keyB"));
         Contact contact = new Contact("Zoidberg", keys);
 
         List<Contact> expected = new ArrayList<>();
@@ -140,7 +139,7 @@ public class GsonDatabaseAdapterTest {
     public void testGetAllContactsReturnsContactWithMultipleKeys() throws IOException {
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"key\"}]]}]", CONTACTS_PATH);
 
-        IKey key = new SimpleKey("key");
+        IKey key = new SimpleKey("", "key");
         Contact contact = new Contact("Zoidberg", key);
         List<Contact> expected = new ArrayList<>();
         expected.add(contact);
@@ -154,9 +153,9 @@ public class GsonDatabaseAdapterTest {
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"ABABAB\"}]]}," +
                 "{\"name\":\"Fry\",\"keys\":[[\"simple\",{\"key\":\"BABABA\"}]]}]", CONTACTS_PATH);
 
-        IKey zoidbergsDey = new SimpleKey("ABABAB");
+        IKey zoidbergsDey = new SimpleKey("", "ABABAB");
         Contact zoidberg = new Contact("Zoidberg", zoidbergsDey);
-        IKey frysKey = new SimpleKey("BABABA");
+        IKey frysKey = new SimpleKey("", "BABABA");
         Contact fry = new Contact("Fry", frysKey);
         List<Contact> expected = new ArrayList<>();
         expected.add(zoidberg);
@@ -168,13 +167,13 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testImplementedWritesToDatabase() throws IOException {
-        IKey keyA = new SimpleKey("keyA");
+        IKey keyA = new SimpleKey("", "keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
 
         // Add the contact to remove from the database
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"key\":\"keyA\"}]]}]", CONTACTS_PATH);
 
-        IKey keyB = new SimpleKey("keyB");
+        IKey keyB = new SimpleKey("", "keyB");
         Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
@@ -183,9 +182,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testUpdateContactThrowsWhenOldContactNotInDatabase() throws IOException {
-        IKey keyA = new SimpleKey("keyA");
+        IKey keyA = new SimpleKey("Webmail", "keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
-        IKey keyB = new SimpleKey("keyB");
+        IKey keyB = new SimpleKey("FTP", "keyB");
         Contact newContact = new Contact("not Zoidberg", keyB);
 
         database.updateContact(oldContact, newContact);
@@ -199,9 +198,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testAddProfile() throws IOException {
-        IKey pubKey = new SimpleKey("PubKey");
-        IKey privKey = new SimpleKey("privKey");
-        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        IKey publicKey = new SimpleKey("", "key");
+        IKey privateKey = new SimpleKey("", "yek");
+        KeyPair keyPair = new KeyPair(publicKey, privateKey);
         Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
@@ -211,9 +210,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testUpdateProfile() throws IOException {
-        IKey pubKey = new SimpleKey("PubKey");
-        IKey privKey = new SimpleKey("privKey");
-        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        IKey publicKey = new SimpleKey("", "key");
+        IKey privateKey = new SimpleKey("", "yek");
+        KeyPair keyPair = new KeyPair(publicKey, privateKey);
         Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
@@ -228,9 +227,9 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testDeleteProfile() throws IOException {
-        IKey pubKey = new SimpleKey("PubKey");
-        IKey privKey = new SimpleKey("privKey");
-        KeyPair keyPair = new KeyPair(pubKey, privKey);
+        IKey publicKey = new SimpleKey("", "key");
+        IKey privateKey = new SimpleKey("", "yek");
+        KeyPair keyPair = new KeyPair(publicKey, privateKey);
         Profile newProfile = new Profile("CoolGuy", keyPair);
         database.addProfile(newProfile);
 
