@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -36,8 +37,8 @@ public final class ContactActivity extends AppCompatActivity {
         final Intent intent = this.getIntent();
 
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        this.setName(contact);
-        this.setKeys(contact);
+        this.setName(contact.getName());
+        this.setKeys(contact.getKeys());
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -70,27 +71,27 @@ public final class ContactActivity extends AppCompatActivity {
     /**
      * Set the name of the {@link Contact} to the {@link ContactActivity}.
      *
-     * @param contact The {@link Contact}.
+     * @param name The name.
      */
-    private void setName(final Contact contact) {
+    private void setName(final String name) {
         final TextView tv = (TextView) this.findViewById(R.id.contact_name);
-        tv.setText(contact.getName());
+        tv.setText(name);
     }
 
     /**
      * Set the keys of the {@link Contact} to the {@link ContactActivity}.
      *
-     * @param contact The {@link Contact}.
+     * @param keys A {@link Collection} of {@link IKey}s.
      */
-    private void setKeys(final Contact contact) {
-        final List<String> keys = new ArrayList<>();
-        for (final IKey key : contact.getKeys()) {
-            keys.add(key.getKey());
+    private void setKeys(final Collection<IKey> keys) {
+        final List<String> keyNames = new ArrayList<>();
+        for (final IKey key : keys) {
+            keyNames.add(key.getName());
         }
 
         final ListView lv = (ListView) this.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, keys));
+                android.R.layout.simple_list_item_1, keyNames));
     }
 
 }

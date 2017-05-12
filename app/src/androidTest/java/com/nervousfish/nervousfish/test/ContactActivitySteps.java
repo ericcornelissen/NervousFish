@@ -49,7 +49,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
     public void iAmViewingContactActivity() {
         assertNotNull(getActivity());
 
-        IKey key = new SimpleKey("key");
+        IKey key = new SimpleKey("my key", "key");
         Contact contact = new Contact("Cornel",key );
 
         Intent intent = new Intent(getActivity(), ContactActivity.class);
