@@ -5,6 +5,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,9 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +37,8 @@ import java.util.List;
  * The main activity class that shows a list of all people with their public keys
  */
 public final class MainActivity extends AppCompatActivity {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
@@ -46,9 +52,15 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Intent intent = getIntent();
-
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
+
+        try {
+            fillDatabaseWithDemoData();
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
@@ -71,14 +83,6 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-
-        try {
-            fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
         final ListView lv = (ListView) findViewById(R.id.listView);
         lv.setAdapter(new ContactListAdapter(this, this.contacts));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,6 +96,8 @@ public final class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        LOGGER.info("MainActivity created");
     }
 
     /**
@@ -101,6 +107,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
@@ -152,8 +159,9 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
     /**
      * {@inheritDoc}
      */
+    @NonNull
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
         View v = convertView;
 
         if (v == null) {

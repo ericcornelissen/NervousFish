@@ -10,6 +10,9 @@ import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,7 +36,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
-
     private final static Type TYPE_CONTACT_LIST =
             new TypeToken<ArrayList<Contact>>() {
             }.getType();
@@ -41,6 +43,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             new TypeToken<ArrayList<Profile>>() {
             }.getType();
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
+    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private final String contactsPath;
     private final String profilesPath;
 
@@ -271,10 +274,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeContacts() throws IOException {
         final File file = new File(this.contactsPath);
         if (!file.exists()) {
+            LOGGER.warn("Contacts part of the database didn't exist");
             final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(this.contactsPath), UTF_8));
             writer.write("[]");
             writer.close();
+            LOGGER.info("Created the contacts part of the database");
         }
     }
 
@@ -285,10 +290,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeUserdata() throws IOException {
         final File file = new File(profilesPath);
         if (!file.exists()) {
+            LOGGER.warn("User data part of the database didn't exist");
             final Writer writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(profilesPath), UTF_8));
             writer.write("[]");
             writer.close();
+            LOGGER.info("Created the user data part of the database");
         }
     }
 }
