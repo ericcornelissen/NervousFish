@@ -3,6 +3,10 @@ package com.nervousfish.nervousfish.data_objects;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -19,8 +23,17 @@ public class ContactTest {
     }
 
     @Test
-    public void testCanBeInstantiatedWithArbitraryValues() {
+    public void testInstantiateWithSingleKey() {
         Contact contact = new Contact("name", this.key);
+        assertNotNull(contact);
+    }
+
+    @Test
+    public void testInstantiateWithMultipleKeys() {
+        Collection<IKey> keys = new ArrayList<>();
+        keys.add(this.key);
+
+        Contact contact = new Contact("name", keys);
         assertNotNull(contact);
     }
 
@@ -34,9 +47,16 @@ public class ContactTest {
     }
 
     @Test
-    public void testGetPublicKeyReturnsThePublicKey() {
-        Contact contact = new Contact("foo", this.key);
-        assertEquals(this.key, contact.getPublicKey());
+    public void testGetKeysReturnsTheKeys() {
+        Contact contactA = new Contact("foo", this.key);
+        List<IKey> keysA = new ArrayList<>();
+        keysA.add(this.key);
+        assertEquals(keysA, contactA.getKeys());
+
+        Collection<IKey> keysB = new ArrayList<>();
+        keysB.add(this.key);
+        Contact contactB = new Contact("foo", keysB);
+        assertEquals(keysB, contactB.getKeys());
     }
 
     @Test

@@ -124,8 +124,6 @@ public final class MainActivity extends AppCompatActivity {
  */
 final class ContactListAdapter extends ArrayAdapter<Contact> {
 
-    private final static int MAX_SNIPPET_SIZE = 30;
-
     /**
      * Create and initialize a ContactListAdapter.
      *
@@ -141,8 +139,7 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
      */
     @NonNull
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
-
+    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
         View v = convertView;
 
         if (v == null) {
@@ -154,20 +151,9 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         if (contact != null) {
             final TextView name = (TextView) v.findViewById(R.id.name);
-            final TextView pubKey = (TextView) v.findViewById(R.id.pubKeySnippet);
 
             if (name != null) {
                 name.setText(contact.getName());
-            }
-
-            if (pubKey != null) {
-                final String publicKey = contact.getPublicKey().getKey();
-                if (publicKey.length() > MAX_SNIPPET_SIZE) {
-                    final String pubKeySnippet = contact.getPublicKey().getKey().substring(0, 30) + "...";
-                    pubKey.setText(pubKeySnippet);
-                } else {
-                    pubKey.setText(publicKey);
-                }
             }
         }
 
