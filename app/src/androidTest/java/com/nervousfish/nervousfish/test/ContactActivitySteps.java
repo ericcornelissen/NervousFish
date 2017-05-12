@@ -48,7 +48,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
         Intent intent = new Intent(getActivity(), ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                getActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
     }
 

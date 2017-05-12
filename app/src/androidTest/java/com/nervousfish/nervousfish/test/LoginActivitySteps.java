@@ -14,12 +14,10 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Before;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
 import cucumber.api.CucumberOptions;
@@ -52,7 +50,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
 
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                getActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
         assertTrue(getCurrentActivity() instanceof LoginActivity);
     }
