@@ -54,15 +54,13 @@ public final class BluetoothConnectionService extends APairingHandler implements
     /**
      * Constructor for the Bluetooth service which manages the connection.
      *
-     * @param handler        A Handler to send messages back to the UI Activity
      * @param serviceLocator The object responsible for creating the service locator
      */
-    private BluetoothConnectionService(final Handler handler, final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
+    private BluetoothConnectionService(final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        this.handler = handler;
         mState = STATE_NONE;
         mNewState = mState;
-        this.bluetoothAdapter = bluetoothAdapter;
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     /**
@@ -73,7 +71,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
-        return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocator, bluetoothAdapter));
+        return new ModuleWrapper<>(new BluetoothConnectionService(serviceLocator));
     }
 
     /**

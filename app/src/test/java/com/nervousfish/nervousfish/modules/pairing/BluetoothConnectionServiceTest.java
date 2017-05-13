@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static com.nervousfish.nervousfish.BaseTest.getField;
+import static com.nervousfish.nervousfish.BaseTest.setField;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -99,12 +100,18 @@ public class BluetoothConnectionServiceTest {
      * and not their functionality
      * @throws Exception
      */
-    /*@Test(expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void connectedThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "connectedThread"));
+        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
+            }
+        });
         bConService.connect(mock(BluetoothDevice.class));
         assertNotNull(getField(bConService, "connectedThread"));
-    }*/
+    }
 
     @Test
     public void stop() throws Exception {
@@ -115,7 +122,16 @@ public class BluetoothConnectionServiceTest {
     }
 
     @Test
-    public void write() throws Exception {
+    public void writeNotConnectedTest() throws Exception {
+        setField(bConService, "mState", 0); //not connected
+        bConService.write(new byte[]{});
+        // need to test this with mocks but
+        // bluetoothServiceConnection is final
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void writeConnectedTest() throws Exception {
+        setField(bConService, "mState", 3); //connected
         bConService.write(new byte[]{});
         // need to test this with mocks but
         // bluetoothServiceConnection is final
