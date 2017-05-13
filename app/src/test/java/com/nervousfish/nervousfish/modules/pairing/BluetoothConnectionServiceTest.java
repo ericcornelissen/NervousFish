@@ -28,9 +28,7 @@ import static org.mockito.Mockito.when;
 public class BluetoothConnectionServiceTest {
 
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
-    private Handler handler = mock(Handler.class);
     private IConstants constants = mock(IConstants.class);
-    private BluetoothAdapter bAdapter =  mock(BluetoothAdapter.class);
     private BluetoothDevice device = mock(BluetoothDevice.class);
     private BluetoothSocket socket = mock(BluetoothSocket.class);
 
@@ -47,7 +45,7 @@ public class BluetoothConnectionServiceTest {
             e.printStackTrace();
         }
 
-        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, handler, serviceLocator, bAdapter);
+        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, serviceLocator);
 
     }
 
@@ -58,10 +56,9 @@ public class BluetoothConnectionServiceTest {
         assertEquals(0, bConService.getState());
     }
 
-    /**
+    /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
-     * @throws Exception
      */
     @Test(expected = NullPointerException.class)
     public void startThreadCreatedTest() throws Exception {
@@ -79,10 +76,9 @@ public class BluetoothConnectionServiceTest {
         assertNotNull(getField(bConService, "secureAcceptThread"));
     }
 
-    /**
+    /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
-     * @throws Exception
      */
     @Test(expected = NullPointerException.class)
     public void connectThreadCreatedTest() throws Exception {
@@ -91,10 +87,9 @@ public class BluetoothConnectionServiceTest {
         assertNotNull(getField(bConService, "connectThread"));
     }
 
-    /**
+    /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
-     * @throws Exception
      */
     /*@Test(expected = NullPointerException.class)
     public void connectedThreadCreatedTest() throws Exception {

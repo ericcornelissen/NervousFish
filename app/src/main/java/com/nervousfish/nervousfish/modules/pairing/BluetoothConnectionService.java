@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -32,18 +31,12 @@ public final class BluetoothConnectionService extends APairingHandler implements
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-    // Message types sent from the BluetoothChatService Handler
-    private static final int MESSAGE_STATE_CHANGE = 1;
-    private static final int MESSAGE_READ = 2;
-    private static final int MESSAGE_DUPLICATE_NAME = 3;
     // Unique UUID for this application (this one is a filler)
     private static final UUID MY_UUID_SECURE =
             UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
-    private static final String TAG = "MY_APP_DEBUG_TAG";
     private final BluetoothAdapter bluetoothAdapter;
-    private final Handler handler; // handler that gets info from Bluetooth service;
     private AcceptThread secureAcceptThread;
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
@@ -54,15 +47,13 @@ public final class BluetoothConnectionService extends APairingHandler implements
     /**
      * Constructor for the Bluetooth service which manages the connection.
      *
-     * @param handler        A Handler to send messages back to the UI Activity
      * @param serviceLocator The object responsible for creating the service locator
      */
-    private BluetoothConnectionService(final Handler handler, final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
+    private BluetoothConnectionService( final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        this.handler = handler;
         mState = STATE_NONE;
         mNewState = mState;
-        this.bluetoothAdapter = bluetoothAdapter;
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     /**
@@ -72,8 +63,8 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @param serviceLocator The service locator bridge that creates the new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<BluetoothConnectionService> newInstance(final Handler handler, final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
-        return new ModuleWrapper<>(new BluetoothConnectionService(handler, serviceLocator, bluetoothAdapter));
+    public static ModuleWrapper<BluetoothConnectionService> newInstance(final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
+        return new ModuleWrapper<>(new BluetoothConnectionService( serviceLocator));
     }
 
     /**
@@ -456,7 +447,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 try {
                     // Read from the InputStream
                     mmInStream.read(buffer);
-
 
                     saveContact(buffer);
 
