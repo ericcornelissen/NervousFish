@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
+import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
@@ -43,7 +44,7 @@ final class ServiceLocator implements IServiceLocator {
         this.database = GsonDatabaseAdapter.newInstance(this).get();
         this.keyGenerator = KeyGeneratorAdapter.newInstance(this).get();
         this.encryptor = EncryptorAdapter.newInstance(this).get();
-        this.bluetoothHandler = DummyBluetoothHandler.newInstance(this).get();
+        this.bluetoothHandler = BluetoothConnectionService.newInstance(this).get();
         this.nfcHandler = DummyNFCHandler.newInstance(this).get();
         this.qrHandler = DummyQRHandler.newInstance(this).get();
     }

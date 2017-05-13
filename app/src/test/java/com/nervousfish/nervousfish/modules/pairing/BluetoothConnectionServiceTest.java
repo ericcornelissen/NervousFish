@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 
-import com.nervousfish.nervousfish.AsynchTester;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -17,6 +16,7 @@ import java.util.UUID;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static com.nervousfish.nervousfish.BaseTest.getField;
+import static com.nervousfish.nervousfish.BaseTest.setField;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -63,16 +63,13 @@ public class BluetoothConnectionServiceTest {
     @Test(expected = NullPointerException.class)
     public void startThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "secureAcceptThread"));
-        AsynchTester aTester = new AsynchTester(new Runnable() {
+        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void run() {
-                bConService.start();
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
             }
         });
-
-        aTester.start();
-        aTester.test();
-
+        bConService.start();
         assertNotNull(getField(bConService, "secureAcceptThread"));
     }
 
@@ -83,6 +80,13 @@ public class BluetoothConnectionServiceTest {
     @Test(expected = NullPointerException.class)
     public void connectThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "connectThread"));
+
+        ((Thread) getField(bConService, "connectThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
+            }
+        });
         bConService.connect(mock(BluetoothDevice.class));
         assertNotNull(getField(bConService, "connectThread"));
     }
@@ -91,12 +95,18 @@ public class BluetoothConnectionServiceTest {
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
      */
-    /*@Test(expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void connectedThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "connectedThread"));
+        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
+            }
+        });
         bConService.connect(mock(BluetoothDevice.class));
         assertNotNull(getField(bConService, "connectedThread"));
-    }*/
+    }
 
     @Test
     public void stop() throws Exception {
@@ -107,7 +117,16 @@ public class BluetoothConnectionServiceTest {
     }
 
     @Test
-    public void write() throws Exception {
+    public void writeNotConnectedTest() throws Exception {
+        setField(bConService, "mState", 0); //not connected
+        bConService.write(new byte[]{});
+        // need to test this with mocks but
+        // bluetoothServiceConnection is final
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void writeConnectedTest() throws Exception {
+        setField(bConService, "mState", 3); //connected
         bConService.write(new byte[]{});
         // need to test this with mocks but
         // bluetoothServiceConnection is final

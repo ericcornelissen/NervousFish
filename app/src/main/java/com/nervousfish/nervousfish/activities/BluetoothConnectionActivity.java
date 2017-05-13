@@ -221,7 +221,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the BluetoothConnectionService.
-        this.bluetoothConnectionService = serviceLocator.getBluetoothHandler();
+        this.bluetoothConnectionService = ;
 
         this.newDevices = new HashSet<BluetoothDevice>();
     }
