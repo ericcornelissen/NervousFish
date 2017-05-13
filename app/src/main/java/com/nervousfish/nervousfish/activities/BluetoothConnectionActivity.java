@@ -21,14 +21,10 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -86,19 +82,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 case MESSAGE_READ:
                     final byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
-                    final ByteArrayInputStream in = new ByteArrayInputStream(readBuf);
-                    final ObjectInputStream is;
-                    Contact temp = null;
-                    try {
-                        is = new ObjectInputStream(in);
-                        temp = (Contact) is.readObject();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if (temp != null) {
-                        // TODO: save the contact in the db
-                        // see APairingHandler saveContact(bytes)
-                    }
                     break;
                 case MESSAGE_DUPLICATE_NAME:
                     // TODO: show an appropriate error
@@ -221,9 +204,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the BluetoothConnectionService.
-        this.bluetoothConnectionService = ;
+        this.bluetoothConnectionService = serviceLocator.getBluetoothHandler();
 
-        this.newDevices = new HashSet<BluetoothDevice>();
+        this.newDevices = new HashSet<>();
     }
 
     /**

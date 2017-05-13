@@ -29,6 +29,7 @@ public class BluetoothConnectionServiceTest {
 
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
+    private BluetoothAdapter adapter = mock(BluetoothAdapter.getDefaultAdapter().getClass());
     private BluetoothDevice device = mock(BluetoothDevice.class);
     private BluetoothSocket socket = mock(BluetoothSocket.class);
 
@@ -46,6 +47,7 @@ public class BluetoothConnectionServiceTest {
         }
 
         this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, serviceLocator);
+        setField(bConService, "bluetoothAdapter", adapter);
 
     }
 
@@ -141,6 +143,32 @@ public class BluetoothConnectionServiceTest {
     @Test
     public void getStateNewInstanceTest() throws Exception {
         assertEquals(0, bConService.getState());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void threadStartConnectConnectedTest() {
+        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
+            }
+        });
+        bConService.start();
+        bConService.connect(device);
+        bConService.connected(socket, device);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void threadConnectedConnectStartTest() {
+        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.println("Caught " + e);
+            }
+        });
+        bConService.connected(socket, device);
+        bConService.connect(device);
+        bConService.start();
     }
 
 

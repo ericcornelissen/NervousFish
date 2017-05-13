@@ -49,7 +49,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      *
      * @param serviceLocator The object responsible for creating the service locator
      */
-    private BluetoothConnectionService( final IServiceLocator serviceLocator) {
+    private BluetoothConnectionService(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         mState = STATE_NONE;
         mNewState = mState;
@@ -63,7 +63,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @param serviceLocator The service locator bridge that creates the new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<BluetoothConnectionService> newInstance(final IServiceLocator serviceLocator, final BluetoothAdapter bluetoothAdapter) {
+    public static ModuleWrapper<BluetoothConnectionService> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new BluetoothConnectionService( serviceLocator));
     }
 
