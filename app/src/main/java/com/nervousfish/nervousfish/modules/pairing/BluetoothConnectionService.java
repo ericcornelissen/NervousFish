@@ -254,7 +254,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     /**
      * Return the current connection state.
      */
-    int getState() {
+    public int getState() {
         synchronized (this) {
             return mState;
         }

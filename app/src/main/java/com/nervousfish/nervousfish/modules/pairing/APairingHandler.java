@@ -22,7 +22,7 @@ abstract class APairingHandler implements Serializable{
 
     /**
      * Prevent instantiation by other classes outside it's package
-     * @param serviceLocator
+     * @param serviceLocator the serviceLocator which will provide means to access other modules
      */
     @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     APairingHandler(final IServiceLocator serviceLocator) {
@@ -33,7 +33,7 @@ abstract class APairingHandler implements Serializable{
      * Luxury method that calls writeContact() for each contact of the database.
      * @throws IOException When deserialization doesn't go well.
      */
-    void writeAllContacts() throws IOException {
+    public void writeAllContacts() throws IOException {
         final List<Contact> list = database.getAllContacts();
         for (final Contact e: list) {
             writeContact(e);
@@ -45,25 +45,27 @@ abstract class APairingHandler implements Serializable{
      * @param contact contact to serialize
      * @throws IOException When deserialization doesn't go well.
      */
-    void writeContact(final Contact contact) throws IOException {
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = null;
-        ObjectOutputStream oos = null;
-        try {
-            bos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(bos);
-            oos.writeObject(contact);
-            oos.flush();
-            bytes = bos.toByteArray();
-        } finally {
-            if (oos != null) {
-                oos.close();
+    public void writeContact(final Contact contact) throws IOException {
+        if (checkExists(contact)) {
+            byte[] bytes = null;
+            ByteArrayOutputStream bos = null;
+            ObjectOutputStream oos = null;
+            try {
+                bos = new ByteArrayOutputStream();
+                oos = new ObjectOutputStream(bos);
+                oos.writeObject(contact);
+                oos.flush();
+                bytes = bos.toByteArray();
+            } finally {
+                if (oos != null) {
+                    oos.close();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
             }
-            if (bos != null) {
-                bos.close();
-            }
+            write(bytes);
         }
-        write(bytes);
     }
 
     /**
@@ -72,15 +74,15 @@ abstract class APairingHandler implements Serializable{
      * @return true when a contact with the same exists in the database
      * @throws IOException When database fails to respond
      */
-    boolean checkExists(final Contact contact) throws IOException {
+    public boolean checkExists(final Contact contact) throws IOException {
         final String name = contact.getName();
         final List<Contact> list = database.getAllContacts();
         for (final Contact e: list) {
             if (e.getName().equals(name)) {
-                showWarning();
                 return true;
             }
         }
+        showWarning();
         return false;
     }
 
@@ -89,7 +91,7 @@ abstract class APairingHandler implements Serializable{
      * @param bytes byte array representing a contact
      * @return Whether or not the process finished successfully
      */
-    boolean saveContact(final byte[] bytes){
+    public boolean saveContact(final byte[] bytes){
         Contact contact = null;
         ByteArrayInputStream bis = null;
         ObjectInputStream ois = null;
