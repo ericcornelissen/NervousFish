@@ -5,6 +5,9 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -16,14 +19,17 @@ import java.security.spec.RSAPublicKeySpec;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
 
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    // This servicelocator will be used later on probably
     private KeyGeneratorAdapter(final IServiceLocator serviceLocator) {
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -42,7 +48,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      *
      * @return a randomly generated KeyPair
      */
-    public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static KeyPair generateRSAKeyPair(final String name) throws NoSuchAlgorithmException, InvalidKeySpecException {
         final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
 
@@ -53,9 +59,9 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
                 RSAPrivateKeySpec.class);
 
-        final RSAKey rsaPublicKey = new RSAKey(publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
-        final RSAKey rsaPrivateKey = new RSAKey(privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
+        final RSAKey rsaPublicKey = new RSAKey(name, publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
+        final RSAKey rsaPrivateKey = new RSAKey(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
-        return new KeyPair(rsaPublicKey, rsaPrivateKey);
+        return new KeyPair(name, rsaPublicKey, rsaPrivateKey);
     }
 }

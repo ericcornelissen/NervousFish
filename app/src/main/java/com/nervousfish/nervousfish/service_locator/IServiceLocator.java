@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 public interface IServiceLocator extends Serializable {
 
+    String getAndroidFilesDir();
     IDatabase getDatabase();
     IKeyGenerator getKeyGenerator();
     IEncryptor getEncryptor();
