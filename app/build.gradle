@@ -40,7 +40,10 @@ android {
     }
 }
 
-cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+cobertura {
+    coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+    coverageExcludes = ['.*android.*', '.*cn.pedant.*', '.*com.pnikosis.*']
+}
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
