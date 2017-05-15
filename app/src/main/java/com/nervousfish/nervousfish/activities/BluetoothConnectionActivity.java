@@ -22,9 +22,9 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
-import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +56,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
     // Device is now discoverable for 300 seconds
     private static final int DISCOVERABILITY_TIME = 300;
+
     /**
      * The Handler that gets information back from the BluetoothChatService
      */
@@ -92,7 +93,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         }
     };
     private BluetoothAdapter bluetoothAdapter;
-    private IBluetoothHandler bluetoothConnectionService;
+    private BluetoothConnectionService bluetoothConnectionService;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> newDevicesArrayAdapter;
@@ -138,6 +139,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             final String address = info.substring(info.length() - 17);
             final BluetoothDevice device = getDevice(address);
             bluetoothConnectionService.connect(device);
+            try {
+                // busy wait is ugly, I think this needs the EventBus (see unused Handler in this class)
+                while(bluetoothConnectionService.getState() != BluetoothConnectionService.STATE_CONNECTED){ /* temporary */}
+                bluetoothConnectionService.writeAllContacts();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
             // Create the result Intent and include the MAC address
@@ -204,7 +212,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the BluetoothConnectionService.
-        this.bluetoothConnectionService = serviceLocator.getBluetoothHandler();
+        this.bluetoothConnectionService = (BluetoothConnectionService) serviceLocator.getBluetoothHandler();
 
         this.newDevices = new HashSet<>();
     }
