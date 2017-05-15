@@ -27,9 +27,9 @@ import java.util.UUID;
 public final class BluetoothConnectionService extends APairingHandler implements IBluetoothHandler {
 
     // Constants that indicate the current connection state
-    static final int STATE_NONE = 0;       // we're doing nothing
-    static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    private static final int STATE_NONE = 0;       // we're doing nothing
+    private static final int STATE_LISTEN = 1;     // now listening for incoming connections
+    private static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
     // Unique UUID for this application
     private static final UUID MY_UUID_SECURE =
