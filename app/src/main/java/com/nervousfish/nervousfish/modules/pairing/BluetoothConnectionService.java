@@ -36,7 +36,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
             UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
-    private transient final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private AcceptThread secureAcceptThread;
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
