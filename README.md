@@ -5,8 +5,9 @@
 An app for your :iphone: to exchange public-keys in a secure manner.
 
 Contributor names and their Github username:
-*Eric Cornelissen - ericcornelissen
-*Kilian Callebaut - kcallebaut
-*Stas Mironov - TheBonheurs (of fietstas/Yxo)
-*Joost Verbraeken - jverbraeken
-*Cornel de Vroomen - clenrock
+
+* Eric Cornelissen - ericcornelissen
+* Kilian Callebaut - kcallebaut
+* Stas Mironov - TheBonheurs (of fietstas/Yxo)
+* Joost Verbraeken - jverbraeken
+* Cornel de Vroomen - clenrock
