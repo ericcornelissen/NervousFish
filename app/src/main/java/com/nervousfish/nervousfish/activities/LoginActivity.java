@@ -34,7 +34,6 @@ public final class LoginActivity extends Activity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-
         mPassword = (EditText) findViewById(R.id.password);
 
         final View submitButton = findViewById(R.id.submit);
@@ -60,7 +59,7 @@ public final class LoginActivity extends Activity {
         if (skipPassword) {
             LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
-            final Intent intent = new Intent(this, MainActivity.class);
+            final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             startActivity(intent);
         } else {
@@ -72,7 +71,7 @@ public final class LoginActivity extends Activity {
             } else {
                 LOGGER.info("Password correct");
                 mError.setVisibility(View.GONE);
-                final Intent intent = new Intent(this, MainActivity.class);
+                final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
                 startActivity(intent);
             }
