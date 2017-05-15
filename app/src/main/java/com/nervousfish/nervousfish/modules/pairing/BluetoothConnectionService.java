@@ -14,13 +14,11 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 /**
- * Created by smironov on 2/05/2017.
  * This Bluetooth service class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"PMD.UnusedLocalVariable", "PMD.UnusedPrivateField", "PMD.SingularField",
-        "PMD.NullAssignment", "PMD.AvoidFinalLocalVariable", "PMD.AvoidDuplicateLiterals"})
-// 1 + 2 + 3)because it's used for storing, later it will also be accessed
+@SuppressWarnings({"PMD.EmptyCatchBlock",
+        "PMD.NullAssignment", "PMD.AvoidFinalLocalVariable"})
 // 4) Suggested use by Android Bluetooth Manual
 // 5) explained where used
 
@@ -40,8 +38,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
     private int mState;
-    private int mNewState;
-
 
     /**
      * Constructor for the Bluetooth service which manages the connection.
@@ -51,7 +47,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private BluetoothConnectionService(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         mState = STATE_NONE;
-        mNewState = mState;
     }
 
     /**
@@ -62,7 +57,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<BluetoothConnectionService> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new BluetoothConnectionService( serviceLocator));
+        return new ModuleWrapper<>(new BluetoothConnectionService(serviceLocator));
     }
 
     /**
@@ -71,11 +66,9 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void updateUserInterfaceTitle() {
         synchronized (this) {
             mState = getState();
-            //log.d(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState);
-            mNewState = mState;
+            //log(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState)
 
             // Give the new state to the Handler so the UI Activity can update
-            //handler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget();
         }
     }
 
@@ -227,7 +220,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
     private void connectionFailed() {
-        // TODO: Send a failure message back to the Activity using the handler
 
         mState = STATE_NONE;
         updateUserInterfaceTitle();
@@ -240,7 +232,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * Indicate that the connection was lost and notify the UI Activity.
      */
     private void connectionLost() {
-        // TODO: Send a failure message back to the Activity using the handler
 
         mState = STATE_NONE;
         updateUserInterfaceTitle();

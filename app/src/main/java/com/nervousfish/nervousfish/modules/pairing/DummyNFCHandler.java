@@ -25,13 +25,17 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
     }
 
     @Override
-    void write(byte[] buffer) {
-
+    void write(final byte[] buffer) {
+    /*
+        Dummy
+     */
     }
 
     @Override
     void showWarning() {
-
+    /*
+    Dummy
+     */
     }
 
     /**

@@ -46,7 +46,7 @@ abstract class APairingHandler implements Serializable{
      * @throws IOException When deserialization doesn't go well.
      */
     public void writeContact(final Contact contact) throws IOException {
-        if (checkExists(contact)) {
+        if (!checkExists(contact)) {
             byte[] bytes = null;
             ByteArrayOutputStream bos = null;
             ObjectOutputStream oos = null;

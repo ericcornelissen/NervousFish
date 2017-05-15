@@ -1,9 +1,7 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
 
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -46,14 +44,13 @@ public class BluetoothConnectionServiceTest {
         }
 
         this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, serviceLocator);
-        setField(bConService, "bluetoothAdapter", BluetoothAdapter.getDefaultAdapter());
 
     }
 
 
     @Test
     public void newInstanceTest() throws Exception {
-        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, new Handler(), mock(IServiceLocator.class), mock(BluetoothAdapter.class));
+        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, mock(IServiceLocator.class));
         assertEquals(0, bConService.getState());
     }
 

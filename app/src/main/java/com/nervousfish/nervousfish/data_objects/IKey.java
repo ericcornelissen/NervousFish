@@ -1,7 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import java.io.Serializable;
 import com.google.gson.stream.JsonWriter;
+
 import java.io.IOException;
 import java.io.Serializable;
 

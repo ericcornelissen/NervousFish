@@ -83,17 +83,21 @@ public class APairingHandlerTest {
     }
 
     @Test
-    public void writeContactSimpleKeyTest() throws IOException {
+    public void writeCheckContactSimpleKeyTest() throws IOException {
         Contact contact = new Contact("Test", new SimpleKey("Test", ""));
         phspy.writeContact(contact);
+        verify(phspy).checkExists(contact);
+        verify(phspy).writeContact(contact);
         verify(phspy).write(phspy.myBuffer);
         assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
     }
 
     @Test
-    public void writeContactRSAKeyTest() throws IOException {
+    public void writeCheckContactRSAKeyTest() throws IOException {
         Contact contact = new Contact("Test", new RSAKey("Test","1234", "0"));
         phspy.writeContact(contact);
+        verify(phspy).checkExists(contact);
+        verify(phspy).writeContact(contact);
         verify(phspy).write(phspy.myBuffer);
         assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
     }

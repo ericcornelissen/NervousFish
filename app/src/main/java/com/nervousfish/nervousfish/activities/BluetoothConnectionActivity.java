@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -33,7 +31,7 @@ import java.util.Set;
  * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"PMD.TooManyMethods","PMD.UnusedLocalVariable", "PMD.UnusedPrivateField", "PMD.SingularField",
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.UnusedLocalVariable", "PMD.UnusedPrivateField", "PMD.SingularField",
         "PMD.AvoidFinalLocalVariable", "PMD.NullAssignment", "PMD.TooFewBranchesForASwitchStatement"})
 // 1 + 2 +3)because it's used for storing, later it will also be accessed
 // 4) This is taken from the Android manual on bluetooth :/
@@ -42,13 +40,7 @@ import java.util.Set;
 
 public class BluetoothConnectionActivity extends AppCompatActivity {
 
-    // Message types sent from the BluetoothChatService Handler
-    public static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_READ = 2;
-
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
-    private static final int MESSAGE_DUPLICATE_NAME = 3;
-
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
@@ -56,52 +48,45 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
     // Device is now discoverable for 300 seconds
     private static final int DISCOVERABILITY_TIME = 300;
-
-    /**
-     * The Handler that gets information back from the BluetoothChatService
-     */
-    private final Handler handler = new Handler() {
-        @Override
-        public void handleMessage(final Message msg) {
-            switch (msg.what) {
-                case MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothConnectionService.STATE_CONNECTED:
-                            //TODO: do iets met connected met evt device name
-                            break;
-                        case BluetoothConnectionService.STATE_CONNECTING:
-                            //TODO: do iets met connecting
-                            break;
-                        case BluetoothConnectionService.STATE_LISTEN:
-                        case BluetoothConnectionService.STATE_NONE:
-                            //TODO: do iets met not connected
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case MESSAGE_READ:
-                    final byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    break;
-                case MESSAGE_DUPLICATE_NAME:
-                    // TODO: show an appropriate error
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothConnectionService bluetoothConnectionService;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
+    /**
+     * The on-click listener for all devices in the ListViews
+     */
+    private final AdapterView.OnItemClickListener mDeviceClickListener
+            = new AdapterView.OnItemClickListener() {
+        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            stopDiscovering();
+
+            // Get the device MAC address, which is the last 17 chars in the View
+            final String info = ((TextView) v).getText().toString();
+            final String address = info.substring(info.length() - 17);
+            final BluetoothDevice device = getDevice(address);
+            bluetoothConnectionService.connect(device);
+            try {
+                // busy wait is ugly, I think this needs the EventBus (see unused Handler in this class)
+                while (bluetoothConnectionService.getState() != BluetoothConnectionService.STATE_CONNECTED) { /* temporary */}
+                bluetoothConnectionService.writeAllContacts();
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+
+
+            // Create the result Intent and include the MAC address
+            final Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+
+
+            // Set result and finish this Activity
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+
+        }
+    };
     private ArrayAdapter<String> newDevicesArrayAdapter;
-    private ArrayAdapter<String> pairedDevicesArrayAdapter;
-    private IServiceLocator serviceLocator;
-    private String connectedDeviceName = null; //string of the connected device name
-
-
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(final Context context, final Intent intent) {
@@ -124,44 +109,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         }
     };
-
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private final AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
-            stopDiscovering();
-
-            // Get the device MAC address, which is the last 17 chars in the View
-            final String info = ((TextView) v).getText().toString();
-            final String address = info.substring(info.length() - 17);
-            final BluetoothDevice device = getDevice(address);
-            bluetoothConnectionService.connect(device);
-            try {
-                // busy wait is ugly, I think this needs the EventBus (see unused Handler in this class)
-                while(bluetoothConnectionService.getState() != BluetoothConnectionService.STATE_CONNECTED){ /* temporary */}
-                bluetoothConnectionService.writeAllContacts();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            // Create the result Intent and include the MAC address
-            final Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-
-        }
-    };
-
-
-
+    private ArrayAdapter<String> pairedDevicesArrayAdapter;
+    private IServiceLocator serviceLocator;
+    private String connectedDeviceName = null; //string of the connected device name
 
     /**
      * {@inheritDoc}
@@ -195,12 +145,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
 
-
         // Find and set up the ListView for newly discovered devices
         final ListView newDevicesListView = (ListView) findViewById(R.id.discoveredlist);
         newDevicesListView.setAdapter(newDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
-
 
 
         // Register for broadcasts when discovery has finished
@@ -306,10 +254,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         setTitle("scanning");
 
-        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+        final int permissionLocation = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+                permissionLocation);
 
         // Turn on sub-title for new devices
         // findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
