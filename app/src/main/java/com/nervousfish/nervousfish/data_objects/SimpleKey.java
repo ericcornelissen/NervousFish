@@ -31,9 +31,13 @@ public final class SimpleKey implements IKey {
      *
      * @param map A {@link Map} mapping {@link SimpleKey} attribute names to values.
      */
-    public SimpleKey(final Map<String, String> map) {
+    public SimpleKey(final Map<String, String> map) throws IllegalArgumentException {
         this.name = map.get("name");
         this.key = map.get("key");
+
+        if (this.name == null || this.key == null) {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**

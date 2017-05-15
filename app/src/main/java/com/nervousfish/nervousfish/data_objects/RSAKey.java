@@ -38,10 +38,14 @@ public final class RSAKey implements IKey {
      *
      * @param map A {@link Map} mapping {@link RSAKey} attribute names to values.
      */
-    public RSAKey(final Map<String, String> map) {
+    public RSAKey(final Map<String, String> map) throws IllegalArgumentException {
         this.name = map.get(RSAKey.JSON_CONSTANT_NAME);
         this.modulus = map.get(RSAKey.JSON_CONSTANT_MODULUS);
         this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
+
+        if (this.name == null || this.modulus == null || this.exponent == null) {
+           throw new IllegalArgumentException();
+        }
     }
 
     /**
