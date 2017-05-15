@@ -8,6 +8,9 @@ import android.bluetooth.BluetoothSocket;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,27 +20,27 @@ import java.util.UUID;
  * This Bluetooth service class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"PMD.EmptyCatchBlock",
-        "PMD.NullAssignment", "PMD.AvoidFinalLocalVariable"})
+@SuppressWarnings({"PMD.NullAssignment", "PMD.AvoidFinalLocalVariable"})
 // 4) Suggested use by Android Bluetooth Manual
 // 5) explained where used
 
 public final class BluetoothConnectionService extends APairingHandler implements IBluetoothHandler {
 
     // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    static final int STATE_NONE = 0;       // we're doing nothing
+    static final int STATE_LISTEN = 1;     // now listening for incoming connections
+    static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-    // Unique UUID for this application (this one is a filler)
+    // Unique UUID for this application
     private static final UUID MY_UUID_SECURE =
-            UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+            UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
     private AcceptThread secureAcceptThread;
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
     private int mState;
+    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
 
     /**
      * Constructor for the Bluetooth service which manages the connection.
@@ -66,9 +69,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void updateUserInterfaceTitle() {
         synchronized (this) {
             mState = getState();
-            //log(TAG, "updateUserInterfaceTitle() " + mNewState + " -> " + mState)
-
-            // Give the new state to the Handler so the UI Activity can update
         }
     }
 
@@ -77,7 +77,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      */
     @Override
     public void start() {
-        //log start
+        LOGGER.info("Bleutooth Service started");
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
@@ -107,7 +107,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      */
     @Override
     public void connect(final BluetoothDevice device) {
-        ////log connect
+        LOGGER.info("Connect Bluetooth thread initialized");
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
@@ -134,7 +134,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      */
     public void connected(final BluetoothSocket socket, final BluetoothDevice
             device) {
-        ////log connected
+        LOGGER.info("Connected Bluetooth thread started");
 
         synchronized (this) {
             // Cancel the thread that completed the connection
@@ -167,7 +167,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
      * {@inheritDoc}
      */
     public void stop() {
-        ////log stopped
+        LOGGER.info("Bluetooth service stopped");
 
         synchronized (this) {
             if (connectThread != null) {
@@ -269,14 +269,15 @@ public final class BluetoothConnectionService extends APairingHandler implements
                         MY_UUID_SECURE);
 
             } catch (final IOException e) {
-                //log listening failed
+                LOGGER.error("Couldn't setup an rfcomm channel");
+
             }
             serverSocket = tmp;
             mState = STATE_LISTEN;
         }
 
         public void run() {
-            //log begin listening
+            LOGGER.info("Start listening on a rfcomm channel");
             setName("AcceptThread" + "Secure");
 
             BluetoothSocket socket = null;
@@ -288,7 +289,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                     // successful connection or an exception
                     socket = serverSocket.accept();
                 } catch (final IOException e) {
-                    //log listening failed
+                    LOGGER.error("Listening on the socket failed");
                     break;
                 }
 
@@ -307,7 +308,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                                 try {
                                     socket.close();
                                 } catch (final IOException e) {
-                                    //log couldn't close unwanted socket
+                                    LOGGER.info("Couldn't close unwanted socket");
                                 }
                                 break;
                             default: //nothing
@@ -316,15 +317,15 @@ public final class BluetoothConnectionService extends APairingHandler implements
                     }
                 }
             }
-            //log end accept thread
+            LOGGER.info("End accept thread");
         }
 
         void cancel() {
-            //log cancelation of accept
+            LOGGER.info("Cancel accept thread");
             try {
                 serverSocket.close();
             } catch (final IOException e) {
-                //log close/server fail
+                LOGGER.warn("Server failed/closed");
             }
         }
     }
@@ -350,14 +351,14 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 tmp = device.createRfcommSocketToServiceRecord(
                         MY_UUID_SECURE);
             } catch (final IOException e) {
-                //log connection failed
+                LOGGER.error("Connection failed");
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;
         }
 
         public void run() {
-            //log connect thread started
+            LOGGER.info("Connect Bluetooth thread started");
             setName("ConnectThread" + "Secure");
 
             // Always cancel discovery because it will slow down a connection
@@ -373,7 +374,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 try {
                     mmSocket.close();
                 } catch (final IOException e2) {
-                    //log connection failure
+                    LOGGER.error("Connection failed/couldn't close the socket");
                 }
                 connectionFailed();
                 return;
@@ -392,7 +393,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             try {
                 mmSocket.close();
             } catch (final IOException e) {
-                //log closing socket failed
+                LOGGER.error("Closing socket failed");
             }
         }
     }
@@ -409,7 +410,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
         ConnectedThread(final BluetoothSocket socket) {
             super();
 
-            //log connected Thread created
+            LOGGER.info("Connected Bluetooth thread created");
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -419,7 +420,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (final IOException e) {
-                //log temporary socket failed to create
+                LOGGER.error("Failed to create a temp socket");
             }
 
             mmInStream = tmpIn;
@@ -428,7 +429,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
         }
 
         public void run() {
-            //log begin connected thread
+            LOGGER.info("Connected Bluetooth thread begin");
             final byte[] buffer = new byte[1024];
 
             // Keep listening to the InputStream while connected
@@ -440,7 +441,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
                     saveContact(buffer);
 
                 } catch (final IOException e) {
-                    //log disconnected
+                    LOGGER.warn("Disconnected from the paired device");
                     connectionLost();
                     break;
                 }
@@ -456,7 +457,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             try {
                 mmOutStream.write(buffer);
             } catch (final IOException e) {
-                //log exception during writing
+                LOGGER.error("Exception during writing");
             }
         }
 
@@ -465,7 +466,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             try {
                 mmSocket.close();
             } catch (final IOException e) {
-                //log closing connect socket failed
+                LOGGER.error("Closing socket");
             }
         }
     }
