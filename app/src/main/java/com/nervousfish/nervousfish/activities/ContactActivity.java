@@ -13,7 +13,9 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +27,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public final class ContactActivity extends AppCompatActivity {
 
+    private IServiceLocator serviceLocator;
+
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -35,6 +39,8 @@ public final class ContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_contact);
         final Intent intent = this.getIntent();
+
+        serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         this.setName(contact.getName());
@@ -58,9 +64,39 @@ public final class ContactActivity extends AppCompatActivity {
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(final SweetAlertDialog sDialog) {
-                                //TODO: delete a contact from the database
-                                sDialog.dismiss();
-                                finish();
+                                try {
+                                    serviceLocator.getDatabase().deleteContact(contact.getName());
+                                    sDialog .setTitleText("Deleted!")
+                                            .setContentText("The contact has been deleted!")
+                                            .setConfirmText("OK")
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(final SweetAlertDialog sDialog) {
+                                                        finish();
+                                                    }
+                                                })
+                                            .showCancelButton(false)
+                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                } catch (IllegalArgumentException e) {
+                                    sDialog .setTitleText("The contact doesn't exist")
+                                            .setContentText("It looks like the contact was already deleted.")
+                                            .setConfirmText("OK")
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(final SweetAlertDialog sDialog) {
+                                                    finish();
+                                                }
+                                            })
+                                            .showCancelButton(false)
+                                            .changeAlertType(SweetAlertDialog.WARNING_TYPE);
+                                } catch (IOException e) {
+                                    sDialog .setTitleText("Something went wrong")
+                                            .setContentText(("There went something wrong deleting this contact, " +
+                                                    "please try again."))
+                                            .setConfirmText("OK")
+                                            .setConfirmClickListener(null)
+                                            .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                                }
                             }
                         })
                         .show();

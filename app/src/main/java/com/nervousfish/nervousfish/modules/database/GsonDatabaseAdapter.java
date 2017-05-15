@@ -102,11 +102,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void deleteContact(final Contact contact) throws IllegalArgumentException, IOException {
+    public void deleteContact(final String contactName) throws IllegalArgumentException, IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
-        contacts.remove(contact);
+        for (final Contact contact : contacts) {
+            if(contactName.equals(contact.getName())) {
+                contacts.remove(contact);
+                break;
+            }
+        }
 
         // Throw if the contact to remove is not found
         if (contacts.size() == lengthBefore) {

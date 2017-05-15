@@ -126,13 +126,12 @@ public final class MainActivity extends AppCompatActivity {
             final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
             final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
             final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-            if (!database.getAllContacts().isEmpty()) {
-                database.deleteContact(a);
-                database.deleteContact(b);
-                database.deleteContact(c);
-                database.deleteContact(d);
-                database.deleteContact(e);
+
+            List<Contact> contacts = database.getAllContacts();
+            for (Contact contact: contacts) {
+                database.deleteContact(contact.getName());
             }
+
             database.addContact(a);
             database.addContact(b);
             database.addContact(c);
