@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:backgroundTint="@android:color/background_light"
         android:theme="@style/AppTheme.AppBarOverlay"
-        tools:context="com.nervousfish.nervousfish.activities.MainActivity">
+        tools:context="com.nervousfish.nervousfish.activities.MainActivity"
+        tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -29,13 +30,18 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
-        <include layout="@layout/content_main" />
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="@dimen/contacts_list_width"
+            android:layout_height="@dimen/contacts_list_height"
+            android:layout_below="@id/toolbar"
+            android:layout_marginTop="@dimen/contacts_list_margin_top" />
 
         <com.github.clans.fab.FloatingActionMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"

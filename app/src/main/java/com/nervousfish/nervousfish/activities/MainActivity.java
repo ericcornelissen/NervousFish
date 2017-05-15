@@ -1,11 +1,8 @@
 package com.nervousfish.nervousfish.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -35,28 +32,17 @@ public final class MainActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-
-            @SuppressWarnings("PMD.MethodCommentRequirement")
-            @Override
-            public void onClick(final View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        /*final ListView lv = (ListView) findViewById(R.id.listView);
+        final ListView lv = (ListView) findViewById(R.id.listView);
 
         //Retrieve the contacts from the database
         getContacts();
 
         lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, contacts));*/
+                android.R.layout.simple_list_item_1, contacts));
 
     }
 
