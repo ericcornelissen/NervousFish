@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Example activity to verify identity in Bluetooth connections.
  */
-public class GridActivity extends Activity {
+public class VisualVerificationActivity extends Activity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("GridActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
     private static final int SECURITY_CODE_LENGTH = 5;
 
     private String securityCode = "";
@@ -31,7 +31,7 @@ public class GridActivity extends Activity {
 
         this.initButtons();
 
-        LOGGER.info("GridActivity created");
+        LOGGER.info("VisualVerificationActivity created");
     }
 
     /**
@@ -48,9 +48,9 @@ public class GridActivity extends Activity {
                 final String button = v.getContentDescription().toString();
                 LOGGER.info("button '" + button + "' clicked");
 
-                if (securityCode.length() == GridActivity.SECURITY_CODE_LENGTH) {
+                if (securityCode.length() == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
                     LOGGER.info("Security code already long enough");
-                } else if (securityCode.length() - 1 == GridActivity.SECURITY_CODE_LENGTH) {
+                } else if (securityCode.length() - 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
                     securityCode += button;
                     LOGGER.info("final code is: " + securityCode);
                 } else {
