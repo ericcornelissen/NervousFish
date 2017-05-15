@@ -50,13 +50,13 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        final ListView lv = (ListView) findViewById(R.id.listView);
+        /*final ListView lv = (ListView) findViewById(R.id.listView);
 
         //Retrieve the contacts from the database
         getContacts();
 
         lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, contacts));
+                android.R.layout.simple_list_item_1, contacts));*/
 
     }
 
