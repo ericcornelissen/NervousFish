@@ -2,8 +2,6 @@ package com.nervousfish.nervousfish;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
-
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -21,13 +19,17 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-import java.util.Hashtable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Hashtable;
 
 /**
  * Generates a QR code
  */
 final public class QRGenerator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("QRGenerator");
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
 
@@ -57,7 +59,7 @@ final public class QRGenerator {
                 }
             }
         } catch (final WriterException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to encode bitmap", e);
         }
         return bitmap;
 
@@ -87,14 +89,11 @@ final public class QRGenerator {
             final Result decoded = qrReader.decode(bitmap, decodeHints);
             publicKey = decoded.getText();
         } catch (final NotFoundException e) {
-            Log.d("QRGenerator", "Not Found Exception " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Not Found Exception", e);
         } catch (final ChecksumException e) {
-            Log.d("QRGenerator", "Checksum Exception " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Checksum Exception", e);
         } catch (final FormatException e) {
-            Log.d("QRGenerator", "Format Exception " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Format Exception", e);
         }
         return publicKey;
     }
