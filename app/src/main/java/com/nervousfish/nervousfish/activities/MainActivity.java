@@ -142,6 +142,17 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            final ListView lv = (ListView) findViewById(R.id.listView);
+            lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 /**
@@ -184,5 +195,4 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         return v;
     }
-
 }

@@ -72,6 +72,7 @@ public final class ContactActivity extends AppCompatActivity {
                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                                     @Override
                                                     public void onClick(final SweetAlertDialog sDialog) {
+                                                        sDialog.dismiss();
                                                         finish();
                                                     }
                                                 })
@@ -84,6 +85,7 @@ public final class ContactActivity extends AppCompatActivity {
                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                                 @Override
                                                 public void onClick(final SweetAlertDialog sDialog) {
+                                                    sDialog.dismiss();
                                                     finish();
                                                 }
                                             })
