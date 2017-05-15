@@ -1,5 +1,8 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -20,8 +23,18 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
     private DummyBluetoothHandler(final IServiceLocator serviceLocator) {
-        super();
+        super(serviceLocator);
         LOGGER.info("Initialized");
+    }
+
+    @Override
+    void write(byte[] buffer) {
+
+    }
+
+    @Override
+    void showWarning() {
+
     }
 
     /**
@@ -33,5 +46,25 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     public static ModuleWrapper<DummyBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new DummyBluetoothHandler(serviceLocator));
+    }
+
+    @Override
+    public void connect(BluetoothDevice device) {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void connected(BluetoothSocket socket, BluetoothDevice device) {
+
+    }
+
+    @Override
+    public void stop() {
+
     }
 }

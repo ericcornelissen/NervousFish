@@ -1,9 +1,7 @@
 package com.nervousfish.nervousfish.activities;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
-
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,14 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -130,18 +129,21 @@ public final class MainActivity extends AppCompatActivity {
             final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
             final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
             final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+            //final Contact f = new Contact("Test", new SimpleKey("Test", "bf7832jfiwjf8i3ofewkkvidji"));
             if (!database.getAllContacts().isEmpty()) {
                 database.deleteContact(a);
                 database.deleteContact(b);
                 database.deleteContact(c);
                 database.deleteContact(d);
                 database.deleteContact(e);
+                //database.deleteContact(f);
             }
             database.addContact(a);
             database.addContact(b);
             database.addContact(c);
             database.addContact(d);
             database.addContact(e);
+            //database.addContact(f);
         } catch (final IOException e) {
             e.printStackTrace();
         }

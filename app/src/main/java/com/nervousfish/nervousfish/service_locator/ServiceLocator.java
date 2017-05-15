@@ -11,7 +11,6 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
-import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;

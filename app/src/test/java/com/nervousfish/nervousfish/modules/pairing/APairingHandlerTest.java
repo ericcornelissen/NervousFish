@@ -84,7 +84,7 @@ public class APairingHandlerTest {
 
     @Test
     public void writeContactSimpleKeyTest() throws IOException {
-        Contact contact = new Contact("Test", new SimpleKey(""));
+        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
         phspy.writeContact(contact);
         verify(phspy).write(phspy.myBuffer);
         assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
@@ -92,7 +92,7 @@ public class APairingHandlerTest {
 
     @Test
     public void writeContactRSAKeyTest() throws IOException {
-        Contact contact = new Contact("Test", new RSAKey("1234", "0"));
+        Contact contact = new Contact("Test", new RSAKey("Test","1234", "0"));
         phspy.writeContact(contact);
         verify(phspy).write(phspy.myBuffer);
         assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
@@ -101,8 +101,8 @@ public class APairingHandlerTest {
     @Test
     public void writeAllContactsTest() throws IOException {
         List<Contact> list = new LinkedList<>();
-        Contact c1 = new Contact("Test", new SimpleKey(""));
-        Contact c2 = new Contact("Test2", new RSAKey("1234", "0"));
+        Contact c1 = new Contact("Test", new SimpleKey("Test", ""));
+        Contact c2 = new Contact("Test2", new RSAKey("Test", "1234", "0"));
         list.add(c1);
         list.add(c2);
         when(database.getAllContacts()).thenReturn(list);
@@ -120,14 +120,14 @@ public class APairingHandlerTest {
 
     @Test
     public void saveContactSimpleKeyTest() throws Exception {
-        Contact contact = new Contact("Test", new SimpleKey(""));
+        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
         tmp.saveContact(serialize(contact));
         verify(database).addContact(contact);
     }
 
     @Test
     public void saveContactRSAKeyTest() throws Exception {
-        Contact contact = new Contact("Test", new RSAKey("1234", "0"));
+        Contact contact = new Contact("Test", new RSAKey("Test", "1234", "0"));
         tmp.saveContact(serialize(contact));
         verify(database).addContact(contact);
     }
@@ -135,14 +135,14 @@ public class APairingHandlerTest {
     @Test
     public void checkExistsEmptyTest() throws IOException {
         when(database.getAllContacts()).thenReturn(new LinkedList<Contact>());
-        Contact contact = new Contact("Test", new SimpleKey(""));
+        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
         assertFalse(phspy.checkExists(contact));
     }
 
     @Test
     public void checkExistsDuplicateTest() throws IOException {
         List<Contact> list = new LinkedList<>();
-        Contact contact = new Contact("Test", new SimpleKey(""));
+        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
         list.add(contact);
         when(database.getAllContacts()).thenReturn(list);
         assertTrue(tmp.checkExists(contact));

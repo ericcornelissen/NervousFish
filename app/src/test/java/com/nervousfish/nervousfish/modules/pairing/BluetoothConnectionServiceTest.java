@@ -29,7 +29,6 @@ public class BluetoothConnectionServiceTest {
 
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
-    private BluetoothAdapter adapter = mock(BluetoothAdapter.getDefaultAdapter().getClass());
     private BluetoothDevice device = mock(BluetoothDevice.class);
     private BluetoothSocket socket = mock(BluetoothSocket.class);
 
@@ -47,7 +46,7 @@ public class BluetoothConnectionServiceTest {
         }
 
         this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, serviceLocator);
-        setField(bConService, "bluetoothAdapter", adapter);
+        setField(bConService, "bluetoothAdapter", BluetoothAdapter.getDefaultAdapter());
 
     }
 

@@ -20,8 +20,18 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
     private DummyQRHandler(final IServiceLocator serviceLocator) {
-        super();
+        super(serviceLocator);
         LOGGER.info("Initialized");
+    }
+
+    @Override
+    void write(byte[] buffer) {
+
+    }
+
+    @Override
+    void showWarning() {
+
     }
 
     /**

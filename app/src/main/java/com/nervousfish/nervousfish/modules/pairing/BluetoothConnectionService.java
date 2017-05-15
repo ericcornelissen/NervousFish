@@ -36,7 +36,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
-    private final BluetoothAdapter bluetoothAdapter;
+    private transient final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private AcceptThread secureAcceptThread;
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
@@ -53,7 +53,6 @@ public final class BluetoothConnectionService extends APairingHandler implements
         super(serviceLocator);
         mState = STATE_NONE;
         mNewState = mState;
-        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     /**
@@ -276,7 +275,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
 
             // Create a new listening server socket
             try {
-                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE,
+                tmp = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(NAME_SECURE,
                         MY_UUID_SECURE);
 
             } catch (final IOException e) {
@@ -372,7 +371,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             setName("ConnectThread" + "Secure");
 
             // Always cancel discovery because it will slow down a connection
-            bluetoothAdapter.cancelDiscovery();
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
 
             // Make a connection to the BluetoothSocket
             try {
