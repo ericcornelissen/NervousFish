@@ -7,7 +7,7 @@ import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.nervousfish.nervousfish.*;
+import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
@@ -18,15 +18,35 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertNotEquals;
 
 @CucumberOptions(features = "features")
 public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
+    private int[] buttons = new int[] {
+        R.id.button00,
+        R.id.button01,
+        R.id.button02,
+        R.id.button03,
+        R.id.button10,
+        R.id.button11,
+        R.id.button12,
+        R.id.button13,
+        R.id.button10,
+        R.id.button21,
+        R.id.button22,
+        R.id.button23,
+        R.id.button30,
+        R.id.button31,
+        R.id.button32,
+        R.id.button33
+    };
+
     public VisualVerificationSteps() {
         super(EntryActivity.class);
     }
+
 
     @Given("^I am viewing the visual verification activity$")
     public void iHaveAVisualVerificationActivity() {
@@ -35,15 +55,17 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
         assertEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
     }
 
-    @When("^I press a button$")
-    public void iPressAButton() {
-        onView(withId(com.nervousfish.nervousfish.R.id.button00)).perform(click());
+    @When("^I press button (\\d+)$")
+    public void iPressButton(final int button) {
+        int btn = this.buttons[button];
+        onView(withId(btn)).perform(click());
     }
 
-    @Then("^I'm happy$")
-    public void imHappy() {
-        assertTrue(true);
+    @Then("^I leave the visual verification activity$")
+    public void iLeaveTheVisualVerificationActivity() {
+        assertNotEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
     }
+
 
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
