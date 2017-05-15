@@ -69,7 +69,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
                 key = new RSAKey(map);
                 break;
             case "simple":
-                key = SimpleKey.fromJSON(reader);
+                key = new SimpleKey(map);
                 break;
             default:
                 throw new IOException("Could not read key");
