@@ -15,18 +15,9 @@ import org.slf4j.LoggerFactory;
 public class GridActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("GridActivity");
-    private static final View.OnClickListener onClickListener = new View.OnClickListener() {
+    private static final int SECURITY_CODE_LENGTH = 5;
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onClick(final View v) {
-            String button = v.getContentDescription().toString();
-            LOGGER.info("button '" + button + "' clicked");
-        }
-
-    };
+    private String securityCode = "";
 
     /**
      * Stuff that needs to be done when the new activity being created.
@@ -47,6 +38,29 @@ public class GridActivity extends Activity {
      * Initialize all the buttons.
      */
     private void initButtons() {
+        final View.OnClickListener onClickListener = new View.OnClickListener() {
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onClick(final View v) {
+                final String button = v.getContentDescription().toString();
+                LOGGER.info("button '" + button + "' clicked");
+
+                if (securityCode.length() == GridActivity.SECURITY_CODE_LENGTH) {
+                    LOGGER.info("Security code already long enough");
+                } else if (securityCode.length() - 1 == GridActivity.SECURITY_CODE_LENGTH) {
+                    securityCode += button;
+                    LOGGER.info("final code is: " + securityCode);
+                } else {
+                    securityCode += button;
+                    LOGGER.info("code so far: " + securityCode);
+                }
+            }
+
+        };
+
         this.findViewById(R.id.button00).setOnClickListener(onClickListener);
         this.findViewById(R.id.button01).setOnClickListener(onClickListener);
         this.findViewById(R.id.button02).setOnClickListener(onClickListener);
