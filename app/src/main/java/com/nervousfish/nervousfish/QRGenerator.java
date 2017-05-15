@@ -39,8 +39,8 @@ final public class QRGenerator {
     }
 
     /**
-     *
      * Encodes the publicKey as a QR code.
+     *
      * @param publicKey The public key that's about to be converted to QR code
      * @return The bitmap being the QR code
      */
@@ -50,12 +50,9 @@ final public class QRGenerator {
         try {
             final BitMatrix matrix = qrWriter.encode(publicKey, BarcodeFormat.QR_CODE, QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT);
             bitmap = Bitmap.createBitmap(QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT, Bitmap.Config.RGB_565);
-            for(int x = 0; x< QRCODE_IMAGE_WIDTH; x++) {
-                for(int y = 0; y<QRCODE_IMAGE_HEIGHT; y++) {
-                    int color = Color.WHITE;
-                    if(matrix.get(x, y)) {
-                        color = Color.BLACK;
-                    }
+            for (int x = 0; x < QRCODE_IMAGE_WIDTH; x++) {
+                for (int y = 0; y < QRCODE_IMAGE_HEIGHT; y++) {
+                    final int color = (matrix.get(x, y) ? Color.BLACK : Color.WHITE);
                     bitmap.setPixel(x, y, color);
                 }
             }
@@ -68,6 +65,7 @@ final public class QRGenerator {
 
     /**
      * Decodes the QRcode to a public key string
+     *
      * @param QRCode The QR code as a bitmap
      * @return The decoded public key.
      */
@@ -75,7 +73,7 @@ final public class QRGenerator {
 
         final Reader qrReader = new MultiFormatReader();
 
-        final int[] intArray = new int[QRCode.getWidth()*QRCode.getHeight()];
+        final int[] intArray = new int[QRCode.getWidth() * QRCode.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
         QRCode.getPixels(intArray, 0, QRCode.getWidth(), 0, 0, QRCode.getWidth(), QRCode.getHeight());
 
