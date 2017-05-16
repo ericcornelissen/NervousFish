@@ -14,7 +14,7 @@ import java.util.List;
 public final class RhythmHelper {
     private final List<ATapData> masterData;
     private final CircularList<ATapData> slaveData;
-    private final Logger LOGGER = LoggerFactory.getLogger("RhythmHelper");
+    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmHelper");
 
     /**
      * Constructs a new RhythmHelper

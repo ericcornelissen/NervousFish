@@ -33,7 +33,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
      * {@inheritDoc}
      */
     @Override
-    public E get(int index) {
+    public E get(final int index) {
         if (index < 0) {
             throw new IllegalArgumentException("Illegal Index: " + index);
         }

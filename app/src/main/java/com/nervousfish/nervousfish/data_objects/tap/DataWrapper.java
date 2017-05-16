@@ -6,8 +6,8 @@ import java.io.Serializable;
  * This class is used to let the other party know what kind of class it contains.
  */
 public class DataWrapper implements Serializable {
-    private ATapData tapData;
-    private Class clazz;
+    private final ATapData tapData;
+    private final Class clazz;
 
     /**
      * Creates a new DataWrapper
