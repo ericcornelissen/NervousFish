@@ -14,7 +14,7 @@ public class DataWrapper implements Serializable {
      *
      * @param tapData The {@link ATapData} object the wrapper wraps
      */
-    public DataWrapper(ATapData tapData) {
+    public DataWrapper(final ATapData tapData) {
         this.tapData = tapData;
         this.clazz = tapData.getClass();
     }
