@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -74,8 +73,6 @@ public final class ContactActivity extends AppCompatActivity {
                             public void onClick(final SweetAlertDialog sDialog) {
                                 try {
                                     serviceLocator.getDatabase().deleteContact(contact.getName());
-                                    Boolean b = serviceLocator.getDatabase().getAllContacts().contains(contact);
-                                    Log.d("test2", b.toString());
                                     sDialog .setTitleText("Deleted!")
                                             .setContentText("The contact has been deleted!")
                                             .setConfirmText("OK")
@@ -88,7 +85,7 @@ public final class ContactActivity extends AppCompatActivity {
                                                 })
                                             .showCancelButton(false)
                                             .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                } catch (IllegalArgumentException e) {
+                                } catch (final IllegalArgumentException e) {
                                     sDialog .setTitleText("The contact doesn't exist")
                                             .setContentText("It looks like the contact was already deleted.")
                                             .setConfirmText("OK")
@@ -101,10 +98,10 @@ public final class ContactActivity extends AppCompatActivity {
                                             })
                                             .showCancelButton(false)
                                             .changeAlertType(SweetAlertDialog.WARNING_TYPE);
-                                } catch (IOException e) {
+                                } catch (final IOException e) {
                                     sDialog .setTitleText("Something went wrong")
-                                            .setContentText(("There went something wrong deleting this contact, " +
-                                                    "please try again."))
+                                            .setContentText(("There went something wrong deleting this contact, "
+                                                    + "please try again."))
                                             .setConfirmText("OK")
                                             .setConfirmClickListener(null)
                                             .changeAlertType(SweetAlertDialog.ERROR_TYPE);
@@ -149,18 +146,18 @@ public final class ContactActivity extends AppCompatActivity {
      * @param v - the view clicked on
      */
     public void contactNameClicked(final View v) {
-        ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
-        TextView contactName = (TextView) findViewById(R.id.contact_name);
+        final ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
+        final TextView contactName = (TextView) findViewById(R.id.contact_name);
         //Switch to edittext
         switcher.showNext();
-        EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
         editText.setText(contactName.getText());
         editText.requestFocus();
         //Show keyboard
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 
-        ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
+        final ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
         saveButton.setVisibility(View.VISIBLE);
     }
 
@@ -171,24 +168,24 @@ public final class ContactActivity extends AppCompatActivity {
      * @param v - the view clicked on
      */
     public void saveNewContactName(final View v) {
-        ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
-        TextView contactName = (TextView) switcher.getNextView();
-        EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+        final ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
+        final TextView contactName = (TextView) switcher.getNextView();
+        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
         switcher.showNext();
         //Update contact
         try {
             final Contact oldContact = serviceLocator.getDatabase().getContactWithName(contactName.getText().toString());
             final Contact newContact = new Contact(editText.getText().toString(), oldContact.getKeys());
             serviceLocator.getDatabase().updateContact(oldContact, newContact);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("IOException while updating contactname");
         }
         //Update text on screen and set savebutton to gone.
         contactName.setText(editText.getText());
-        ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
+        final ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
         saveButton.setVisibility(View.GONE);
         //Dont show keyboard
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 

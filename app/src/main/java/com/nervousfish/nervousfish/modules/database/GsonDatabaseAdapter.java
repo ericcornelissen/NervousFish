@@ -85,10 +85,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public void addContact(final Contact contact) throws IOException {
         // Get the list of contacts and add the new contact
-        final List<Contact> contacts = this.getAllContacts();
         if(getContactWithName(contact.getName()) != null) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
         }
+
+        final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
         // Update the database

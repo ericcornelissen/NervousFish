@@ -125,8 +125,8 @@ public final class MainActivity extends AppCompatActivity {
             final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
             final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
 
-            List<Contact> contacts = database.getAllContacts();
-            for (Contact contact: contacts) {
+            final List<Contact> contacts = database.getAllContacts();
+            for (final Contact contact: contacts) {
                 database.deleteContact(contact.getName());
             }
 
@@ -136,7 +136,7 @@ public final class MainActivity extends AppCompatActivity {
             database.addContact(d);
             database.addContact(e);
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Filling the database with demo data threw an IOException");
         }
     }
 
@@ -147,8 +147,8 @@ public final class MainActivity extends AppCompatActivity {
             this.contacts = serviceLocator.getDatabase().getAllContacts();
             final ListView lv = (ListView) findViewById(R.id.listView);
             lv.setAdapter(new ContactListAdapter(this, this.contacts));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException");
         }
     }
 }
