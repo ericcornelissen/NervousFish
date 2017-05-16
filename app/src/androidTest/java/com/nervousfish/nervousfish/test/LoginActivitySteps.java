@@ -19,6 +19,7 @@ import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
+import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -37,6 +38,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
     public LoginActivitySteps(EntryActivity activityClass) {
+        super(EntryActivity.class);
+    }
+    public LoginActivitySteps() {
         super(EntryActivity.class);
     }
 

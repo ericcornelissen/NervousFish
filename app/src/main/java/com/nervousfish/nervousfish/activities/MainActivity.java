@@ -1,7 +1,9 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.content.Context;
+import com.nervousfish.nervousfish.data_objects.Contact;
+
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +20,7 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -27,16 +29,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * The main activity class that shows a list of all people with their public keys
  */
-@SuppressWarnings("PMD.AtLeastOneConstructor")
 public final class MainActivity extends AppCompatActivity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
     private IServiceLocator serviceLocator;
+    private List<Contact> contacts;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -46,21 +51,32 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        LOGGER.info("MainActivity created");
+        final Intent intent = getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.setContentView(R.layout.activity_main);
+
+        try {
+            fillDatabaseWithDemoData();
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        this.setSupportActionBar(toolbar);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
-            @SuppressWarnings("PMD.MethodCommentRequirement")
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(final View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
+
         });
 
         if (getSupportActionBar() != null) {
@@ -68,39 +84,48 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         final ListView lv = (ListView) findViewById(R.id.listView);
-        final Intent mainActivityIntent = getIntent();
-        serviceLocator = (IServiceLocator) mainActivityIntent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
-        fillDatabaseWithDemoData();
-
+        lv.setAdapter(new ContactListAdapter(this, this.contacts));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            /**
+             * {@inheritDoc}
+             */
             @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                final Intent intent = new Intent(MainActivity.this,ContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                startActivity(intent);
+            public void onItemClick(final AdapterView<?> parent, final View view, final int index, final long id) {
+                openContact(index);
             }
+
         });
 
-        try {
-            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        LOGGER.info("MainActivity created");
+    }
+
+    /**
+     * Temporary method to open the {@link ContactActivity} for a contact.
+     *
+     * @param index The index of the contact in {@code this.contacts}.
+     */
+    private void openContact(final int index) {
+        final Intent intent = new Intent(this, ContactActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
+        this.startActivity(intent);
     }
 
     /**
      * Temporarily fill the database with demo data for development.
      */
-    private void fillDatabaseWithDemoData() {
-        final IDatabase database = serviceLocator.getDatabase();
+    private void fillDatabaseWithDemoData() throws IOException {
+        final IDatabase database = this.serviceLocator.getDatabase();
         try {
-
-            final Contact a = new Contact("Eric", new SimpleKey("", "jdfs09jdfs09jfs0djfds9jfsd0"));
-            final Contact b = new Contact("Stas", new SimpleKey("", "4ji395j495i34j5934ij534i"));
-            final Contact c = new Contact("Joost", new SimpleKey("", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-            final Contact d = new Contact("Kilian", new SimpleKey("", "sdjnefiniwfnfejewjnwnkenfk32"));
-            final Contact e = new Contact("Cornel", new SimpleKey("", "nr23uinr3uin2o3uin23oi4un234ijn"));
+            final Collection<IKey> keys = new ArrayList<>();
+            keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
+            keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
+            final Contact a = new Contact("Eric", keys);
+            final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
+            final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+            final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+            final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
             if (!database.getAllContacts().isEmpty()) {
                 database.deleteContact(a);
                 database.deleteContact(b);
@@ -117,6 +142,7 @@ public final class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }
 
 /**
