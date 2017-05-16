@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -130,6 +131,13 @@ public final class ContactActivity extends AppCompatActivity {
         final ListView lv = (ListView) this.findViewById(R.id.listView);
         lv.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, keyNames));
+    }
+
+    public void ContactNameClicked() {
+        ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
+        switcher.showNext(); //or switcher.showPrevious();
+        TextView myTV = (TextView) switcher.findViewById(R.id.contact_name);
+        myTV.setText("value");
     }
 
 }

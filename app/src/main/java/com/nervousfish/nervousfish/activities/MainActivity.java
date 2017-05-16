@@ -77,7 +77,12 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         final ListView lv = (ListView) findViewById(R.id.listView);
-        lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        try {
+            fillDatabaseWithDemoData();
+            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+        } catch (final IOException e) {
+            LOGGER.error("Failed to retrieve contacts from database", e);
+        }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
@@ -89,13 +94,6 @@ public final class MainActivity extends AppCompatActivity {
             }
 
         });
-
-        try {
-            fillDatabaseWithDemoData();
-            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
-        } catch (final IOException e) {
-            LOGGER.error("Failed to retrieve contacts from database", e);
-        }
 
         LOGGER.info("MainActivity created");
     }
