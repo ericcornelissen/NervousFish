@@ -59,7 +59,7 @@ public final class LoginActivity extends Activity {
         if (skipPassword) {
             LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
-            final Intent intent = new Intent(LoginActivity.this, VisualVerificationActivity.class);
+            final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             startActivity(intent);
         } else {
