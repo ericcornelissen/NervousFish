@@ -12,9 +12,9 @@ import java.util.List;
  * Provides some helper function for verifying the identity of the user by using a rhythm
  */
 public final class RhythmHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmHelper");
     private final List<ATapData> masterData;
     private final CircularList<ATapData> slaveData;
-    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmHelper");
 
     /**
      * Constructs a new RhythmHelper
