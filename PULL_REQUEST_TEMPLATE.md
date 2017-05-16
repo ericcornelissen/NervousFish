@@ -1,20 +1,21 @@
-- Relevant Issues: ...
-- Related Pull Requests: ...
+<!-- Check if the title is descriptive! -->
+- Relevant Issues: #
+- Related Pull Requests: -
 
 * * *
 
 ## What
-Specify what this Pull Request adds to the repository.
+This Pull Request adds to the repository 
 
 ## Why
-Specify why this Pull Request is needed in the project.
+This Pull Request is needed because 
 
 ## How
-Specify how this feature can be viewed/tested within the project.
+This feature can be viewed/tested within the project by 
 
 ## Alternative implementation
-Discuss any possible other implementation you have considered.
+Other implementations that I've have considered are 
 
 ## Notes
-Is there anything reviewers need to know about? Do they need to take something into account while
-reviewing? Is there something they should pay extra attention to?
+<!-- Is there anything reviewers need to know about? Do they need to take something into account while
+reviewing? Is there something they should pay extra attention to? -->

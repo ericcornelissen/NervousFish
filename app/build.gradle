@@ -40,7 +40,16 @@ android {
     }
 }
 
-cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+cobertura {
+    coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+    coverageExcludes = [
+            // Exclude dependencies
+            '.*android.*', '.*cn.pedant.*', '.*com.pnikosis.*',
+
+            // Exclude hard to test code
+            '.*com.nervousfish.nervousfish.modules.pairing.*' // Bluetooth/NFC connections
+    ]
+}
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
