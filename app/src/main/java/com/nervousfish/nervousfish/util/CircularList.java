@@ -13,7 +13,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
     private final Object[] data;
     private int head;
     private int lastElementLocation;
-    private int current_size;
+    private int currentSize;
 
     /**
      * Creates a new CircularList.
@@ -45,7 +45,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
      */
     @Override
     public int size() {
-        return this.current_size;
+        return this.currentSize;
     }
 
     /**
@@ -58,10 +58,10 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
         if (this.lastElementLocation == maxSize) {
             this.lastElementLocation = 0;
         }
-        if (current_size == maxSize) {
+        if (currentSize == maxSize) {
             head++;
         }
-        current_size = Math.min(maxSize, current_size + 1);
+        currentSize = Math.min(maxSize, currentSize + 1);
         return true;
     }
 
