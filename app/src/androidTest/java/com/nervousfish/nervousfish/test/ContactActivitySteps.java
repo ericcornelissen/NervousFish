@@ -18,10 +18,14 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
+
+import java.io.IOException;
+import java.util.List;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -35,7 +39,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    private Activity parent = null;
+    private Contact contact = null;
+    private IServiceLocator serviceLocator = null;
 
     public ContactActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
@@ -46,16 +51,22 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
     }
 
     @Given("^I am viewing the contact activity$")
-    public void iAmViewingContactActivity() {
+    public void iAmViewingContactActivity() throws IOException {
         assertNotNull(getActivity());
 
         IKey key = new SimpleKey("my key", "key");
-        Contact contact = new Contact("Cornel",key );
+        contact = new Contact("TestPerson",key );
+
+        serviceLocator = (IServiceLocator) getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        List<Contact> contacts = serviceLocator.getDatabase().getAllContacts();
+        for (Contact contact: contacts) {
+            serviceLocator.getDatabase().deleteContact(contact.getName());
+        }
+        serviceLocator.getDatabase().addContact(contact);
 
         Intent intent = new Intent(getActivity(), ContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         getActivity().startActivity(intent);
     }
 
@@ -69,13 +80,35 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         onView(withId(R.id.deleteButton)).perform(click());
     }
 
+    @When("^I press that I am sure$")
+    public void iAmSureToDelete() {
+        onView(withId(R.id.confirm_button)).perform(click());
+    }
+
+    @When("^I press on the OK button$")
+    public void iPressOK() {
+        onView(withId(R.id.confirm_button)).perform(click());
+    }
+
     @Then("^I should go to the previous activity I visited$")
     public void iShouldGoToPreviousActivity() {
         assertEquals(LoginActivity.class, getCurrentActivity().getClass());
     }
 
-    @Then("^I should get a popup asking if I am sure to delete the contact$")
-    public void iShouldGetPopup() {
+    @Then("^the current contact should be deleted$")
+    public void currentContactIsDeleted() throws IOException {
+//        List<Contact> contacts = serviceLocator.getDatabase().getAllContacts();
+//        for (Contact c:
+//             contacts) {
+//            Log.d("test", c.getName());
+//        }
+//        serviceLocator.getDatabase().deleteContact(contact.getName());
+//        contacts = serviceLocator.getDatabase().getAllContacts();
+//        for (Contact c:
+//                contacts) {
+//            Log.d("test", c.getName());
+//        }
+        assertFalse(serviceLocator.getDatabase().getAllContacts().contains(contact));
     }
 
     private Activity getCurrentActivity() {

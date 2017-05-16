@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -73,6 +74,8 @@ public final class ContactActivity extends AppCompatActivity {
                             public void onClick(final SweetAlertDialog sDialog) {
                                 try {
                                     serviceLocator.getDatabase().deleteContact(contact.getName());
+                                    Boolean b = serviceLocator.getDatabase().getAllContacts().contains(contact);
+                                    Log.d("test2", b.toString());
                                     sDialog .setTitleText("Deleted!")
                                             .setContentText("The contact has been deleted!")
                                             .setConfirmText("OK")

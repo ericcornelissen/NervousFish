@@ -38,6 +38,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
+    private final static String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private final static Type TYPE_CONTACT_LIST =
             new TypeToken<ArrayList<Contact>>() {
@@ -85,6 +86,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
     public void addContact(final Contact contact) throws IOException {
         // Get the list of contacts and add the new contact
         final List<Contact> contacts = this.getAllContacts();
+        if(getContactWithName(contact.getName()) != null) {
+            throw new IllegalArgumentException(CONTACT_DUPLICATE);
+        }
         contacts.add(contact);
 
         // Update the database
