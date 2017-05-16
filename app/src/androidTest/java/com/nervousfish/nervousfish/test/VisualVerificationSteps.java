@@ -7,6 +7,7 @@ import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
@@ -53,6 +54,8 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
     public void iHaveAVisualVerificationActivity() {
         onView(withId(R.id.password)).perform(closeSoftKeyboard());
         Intent intent = new Intent(getActivity(), VisualVerificationActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
+                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
         assertEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
     }
