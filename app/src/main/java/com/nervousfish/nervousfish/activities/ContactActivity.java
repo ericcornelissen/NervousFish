@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -133,11 +135,15 @@ public final class ContactActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, keyNames));
     }
 
-    public void ContactNameClicked() {
+    public void ContactNameClicked(final View v) {
         ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
+        TextView contactName = (TextView) findViewById(R.id.contact_name);
         switcher.showNext(); //or switcher.showPrevious();
-        TextView myTV = (TextView) switcher.findViewById(R.id.contact_name);
-        myTV.setText("value");
+        EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+        editText.setText(contactName.getText());
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
 }
