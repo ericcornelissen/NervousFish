@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -42,6 +41,9 @@ public class VisualVerificationActivity extends Activity {
         LOGGER.info("VisualVerificationActivity created");
     }
 
+    /**
+     * Go to the next activity and provide it with the generated pattern.
+     */
     private void nextActivity() {
         // TODO: Progress to the correct activity
         final Intent intent = new Intent(this, LoginActivity.class);
@@ -63,7 +65,6 @@ public class VisualVerificationActivity extends Activity {
             public void onClick(final View v) {
                 final String button = v.getContentDescription().toString();
                 LOGGER.info("button '" + button + "' clicked");
-                Log.d("tst", "button " + button + " clicked");
 
                 if (securityCode.length() > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
                     LOGGER.info("Security code already long enough");
