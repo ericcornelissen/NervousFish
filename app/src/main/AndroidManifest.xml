@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nervousfish.nervousfish"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.nervousfish.nervousfish">
 
     <application
         android:allowBackup="true"
@@ -29,6 +29,10 @@
             android:name=".activities.ContactActivity"
             android:label="@string/title_activity_contact"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.RhythmCreateActivity"
+            android:label="@string/title_activity_rhythm_create"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
