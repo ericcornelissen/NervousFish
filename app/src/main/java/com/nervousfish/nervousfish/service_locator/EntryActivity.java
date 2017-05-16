@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.RhythmCreateActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

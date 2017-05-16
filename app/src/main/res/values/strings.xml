@@ -16,4 +16,7 @@
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
     <string name="cancel">Cancel</string>
     <string name="yes_delete">Yes,delete it!</string>
+
+    <string name="title_activity_rhythm_create">RhythmCreateActivity</string>
+    <string name="tap_me">Tap me!</string>
 </resources>
