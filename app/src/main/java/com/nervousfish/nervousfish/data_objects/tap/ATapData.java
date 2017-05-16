@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 /**
  * This class denotes a touch event on the screen.
  */
-abstract class ATapData implements Serializable {
+public abstract class ATapData implements Serializable {
     private Timestamp timestamp;
 
     /**
@@ -17,9 +17,17 @@ abstract class ATapData implements Serializable {
     }
 
     /**
+     * <b>Should only be used for testing purposes!</b>
+     * @param timestamp The timestamp of the tap data
+     */
+    public ATapData(final Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    /**
      * @return The time on which the ATapData was instantiated
      */
-    Timestamp getTimestamp() {
+    public Timestamp getTimestamp() {
         return this.timestamp;
     }
 }
