@@ -18,25 +18,29 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="A" />
+            android:contentDescription="A"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button01"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="B" />
+            android:contentDescription="B"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button02"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="C" />
+            android:contentDescription="C"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button03"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="D" />
+            android:contentDescription="D"
+            android:onClick="buttonAction" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,25 +54,29 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="E" />
+            android:contentDescription="E"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button11"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="F" />
+            android:contentDescription="F"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button12"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="G" />
+            android:contentDescription="G"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button13"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="H" />
+            android:contentDescription="H"
+            android:onClick="buttonAction" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -82,25 +90,29 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="I" />
+            android:contentDescription="I"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button21"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="J" />
+            android:contentDescription="J"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button22"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="K" />
+            android:contentDescription="K"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button23"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="L" />
+            android:contentDescription="L"
+            android:onClick="buttonAction" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -114,24 +126,28 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="M" />
+            android:contentDescription="M"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button31"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="N" />
+            android:contentDescription="N"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button32"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="O" />
+            android:contentDescription="O"
+            android:onClick="buttonAction" />
         <Button
             android:id="@+id/button33"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:contentDescription="P" />
+            android:contentDescription="P"
+            android:onClick="buttonAction" />
     </LinearLayout>
 </LinearLayout>

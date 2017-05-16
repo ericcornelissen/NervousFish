@@ -36,8 +36,6 @@ public class VisualVerificationActivity extends Activity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        this.initButtons();
-
         LOGGER.info("VisualVerificationActivity created");
     }
 
@@ -53,49 +51,24 @@ public class VisualVerificationActivity extends Activity {
     }
 
     /**
-     * Initialize all the buttons.
+     * Action to perform when clicking on a button in the activity.
+     *
+     * @param v The view of the button being clicked.
      */
-    private void initButtons() {
-        final View.OnClickListener onClickListener = new View.OnClickListener() {
+    public void buttonAction(final View v) {
+        final String button = v.getContentDescription().toString();
+        LOGGER.info("button '" + button + "' clicked");
 
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View v) {
-                final String button = v.getContentDescription().toString();
-                LOGGER.info("button '" + button + "' clicked");
-
-                if (securityCode.length() > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
-                    LOGGER.info("Security code already long enough");
-                } else if (securityCode.length() + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
-                    securityCode += button;
-                    LOGGER.info("final code is: " + securityCode);
-                    nextActivity();
-                } else {
-                    securityCode += button;
-                    LOGGER.info("code so far: " + securityCode);
-                }
-            }
-
-        };
-
-        this.findViewById(R.id.button00).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button01).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button02).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button03).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button10).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button11).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button12).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button13).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button20).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button21).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button22).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button23).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button30).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button31).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button32).setOnClickListener(onClickListener);
-        this.findViewById(R.id.button33).setOnClickListener(onClickListener);
+        if (this.securityCode.length() > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
+            LOGGER.info("Security code already long enough");
+        } else if (this.securityCode.length() + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
+            this.securityCode += button;
+            LOGGER.info("final code is: " + this.securityCode);
+            this.nextActivity();
+        } else {
+            this.securityCode += button;
+            LOGGER.info("code so far: " + this.securityCode);
+        }
     }
 
 }
