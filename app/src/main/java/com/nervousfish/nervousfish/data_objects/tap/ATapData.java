@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * This class denotes a touch event on the screen.
  */
 public abstract class ATapData implements Serializable {
-    private Timestamp timestamp;
+    private final Timestamp timestamp;
 
     /**
      * Creates a new TapData object.

@@ -10,10 +10,10 @@ import java.util.List;
  */
 public final class CircularList<E> extends AbstractList<E> implements List<E>, Serializable {
     private final int maxSize;
-    private final Object[] elementData;
-    private int head = 0;
-    private int lastElementLocation = 0;
-    private int size = 0;
+    private final Object[] data;
+    private int head;
+    private int lastElementLocation;
+    private int current_size;
 
     /**
      * Creates a new CircularList.
@@ -25,7 +25,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
         if (maxSize <= 0){
             throw new IllegalArgumentException("Illegal Capacity: " + maxSize);
         }
-        this.elementData = new Object[maxSize];
+        this.data = new Object[maxSize];
         this.maxSize = maxSize;
     }
 
@@ -45,7 +45,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
      */
     @Override
     public int size() {
-        return this.size;
+        return this.current_size;
     }
 
     /**
@@ -53,15 +53,15 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
      */
     @Override
     public boolean add(final E e) {
-        this.elementData[this.lastElementLocation] = e;
+        this.data[this.lastElementLocation] = e;
         this.lastElementLocation++;
         if (this.lastElementLocation == maxSize) {
             this.lastElementLocation = 0;
         }
-        if (size == maxSize) {
+        if (current_size == maxSize) {
             head++;
         }
-        size = Math.min(maxSize, size + 1);
+        current_size = Math.min(maxSize, current_size + 1);
         return true;
     }
 
@@ -83,6 +83,6 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
      */
     @SuppressWarnings("unchecked")
     private E elementData(final int index) {
-        return (E) this.elementData[index];
+        return (E) this.data[index];
     }
 }

@@ -47,7 +47,6 @@ public final class RhythmHelper {
         }
 
         double dist = 0d;
-        final List<ATapData> slaveDataList = slaveData.getElements();
         final long offset = slaveData.get(0).getTimestamp().getTime();
         for (int i = 0; i < masterData.size(); i++) {
             final ATapData masterSample = masterData.get(i);
