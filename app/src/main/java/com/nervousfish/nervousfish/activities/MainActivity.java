@@ -55,13 +55,6 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        try {
-            fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
 
@@ -96,6 +89,13 @@ public final class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        try {
+            fillDatabaseWithDemoData();
+            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+        } catch (final IOException e) {
+            LOGGER.error("Failed to retrieve contacts from database", e);
+        }
 
         LOGGER.info("MainActivity created");
     }

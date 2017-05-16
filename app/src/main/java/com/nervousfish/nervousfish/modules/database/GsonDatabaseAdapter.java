@@ -36,14 +36,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
+
+    private final static String CONTACT_NOT_FOUND = "Contact not found in database";
+    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private final static Type TYPE_CONTACT_LIST =
             new TypeToken<ArrayList<Contact>>() {
             }.getType();
     private final static Type TYPE_PROFILE_LIST =
             new TypeToken<ArrayList<Profile>>() {
             }.getType();
-    private final static String CONTACT_NOT_FOUND = "Contact not found in database";
-    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
+
     private final String contactsPath;
     private final String profilesPath;
 
@@ -61,8 +63,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         try {
             this.initializeDatabase();
         } catch (final IOException e) {
-            // TODO: Handle failure
-            e.printStackTrace();
+            LOGGER.error("Failed to initialize database", e);
         }
     }
 
@@ -303,4 +304,5 @@ public final class GsonDatabaseAdapter implements IDatabase {
             LOGGER.info("Created the user data part of the database");
         }
     }
+
 }
