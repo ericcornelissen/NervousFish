@@ -19,4 +19,5 @@
 
     <string name="title_activity_rhythm_create">RhythmCreateActivity</string>
     <string name="tap_me">Tap me!</string>
+    <string name="stop_recording">Stop recording</string>
 </resources>
