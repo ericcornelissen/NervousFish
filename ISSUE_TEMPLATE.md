@@ -20,6 +20,12 @@ This issue is needed for the project because
 This feature can be added by 
 <!-- Specify in general terms how this feature can be added. -->
 
+## Definition of ready
+This features is not ready until the following issues are finished:
+
+- 
+<!-- Specify if there are still issues open that must be completed first before people can start on this issue -->
+
 ## Definition of done
 This task can be considered done when
 
