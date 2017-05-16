@@ -80,7 +80,7 @@
                         android:textSize="@dimen/contact_name_size"
                         android:textStyle="bold"
                         android:clickable="true"
-                        android:onClick="ContactNameClicked" />
+                        android:onClick="contactNameClicked" />
 
                     <EditText
                         android:id="@+id/edit_contact_name"
@@ -90,6 +90,15 @@
                         android:textSize="@dimen/contact_name_size"
                         android:textStyle="bold" />
                 </ViewSwitcher>
+
+                <ImageButton
+                    android:id="@+id/save_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@android:drawable/ic_menu_save"
+                    android:background="@color/colorPrimary"
+                    android:onClick="saveNewContactName"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

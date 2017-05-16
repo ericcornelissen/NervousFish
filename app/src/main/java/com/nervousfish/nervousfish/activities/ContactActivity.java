@@ -18,6 +18,9 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +33,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public final class ContactActivity extends AppCompatActivity {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private IServiceLocator serviceLocator;
 
     /**
@@ -135,15 +139,54 @@ public final class ContactActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, keyNames));
     }
 
-    public void ContactNameClicked(final View v) {
+    /**
+     * Gets called when there is clicked on the contact name.
+     * After running this method, it is possible to change the name.
+     *
+     * @param v - the view clicked on
+     */
+    public void contactNameClicked(final View v) {
         ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
         TextView contactName = (TextView) findViewById(R.id.contact_name);
-        switcher.showNext(); //or switcher.showPrevious();
+        //Switch to edittext
+        switcher.showNext();
         EditText editText = (EditText) findViewById(R.id.edit_contact_name);
         editText.setText(contactName.getText());
         editText.requestFocus();
+        //Show keyboard
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+
+        ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
+        saveButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * When the save button is clicked this method is called.
+     * It saves the new contact name.
+     *
+     * @param v - the view clicked on
+     */
+    public void saveNewContactName(final View v) {
+        ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
+        TextView contactName = (TextView) switcher.getNextView();
+        EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+        switcher.showNext();
+        //Update contact
+        try {
+            final Contact oldContact = serviceLocator.getDatabase().getContactWithName(contactName.getText().toString());
+            final Contact newContact = new Contact(editText.getText().toString(), oldContact.getKeys());
+            serviceLocator.getDatabase().updateContact(oldContact, newContact);
+        } catch (IOException e) {
+            LOGGER.error("IOException while updating contactname");
+        }
+        //Update text on screen and set savebutton to gone.
+        contactName.setText(editText.getText());
+        ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
+        saveButton.setVisibility(View.GONE);
+        //Dont show keyboard
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
 }

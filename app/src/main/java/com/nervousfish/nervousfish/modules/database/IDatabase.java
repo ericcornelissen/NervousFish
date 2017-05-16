@@ -45,6 +45,14 @@ public interface IDatabase extends IModule {
     List<Contact> getAllContacts() throws IOException;
 
     /**
+     * Get one Contact from the database given his name as input.
+     *
+     * @param contactName - The name of the Contact.
+     * @return A {@link Contact}.
+     */
+    Contact getContactWithName(final String contactName) throws IOException;
+
+    /**
      * Get the Profile list with user information.
      *
      * @return A {@link List} of {@link Profile Profiles}.

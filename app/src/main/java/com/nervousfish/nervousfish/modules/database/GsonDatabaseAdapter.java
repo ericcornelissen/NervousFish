@@ -179,6 +179,21 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
+    public Contact getContactWithName(final String contactName) throws IOException {
+        final List<Contact> contacts = getAllContacts();
+        for (final Contact contact: contacts) {
+            if(contact.getName().equals(contactName)) {
+                return contact;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<Profile> getProfiles() throws IOException {
         final GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
