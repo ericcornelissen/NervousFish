@@ -2,6 +2,9 @@ package com.nervousfish.nervousfish.data_objects;
 
 import org.junit.Test;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -15,6 +18,21 @@ public class SimpleKeyTest {
             IKey key = new SimpleKey("Webmail", "foobar");
             assertNotNull(key);
         }
+
+    @Test
+    public void testCanBeInstantiatedWithMap() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("name", "name");
+        map.put("key", "key");
+        IKey key = new SimpleKey(map);
+        assertNotNull(key);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testCanBeInstantiatedWithMapMustHaveAllFields() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        new SimpleKey(map);
+    }
 
         @Test
         public void testGetNameReturnsNotNull() {

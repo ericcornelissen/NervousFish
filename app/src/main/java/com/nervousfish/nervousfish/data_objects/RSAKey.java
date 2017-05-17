@@ -1,12 +1,10 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * RSA variant of {@link IKey}.
@@ -36,24 +34,50 @@ public final class RSAKey implements IKey {
     }
 
     /**
-     * Create a new RSAKey given a {@link JsonReader}.
+     * Constructor for a RSA key given a {@link Map} of its values.
      *
-     * @param reader The {@link JsonReader} to read with.
-     * @return An {@link IKey} representing the JSON key.
-     * @throws IOException When the {@link JsonReader} throws an {@link IOException}.
+     * @param map A {@link Map} mapping {@link RSAKey} attribute names to values.
      */
-    static public IKey fromJSON(final JsonReader reader) throws IOException {
-        final Map<String, String> map = new ConcurrentHashMap<>();
-        while (reader.hasNext()) {
-            final String name = reader.nextName();
-            final String value = reader.nextString();
-            map.put(name, value);
+    public RSAKey(final Map<String, String> map) throws IllegalArgumentException {
+        this.name = map.get(RSAKey.JSON_CONSTANT_NAME);
+        this.modulus = map.get(RSAKey.JSON_CONSTANT_MODULUS);
+        this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
+
+        if (this.name == null || this.modulus == null || this.exponent == null) {
+           throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Get the exponent of an {@link RSAKey}.
+     *
+     * @param key An {@link RSAKey}.
+     * @return The value for the exponent attribute of the {@code key}.
+     * @throws Exception If the provided {@link IKey} is not a {@link RSAKey}.
+     */
+    public static String getExponent(final IKey key) throws IllegalArgumentException {
+        final String type = key.getType();
+        if (!type.equals(ConstantKeywords.RSA_KEY)) {
+            throw new IllegalArgumentException();
         }
 
-        final String name = map.get(RSAKey.JSON_CONSTANT_NAME);
-        final String modulus = map.get(RSAKey.JSON_CONSTANT_MODULUS);
-        final String exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
-        return new RSAKey(name, modulus, exponent);
+        return ((RSAKey) key).exponent;
+    }
+
+    /**
+     * Get the modulus of an {@link RSAKey}.
+     *
+     * @param key An {@link RSAKey}.
+     * @return The value for the modulus attribute of the {@code key}.
+     * @throws Exception If the provided {@link IKey} is not a {@link RSAKey}.
+     */
+    public static String getModulus(final IKey key) throws IllegalArgumentException {
+        final String type = key.getType();
+        if (!type.equals(ConstantKeywords.RSA_KEY)) {
+            throw new IllegalArgumentException();
+        }
+
+        return ((RSAKey) key).modulus;
     }
 
     /**
