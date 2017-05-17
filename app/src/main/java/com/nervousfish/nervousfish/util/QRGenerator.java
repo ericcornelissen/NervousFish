@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish;
+package com.nervousfish.nervousfish.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
