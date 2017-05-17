@@ -1,10 +1,13 @@
 package com.nervousfish.nervousfish.activities;
 
+import com.nervousfish.nervousfish.data_objects.Contact;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -81,7 +84,12 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         final ListView lv = (ListView) findViewById(R.id.listView);
-        lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        try {
+            fillDatabaseWithDemoData();
+            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+        } catch (final IOException e) {
+            LOGGER.error("Failed to retrieve contacts from database", e);
+        }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
@@ -119,34 +127,27 @@ public final class MainActivity extends AppCompatActivity {
      * Temporarily fill the database with demo data for development.
      */
     private void fillDatabaseWithDemoData() throws IOException {
-        final IDatabase database = this.serviceLocator.getDatabase();
-        try {
-            final Collection<IKey> keys = new ArrayList<>();
-            keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
-            keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
-            final Contact a = new Contact("Eric", keys);
-            final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
-            final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-            final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-            final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-            //final Contact f = new Contact("Test", new SimpleKey("Test", "bf7832jfiwjf8i3ofewkkvidji"));
-            if (!database.getAllContacts().isEmpty()) {
-                database.deleteContact(a);
-                database.deleteContact(b);
-                database.deleteContact(c);
-                database.deleteContact(d);
-                database.deleteContact(e);
-                //database.deleteContact(f);
-            }
-            database.addContact(a);
-            database.addContact(b);
-            database.addContact(c);
-            database.addContact(d);
-            database.addContact(e);
-            //database.addContact(f);
-        } catch (final IOException e) {
-            e.printStackTrace();
+        final IDatabase database = serviceLocator.getDatabase();
+        final Collection<IKey> keys = new ArrayList<>();
+        keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
+        keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
+        final Contact a = new Contact("Eric", keys);
+        final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
+        final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+        final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+        final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+        if (!database.getAllContacts().isEmpty()) {
+            database.deleteContact(a);
+            database.deleteContact(b);
+            database.deleteContact(c);
+            database.deleteContact(d);
+            database.deleteContact(e);
         }
+        database.addContact(a);
+        database.addContact(b);
+        database.addContact(c);
+        database.addContact(d);
+        database.addContact(e);
     }
 
 }
