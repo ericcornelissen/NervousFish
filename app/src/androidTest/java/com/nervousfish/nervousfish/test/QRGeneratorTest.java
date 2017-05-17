@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
 
-import com.nervousfish.nervousfish.QRGenerator;
+import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
