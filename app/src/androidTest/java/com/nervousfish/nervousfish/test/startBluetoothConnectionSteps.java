@@ -22,7 +22,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 
 
-@SuppressWarnings("PMD")
 @CucumberOptions(features = "features")
 public class startBluetoothConnectionSteps extends ActivityInstrumentationTestCase2<MainActivity> {
 

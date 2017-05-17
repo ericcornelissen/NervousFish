@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Contains common methods shared by all pairing modules.
  */
-@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 abstract class APairingHandler implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
@@ -30,7 +29,6 @@ abstract class APairingHandler implements Serializable {
      *
      * @param serviceLocator the serviceLocator which will provide means to access other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
     APairingHandler(final IServiceLocator serviceLocator) {
         database = serviceLocator.getDatabase();

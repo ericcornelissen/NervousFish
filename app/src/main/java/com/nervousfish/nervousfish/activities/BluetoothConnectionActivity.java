@@ -42,7 +42,7 @@ import java.util.Set;
 public class BluetoothConnectionActivity extends AppCompatActivity {
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
-    private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
+    private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
