@@ -16,4 +16,6 @@
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
     <string name="cancel">Cancel</string>
     <string name="yes_delete">Yes,delete it!</string>
+    <string name="waiting_for_slave">Waiting for partner...</string>
+    <string name="cancel_pairing">Cancel</string>
 </resources>
