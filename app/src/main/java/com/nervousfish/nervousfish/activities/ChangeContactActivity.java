@@ -136,7 +136,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
                     new Intent().putExtra(ConstantKeywords.CONTACT, contact));
             finish();
         } else {
-            new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.invalid_name))
                     .setContentText(getString(R.string.invalid_name_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
