@@ -39,6 +39,7 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -101,6 +102,31 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     public void theContactShouldBeUpdated() throws IOException {
         assertEquals(serviceLocator.getDatabase().getContactWithName(TEST_NAME), null);
         assertEquals(serviceLocator.getDatabase().getContactWithName(differentname).getKeys().get(0), TEST_KEY);
+    }
+
+    @When("^I change the name$")
+    public void iChangeTheName() {
+        onView(withId(R.id.edit_contact_name)).perform(typeText("aabbcc"));
+    }
+
+    @When("^I press the back button$")
+    public void iPressBack() {
+        onView(withId(R.id.backButton)).perform(click());
+    }
+
+    @When("^I press cancel on the popup$")
+    public void iPressCancelPopup() {
+        onView(withId(R.id.cancel_button)).perform(click());
+    }
+
+    @When("^I press yes go back on the popup$")
+    public void iPressYesGoBack() {
+        onView(withId(R.id.confirm_button)).perform(click());
+    }
+
+    @Then("^I should stay on the page$")
+    public void iShouldStayOnPage() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
     }
 
     private Activity getCurrentActivity() {
