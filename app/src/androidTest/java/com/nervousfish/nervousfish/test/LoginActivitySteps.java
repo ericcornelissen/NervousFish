@@ -19,7 +19,6 @@ import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
-import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -61,7 +60,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
 
     @When("^I input password \"(.*?)\"$")
     public void iInputPassword(final String password) {
-        onView(withId(R.id.password)).perform(typeText(password));
+        onView(withId(R.id.login_password_input)).perform(typeText(password));
     }
 
     @When("^I press submit button$")
