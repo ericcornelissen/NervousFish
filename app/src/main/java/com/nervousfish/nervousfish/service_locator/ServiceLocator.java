@@ -139,6 +139,14 @@ final class ServiceLocator implements IServiceLocator {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unregisterFromEventBus(final Object object) {
+        EventBus.getDefault().unregister(object);
+    }
+
+    /**
      * Checks if the module is initialized and throws an error otherwise.
      *
      * @param object The object to check

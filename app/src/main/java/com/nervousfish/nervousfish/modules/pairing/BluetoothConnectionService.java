@@ -5,9 +5,14 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
+import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
+import com.nervousfish.nervousfish.events.BluetoothDisconnectedEvent;
+import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +55,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private BluetoothConnectionService(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         mState = STATE_NONE;
+        EventBus.getDefault().post(new BluetoothDisconnectedEvent());
     }
 
     /**
@@ -132,6 +138,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     /**
      * {@inheritDoc}
      */
+    @Override
     public void connected(final BluetoothSocket socket, final BluetoothDevice
             device) {
         LOGGER.info("Connected Bluetooth thread started");
@@ -166,6 +173,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stop() {
         LOGGER.info("Bluetooth service stopped");
 
@@ -186,6 +194,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
 
             mState = STATE_NONE;
+            EventBus.getDefault().post(new BluetoothDisconnectedEvent());
             updateUserInterfaceTitle();
         }
     }
@@ -211,6 +220,9 @@ public final class BluetoothConnectionService extends APairingHandler implements
         ready.write(output);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     void showWarning() {
         // needs to be implemented later
@@ -222,6 +234,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void connectionFailed() {
 
         mState = STATE_NONE;
+        EventBus.getDefault().post(new BluetoothDisconnectedEvent());
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
@@ -234,6 +247,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void connectionLost() {
 
         mState = STATE_NONE;
+        EventBus.getDefault().post(new BluetoothDisconnectedEvent());
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
@@ -274,6 +288,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
             serverSocket = tmp;
             mState = STATE_LISTEN;
+            EventBus.getDefault().post(new BluetoothListeningEvent());
         }
 
         public void run() {
@@ -355,6 +370,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;
+            EventBus.getDefault().post(new BluetoothConnectingEvent());
         }
 
         public void run() {
@@ -426,6 +442,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
             mState = STATE_CONNECTED;
+            EventBus.getDefault().post(new BluetoothConnectedEvent());
         }
 
         public void run() {

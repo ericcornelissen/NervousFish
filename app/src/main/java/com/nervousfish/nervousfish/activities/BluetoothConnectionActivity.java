@@ -19,9 +19,11 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,14 +48,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
-    private static final int REQUEST_CODE_CHECK_BLUETOOTH_STATE = 101;
 
     // Device is now discoverable for 300 seconds
-    private static final int DISCOVERABILITY_TIME = 300;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothConnectionService bluetoothConnectionService;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
+    private IServiceLocator serviceLocator;
     /**
      * The on-click listener for all devices in the ListViews
      */
@@ -68,14 +69,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             final String address = info.substring(info.length() - 17);
             final BluetoothDevice device = getDevice(address);
             bluetoothConnectionService.connect(device);
-            try {
-                // busy wait is ugly, I think this needs the EventBus (see unused Handler in this class)
-                while (bluetoothConnectionService.getState() != BluetoothConnectionService.STATE_CONNECTED) { /* temporary */}
-                bluetoothConnectionService.writeAllContacts();
-            } catch (final IOException e) {
-                LOGGER.warn("Writing all contacts issued an IOexception");
-            }
-
 
             // Create the result Intent and include the MAC address
             final Intent intent = new Intent();
@@ -155,10 +148,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Get the serviceLocator.
         final Intent intent = getIntent();
-        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the BluetoothConnectionService.
-        this.bluetoothConnectionService = (BluetoothConnectionService) serviceLocator.getBluetoothHandler();
+        this.bluetoothConnectionService = (BluetoothConnectionService) this.serviceLocator.getBluetoothHandler();
 
         this.newDevices = new HashSet<>();
     }
@@ -181,6 +174,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         enableBluetooth();
+        this.serviceLocator.registerToEventBus(this);
         bluetoothConnectionService.start();
         // Get the Paired Devices list
         queryPairedDevices();
@@ -193,6 +187,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+        this.serviceLocator.unregisterFromEventBus(this);
         bluetoothConnectionService.stop();
     }
 
@@ -224,14 +219,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             final Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
         }
-    }
-
-    /**
-     * Checks bluetooth state.
-     */
-    public void checkBluetoothState() {
-        final Intent checkBtStateIntent = new Intent(BluetoothAdapter.ACTION_STATE_CHANGED);
-        startActivityForResult(checkBtStateIntent, REQUEST_CODE_CHECK_BLUETOOTH_STATE);
     }
 
     /**
@@ -274,13 +261,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Sets the device to being discoverable.
-     */
-    public void setDiscoverable() {
-        final Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABILITY_TIME);
-        startActivity(discoverableIntent);
+    @Subscribe
+    public void onEvent(final BluetoothConnectedEvent event) {
+        try {
+            bluetoothConnectionService.writeAllContacts();
+        } catch (final IOException e) {
+            LOGGER.warn("Writing all contacts issued an IOexception");
+        }
     }
 
     /**
