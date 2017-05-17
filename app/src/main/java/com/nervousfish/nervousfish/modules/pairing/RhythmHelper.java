@@ -46,6 +46,8 @@ public final class RhythmHelper {
             return false;
         }
 
+        /* Denotes the accumulated difference between the times at which the slave and the
+           master tapped on their screen */
         double dist = 0d;
         final long offset = slaveData.get(0).getTimestamp().getTime();
         for (int i = 0; i < masterData.size(); i++) {
