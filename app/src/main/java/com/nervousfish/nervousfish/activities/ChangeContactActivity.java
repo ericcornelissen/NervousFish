@@ -120,8 +120,8 @@ public final class ChangeContactActivity extends AppCompatActivity {
         try {
             final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
             if(!contact.equals(newContact)) {
-                contact = newContact;
                 serviceLocator.getDatabase().updateContact(contact, newContact);
+                contact = newContact;
             }
         } catch (final IOException e) {
             LOGGER.error("IOException while updating contactname");

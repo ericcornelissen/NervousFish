@@ -45,6 +45,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
 
 @CucumberOptions(features = "features")
@@ -94,7 +95,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     @When("^I press delete$")
     public void iPressDeleteButton() {
-        onView(withId(R.id.delete_contact_menu_item)).perform(click());
+        onView(withText("Delete")).perform(click());
     }
 
     @When("^I press that I am sure$")
@@ -119,10 +120,10 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     @When("^I press edit$")
     public void iPressEdit() {
-        onView(withId(R.id.edit_contact_menu_iten)).perform(click());
+        onView(withText("Edit")).perform(click());
     }
 
-    @Then("^I should go to the previous activity I visited$")
+    @Then("^I should go to the change contact activity$")
     public void iShouldGoToChangeContactActivity() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
     }

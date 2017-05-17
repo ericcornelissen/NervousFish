@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -51,7 +52,7 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     private IServiceLocator serviceLocator = null;
     private final static String TEST_NAME = "TestPerson";
     private final static IKey TEST_KEY = new SimpleKey("my key", "key");
-    private final static String DIFFERENT_NAME = "DifferentName";
+    private String differentname;
 
     public ChangeContactActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
@@ -74,80 +75,32 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
         }
         serviceLocator.getDatabase().addContact(contact);
 
-        Intent intent = new Intent(getActivity(), ContactActivity.class);
+        Intent intent = new Intent(getActivity(), ChangeContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         getActivity().startActivity(intent);
     }
 
-    @When("^I press the back arrow$")
-    public void iPressBackArrow() {
-        onView(withId(R.id.backButton)).perform(click());
-    }
-
-    @When("^I press that I am sure$")
-    public void iAmSureToDelete() {
-        onView(withId(R.id.confirm_button)).perform(click());
-    }
-
-    @When("^I press on the OK button$")
-    public void iPressOK() {
-        onView(withId(R.id.confirm_button)).perform(click());
-    }
-
-    @Then("^I should go to the previous activity I visited$")
-    public void iShouldGoToPreviousActivity() {
-        assertEquals(LoginActivity.class, getCurrentActivity().getClass());
-    }
-
-    @Then("^the current contact should be deleted$")
-    public void currentContactIsDeleted() throws IOException {
-        assertFalse(serviceLocator.getDatabase().getAllContacts().contains(contact));
-    }
-
     @When("^I press the contact name$")
     public void iPressContactName() {
-        onView(withId(R.id.contact_name)).perform(click());
+        onView(withId(R.id.edit_contact_name)).perform(click());
     }
 
-    @When("^I type a different name$")
-    public void iTypeDifferentName() {
-        onView(withId(R.id.edit_contact_name)).perform(replaceText(DIFFERENT_NAME));
+    @When("^I type a \"(.*?)\"$")
+    public void iTypeDifferentName(final String differentname) {
+        this.differentname = differentname;
+        onView(withId(R.id.edit_contact_name)).perform(replaceText(differentname));
     }
 
     @When("^I press on the save button$")
     public void iPressSave() {
-        onView(withId(R.id.saveContactButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
-                new ViewAction() {
-                    @Override
-                    public Matcher<View> getConstraints() {
-                        return isEnabled(); // no constraints, they are checked above
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "click plus button";
-                    }
-
-                    @Override
-                    public void perform(UiController uiController, View view) {
-                        view.performClick();
-                    }
-                }
-        );
+        onView(withId(R.id.saveContactButton)).perform(click());
     }
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
         assertEquals(serviceLocator.getDatabase().getContactWithName(TEST_NAME), null);
-        assertEquals(serviceLocator.getDatabase().getContactWithName(DIFFERENT_NAME).getKeys().get(0), TEST_KEY);
-    }
-
-    @Then("^I should see the new contact name$")
-    public void iShouldSeeNewContactName() {
-        assertEquals(
-                ((TextView)getCurrentActivity().findViewById(R.id.contact_name)).getText().toString(),
-                DIFFERENT_NAME);
+        assertEquals(serviceLocator.getDatabase().getContactWithName(differentname).getKeys().get(0), TEST_KEY);
     }
 
     private Activity getCurrentActivity() {
