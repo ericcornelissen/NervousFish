@@ -22,6 +22,9 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +42,7 @@ import java.util.Set;
 public class BluetoothConnectionActivity extends AppCompatActivity {
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
+    private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
@@ -69,7 +73,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 while (bluetoothConnectionService.getState() != BluetoothConnectionService.STATE_CONNECTED) { /* temporary */}
                 bluetoothConnectionService.writeAllContacts();
             } catch (final IOException e) {
-                e.printStackTrace();
+                LOGGER.warn("Writing all contacts issued an IOexception");
             }
 
 

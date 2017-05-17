@@ -4,6 +4,9 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,6 +20,8 @@ import java.util.List;
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 abstract class APairingHandler implements Serializable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
 
     private final IDatabase database;
 
@@ -105,32 +110,29 @@ abstract class APairingHandler implements Serializable {
             bis = new ByteArrayInputStream(bytes);
             ois = new ObjectInputStream(bis);
             contact = (Contact) ois.readObject();
-        } catch (final ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final ClassNotFoundException | IOException e) {
+            LOGGER.error(" Couldn't start deserialization!");
             return false;
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (final IOException e) {
-                    e.printStackTrace();
+                    LOGGER.warn("Couldn't close the ByteArrayInputStream");
                 }
             }
             if (ois != null) {
                 try {
                     ois.close();
                 } catch (final IOException e) {
-                    e.printStackTrace();
+                    LOGGER.warn("Couldn't close the ObjectInputStream");
                 }
             }
         }
         try {
             database.addContact(contact);
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("DB issued an error while saving contact");
             return false;
         }
         return true;
