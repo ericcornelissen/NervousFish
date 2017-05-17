@@ -6,18 +6,17 @@ Feature: ContactPage
     When I press the back arrow
     Then I should go to the previous activity I visited
 
-  Scenario: Click on the delete button delete contact
+  Scenario: Click on the delete menu button delete contact
     Given I am viewing the contact activity
-    When I press the delete button
+    When I press the menu
+    And I press delete
     And I press that I am sure
     And I press on the OK button
     Then the current contact should be deleted
     And I should go to the previous activity I visited
 
-  Scenario: Change the name of a contact
-      Given I am viewing the contact activity
-      When I press the contact name
-      And I type a different name
-      And I press on the save button
-      Then the contact should be updated
-      And I should see the new contact name
+  Scenario: Click on the edit button to go change contact activity
+    Given I am viewing the contact activity
+    When I press the menu
+    And I press edit
+    Then I should go to the change contact activity

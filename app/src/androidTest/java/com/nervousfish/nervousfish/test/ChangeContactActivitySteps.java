@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -39,8 +38,6 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -48,14 +45,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.core.AllOf.allOf;
 
 @CucumberOptions(features = "features")
-public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
     private Contact contact = null;
     private IServiceLocator serviceLocator = null;
     private final static String TEST_NAME = "TestPerson";
     private final static IKey TEST_KEY = new SimpleKey("my key", "key");
+    private final static String DIFFERENT_NAME = "DifferentName";
 
-    public ContactActivitySteps(EntryActivity activityClass) {
+    public ChangeContactActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
     }
 
@@ -63,7 +61,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         return new ErrorTextMatcher(expectedError);
     }
 
-    @Given("^I am viewing the contact activity$")
+    @Given("^I am viewing the change contact activity$")
     public void iAmViewingContactActivity() throws IOException {
         assertNotNull(getActivity());
 
@@ -87,16 +85,6 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         onView(withId(R.id.backButton)).perform(click());
     }
 
-    @When("^I press the menu$")
-    public void iPressMenu() {
-        onView(withId(R.id.edit_menu_button)).perform(click());
-    }
-
-    @When("^I press delete$")
-    public void iPressDeleteButton() {
-        onView(withId(R.id.delete_contact_menu_item)).perform(click());
-    }
-
     @When("^I press that I am sure$")
     public void iAmSureToDelete() {
         onView(withId(R.id.confirm_button)).perform(click());
@@ -117,14 +105,49 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         assertFalse(serviceLocator.getDatabase().getAllContacts().contains(contact));
     }
 
-    @When("^I press edit$")
-    public void iPressEdit() {
-        onView(withId(R.id.edit_contact_menu_iten)).perform(click());
+    @When("^I press the contact name$")
+    public void iPressContactName() {
+        onView(withId(R.id.contact_name)).perform(click());
     }
 
-    @Then("^I should go to the previous activity I visited$")
-    public void iShouldGoToChangeContactActivity() {
-        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+    @When("^I type a different name$")
+    public void iTypeDifferentName() {
+        onView(withId(R.id.edit_contact_name)).perform(replaceText(DIFFERENT_NAME));
+    }
+
+    @When("^I press on the save button$")
+    public void iPressSave() {
+        onView(withId(R.id.saveContactButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return isEnabled(); // no constraints, they are checked above
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "click plus button";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                }
+        );
+    }
+
+    @Then("^the contact should be updated$")
+    public void theContactShouldBeUpdated() throws IOException {
+        assertEquals(serviceLocator.getDatabase().getContactWithName(TEST_NAME), null);
+        assertEquals(serviceLocator.getDatabase().getContactWithName(DIFFERENT_NAME).getKeys().get(0), TEST_KEY);
+    }
+
+    @Then("^I should see the new contact name$")
+    public void iShouldSeeNewContactName() {
+        assertEquals(
+                ((TextView)getCurrentActivity().findViewById(R.id.contact_name)).getText().toString(),
+                DIFFERENT_NAME);
     }
 
     private Activity getCurrentActivity() {
