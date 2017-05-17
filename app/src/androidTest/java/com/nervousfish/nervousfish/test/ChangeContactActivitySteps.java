@@ -49,7 +49,6 @@ import static org.hamcrest.core.AllOf.allOf;
 @CucumberOptions(features = "features")
 public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    private Contact contact = null;
     private IServiceLocator serviceLocator = null;
     private final static String TEST_NAME = "TestPerson";
     private final static IKey TEST_KEY = new SimpleKey("my key", "key");
@@ -67,12 +66,12 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     public void iAmViewingContactActivity() throws IOException {
         assertNotNull(getActivity());
 
-        contact = new Contact(TEST_NAME, TEST_KEY);
+        final Contact contact = new Contact(TEST_NAME, TEST_KEY);
 
         serviceLocator = (IServiceLocator) getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         List<Contact> contacts = serviceLocator.getDatabase().getAllContacts();
-        for (Contact contact: contacts) {
-            serviceLocator.getDatabase().deleteContact(contact.getName());
+        for (Contact c: contacts) {
+            serviceLocator.getDatabase().deleteContact(c.getName());
         }
         serviceLocator.getDatabase().addContact(contact);
 

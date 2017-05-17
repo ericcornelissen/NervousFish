@@ -120,7 +120,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        if(editText.getText().toString().matches(".*\\w.*")) {
+        if(isValidName(editText.getText().toString())) {
             //Update contact
             try {
                 final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
@@ -148,6 +148,17 @@ public final class ChangeContactActivity extends AppCompatActivity {
                     })
                     .show();
         }
+    }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 1 ASCII character.
+     *
+     * @param name - the name that has been entered
+     * @return a {@link boolean} telling if the name is valid or not
+     */
+    private boolean isValidName(final String name) {
+        return name != null && !name.isEmpty() && !name.trim().isEmpty();
     }
 
 }
