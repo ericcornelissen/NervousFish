@@ -24,7 +24,7 @@ public final class RSAKey implements IKey {
      * Constructor for a RSA key.
      *
      * @param name     The name for the key.
-     * @param modulus  The modules of the RSA key.
+     * @param modulus  The modulus of the RSA key.
      * @param exponent The exponent of the RSA key.
      */
     public RSAKey(final String name, final String modulus, final String exponent) {

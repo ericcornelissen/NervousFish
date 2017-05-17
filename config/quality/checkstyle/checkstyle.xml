@@ -160,7 +160,10 @@
             <property name="format" value="(?i)\s+TODO\s+" />
             <property name="severity" value="info" />
         </module>
-        <module name="TrailingComment" />
+        <!-- Depends on the project if you want this. It generates a lot of warnings while it doesn't really improve the readability of the code -->
+        <module name="TrailingComment">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="UncommentedMain" />
         <module name="UpperEll" />
 
