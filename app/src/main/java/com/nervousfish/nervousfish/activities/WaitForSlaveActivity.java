@@ -19,11 +19,13 @@ import org.slf4j.LoggerFactory;
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
  * to complete the pairing session.
  */
-@SuppressWarnings("PMD")
 public final class WaitForSlaveActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private IServiceLocator serviceLocator;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,10 @@ public final class WaitForSlaveActivity extends Activity {
         setContentView(R.layout.wait_for_slave);
         LOGGER.info("WaitForSlaveActivity created");
 
+        initCancelButton();
+    }
+
+    private void initCancelButton() {
         final Button cancelButton = (Button) findViewById(R.id.cancelWaitForSlave);
         final Context context = this;
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +47,5 @@ public final class WaitForSlaveActivity extends Activity {
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 context.startActivity(intent);
             }
-        });
-    }
+        });}
 }
