@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,6 +40,7 @@ public final class ContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ContactActivity");
     private IServiceLocator serviceLocator;
+    private Contact contact;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -51,7 +55,7 @@ public final class ContactActivity extends AppCompatActivity {
 
         serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 
@@ -59,58 +63,6 @@ public final class ContactActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 finish();
-            }
-        });
-
-        final ImageButton deleteButton = (ImageButton) findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.delete_popup_you_sure))
-                        .setContentText(getString(R.string.delete_popup_no_recovery))
-                        .setCancelText(getString(R.string.cancel))
-                        .setConfirmText(getString(R.string.yes_delete))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(final SweetAlertDialog sDialog) {
-                                try {
-                                    serviceLocator.getDatabase().deleteContact(contact.getName());
-                                    sDialog .setTitleText("Deleted!")
-                                            .setContentText("The contact has been deleted!")
-                                            .setConfirmText("OK")
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                    @Override
-                                                    public void onClick(final SweetAlertDialog sDialog) {
-                                                        sDialog.dismiss();
-                                                        finish();
-                                                    }
-                                                })
-                                            .showCancelButton(false)
-                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                } catch (final IllegalArgumentException e) {
-                                    sDialog .setTitleText("The contact doesn't exist")
-                                            .setContentText("It looks like the contact was already deleted.")
-                                            .setConfirmText("OK")
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(final SweetAlertDialog sDialog) {
-                                                    sDialog.dismiss();
-                                                    finish();
-                                                }
-                                            })
-                                            .showCancelButton(false)
-                                            .changeAlertType(SweetAlertDialog.WARNING_TYPE);
-                                } catch (final IOException e) {
-                                    sDialog .setTitleText("Something went wrong")
-                                            .setContentText(("There went something wrong deleting this contact, "
-                                                    + "please try again."))
-                                            .setConfirmText("OK")
-                                            .setConfirmClickListener(null)
-                                            .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                                }
-                            }
-                        })
-                        .show();
             }
         });
     }
@@ -142,65 +94,88 @@ public final class ContactActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets called when there is clicked on the contact name.
-     * After running this method, it is possible to change the name.
-     *
-     * @param v - the view clicked on
-     */
-    public void contactNameClicked(final View v) {
-        final ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
-        final TextView contactName = (TextView) findViewById(R.id.contact_name);
-        //Switch to edittext
-        switcher.showNext();
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        editText.setText(contactName.getText());
-        editText.requestFocus();
-        //Show keyboard
-        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-
-        final ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
-        saveButton.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * When the save button is clicked this method is called.
-     * It saves the new contact name.
-     *
-     * @param v - the view clicked on
-     */
-    public void saveNewContactName(final View v) {
-        final ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
-        final TextView contactName = (TextView) switcher.getNextView();
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        switcher.showNext();
-        //Update contact
-        try {
-            final Contact oldContact = serviceLocator.getDatabase().getContactWithName(contactName.getText().toString());
-            final Contact newContact = new Contact(editText.getText().toString(), oldContact.getKeys());
-            serviceLocator.getDatabase().updateContact(oldContact, newContact);
-        } catch (final IOException e) {
-            LOGGER.error("IOException while updating contactname");
-        }
-        //Update text on screen and set savebutton to gone.
-        contactName.setText(editText.getText());
-        final ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
-        saveButton.setVisibility(View.GONE);
-        //Dont show keyboard
-        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-
-    /**
      * Opens when the 3 dots are clicked.
      *
      * @param v - the View element clicked
      */
     public void showPopupMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.delete_contact_menu_item) {
+                    new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.popup_you_sure))
+                        .setContentText(getString(R.string.delete_popup_no_recovery))
+                        .setCancelText(getString(R.string.cancel))
+                        .setConfirmText(getString(R.string.yes_delete))
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(final SweetAlertDialog sDialog) {
+                            try {
+                                serviceLocator.getDatabase().deleteContact(contact.getName());
+                                sDialog .setTitleText("Deleted!")
+                                        .setContentText("The contact has been deleted!")
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(final SweetAlertDialog sDialog) {
+                                                sDialog.dismiss();
+                                                finish();
+                                            }
+                                        })
+                                        .showCancelButton(false)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                            } catch (final IllegalArgumentException e) {
+                                sDialog .setTitleText("The contact doesn't exist")
+                                        .setContentText("It looks like the contact was already deleted.")
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(final SweetAlertDialog sDialog) {
+                                                sDialog.dismiss();
+                                                finish();
+                                            }
+                                        })
+                                        .showCancelButton(false)
+                                        .changeAlertType(SweetAlertDialog.WARNING_TYPE);
+                            } catch (final IOException e) {
+                                sDialog .setTitleText("Something went wrong")
+                                        .setContentText(("There went something wrong deleting this contact, "
+                                                + "please try again."))
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                            }
+                            }
+                        })
+                        .show();
+                    return true;
+                } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
+                    final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
+                    intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                    intent.putExtra(ConstantKeywords.CONTACT, contact);
+                    ContactActivity.this.startActivityForResult(intent, 1);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.edit_contact_menu, popup.getMenu());
         popup.show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 1) {
+            setName(((Contact) data.getSerializableExtra(ConstantKeywords.CONTACT)).getName());
+        }
     }
 
 }

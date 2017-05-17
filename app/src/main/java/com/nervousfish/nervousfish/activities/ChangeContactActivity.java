@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -35,6 +33,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
     private IServiceLocator serviceLocator;
+    private Contact contact;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -44,19 +43,40 @@ public final class ChangeContactActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_contact);
+        super.setContentView(R.layout.activity_change_contact);
         final Intent intent = this.getIntent();
 
         serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                finish();
+                final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+                if (!editText.getText().toString().equals(contact.getName())) {
+                    new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.popup_you_sure))
+                            .setContentText(getString(R.string.go_back_changes_lost))
+                            .setCancelText(getString(R.string.cancel))
+                            .setConfirmText(getString(R.string.yes_go_back))
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(final SweetAlertDialog sDialog) {
+                                    sDialog.dismiss();
+                                    finish();
+                                }
+                            })
+                            .show();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -68,7 +88,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * @param name The name.
      */
     private void setName(final String name) {
-        final TextView tv = (TextView) this.findViewById(R.id.contact_name);
+        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name);
         tv.setText(name);
     }
 
@@ -89,53 +109,30 @@ public final class ChangeContactActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets called when there is clicked on the contact name.
-     * After running this method, it is possible to change the name.
-     *
-     * @param v - the view clicked on
-     */
-    public void contactNameClicked(final View v) {
-        final ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
-        final TextView contactName = (TextView) findViewById(R.id.contact_name);
-        //Switch to edittext
-        switcher.showNext();
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        editText.setText(contactName.getText());
-        editText.requestFocus();
-        //Show keyboard
-        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-
-        final ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
-        saveButton.setVisibility(View.VISIBLE);
-    }
-
-    /**
      * When the save button is clicked this method is called.
      * It saves the new contact name.
      *
      * @param v - the view clicked on
      */
-    public void saveNewContactName(final View v) {
-        final ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.switch_name_field);
-        final TextView contactName = (TextView) switcher.getNextView();
+    public void saveContact(final View v) {
         final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        switcher.showNext();
         //Update contact
         try {
-            final Contact oldContact = serviceLocator.getDatabase().getContactWithName(contactName.getText().toString());
-            final Contact newContact = new Contact(editText.getText().toString(), oldContact.getKeys());
-            serviceLocator.getDatabase().updateContact(oldContact, newContact);
+            final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
+            if(!contact.equals(newContact)) {
+                contact = newContact;
+                serviceLocator.getDatabase().updateContact(contact, newContact);
+            }
         } catch (final IOException e) {
             LOGGER.error("IOException while updating contactname");
         }
-        //Update text on screen and set savebutton to gone.
-        contactName.setText(editText.getText());
-        final ImageButton saveButton = (ImageButton) findViewById(R.id.save_button);
-        saveButton.setVisibility(View.GONE);
         //Dont show keyboard
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        setResult(1,
+                new Intent().putExtra(ConstantKeywords.CONTACT, contact));
+        finish();
     }
 
 }

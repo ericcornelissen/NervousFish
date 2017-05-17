@@ -63,42 +63,14 @@
                     android:src="@drawable/personplaceholder"
                     android:contentDescription="@string/contact_title" />
 
-                <ViewSwitcher
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/switch_name_field"
+                <EditText
+                    android:id="@+id/edit_contact_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center" >
-
-                    <TextView
-                        android:id="@+id/contact_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/contact_name_margin"
-                        android:text="@string/contact_title"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/contact_name_size"
-                        android:textStyle="bold"
-                        android:clickable="true"
-                        android:onClick="contactNameClicked" />
-
-                    <EditText
-                        android:id="@+id/edit_contact_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/contact_name_size"
-                        android:textStyle="bold" />
-                </ViewSwitcher>
-
-                <ImageButton
-                    android:id="@+id/save_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/ic_menu_save"
-                    android:background="@color/colorPrimary"
-                    android:onClick="saveNewContactName"
-                    android:visibility="gone"/>
+                    android:text="Contact"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/contact_name_size"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
