@@ -31,7 +31,7 @@ import java.util.Set;
  * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({ "PMD.TooManyMethods", "PMD.NullAssignment", "PMD.EmptyWhileStmt" })
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.NullAssignment", "PMD.EmptyWhileStmt"})
 // 1) This is taken from the Android manual on bluetooth :/
 // 2) This is necessary for freeing up resources
 // 3) Temporary busy wait, needs eventbus

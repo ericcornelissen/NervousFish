@@ -16,36 +16,40 @@ import java.util.List;
  * Contains common methods shared by all pairing modules.
  */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
-abstract class APairingHandler implements Serializable{
+abstract class APairingHandler implements Serializable {
 
     private final IDatabase database;
 
     /**
      * Prevent instantiation by other classes outside it's package
+     *
      * @param serviceLocator the serviceLocator which will provide means to access other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    // This servicelocator will be used later on probably
     APairingHandler(final IServiceLocator serviceLocator) {
         database = serviceLocator.getDatabase();
     }
 
     /**
      * Luxury method that calls writeContact() for each contact of the database.
+     *
      * @throws IOException When deserialization doesn't go well.
      */
     public void writeAllContacts() throws IOException {
         final List<Contact> list = database.getAllContacts();
-        for (final Contact e: list) {
+        for (final Contact e : list) {
             writeContact(e);
         }
     }
 
     /**
      * Serializes a contact object and writes it, which is implemented in the specific subclass.
+     *
      * @param contact contact to serialize
      * @throws IOException When deserialization doesn't go well.
      */
-    public void writeContact(final Contact contact) throws IOException {
+    void writeContact(final Contact contact) throws IOException {
         if (!checkExists(contact)) {
             byte[] bytes = null;
             ByteArrayOutputStream bos = null;
@@ -70,14 +74,15 @@ abstract class APairingHandler implements Serializable{
 
     /**
      * Checks if a name of a given contact exists in the database.
+     *
      * @param contact A contact object
      * @return true when a contact with the same exists in the database
      * @throws IOException When database fails to respond
      */
-    public boolean checkExists(final Contact contact) throws IOException {
+    boolean checkExists(final Contact contact) throws IOException {
         final String name = contact.getName();
         final List<Contact> list = database.getAllContacts();
-        for (final Contact e: list) {
+        for (final Contact e : list) {
             if (e.getName().equals(name)) {
                 return true;
             }
@@ -88,10 +93,11 @@ abstract class APairingHandler implements Serializable{
 
     /**
      * Deserializes a contact through a byte array and sends it to the database.
+     *
      * @param bytes byte array representing a contact
      * @return Whether or not the process finished successfully
      */
-    public boolean saveContact(final byte[] bytes){
+    boolean saveContact(final byte[] bytes) {
         Contact contact = null;
         ByteArrayInputStream bis = null;
         ObjectInputStream ois = null;
