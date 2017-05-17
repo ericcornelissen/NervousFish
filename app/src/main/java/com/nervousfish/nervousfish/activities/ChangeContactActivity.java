@@ -60,7 +60,9 @@ public final class ChangeContactActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-                if (!editText.getText().toString().equals(contact.getName())) {
+                if (editText.getText().toString().equals(contact.getName())) {
+                    finish();
+                } else {
                     new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(getString(R.string.popup_you_sure))
                             .setContentText(getString(R.string.go_back_changes_lost))
@@ -74,8 +76,6 @@ public final class ChangeContactActivity extends AppCompatActivity {
                                 }
                             })
                             .show();
-                } else {
-                    finish();
                 }
             }
         });
@@ -130,7 +130,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        setResult(1,
+        setResult(RESULT_FIRST_USER,
                 new Intent().putExtra(ConstantKeywords.CONTACT, contact));
         finish();
     }

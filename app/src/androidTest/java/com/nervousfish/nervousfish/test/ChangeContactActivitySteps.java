@@ -100,8 +100,12 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
-        assertEquals(serviceLocator.getDatabase().getContactWithName(TEST_NAME), null);
-        assertEquals(serviceLocator.getDatabase().getContactWithName(differentname).getKeys().get(0), TEST_KEY);
+        try {
+            serviceLocator.getDatabase().getContactWithName(TEST_NAME);
+
+        } catch (IllegalArgumentException e) {
+            assertEquals(serviceLocator.getDatabase().getContactWithName(differentname).getKeys().get(0), TEST_KEY);
+        }
     }
 
     @When("^I change the name$")

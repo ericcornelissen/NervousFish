@@ -4,18 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -98,8 +93,8 @@ public final class ContactActivity extends AppCompatActivity {
      *
      * @param v - the View element clicked
      */
-    public void showPopupMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
+    public void showPopupMenu(final View v) {
+        final PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final MenuItem menuItem) {
@@ -155,14 +150,14 @@ public final class ContactActivity extends AppCompatActivity {
                     final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
                     intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                     intent.putExtra(ConstantKeywords.CONTACT, contact);
-                    ContactActivity.this.startActivityForResult(intent, 1);
+                    ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
                     return true;
                 } else {
                     return false;
                 }
             }
         });
-        MenuInflater inflater = popup.getMenuInflater();
+        final MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.edit_contact_menu, popup.getMenu());
         popup.show();
     }
@@ -171,9 +166,9 @@ public final class ContactActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 1) {
+        if(resultCode == RESULT_FIRST_USER) {
             setName(((Contact) data.getSerializableExtra(ConstantKeywords.CONTACT)).getName());
         }
     }
