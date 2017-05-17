@@ -8,6 +8,9 @@
     <string name="title_activity_contact">Contact</string>
     <string name="msg_mismatch">Your password is wrong</string>
     <string name="contact_title">Contact</string>
+    <string name="qr">QR</string>
+    <string name="nfc">NFC</string>
+    <string name="bluetooth">Bluetooth</string>
 
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
@@ -15,5 +18,5 @@
     <string name="delete_popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
     <string name="cancel">Cancel</string>
-    <string name="yes_delete">Yes,delete it!</string>
+    <string name="yes_delete">Yes, delete it!</string>
 </resources>
