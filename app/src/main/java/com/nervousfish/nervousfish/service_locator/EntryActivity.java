@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
+@SuppressWarnings("checkstyle:missingctor")
 public final class EntryActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("EntryActivity");

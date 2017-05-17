@@ -27,7 +27,7 @@ import java.util.Hashtable;
 /**
  * Generates a QR code
  */
-final public class QRGenerator {
+public final class QRGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRGenerator");
     private static final int QRCODE_IMAGE_HEIGHT = 400;
@@ -54,7 +54,7 @@ final public class QRGenerator {
             bitmap = Bitmap.createBitmap(QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT, Bitmap.Config.RGB_565);
             for (int x = 0; x < QRCODE_IMAGE_WIDTH; x++) {
                 for (int y = 0; y < QRCODE_IMAGE_HEIGHT; y++) {
-                    final int color = (matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                    final int color = matrix.get(x, y) ? Color.BLACK : Color.WHITE;
                     bitmap.setPixel(x, y, color);
                 }
             }
@@ -68,18 +68,18 @@ final public class QRGenerator {
     /**
      * Decodes the QRcode to a public key string
      *
-     * @param QRCode The QR code as a bitmap
+     * @param qrCode The QR code as a bitmap
      * @return The decoded public key.
      */
-    public static String decode(final Bitmap QRCode) {
+    public static String decode(final Bitmap qrCode) {
 
         final Reader qrReader = new MultiFormatReader();
 
-        final int[] intArray = new int[QRCode.getWidth() * QRCode.getHeight()];
+        final int[] intArray = new int[qrCode.getWidth() * qrCode.getHeight()];
         //copy pixel data from the Bitmap into the 'intArray' array
-        QRCode.getPixels(intArray, 0, QRCode.getWidth(), 0, 0, QRCode.getWidth(), QRCode.getHeight());
+        qrCode.getPixels(intArray, 0, qrCode.getWidth(), 0, 0, qrCode.getWidth(), qrCode.getHeight());
 
-        final LuminanceSource source = new RGBLuminanceSource(QRCode.getWidth(), QRCode.getHeight(), intArray);
+        final LuminanceSource source = new RGBLuminanceSource(qrCode.getWidth(), qrCode.getHeight(), intArray);
         final BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         String publicKey = "";
 

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Example activity to verify identity in Bluetooth connections.
  */
+@SuppressWarnings("checkstyle:missingctor")
 public class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");

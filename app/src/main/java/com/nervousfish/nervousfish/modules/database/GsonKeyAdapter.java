@@ -37,7 +37,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
         // Then write the rest of the key
         writer.beginObject();
-        key.toJSON(writer);
+        key.toJson(writer);
         writer.endObject();
 
         writer.endArray();

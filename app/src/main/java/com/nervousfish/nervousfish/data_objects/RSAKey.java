@@ -11,10 +11,10 @@ import java.util.Map;
  */
 public final class RSAKey implements IKey {
 
-    private final static String TYPE = ConstantKeywords.RSA_KEY;
-    private final static String JSON_CONSTANT_EXPONENT = "exponent";
-    private final static String JSON_CONSTANT_MODULUS = "modulus";
-    private final static String JSON_CONSTANT_NAME = "name";
+    private static final String TYPE = ConstantKeywords.RSA_KEY;
+    private static final String JSON_CONSTANT_EXPONENT = "exponent";
+    private static final String JSON_CONSTANT_MODULUS = "modulus";
+    private static final String JSON_CONSTANT_NAME = "name";
 
     private final String exponent;
     private final String modulus;
@@ -44,7 +44,7 @@ public final class RSAKey implements IKey {
         this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
 
         if (this.name == null || this.modulus == null || this.exponent == null) {
-           throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Couldn't find the name, modules and exponent in the map");
         }
     }
 
@@ -108,7 +108,7 @@ public final class RSAKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public void toJSON(final JsonWriter writer) throws IOException {
+    public void toJson(final JsonWriter writer) throws IOException {
         writer.name(RSAKey.JSON_CONSTANT_NAME).value(this.name);
         writer.name(RSAKey.JSON_CONSTANT_MODULUS).value(this.modulus);
         writer.name(RSAKey.JSON_CONSTANT_EXPONENT).value(this.exponent);
