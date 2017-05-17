@@ -122,6 +122,7 @@ public final class ContactActivity extends AppCompatActivity {
                                         .showCancelButton(false)
                                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                             } catch (final IllegalArgumentException e) {
+                                LOGGER.error("IllegalArgumentException while deleting contact in ContactActivity");
                                 sDialog .setTitleText("The contact doesn't exist")
                                         .setContentText("It looks like the contact was already deleted.")
                                         .setConfirmText("OK")
@@ -135,6 +136,7 @@ public final class ContactActivity extends AppCompatActivity {
                                         .showCancelButton(false)
                                         .changeAlertType(SweetAlertDialog.WARNING_TYPE);
                             } catch (final IOException e) {
+                                LOGGER.error("IOException while deleting contact in ContactActivity");
                                 sDialog .setTitleText("Something went wrong")
                                         .setContentText(("There went something wrong deleting this contact, "
                                                 + "please try again."))

@@ -45,9 +45,9 @@ public interface IDatabase extends IModule {
     List<Contact> getAllContacts() throws IOException;
 
     /**
-     * Get one Contact from the database given his name as input.
+     * Get one Contact from the database given the contact's name as input.
      *
-     * @param contactName - The name of the Contact.
+     * @param contactName - The name of the Contact as a {@link String}.
      * @return A {@link Contact}.
      */
     Contact getContactWithName(final String contactName) throws IOException;
