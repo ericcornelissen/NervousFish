@@ -1,6 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.data_objects.tap.ATapData;
+import com.nervousfish.nervousfish.data_objects.tap.AbstractTapData;
 import com.nervousfish.nervousfish.util.CircularList;
 
 import org.slf4j.Logger;
@@ -13,23 +13,23 @@ import java.util.List;
  */
 public final class RhythmHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmHelper");
-    private final List<ATapData> masterData;
-    private final CircularList<ATapData> slaveData;
+    private final List<AbstractTapData> masterData;
+    private final CircularList<AbstractTapData> slaveData;
 
     /**
      * Constructs a new RhythmHelper
      */
-    RhythmHelper(final List<ATapData> masterData) {
+    RhythmHelper(final List<AbstractTapData> masterData) {
         this.masterData = masterData;
         this.slaveData = new CircularList<>(this.masterData.size());
     }
 
-    public void addSlaveData(final ATapData data) {
+    public void addSlaveData(final AbstractTapData data) {
         this.slaveData.add(data);
     }
 
-    public void setSlaveData(final List<ATapData> data) {
-        for (final ATapData elem : data) {
+    public void setSlaveData(final List<AbstractTapData> data) {
+        for (final AbstractTapData elem : data) {
             addSlaveData(elem);
         }
     }
@@ -49,8 +49,8 @@ public final class RhythmHelper {
         double dist = 0d;
         final long offset = slaveData.get(0).getTimestamp().getTime();
         for (int i = 0; i < masterData.size(); i++) {
-            final ATapData masterSample = masterData.get(i);
-            final ATapData slaveSample = slaveData.get(i);
+            final AbstractTapData masterSample = masterData.get(i);
+            final AbstractTapData slaveSample = slaveData.get(i);
             final long masterTimeMilliseconds = masterSample.getTimestamp().getTime();
             final long slaveTimeMilliseconds = slaveSample.getTimestamp().getTime() - offset;
             final long difference = Math.abs(slaveTimeMilliseconds - masterTimeMilliseconds);

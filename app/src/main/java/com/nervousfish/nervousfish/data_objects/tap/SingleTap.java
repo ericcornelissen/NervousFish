@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * This class contains the bare minimum functionality of a tap event.
  */
-public final class SingleTap extends ATapData {
+public final class SingleTap extends AbstractTapData {
     /**
      * {@inheritDoc}
      */

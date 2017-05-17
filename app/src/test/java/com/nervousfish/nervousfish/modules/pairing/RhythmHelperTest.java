@@ -1,9 +1,8 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.data_objects.tap.ATapData;
+import com.nervousfish.nervousfish.data_objects.tap.AbstractTapData;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -15,7 +14,7 @@ import static org.junit.Assert.*;
 public class RhythmHelperTest {
     @Test
     public void testSingleMatchByAdd() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         final RhythmHelper helper = new RhythmHelper(masterData);
 
@@ -25,11 +24,11 @@ public class RhythmHelperTest {
 
     @Test
     public void testSingleMatchBySet() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         final RhythmHelper helper = new RhythmHelper(masterData);
 
-        List<ATapData> slaveData = new ArrayList<>();
+        List<AbstractTapData> slaveData = new ArrayList<>();
         slaveData.add(new SingleTap(new Timestamp(1000000L)));
         helper.setSlaveData(slaveData);
         assertTrue(helper.isMatch(2, 10));
@@ -37,7 +36,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testFiveMatchByAdd() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
@@ -55,7 +54,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testFiveNoMatchByAdd() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
@@ -73,7 +72,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testFiveMatchBySet() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
@@ -81,7 +80,7 @@ public class RhythmHelperTest {
         masterData.add(new SingleTap(new Timestamp(80L)));
         final RhythmHelper helper = new RhythmHelper(masterData);
 
-        List<ATapData> slaveData = new ArrayList<>();
+        List<AbstractTapData> slaveData = new ArrayList<>();
         slaveData.add(new SingleTap(new Timestamp(1000000L)));
         slaveData.add(new SingleTap(new Timestamp(1000018L)));
         slaveData.add(new SingleTap(new Timestamp(1000036L)));
@@ -93,7 +92,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testFiveNoMatchBySet() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
@@ -106,7 +105,7 @@ public class RhythmHelperTest {
         helper.addSlaveData(new SingleTap(new Timestamp(1000036L)));
         helper.addSlaveData(new SingleTap(new Timestamp(1000065L)));
         helper.addSlaveData(new SingleTap(new Timestamp(1000081L)));
-        List<ATapData> slaveData = new ArrayList<>();
+        List<AbstractTapData> slaveData = new ArrayList<>();
         slaveData.add(new SingleTap(new Timestamp(1000000L)));
         slaveData.add(new SingleTap(new Timestamp(1000018L)));
         slaveData.add(new SingleTap(new Timestamp(1000036L)));
@@ -118,7 +117,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testTooFewSlaveData() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
@@ -135,7 +134,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testTooMuchSlaveData() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
@@ -156,7 +155,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testSlaveDataNotInOrder() throws Exception {
-        List<ATapData> masterData = new ArrayList<>();
+        List<AbstractTapData> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));

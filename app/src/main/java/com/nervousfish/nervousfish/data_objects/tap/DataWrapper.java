@@ -6,15 +6,15 @@ import java.io.Serializable;
  * This class is used to let the other party know what kind of class it contains.
  */
 public class DataWrapper implements Serializable {
-    private final ATapData tapData;
+    private final AbstractTapData tapData;
     private final Class clazz;
 
     /**
      * Creates a new DataWrapper
      *
-     * @param tapData The {@link ATapData} object the wrapper wraps
+     * @param tapData The {@link AbstractTapData} object the wrapper wraps
      */
-    public DataWrapper(final ATapData tapData) {
+    public DataWrapper(final AbstractTapData tapData) {
         this.tapData = tapData;
         this.clazz = tapData.getClass();
     }
@@ -22,7 +22,7 @@ public class DataWrapper implements Serializable {
     /**
      * @return The tapData object it wraps
      */
-    public ATapData getTapData() {
+    public AbstractTapData getTapData() {
         return tapData;
     }
 
