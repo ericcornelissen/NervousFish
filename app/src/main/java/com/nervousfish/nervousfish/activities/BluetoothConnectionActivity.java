@@ -31,12 +31,10 @@ import java.util.Set;
  * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"PMD.TooManyMethods", "PMD.UnusedLocalVariable", "PMD.UnusedPrivateField", "PMD.SingularField",
-        "PMD.AvoidFinalLocalVariable", "PMD.NullAssignment", "PMD.TooFewBranchesForASwitchStatement"})
-// 1 + 2 +3)because it's used for storing, later it will also be accessed
-// 4) This is taken from the Android manual on bluetooth :/
-// 5) This is necessary for freeing up resources, also see end of 3
-// 6) Will be larger when implemented
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.NullAssignment", "PMD.EmptyWhileStmt" })
+// 1) This is taken from the Android manual on bluetooth :/
+// 2) This is necessary for freeing up resources
+// 3) Temporary busy wait, needs eventbus
 
 public class BluetoothConnectionActivity extends AppCompatActivity {
 
@@ -102,16 +100,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setTitle("select_device");
                 if (newDevicesArrayAdapter.getCount() == 0) {
-                    final String noDevices = "none_found";
-                    newDevicesArrayAdapter.add(noDevices);
+                    newDevicesArrayAdapter.add("none_found");
                 }
             }
 
         }
     };
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
-    private IServiceLocator serviceLocator;
-    private String connectedDeviceName = null; //string of the connected device name
 
     /**
      * {@inheritDoc}
@@ -134,7 +129,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
-        // TODO: replace all the resources in the code below (All the R.something.something references)
         pairedDevicesArrayAdapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         newDevicesArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
@@ -157,7 +151,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Get the serviceLocator.
         final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the BluetoothConnectionService.
         this.bluetoothConnectionService = (BluetoothConnectionService) serviceLocator.getBluetoothHandler();
@@ -242,7 +236,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     public void queryPairedDevices() {
         pairedDevices = bluetoothAdapter.getBondedDevices();
         findViewById(R.id.pairedlist).setVisibility(View.VISIBLE);
-        for (BluetoothDevice device : pairedDevices) {
+        for (final BluetoothDevice device : pairedDevices) {
             pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
     }
@@ -254,10 +248,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         setTitle("scanning");
 
-        final int permissionLocation = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                permissionLocation);
+                1);
 
         // Turn on sub-title for new devices
         // findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
@@ -293,35 +286,17 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      * @return The BLuetoothDevice corresponding to the mac address.
      */
     private BluetoothDevice getDevice(final String address) {
-        for (BluetoothDevice device : pairedDevices) {
+        for (final BluetoothDevice device : pairedDevices) {
             if (device.getAddress().equals(address)) {
                 return device;
             }
         }
-        for (BluetoothDevice device : newDevices) {
+        for (final BluetoothDevice device : newDevices) {
             if (device.getAddress().equals(address)) {
                 return device;
             }
         }
         return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_ENABLE_BLUETOOTH:
-                if (resultCode == RESULT_OK) {
-                    bluetoothConnectionService.start();
-                    return;
-                }
-                break;
-            default:
-
-                break;
-        }
     }
 
 }
