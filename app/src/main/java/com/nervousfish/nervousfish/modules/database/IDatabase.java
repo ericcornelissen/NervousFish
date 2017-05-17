@@ -53,6 +53,14 @@ public interface IDatabase extends IModule {
     Contact getContactWithName(final String contactName) throws IOException;
 
     /**
+     * Returns true if the contact exists and fals otherwise.
+     *
+     * @param name - the name of the contact to check
+     * @return A {@link boolean} which is true if the contact exists in the database
+     */
+    boolean contactExtists(final String name) throws IOException;
+
+    /**
      * Get the Profile list with user information.
      *
      * @return A {@link List} of {@link Profile Profiles}.
