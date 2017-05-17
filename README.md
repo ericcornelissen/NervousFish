@@ -5,7 +5,7 @@
 ## Waffle
 [![Backlog](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=backlog&title=Backlog)](http://waffle.io/ericcornelissen/nervousfish)
 
-[![Sprint backlog](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=this%20weekg&title=Sprint%20backlog)](http://waffle.io/ericcornelissen/nervousfish)
+[![Sprint backlog](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=this%20week&title=Sprint%20backlog)](http://waffle.io/ericcornelissen/nervousfish)
 
 [![Ongoing user-stories](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=ongoing%20user%20stories&title=Ongoing%20user-stories)](http://waffle.io/ericcornelissen/nervousfish)
 
