@@ -33,19 +33,11 @@ public final class WaitForSlaveActivity extends Activity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         setContentView(R.layout.wait_for_slave);
         LOGGER.info("WaitForSlaveActivity created");
-
-        initCancelButton();
     }
 
-    private void initCancelButton() {
-        final Button cancelButton = (Button) findViewById(R.id.cancelWaitForSlave);
-        final Context context = this;
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                final Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                context.startActivity(intent);
-            }
-        });}
+    public void cancelWaitingForSlave(final View view) {
+        final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        startActivity(intent);
+    }
 }

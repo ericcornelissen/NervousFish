@@ -56,7 +56,6 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
-        assertTrue(getCurrentActivity() instanceof LoginActivity);
     }
 
     @When("^I input password \"(.*?)\"$")
