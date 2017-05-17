@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class VisualVerificationActivity extends Activity {
      */
     private void nextActivity() {
         // TODO: Progress to the correct activity
-        final Intent intent = new Intent(this, LoginActivity.class);
+        final Intent intent = new Intent(this, EntryActivity.class);
         intent.putExtra(ConstantKeywords.SECURITY_CODE, this.securityCode);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
