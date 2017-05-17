@@ -3,8 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -33,9 +31,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The ContactActivity shows the contacts information and his public keys.
  */
-public final class ContactActivity extends AppCompatActivity {
+public final class ChangeContactActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("ContactActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
     private IServiceLocator serviceLocator;
 
     /**
@@ -62,57 +60,6 @@ public final class ContactActivity extends AppCompatActivity {
             }
         });
 
-        final ImageButton deleteButton = (ImageButton) findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.delete_popup_you_sure))
-                        .setContentText(getString(R.string.delete_popup_no_recovery))
-                        .setCancelText(getString(R.string.cancel))
-                        .setConfirmText(getString(R.string.yes_delete))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(final SweetAlertDialog sDialog) {
-                                try {
-                                    serviceLocator.getDatabase().deleteContact(contact.getName());
-                                    sDialog .setTitleText("Deleted!")
-                                            .setContentText("The contact has been deleted!")
-                                            .setConfirmText("OK")
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                    @Override
-                                                    public void onClick(final SweetAlertDialog sDialog) {
-                                                        sDialog.dismiss();
-                                                        finish();
-                                                    }
-                                                })
-                                            .showCancelButton(false)
-                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                } catch (final IllegalArgumentException e) {
-                                    sDialog .setTitleText("The contact doesn't exist")
-                                            .setContentText("It looks like the contact was already deleted.")
-                                            .setConfirmText("OK")
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(final SweetAlertDialog sDialog) {
-                                                    sDialog.dismiss();
-                                                    finish();
-                                                }
-                                            })
-                                            .showCancelButton(false)
-                                            .changeAlertType(SweetAlertDialog.WARNING_TYPE);
-                                } catch (final IOException e) {
-                                    sDialog .setTitleText("Something went wrong")
-                                            .setContentText(("There went something wrong deleting this contact, "
-                                                    + "please try again."))
-                                            .setConfirmText("OK")
-                                            .setConfirmClickListener(null)
-                                            .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                                }
-                            }
-                        })
-                        .show();
-            }
-        });
     }
 
     /**
@@ -189,18 +136,6 @@ public final class ContactActivity extends AppCompatActivity {
         //Dont show keyboard
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-
-    /**
-     * Opens when the 3 dots are clicked.
-     *
-     * @param v - the View element clicked
-     */
-    public void showPopupMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.edit_contact_menu, popup.getMenu());
-        popup.show();
     }
 
 }
