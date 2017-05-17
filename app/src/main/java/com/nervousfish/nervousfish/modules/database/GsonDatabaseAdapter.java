@@ -166,8 +166,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public List<Profile> getProfiles() throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         final Reader reader = this.fileSystem.getReader(this.profilesPath);
@@ -186,8 +185,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final List<Profile> profiles = this.getProfiles();
         profiles.add(profile);
 
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         // Update the database
@@ -211,8 +209,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         // Update the database
@@ -236,8 +233,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         // Add the new contact and update the database

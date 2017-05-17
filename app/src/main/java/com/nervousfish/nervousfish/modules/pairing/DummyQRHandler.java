@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An handler doing nothing.
  */
-public final class DummyQRHandler extends APairingHandler implements IQRHandler {
+public final class DummyQRHandler extends AbstractPairingHandler implements IQRHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
 
     /**

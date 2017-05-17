@@ -14,7 +14,7 @@ import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
+import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,22 +31,24 @@ final class ServiceLocator implements IServiceLocator {
     private final IFileSystem fileSystem;
     private final IConstants constants;
     private final IBluetoothHandler bluetoothHandler;
-    private final INFCHandler nfcHandler;
+    private final INfcHandler nfcHandler;
     private final IQRHandler qrHandler;
 
     /**
      * Package-private constructor of the service locator
+     *
+     * @param androidFilesDir The directory of the Android-specific files
      */
     ServiceLocator(final String androidFilesDir) {
         this.androidFilesDir = androidFilesDir;
-        this.constants = Constants.newInstance(this).get();
-        this.fileSystem = AndroidFileSystemAdapter.newInstance(this).get();
-        this.database = GsonDatabaseAdapter.newInstance(this).get();
-        this.keyGenerator = KeyGeneratorAdapter.newInstance(this).get();
-        this.encryptor = EncryptorAdapter.newInstance(this).get();
-        this.bluetoothHandler = DummyBluetoothHandler.newInstance(this).get();
-        this.nfcHandler = DummyNFCHandler.newInstance(this).get();
-        this.qrHandler = DummyQRHandler.newInstance(this).get();
+        this.constants = Constants.newInstance(this).getModule();
+        this.fileSystem = AndroidFileSystemAdapter.newInstance(this).getModule();
+        this.database = GsonDatabaseAdapter.newInstance(this).getModule();
+        this.keyGenerator = KeyGeneratorAdapter.newInstance(this).getModule();
+        this.encryptor = EncryptorAdapter.newInstance(this).getModule();
+        this.bluetoothHandler = DummyBluetoothHandler.newInstance(this).getModule();
+        this.nfcHandler = DummyNFCHandler.newInstance(this).getModule();
+        this.qrHandler = DummyQRHandler.newInstance(this).getModule();
     }
 
     /**
@@ -116,7 +118,7 @@ final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public INFCHandler getNFCHandler() {
+    public INfcHandler getNFCHandler() {
         this.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }

@@ -110,10 +110,10 @@
         <!-- See http://checkstyle.sourceforge.net/config_javadoc.html -->
         <module name="JavadocMethod">
             <property name="scope" value="package" />
+            <property name="allowMissingPropertyJavadoc" value="true" />
             <property name="allowMissingThrowsTags" value="true" />
             <property name="allowThrowsTagsForSubclasses" value="true" />
             <property name="allowUndeclaredRTE" value="true" />
-            <property name="allowMissingPropertyJavadoc" value="true" />
         </module>
         <module name="JavadocType">
             <property name="scope" value="package" />

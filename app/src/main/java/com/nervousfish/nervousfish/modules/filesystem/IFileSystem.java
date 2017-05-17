@@ -16,12 +16,12 @@ public interface IFileSystem extends IModule {
      * @param path The full path, containing the file, to which should be written
      * @return A {@link Writer} that can be used to write to the file
      */
-    Writer getWriter(final String path) throws IOException;
+    Writer getWriter(String path) throws IOException;
 
     /**
      * Returns a reader that can be used to read from the path specified.
      * @param path The full path, containing the file, from which should be read
      * @return A {@link Writer} that can be used to read from the file
      */
-    Reader getReader(final String path) throws IOException;
+    Reader getReader(String path) throws IOException;
 }
