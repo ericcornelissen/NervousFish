@@ -8,10 +8,13 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Simple login activity class.
@@ -21,6 +24,7 @@ public final class LoginActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
 
     private IServiceLocator serviceLocator;
+    private String actualPassword;
 
     /**
      * {@inheritDoc}
@@ -32,6 +36,14 @@ public final class LoginActivity extends Activity {
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+
+        IDatabase database = this.serviceLocator.getDatabase();
+        try {
+            this.actualPassword = database.getUserPassword();
+        } catch (IOException e) {
+            LOGGER.error("Failed to retrieve password from database", e);
+        }
 
         LOGGER.info("LoginActivity created");
     }
@@ -52,18 +64,16 @@ public final class LoginActivity extends Activity {
         if (skipPassword) {
             LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
-
             this.nextActivity();
         } else {
             final String providedPassword = passwordInput.getText().toString();
-            final boolean wrongPassword = !providedPassword.equals("12345");
+            final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
             if (wrongPassword) {
                 LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);
             } else {
                 LOGGER.info("Password correct");
                 mError.setVisibility(View.GONE);
-
                 this.nextActivity();
             }
         }
