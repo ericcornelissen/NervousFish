@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.LoginActivity;
-import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public final class EntryActivity extends Activity {
 
         LOGGER.info("EntryActivity created");
 
-        final Intent intent = new Intent(this, VisualVerificationActivity.class);
+        final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         this.startActivity(intent);
     }

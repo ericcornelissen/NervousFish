@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
@@ -30,19 +31,15 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
         R.id.button00,
         R.id.button01,
         R.id.button02,
-        R.id.button03,
         R.id.button10,
         R.id.button11,
         R.id.button12,
-        R.id.button13,
         R.id.button10,
         R.id.button21,
         R.id.button22,
-        R.id.button23,
         R.id.button30,
         R.id.button31,
         R.id.button32,
-        R.id.button33
     };
 
     public VisualVerificationSteps() {
@@ -52,7 +49,9 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
 
     @Given("^I am viewing the visual verification activity$")
     public void iHaveAVisualVerificationActivity() {
-        onView(withId(R.id.password)).perform(closeSoftKeyboard());
+        try {
+            onView(withId(R.id.password)).perform(closeSoftKeyboard());
+        } catch(NoMatchingViewException ignored) { }
         Intent intent = new Intent(getActivity(), VisualVerificationActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
