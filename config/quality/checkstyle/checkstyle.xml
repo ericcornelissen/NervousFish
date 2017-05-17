@@ -5,9 +5,9 @@
     "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
-    <module name="SuppressWarningsFilter"/>
+    <module name="SuppressWarningsFilter" />
     <module name="TreeWalker">
-        <module name="SuppressWarningsHolder"/>
+        <module name="SuppressWarningsHolder" />
         <!-- Checks for annotations. -->
         <!-- See http://checkstyle.sourceforge.net/config_annotation1.html -->
         <module name="AnnotationLocation" />
@@ -52,9 +52,9 @@
         <module name="FallThrough" />
         <module name="FinalLocalVariable" />
         <!-- Disabled because the "this" rule already enforces that the variables will be assigned correctly -->
-        <module name="HiddenField" >
+        <module name="HiddenField">
             <property name="severity" value="ignore" />
-            </module>
+        </module>
         <module name="IllegalCatch" />
         <module name="IllegalInstantiation" />
         <module name="IllegalThrows" />
@@ -141,7 +141,10 @@
         <module name="ArrayTypeStyle" />
         <module name="AvoidEscapedUnicodeCharacters" />
         <module name="CommentsIndentation" />
-        <module name="DescendantToken" />
+        <!-- Discouraged by CheckStyle itself because it can be replaced by other rules normally -->
+        <module name="DescendantToken">
+            <property name="severity" value="ignore" />
+        </module>
         <module name="FileContentsHolder" />
         <module name="FinalParameters" />
         <module name="Indentation" />
@@ -217,19 +220,19 @@
         <module name="OperatorWrap" />
         <module name="ParenPad" />
         <module name="SeparatorWrap">
-            <property name="id" value="SeparatorWrapDot"/>
-            <property name="tokens" value="DOT"/>
-            <property name="option" value="nl"/>
+            <property name="id" value="SeparatorWrapDot" />
+            <property name="tokens" value="DOT" />
+            <property name="option" value="nl" />
         </module>
         <module name="SeparatorWrap">
-            <property name="id" value="SeparatorWrapComma"/>
-            <property name="tokens" value="COMMA"/>
-            <property name="option" value="EOL"/>
+            <property name="id" value="SeparatorWrapComma" />
+            <property name="tokens" value="COMMA" />
+            <property name="option" value="EOL" />
         </module>
         <module name="SeparatorWrap">
-            <property name="id" value="SeparatorWrapMethodRef"/>
-            <property name="tokens" value="METHOD_REF"/>
-            <property name="option" value="nl"/>
+            <property name="id" value="SeparatorWrapMethodRef" />
+            <property name="tokens" value="METHOD_REF" />
+            <property name="option" value="nl" />
         </module>
         <module name="SingleSpaceSeparator" />
         <module name="TypecastParenPad" />
