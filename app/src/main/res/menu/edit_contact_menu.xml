@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/open"
+    <item android:id="@+id/edit_contact_menu_iten"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/edit_menu_item" />
 
-        android:title="Open the file" />
-
-    <item android:id="@+id/save"
-
-        android:title="Save the file" />
+    <item android:id="@+id/delete_contact_menu_item"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/delete_menu_item" />
 </menu>
