@@ -13,6 +13,7 @@ Feature: ContactPage
         | differentname  |
         | OtherName  |
         | 6j206j206j20  |
+        | @&*#%*$(^(  |
 
   Scenario Outline: Change the name of a contact to an invalid one
         Given I am viewing the change contact activity
@@ -25,7 +26,6 @@ Feature: ContactPage
         Examples:
           | differentname  |
           |   |
-          | @#^&#%*#*$(%(  |
 
   Scenario: Press the back button after doing nothing
         Given I am viewing the change contact activity

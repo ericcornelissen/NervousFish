@@ -140,12 +140,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
                     .setTitleText(getString(R.string.invalid_name))
                     .setContentText(getString(R.string.invalid_name_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(final SweetAlertDialog sDialog) {
-                            sDialog.dismiss();
-                        }
-                    })
+                    .setConfirmClickListener(null)
                     .show();
         }
     }
