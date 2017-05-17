@@ -22,6 +22,9 @@
     <string name="go_back_changes_lost">Your changes will be lost</string>
     <string name="yes_go_back">Yes, go back</string>
 
+    <string name="invalid_name">Invalid name entered</string>
+    <string name="invalid_name_explanation">The new name you entered is invalid, it can\'t be all whitespaces or empty.</string>
+
     <string name="edit_menu_item">Edit</string>
     <string name="delete_menu_item">Delete</string>
 </resources>

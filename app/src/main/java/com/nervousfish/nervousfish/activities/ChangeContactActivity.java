@@ -115,24 +115,39 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * @param v - the view clicked on
      */
     public void saveContact(final View v) {
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        //Update contact
-        try {
-            final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
-            if(!contact.equals(newContact)) {
-                serviceLocator.getDatabase().updateContact(contact, newContact);
-                contact = newContact;
-            }
-        } catch (final IOException e) {
-            LOGGER.error("IOException while updating contactname");
-        }
-        //Dont show keyboard
+        //Dont show keyboard anymore
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        setResult(RESULT_FIRST_USER,
-                new Intent().putExtra(ConstantKeywords.CONTACT, contact));
-        finish();
+        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+        if(editText.getText().toString().matches(".*\\w.*")) {
+            //Update contact
+            try {
+                final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
+                if (!contact.equals(newContact)) {
+                    serviceLocator.getDatabase().updateContact(contact, newContact);
+                    contact = newContact;
+                }
+            } catch (final IOException e) {
+                LOGGER.error("IOException while updating contactname");
+            }
+
+            setResult(RESULT_FIRST_USER,
+                    new Intent().putExtra(ConstantKeywords.CONTACT, contact));
+            finish();
+        } else {
+            new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.invalid_name))
+                    .setContentText(getString(R.string.invalid_name_explanation))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(final SweetAlertDialog sDialog) {
+                            sDialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
     }
 
 }

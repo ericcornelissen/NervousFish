@@ -13,8 +13,19 @@ Feature: ContactPage
         | differentname  |
         | OtherName  |
         | 6j206j206j20  |
-        |   |
-        | @#^&#%*#*$(%(  |
+
+  Scenario Outline: Change the name of a contact to an invalid one
+        Given I am viewing the change contact activity
+        When I press the contact name
+        And I type a "<differentname>"
+        And I press on the save button
+        And I press confirm on the popup
+        Then I should stay on the page
+
+        Examples:
+          | differentname  |
+          |   |
+          | @#^&#%*#*$(%(  |
 
   Scenario: Press the back button after doing nothing
         Given I am viewing the change contact activity

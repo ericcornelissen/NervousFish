@@ -128,8 +128,18 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
         onView(withId(R.id.confirm_button)).perform(click());
     }
 
+    @When("^I press confirm on the popup$")
+    public void iPressConfirm() {
+        onView(withId(R.id.confirm_button)).perform(click());
+    }
+
     @Then("^I should stay on the page$")
     public void iShouldStayOnPage() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+    }
+
+    @Then("^an error should be raised that the name is invalid$")
+    public void raiseErrorInvalidName() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
     }
 
