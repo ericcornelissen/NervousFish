@@ -23,14 +23,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class BluetoothConnectionServiceTest {
+public class AndroidBluetoothHandlerTest {
 
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
     private BluetoothDevice device = mock(BluetoothDevice.class);
     private BluetoothSocket socket = mock(BluetoothSocket.class);
 
-    private BluetoothConnectionService bConService;
+    private AndroidBluetoothHandler bConService;
 
 
 
@@ -43,14 +43,14 @@ public class BluetoothConnectionServiceTest {
             e.printStackTrace();
         }
 
-        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, serviceLocator);
+        this.bConService = (AndroidBluetoothHandler) accessConstructor(AndroidBluetoothHandler.class, serviceLocator);
 
     }
 
 
     @Test
     public void newInstanceTest() throws Exception {
-        this.bConService = (BluetoothConnectionService) accessConstructor(BluetoothConnectionService.class, mock(IServiceLocator.class));
+        this.bConService = (AndroidBluetoothHandler) accessConstructor(AndroidBluetoothHandler.class, mock(IServiceLocator.class));
         assertEquals(0, bConService.getState());
     }
 
@@ -128,12 +128,6 @@ public class BluetoothConnectionServiceTest {
         bConService.write(new byte[]{});
         // need to test this with mocks but
         // bluetoothServiceConnection is final
-    }
-
-    @Test
-    public void showWarning() throws Exception {
-        bConService.showWarning();
-        // can't test this as it isn't implemented yet
     }
 
     @Test

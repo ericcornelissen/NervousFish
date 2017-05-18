@@ -64,6 +64,7 @@ public final class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(final View view) {
+                LOGGER.info("Bluetooth button clicked");
                 startBluetoothPairing();
             }
 

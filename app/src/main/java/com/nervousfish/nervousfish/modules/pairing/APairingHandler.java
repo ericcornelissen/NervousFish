@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Contains common methods shared by all pairing modules.
  */
-abstract class APairingHandler implements Serializable {
+abstract class APairingHandler implements IPairingHandler, Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
 
@@ -37,9 +37,7 @@ abstract class APairingHandler implements Serializable {
     }
 
     /**
-     * Luxury method that calls writeContact() for each contact of the database.
-     *
-     * @throws IOException When deserialization doesn't go well.
+     * {@inheritDoc}
      */
     public void writeAllContacts() throws IOException {
         final List<Contact> list = database.getAllContacts();
@@ -92,7 +90,6 @@ abstract class APairingHandler implements Serializable {
                 return true;
             }
         }
-        showWarning();
         return false;
     }
 
@@ -143,14 +140,9 @@ abstract class APairingHandler implements Serializable {
     }
 
     /**
-     * Abstract method in order to write to the connected Device via outputstream.
+     * Write to the buffer to the world
      *
      * @param buffer The bytes to write
      */
     abstract void write(final byte[] buffer);
-
-    /**
-     * Abstract method that handles warnings/errors and shows them to the user.
-     */
-    abstract void showWarning();
 }

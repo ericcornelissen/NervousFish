@@ -23,13 +23,11 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
         LOGGER.info("Initialized");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     void write(final byte[] buffer) {
-        //dummy
-    }
-
-    @Override
-    void showWarning() {
         //dummy
     }
 

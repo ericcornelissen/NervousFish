@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.modules.pairing.BluetoothConnectionService;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -32,7 +32,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Kilian on 2/05/2017.
  * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
 
@@ -51,10 +50,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
     // Device is now discoverable for 300 seconds
     private BluetoothAdapter bluetoothAdapter;
-    private BluetoothConnectionService bluetoothConnectionService;
+    private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
-    private IServiceLocator serviceLocator;
     /**
      * The on-click listener for all devices in the ListViews
      */
@@ -68,7 +66,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             final String info = ((TextView) v).getText().toString();
             final String address = info.substring(info.length() - 17);
             final BluetoothDevice device = getDevice(address);
-            bluetoothConnectionService.connect(device);
+            bluetoothHandler.connect(device);
 
             // Create the result Intent and include the MAC address
             final Intent intent = new Intent();
@@ -81,6 +79,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         }
     };
+    private IServiceLocator serviceLocator;
     private ArrayAdapter<String> newDevicesArrayAdapter;
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -116,7 +115,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, filter);
 
-        setContentView(R.layout.activity_bluetoothconection);
+        setContentView(R.layout.activity_bluetooth_connection);
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
@@ -131,13 +130,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         newDevicesArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         // Find and set up the ListView for paired devices
-        final ListView pairedListView = (ListView) findViewById(R.id.pairedlist);
+        final ListView pairedListView = (ListView) findViewById(R.id.paired_list);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
 
         // Find and set up the ListView for newly discovered devices
-        final ListView newDevicesListView = (ListView) findViewById(R.id.discoveredlist);
+        final ListView newDevicesListView = (ListView) findViewById(R.id.discovered_list);
         newDevicesListView.setAdapter(newDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -150,8 +149,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        // Get the BluetoothConnectionService.
-        this.bluetoothConnectionService = (BluetoothConnectionService) this.serviceLocator.getBluetoothHandler();
+        // Get the AndroidBluetoothHandler.
+        this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
 
         this.newDevices = new HashSet<>();
     }
@@ -163,8 +162,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // Don't forget to unregister the ACTION_FOUND receiver.
-        breakDown();
+        unregisterReceiver(this.broadcastReceiver);
+        this.bluetoothAdapter = null;
     }
 
     /**
@@ -175,7 +174,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStart();
         enableBluetooth();
         this.serviceLocator.registerToEventBus(this);
-        bluetoothConnectionService.start();
+        bluetoothHandler.start();
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
@@ -188,7 +187,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         this.serviceLocator.unregisterFromEventBus(this);
-        bluetoothConnectionService.stop();
+        bluetoothHandler.stop();
     }
 
     /**
@@ -201,14 +200,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             setResult(Activity.RESULT_CANCELED);
             finish();
         }
-    }
-
-    /**
-     * Deletes bluetoothadapter and unregisters broadcastreceiver
-     */
-    public void breakDown() {
-        unregisterReceiver(broadcastReceiver);
-        bluetoothAdapter = null;
     }
 
     /**
@@ -226,7 +217,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      */
     public void queryPairedDevices() {
         pairedDevices = bluetoothAdapter.getBondedDevices();
-        findViewById(R.id.pairedlist).setVisibility(View.VISIBLE);
+        findViewById(R.id.paired_list).setVisibility(View.VISIBLE);
         for (final BluetoothDevice device : pairedDevices) {
             pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
@@ -264,7 +255,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     @Subscribe
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
-            bluetoothConnectionService.writeAllContacts();
+            bluetoothHandler.writeAllContacts();
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception");
         }

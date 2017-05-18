@@ -44,11 +44,6 @@ public class APairingHandlerTest {
             myBuffer = buffer;
         }
 
-        @Override
-        void showWarning() {
-
-        }
-
     }
 
     private byte[] serialize(Contact contact) throws IOException {

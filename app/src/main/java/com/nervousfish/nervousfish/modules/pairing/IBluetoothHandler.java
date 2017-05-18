@@ -9,7 +9,7 @@ import com.nervousfish.nervousfish.modules.IModule;
  * Defines a module used for pairing over Bluetooth that can be used by a service locator.
  */
 
-public interface IBluetoothHandler extends IModule {
+public interface IBluetoothHandler extends IPairingHandler, IModule {
 
     /**
      * Start the ConnectThread to initiate a connection to a remote device.
