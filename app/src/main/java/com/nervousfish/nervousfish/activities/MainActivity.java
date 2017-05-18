@@ -79,7 +79,8 @@ public final class MainActivity extends AppCompatActivity {
         final ListView lv = (ListView) findViewById(R.id.listView);
         try {
             fillDatabaseWithDemoData();
-            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+            contacts = serviceLocator.getDatabase().getAllContacts();
+            lv.setAdapter(new ContactListAdapter(this, contacts));
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
