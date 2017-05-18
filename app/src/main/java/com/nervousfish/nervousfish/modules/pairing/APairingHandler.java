@@ -30,7 +30,6 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
      *
      * @param serviceLocator the serviceLocator which will provide means to access other modules
      */
-    // This servicelocator will be used later on probably
     APairingHandler(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
         this.database = serviceLocator.getDatabase();
