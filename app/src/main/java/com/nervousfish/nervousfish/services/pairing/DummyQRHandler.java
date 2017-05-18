@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.cryptography;
+package com.nervousfish.nervousfish.services.pairing;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An adapter to the default Java class for encrypting messages
+ * An handler doing nothing.
  */
-public final class EncryptorAdapter implements IEncryptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
+public final class DummyQRHandler extends APairingHandler implements IQRHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
 
     /**
      * Prevents construction from outside the class.
@@ -19,7 +19,8 @@ public final class EncryptorAdapter implements IEncryptor {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
-    private EncryptorAdapter(final IServiceLocator serviceLocator) {
+    private DummyQRHandler(final IServiceLocator serviceLocator) {
+        super();
         LOGGER.info("Initialized");
     }
 
@@ -30,7 +31,7 @@ public final class EncryptorAdapter implements IEncryptor {
      * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<EncryptorAdapter> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new EncryptorAdapter(serviceLocator));
+    public static ModuleWrapper<DummyQRHandler> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new DummyQRHandler(serviceLocator));
     }
 }

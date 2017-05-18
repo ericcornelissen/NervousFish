@@ -1,13 +1,13 @@
 package com.nervousfish.nervousfish.service_locator;
 
-import com.nervousfish.nervousfish.modules.constants.IConstants;
-import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
-import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
-import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
+import com.nervousfish.nervousfish.services.constants.IConstants;
+import com.nervousfish.nervousfish.services.cryptography.IEncryptor;
+import com.nervousfish.nervousfish.services.cryptography.IKeyGenerator;
+import com.nervousfish.nervousfish.services.database.IDatabase;
+import com.nervousfish.nervousfish.services.pairing.IBluetoothHandler;
+import com.nervousfish.nervousfish.services.pairing.INFCHandler;
+import com.nervousfish.nervousfish.services.pairing.IQRHandler;
+import com.nervousfish.nervousfish.services.filesystem.IFileSystem;
 
 import java.io.Serializable;
 

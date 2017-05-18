@@ -1,6 +1,6 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.services.pairing;
 
-import com.nervousfish.nervousfish.modules.IModule;
+import com.nervousfish.nervousfish.services.IModule;
 
 /**
  * Defines a module used for pairing over Bluetooth that can be used by a service locator.

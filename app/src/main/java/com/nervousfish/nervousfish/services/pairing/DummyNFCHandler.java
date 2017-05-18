@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.services.pairing;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;

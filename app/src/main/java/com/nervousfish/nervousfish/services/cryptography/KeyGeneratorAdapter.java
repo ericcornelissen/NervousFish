@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.cryptography;
+package com.nervousfish.nervousfish.services.cryptography;
 
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
