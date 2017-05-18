@@ -57,7 +57,6 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
-        assertEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
     }
 
     @When("^I press button (\\d+)$")

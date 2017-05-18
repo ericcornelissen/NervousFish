@@ -1,9 +1,15 @@
 package com.nervousfish.nervousfish.test;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.support.test.espresso.core.deps.guava.collect.Iterables;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
+import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
@@ -13,35 +19,20 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-/**
- * Created by Kilian on 3/05/2017.
- */
 
 @CucumberOptions(features = "features")
-public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<BluetoothConnectionActivity> {
-
-    private Activity mActivity = null;
+public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
     public BluetoothActivitySteps(EntryActivity activityClass) {
-        super(BluetoothConnectionActivity.class);
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        mActivity = getActivity(); // Start Activity before each test scenario
-        assertNotNull(mActivity);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        getActivity().finish();
-        super.tearDown(); // This step scrubs everything in this class so always call it last
+        super(EntryActivity.class);
     }
 
     @Given("^I have a BluetoothConnectionActivity and don't have an established connection$")
     public void iHaveABluetoothConnectionActivityWithoutAConnection() {
-        assertNotNull(getActivity());
+        Intent intent = new Intent(getActivity(), BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
+                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
+        getActivity().startActivity(intent);
 
     }
 
@@ -55,4 +46,21 @@ public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<Blu
         assertTrue(true);
     }
 
+
+    private Activity getCurrentActivity() {
+        getInstrumentation().waitForIdleSync();
+        final Activity[] activity = new Activity[1];
+        try {
+            runTestOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+                    activity[0] = Iterables.getOnlyElement(activities);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return activity[0];
+    }
 }
