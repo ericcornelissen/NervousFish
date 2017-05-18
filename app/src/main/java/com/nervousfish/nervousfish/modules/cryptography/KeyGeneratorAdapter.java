@@ -80,14 +80,16 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * Ensure that no instance of this class is created because it was present in the stream. A correct
      * stream should only contain instances of the proxy.
      */
-    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
         throw new InvalidObjectException("Proxy required.");
     }
 
     /**
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
+     * Used for the Serialization Proxy Pattern.
      */
+    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -5933759426888012276L;
         private final IServiceLocator serviceLocator;

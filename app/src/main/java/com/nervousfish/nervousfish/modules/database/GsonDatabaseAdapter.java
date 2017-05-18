@@ -20,8 +20,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
-
+    private static final long serialVersionUID = -4101015873770268925L;
     private final static String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private final static Type TYPE_CONTACT_LIST =
@@ -48,6 +51,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     private final String contactsPath;
     private final String profilesPath;
+    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -55,6 +59,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocator Can be used to get access to other modules
      */
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
+        this.serviceLocator = serviceLocator;
         final IConstants constants = serviceLocator.getConstants();
 
         this.contactsPath = constants.getDatabaseContactsPath();
@@ -300,4 +305,38 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
     }
 
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     * Used for the Serialization Proxy Pattern.
+     */
+    @SuppressWarnings("PMD.AccessorClassGeneration")
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -4101015873770268925L;
+        private final IServiceLocator serviceLocator;
+
+        SerializationProxy(final GsonDatabaseAdapter gsonDatabaseAdapter) {
+            this.serviceLocator = gsonDatabaseAdapter.serviceLocator;
+        }
+
+        private Object readResolve() {
+            return new GsonDatabaseAdapter(this.serviceLocator);
+        }
+    }
 }

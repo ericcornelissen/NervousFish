@@ -19,10 +19,15 @@ import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 /**
  * Manages all modules and provides access to them.
  */
 final class ServiceLocator implements IServiceLocator {
+    private static final long serialVersionUID = 1408616442873653749L;
 
     private final String androidFilesDir;
     private final IDatabase database;
@@ -47,6 +52,30 @@ final class ServiceLocator implements IServiceLocator {
         this.bluetoothHandler = DummyBluetoothHandler.newInstance(this).get();
         this.nfcHandler = DummyNFCHandler.newInstance(this).get();
         this.qrHandler = DummyQRHandler.newInstance(this).get();
+    }
+
+    /**
+     * Private constructor for deserializing the service locator
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    ServiceLocator(final String androidFilesDir,
+                   final IDatabase database,
+                   final IKeyGenerator keyGenerator,
+                   final IEncryptor encryptor,
+                   final IFileSystem fileSystem,
+                   final IConstants constants,
+                   final IBluetoothHandler bluetoothHandler,
+                   final INFCHandler nfcHandler,
+                   final IQRHandler qrHandler) {
+        this.androidFilesDir = androidFilesDir;
+        this.database = database;
+        this.keyGenerator = keyGenerator;
+        this.encryptor = encryptor;
+        this.fileSystem = fileSystem;
+        this.constants = constants;
+        this.bluetoothHandler = bluetoothHandler;
+        this.nfcHandler = nfcHandler;
+        this.qrHandler = qrHandler;
     }
 
     /**
@@ -154,7 +183,7 @@ final class ServiceLocator implements IServiceLocator {
     /**
      * Thrown when a module was called before it was initialized.
      */
-    private class ModuleNotFoundException extends RuntimeException {
+    private static class ModuleNotFoundException extends RuntimeException {
 
         /**
          * Constructs a new exception to make clear that a module was requested before it was initialized.
@@ -167,4 +196,60 @@ final class ServiceLocator implements IServiceLocator {
 
     }
 
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = 1408616442873653749L;
+        private final String androidFilesDir;
+        private final IDatabase database;
+        private final IKeyGenerator keyGenerator;
+        private final IEncryptor encryptor;
+        private final IFileSystem fileSystem;
+        private final IConstants constants;
+        private final IBluetoothHandler bluetoothHandler;
+        private final INFCHandler nfcHandler;
+        private final IQRHandler qrHandler;
+
+        SerializationProxy(final ServiceLocator serviceLocator) {
+            this.androidFilesDir = serviceLocator.androidFilesDir;
+            this.database = serviceLocator.database;
+            this.keyGenerator = serviceLocator.keyGenerator;
+            this.encryptor = serviceLocator.encryptor;
+            this.fileSystem = serviceLocator.fileSystem;
+            this.constants = serviceLocator.constants;
+            this.bluetoothHandler = serviceLocator.bluetoothHandler;
+            this.nfcHandler = serviceLocator.nfcHandler;
+            this.qrHandler = serviceLocator.qrHandler;
+        }
+
+        private Object readResolve() {
+            return new ServiceLocator(this.androidFilesDir,
+                    this.database,
+                    this.keyGenerator,
+                    this.encryptor,
+                    this.fileSystem,
+                    this.constants,
+                    this.bluetoothHandler,
+                    this.nfcHandler,
+                    this.qrHandler);
+        }
+    }
 }

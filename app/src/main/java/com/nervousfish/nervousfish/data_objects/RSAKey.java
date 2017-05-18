@@ -128,7 +128,7 @@ public final class RSAKey implements IKey {
      * Ensure that no instance of this class is created because it was present in the stream. A correct
      * stream should only contain instances of the proxy.
      */
-    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
         throw new InvalidObjectException("Proxy required.");
     }
 

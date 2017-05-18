@@ -6,11 +6,17 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 /**
  * An adapter to the default Android file system
  */
 public final class AndroidFileSystemAdapter implements IFileSystem {
+    private static final long serialVersionUID = 1937542180968231197L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
+    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -21,6 +27,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     // This servicelocator will be used later on probably
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
+        this.serviceLocator = serviceLocator;
     }
 
     /**
@@ -32,5 +39,40 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     public static ModuleWrapper<AndroidFileSystemAdapter> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocator));
+    }
+
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     * Used for the Serialization Proxy Pattern.
+     */
+    @SuppressWarnings("PMD.AccessorClassGeneration")
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = 1937542180968231197L;
+        private final IServiceLocator serviceLocator;
+
+        SerializationProxy(final AndroidFileSystemAdapter androidFileSystemAdapter) {
+            this.serviceLocator = androidFileSystemAdapter.serviceLocator;
+        }
+
+        private Object readResolve() {
+            return new AndroidFileSystemAdapter(this.serviceLocator);
+        }
     }
 }

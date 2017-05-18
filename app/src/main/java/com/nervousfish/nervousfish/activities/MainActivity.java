@@ -1,25 +1,22 @@
 package com.nervousfish.nervousfish.activities;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
-
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -41,7 +38,6 @@ public final class MainActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
     private IServiceLocator serviceLocator;
-    private List<Contact> contacts;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -57,20 +53,6 @@ public final class MainActivity extends AppCompatActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-
-        });
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -103,10 +85,13 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param index The index of the contact in {@code this.contacts}.
      */
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
+        // TODO this must be fixed in another PR
+        // This doesn't work because contacts was never assigned
+        //intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
 
@@ -137,47 +122,46 @@ public final class MainActivity extends AppCompatActivity {
         database.addContact(e);
     }
 
-}
-
-/**
- * An Adapter which converts a list with contacts into List entries.
- */
-final class ContactListAdapter extends ArrayAdapter<Contact> {
-
     /**
-     * Create and initialize a ContactListAdapter.
-     *
-     * @param context  the Context where the ListView is created
-     * @param contacts the list with contacts
+     * An Adapter which converts a list with contacts into List entries.
      */
-    ContactListAdapter(final Context context, final List<Contact> contacts) {
-        super(context, 0, contacts);
-    }
+    private static final class ContactListAdapter extends ArrayAdapter<Contact> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @NonNull
-    @Override
-    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
-        View v = convertView;
-
-        if (v == null) {
-            final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, null);
+        /**
+         * Create and initialize a ContactListAdapter.
+         *
+         * @param context  the Context where the ListView is created
+         * @param contacts the list with contacts
+         */
+        ContactListAdapter(final Context context, final List<Contact> contacts) {
+            super(context, 0, contacts);
         }
 
-        final Contact contact = getItem(position);
+        /**
+         * {@inheritDoc}
+         */
+        @NonNull
+        @Override
+        public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
+            View v = convertView;
 
-        if (contact != null) {
-            final TextView name = (TextView) v.findViewById(R.id.name);
-
-            if (name != null) {
-                name.setText(contact.getName());
+            if (v == null) {
+                final LayoutInflater vi = LayoutInflater.from(getContext());
+                v = vi.inflate(R.layout.contact_list_entry, null);
             }
+
+            final Contact contact = getItem(position);
+
+            if (contact != null) {
+                final TextView name = (TextView) v.findViewById(R.id.name);
+
+                if (name != null) {
+                    name.setText(contact.getName());
+                }
+            }
+
+            return v;
         }
 
-        return v;
     }
-
 }

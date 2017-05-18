@@ -6,11 +6,17 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 /**
  * An handler doing nothing.
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
+    private static final long serialVersionUID = -1164062335787406761L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
+    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -22,6 +28,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     private DummyQRHandler(final IServiceLocator serviceLocator) {
         super();
         LOGGER.info("Initialized");
+        this.serviceLocator = serviceLocator;
     }
 
     /**
@@ -33,5 +40,40 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      */
     public static ModuleWrapper<DummyQRHandler> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new DummyQRHandler(serviceLocator));
+    }
+
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     * Used for the Serialization Proxy Pattern.
+     */
+    @SuppressWarnings("PMD.AccessorClassGeneration")
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -1164062335787406761L;
+        private final IServiceLocator serviceLocator;
+
+        SerializationProxy(final DummyQRHandler handler) {
+            this.serviceLocator = handler.serviceLocator;
+        }
+
+        private Object readResolve() {
+            return new DummyQRHandler(this.serviceLocator);
+        }
     }
 }
