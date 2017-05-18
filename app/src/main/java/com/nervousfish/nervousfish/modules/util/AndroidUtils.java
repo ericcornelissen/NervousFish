@@ -44,6 +44,7 @@ public final class AndroidUtils extends AbstractUtils {
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
     private AndroidUtils(final IServiceLocator serviceLocator) {
+        super();
         final IConstants constants = serviceLocator.getConstants();
         this.qrcodeImageWidth = constants.getQRCodeWidth();
         this.qrcodeImageHeight = constants.getQRCodeHeight();

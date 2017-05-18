@@ -22,5 +22,5 @@ public interface IUtils extends IModule {
      * @param QRCode The QR code. The implementation required depends on the platform-specific implementation
      * @return The decoded public key.
      */
-    String decodeQR(final Object QRCode) throws InvalidClassException;
+    String decodeQR(Object QRCode) throws InvalidClassException;
 }
