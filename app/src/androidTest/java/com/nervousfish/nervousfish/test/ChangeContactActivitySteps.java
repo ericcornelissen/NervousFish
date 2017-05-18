@@ -71,10 +71,10 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
         serviceLocator.getDatabase().addContact(contact);
 
         previousActivity = getCurrentActivity();
-        Intent intent = new Intent(getActivity(), ChangeContactActivity.class);
+        Intent intent = new Intent(getCurrentActivity(), ChangeContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        getActivity().startActivity(intent);
+        getCurrentActivity().startActivity(intent);
     }
 
     @When("^I press the contact name$")
