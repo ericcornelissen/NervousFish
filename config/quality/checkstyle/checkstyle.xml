@@ -98,9 +98,7 @@
         <!-- See http://checkstyle.sourceforge.net/config_import.html -->
         <module name="AvoidStarImport" />
         <!-- We suppress this warning because the Java creators themselves disagree on this one, for example in the newest JUnit 5 -->
-        <module name="AvoidStaticImport">
-            <property name="severity" value="ignore" />
-        </module>
+        <module name="AvoidStaticImport" />
         <module name="IllegalImport" />
         <!-- Suppressed because we don't have so many imports that this is necessary -->
         <!-- <module name="ImportControl"/> -->
@@ -175,7 +173,9 @@
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sourceforge.net/config_naming.html -->
         <module name="AbbreviationAsWordInName" />
-        <module name="AbstractClassName" />
+        <module name="AbstractClassName">
+            <property name="format" value="^A[A-Z].+$" />
+        </module>
         <module name="CatchParameterName" />
         <module name="ClassTypeParameterName" />
         <module name="ConstantName" />

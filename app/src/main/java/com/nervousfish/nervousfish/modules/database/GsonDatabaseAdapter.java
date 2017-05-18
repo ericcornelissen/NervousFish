@@ -186,7 +186,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final List<Profile> profiles = this.getProfiles();
         profiles.add(profile);
 
-        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         // Update the database

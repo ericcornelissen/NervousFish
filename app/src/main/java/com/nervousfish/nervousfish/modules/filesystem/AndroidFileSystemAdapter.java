@@ -18,8 +18,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 /**
  * An adapter to the default Android file system
  */
@@ -54,7 +52,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     @Override
     public Writer getWriter(final String path) throws IOException {
         final OutputStream outputStream = new FileOutputStream(path);
-        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, UTF_8);
+        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, java.nio.charset.StandardCharsets.UTF_8);
         return new BufferedWriter(outputStreamWriter);
     }
 
@@ -64,7 +62,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     @Override
     public Reader getReader(final String path) throws IOException {
         final InputStream inputStream = new FileInputStream(path);
-        final InputStreamReader outputStreamReader = new InputStreamReader(inputStream, UTF_8);
+        final InputStreamReader outputStreamReader = new InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8);
         return new BufferedReader(outputStreamReader);
     }
 }

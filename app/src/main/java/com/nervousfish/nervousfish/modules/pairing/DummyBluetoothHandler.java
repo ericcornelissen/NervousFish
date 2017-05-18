@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An handler doing nothing.
  */
-public final class DummyBluetoothHandler extends AbstractPairingHandler implements IBluetoothHandler {
+public final class DummyBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyBluetoothHandler");
 
     /**
