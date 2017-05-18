@@ -34,6 +34,7 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -105,6 +106,11 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     @When("^I change the name$")
     public void iChangeTheName() {
         onView(withId(R.id.edit_contact_name)).perform(typeText("aabbcc"));
+    }
+
+    @When("^I close the keyboard$")
+    public void iCloseKeyboard() {
+        onView(withId(R.id.edit_contact_name)).perform(closeSoftKeyboard());
     }
 
     @When("^I press the back button$")

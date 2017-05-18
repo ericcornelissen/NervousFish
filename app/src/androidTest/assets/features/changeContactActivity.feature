@@ -5,6 +5,7 @@ Feature: ContactPage
       Given I am viewing the change contact activity
       When I press the contact name
       And I type a "<differentname>"
+      And I close the keyboard
       And I press on the save button
       Then the contact should be updated
       And I should go to the previous activity I visited
@@ -19,6 +20,7 @@ Feature: ContactPage
         Given I am viewing the change contact activity
         When I press the contact name
         And I type a "<differentname>"
+        And I close the keyboard
         And I press on the save button
         And I press confirm on the popup
         Then I should stay on the page
@@ -31,3 +33,11 @@ Feature: ContactPage
         Given I am viewing the change contact activity
         When I press the back button
         Then I should go to the previous activity I visited
+
+  Scenario: Press the back button after changing something and go back
+        Given I am viewing the change contact activity
+        When I change the name
+        And I close the keyboard
+        And I press the back button
+        And I press yes go back on the popup
+        Then I should go to the previous activity
