@@ -15,7 +15,7 @@ public class ProfileTest {
 
     @Before
     public void setup() {
-        this.keyPair = new KeyPair(mock(IKey.class), mock(IKey.class));
+        this.keyPair = new KeyPair("Webserver", mock(IKey.class), mock(IKey.class));
     }
 
     @Test
@@ -31,6 +31,12 @@ public class ProfileTest {
 
         Profile profileB = new Profile("bar", this.keyPair);
         assertEquals("bar", profileB.getName());
+    }
+
+    @Test
+    public void testGetKeyPairReturnsTheKeyPair() {
+        Profile profile = new Profile("foo", this.keyPair);
+        assertEquals(this.keyPair, profile.getKeyPair());
     }
 
     @Test

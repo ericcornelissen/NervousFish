@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.data_objects;
 import java.io.Serializable;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
 
 /**
@@ -16,6 +17,13 @@ public interface IKey extends Serializable {
      * @return The key as a {@link String}.
      */
     String getKey();
+
+    /**
+     * Get a string representing the name of the key.
+     *
+     * @return The key name.
+     */
+    String getName();
 
     /**
      * Get a string representation of the key type.
