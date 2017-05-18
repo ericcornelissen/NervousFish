@@ -34,9 +34,8 @@ public final class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final Intent intent = getIntent();
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        LOGGER.info("serviceLocator: " + this.serviceLocator);
 
         IDatabase database = this.serviceLocator.getDatabase();
         try {
