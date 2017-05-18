@@ -171,7 +171,8 @@ public final class ContactActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_FIRST_USER) {
-            setName(((Contact) data.getSerializableExtra(ConstantKeywords.CONTACT)).getName());
+            contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
+            setName(contact.getName());
         }
     }
 
