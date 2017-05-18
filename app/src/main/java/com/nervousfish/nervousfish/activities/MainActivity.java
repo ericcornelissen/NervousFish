@@ -36,7 +36,6 @@ import java.util.List;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
-@SuppressWarnings("checkstyle:missingctor")
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");

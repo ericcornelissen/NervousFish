@@ -23,7 +23,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The ContactActivity shows the contacts information and his public keys.
  */
-@SuppressWarnings("checkstyle:missingctor")
 public final class ContactActivity extends AppCompatActivity {
 
     /**

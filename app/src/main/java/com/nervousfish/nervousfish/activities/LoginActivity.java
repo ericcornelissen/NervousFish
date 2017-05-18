@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
  * Demo Login activity class. All warnings are suppressed because this is a demo class that can be deleted
  * after we're comfortable writing Cucumber tests.
  */
-@SuppressWarnings({"PMD", "checkstyle:missingctor"})
 public final class LoginActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private EditText mPassword;
