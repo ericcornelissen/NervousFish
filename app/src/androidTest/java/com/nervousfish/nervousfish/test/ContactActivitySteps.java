@@ -3,15 +3,12 @@ package com.nervousfish.nervousfish.test;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -38,12 +35,6 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
@@ -85,7 +76,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     @When("^I press the back arrow$")
     public void iPressBackArrow() {
-        onView(withId(R.id.backButton)).perform(click());
+        onView(withId(R.id.backButtonChange)).perform(click());
     }
 
     @When("^I press the menu$")

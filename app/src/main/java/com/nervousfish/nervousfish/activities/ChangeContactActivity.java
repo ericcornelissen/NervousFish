@@ -56,7 +56,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
+        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
