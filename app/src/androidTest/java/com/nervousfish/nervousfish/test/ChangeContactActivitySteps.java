@@ -79,11 +79,13 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
 
     @When("^I press the contact name$")
     public void iPressContactName() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
         onView(withId(R.id.edit_contact_name)).perform(click());
     }
 
-    @When("^I type a \"(.*?)\"$")
+    @When("^I type \"(.*?)\"$")
     public void iTypeDifferentName(final String differentname) {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
         this.differentname = differentname;
         onView(withId(R.id.edit_contact_name)).perform(replaceText(differentname));
     }
@@ -105,11 +107,13 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
 
     @When("^I change the name$")
     public void iChangeTheName() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
         onView(withId(R.id.edit_contact_name)).perform(typeText("aabbcc"));
     }
 
     @When("^I close the keyboard$")
     public void iCloseKeyboard() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
         onView(withId(R.id.edit_contact_name)).perform(closeSoftKeyboard());
     }
 
