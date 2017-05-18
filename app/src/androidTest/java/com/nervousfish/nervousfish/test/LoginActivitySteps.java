@@ -36,9 +36,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    public LoginActivitySteps(EntryActivity activityClass) {
-        super(EntryActivity.class);
-    }
     public LoginActivitySteps() {
         super(EntryActivity.class);
     }
@@ -68,13 +65,9 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
     }
 
-    @Then("^I (true|false) continue to the MainActivity$")
-    public void iShouldContinueToNextActivity(boolean continuesToNextActivity) {
-        if (continuesToNextActivity) {
-            assertEquals(getCurrentActivity().getClass(), MainActivity.class);
-        } else {
-            assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
-        }
+    @Then("^I should continue to the MainActivity$")
+    public void iShouldContinueToNextActivity() {
+        assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
     }
 
     @Then("^I should see an auth error$")

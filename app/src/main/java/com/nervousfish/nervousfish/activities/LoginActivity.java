@@ -37,11 +37,10 @@ public final class LoginActivity extends Activity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-
-        IDatabase database = this.serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         try {
             this.actualPassword = database.getUserPassword();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Failed to retrieve password from database", e);
         }
 
@@ -83,7 +82,7 @@ public final class LoginActivity extends Activity {
      * Go to the next activity from the {@link LoginActivity}.
      */
     private void nextActivity() {
-        final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }
