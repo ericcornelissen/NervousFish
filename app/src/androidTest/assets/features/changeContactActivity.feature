@@ -37,4 +37,4 @@ Feature: ContactPage
         When I change the name
         And I press the back button
         And I press yes go back on the popup
-        Then I should go to the previous activity I visited
+        Then I should go to the previous activity

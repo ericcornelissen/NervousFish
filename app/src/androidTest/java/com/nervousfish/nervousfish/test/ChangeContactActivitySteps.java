@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
+import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -45,6 +46,7 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     private final static String TEST_NAME = "TestPerson";
     private final static IKey TEST_KEY = new SimpleKey("my key", "key");
     private String differentname;
+    private Activity previousActivity;
 
     public ChangeContactActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
@@ -67,6 +69,7 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
         }
         serviceLocator.getDatabase().addContact(contact);
 
+        previousActivity = getCurrentActivity();
         Intent intent = new Intent(getActivity(), ChangeContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
@@ -132,6 +135,11 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     @Then("^an error should be raised that the name is invalid$")
     public void raiseErrorInvalidName() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+    }
+
+    @Then("^I should go to the previous activity$")
+    public void iShouldGoToPrevActivity() {
+        assertEquals(previousActivity.getClass(), getCurrentActivity().getClass());
     }
 
     private Activity getCurrentActivity() {
