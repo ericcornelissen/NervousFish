@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="4"
+    android:rowCount="4"
+    android:baselineAligned="false">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button00"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="A"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button01"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="B"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button02"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="C"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button03"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="D"
+            android:onClick="buttonAction" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button10"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="E"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button11"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="F"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button12"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="G"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button13"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="H"
+            android:onClick="buttonAction" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button20"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="I"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button21"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="J"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button22"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="K"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button23"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="L"
+            android:onClick="buttonAction" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button30"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="M"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button31"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="N"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button32"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="O"
+            android:onClick="buttonAction" />
+        <Button
+            android:id="@+id/button33"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="P"
+            android:onClick="buttonAction" />
+    </LinearLayout>
+</LinearLayout>
