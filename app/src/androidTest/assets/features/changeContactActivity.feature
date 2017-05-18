@@ -32,13 +32,6 @@ Feature: ContactPage
         When I press the back button
         Then I should go to the previous activity I visited
 
-  Scenario: Press the back button after changing something and press cancel
-      Given I am viewing the change contact activity
-      When I change the name
-      And I press the back button
-      And I press cancel on the popup
-      Then I should stay on the page
-
   Scenario: Press the back button after changing something and go back
         Given I am viewing the change contact activity
         When I change the name
