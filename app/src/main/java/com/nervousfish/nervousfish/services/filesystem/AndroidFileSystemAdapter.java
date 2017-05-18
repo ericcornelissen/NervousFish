@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.services.filesystem;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An handler doing nothing.
+ * An adapter to the default Android file system
  */
-public final class DummyBluetoothHandler extends APairingHandler implements IBluetoothHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger("DummyBluetoothHandler");
+public final class AndroidFileSystemAdapter implements IFileSystem {
+    private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
 
     /**
      * Prevents construction from outside the class.
@@ -19,8 +19,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
-    private DummyBluetoothHandler(final IServiceLocator serviceLocator) {
-        super();
+    private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
     }
 
@@ -31,7 +30,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<DummyBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new DummyBluetoothHandler(serviceLocator));
+    public static ModuleWrapper<AndroidFileSystemAdapter> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocator));
     }
 }

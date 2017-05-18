@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.services.pairing;
 
 /**
  * Contains common methods shared by all pairing modules.

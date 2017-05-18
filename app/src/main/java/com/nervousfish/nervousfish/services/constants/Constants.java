@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.constants;
+package com.nervousfish.nervousfish.services.constants;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;

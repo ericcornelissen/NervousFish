@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.database;
+package com.nervousfish.nervousfish.services.database;
 
 import com.google.gson.JsonSyntaxException;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
@@ -7,7 +7,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.services.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 

@@ -2,7 +2,7 @@ package com.nervousfish.nervousfish;
 
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
-import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
+import com.nervousfish.nervousfish.services.cryptography.KeyGeneratorAdapter;
 
 import org.junit.Test;
 

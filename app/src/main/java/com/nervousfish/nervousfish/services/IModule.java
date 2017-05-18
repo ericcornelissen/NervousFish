@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules;
+package com.nervousfish.nervousfish.services;
 
 import java.io.Serializable;
 

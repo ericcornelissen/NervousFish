@@ -1,6 +1,6 @@
-package com.nervousfish.nervousfish.modules.constants;
+package com.nervousfish.nervousfish.services.constants;
 
-import com.nervousfish.nervousfish.modules.IModule;
+import com.nervousfish.nervousfish.services.IModule;
 
 /**
  * Interface for a class containing all main constants of the application.

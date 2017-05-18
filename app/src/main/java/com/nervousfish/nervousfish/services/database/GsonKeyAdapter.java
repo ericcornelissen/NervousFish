@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.database;
+package com.nervousfish.nervousfish.services.database;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

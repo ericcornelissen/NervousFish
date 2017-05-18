@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.filesystem;
+package com.nervousfish.nervousfish.services.cryptography;
 
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An adapter to the default Android file system
+ * An adapter to the default Java class for encrypting messages
  */
-public final class AndroidFileSystemAdapter implements IFileSystem {
-    private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
+public final class EncryptorAdapter implements IEncryptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
 
     /**
      * Prevents construction from outside the class.
@@ -19,7 +19,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
-    private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
+    private EncryptorAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
     }
 
@@ -30,7 +30,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<AndroidFileSystemAdapter> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocator));
+    public static ModuleWrapper<EncryptorAdapter> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new EncryptorAdapter(serviceLocator));
     }
 }
