@@ -1,4 +1,4 @@
-Feature: ContactPage
+Feature: ChangeContact
   Editing a contact on the change contact page
 
   Scenario Outline: Change the name of a contact

@@ -58,7 +58,7 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     }
 
     @Given("^I am viewing the change contact activity$")
-    public void iAmViewingContactActivity() throws IOException {
+    public void iAmViewingChangeContactActivity() throws IOException {
         assertNotNull(getActivity());
 
         final Contact contact = new Contact(TEST_NAME, TEST_KEY);
