@@ -33,4 +33,16 @@ public interface IServiceLocator extends Serializable {
      */
     void registerToEventBus(final Object object);
 
+    /**
+     * Unregisters the class specified from the EventBus
+     *
+     * @param object The Object that should be unregistered from the EventBus
+     */
+    void unregisterFromEventBus(final Object object);
+
+    /**
+     * Posts a message on the EventBus
+     * @param message The message that should be posted
+     */
+    void postOnEventBus(final Object message);
 }

@@ -8,66 +8,42 @@ import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertNotEquals;
 
 @CucumberOptions(features = "features")
-public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    private int[] buttons = new int[] {
-        R.id.button00,
-        R.id.button01,
-        R.id.button02,
-        R.id.button03,
-        R.id.button10,
-        R.id.button11,
-        R.id.button12,
-        R.id.button13,
-        R.id.button10,
-        R.id.button21,
-        R.id.button22,
-        R.id.button23,
-        R.id.button30,
-        R.id.button31,
-        R.id.button32,
-        R.id.button33
-    };
-
-    public VisualVerificationSteps() {
+    public BluetoothActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
     }
 
-
-    @Given("^I am viewing the visual verification activity$")
-    public void iHaveAVisualVerificationActivity() {
-        onView(withId(R.id.password)).perform(closeSoftKeyboard());
-        Intent intent = new Intent(getActivity(), VisualVerificationActivity.class);
+    @Given("^I have a BluetoothConnectionActivity and don't have an established connection$")
+    public void iHaveABluetoothConnectionActivityWithoutAConnection() {
+        Intent intent = new Intent(getActivity(), BluetoothConnectionActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
+
     }
 
-    @When("^I press button (\\d+)$")
-    public void iPressButton(final int button) {
-        int btn = this.buttons[button];
-        onView(withId(btn)).perform(click());
+    @When("^When I'm in the MainActivity and the connect button is pressed")
+    public void iPressConnect() {
+        assertTrue(true);
     }
 
-    @Then("^I leave the visual verification activity$")
-    public void iLeaveTheVisualVerificationActivity() {
-        assertNotEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
+    @Then("^$")
+    public void iShouldStartAConnection() {
+        assertTrue(true);
     }
 
 
@@ -87,5 +63,4 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
         }
         return activity[0];
     }
-
 }
