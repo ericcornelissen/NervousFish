@@ -4,21 +4,25 @@ import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * RSA variant of {@link IKey}.
  */
 public final class RSAKey implements IKey {
+    private static final long serialVersionUID = -5286281533321045061L;
 
     private final static String TYPE = ConstantKeywords.RSA_KEY;
     private final static String JSON_CONSTANT_EXPONENT = "exponent";
     private final static String JSON_CONSTANT_MODULUS = "modulus";
     private final static String JSON_CONSTANT_NAME = "name";
 
-    private final String exponent;
-    private final String modulus;
     private final String name;
+    private final String modulus;
+    private final String exponent;
 
     /**
      * Constructor for a RSA key.
@@ -48,36 +52,12 @@ public final class RSAKey implements IKey {
         }
     }
 
-    /**
-     * Get the exponent of an {@link RSAKey}.
-     *
-     * @param key An {@link RSAKey}.
-     * @return The value for the exponent attribute of the {@code key}.
-     * @throws Exception If the provided {@link IKey} is not a {@link RSAKey}.
-     */
-    public static String getExponent(final IKey key) throws IllegalArgumentException {
-        final String type = key.getType();
-        if (!type.equals(ConstantKeywords.RSA_KEY)) {
-            throw new IllegalArgumentException();
-        }
-
-        return ((RSAKey) key).exponent;
+    public String getExponent() {
+        return this.exponent;
     }
 
-    /**
-     * Get the modulus of an {@link RSAKey}.
-     *
-     * @param key An {@link RSAKey}.
-     * @return The value for the modulus attribute of the {@code key}.
-     * @throws Exception If the provided {@link IKey} is not a {@link RSAKey}.
-     */
-    public static String getModulus(final IKey key) throws IllegalArgumentException {
-        final String type = key.getType();
-        if (!type.equals(ConstantKeywords.RSA_KEY)) {
-            throw new IllegalArgumentException();
-        }
-
-        return ((RSAKey) key).modulus;
+    public String getModulus() {
+        return this.modulus;
     }
 
     /**
@@ -137,4 +117,39 @@ public final class RSAKey implements IKey {
         return this.name.hashCode() + this.modulus.hashCode() + this.exponent.hashCode();
     }
 
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -5286281533321045061L;
+        private final String name;
+        private final String modulus;
+        private final String exponent;
+
+        SerializationProxy(final RSAKey key) {
+            this.name = key.name;
+            this.modulus = key.modulus;
+            this.exponent = key.exponent;
+        }
+
+        private Object readResolve() {
+            return new RSAKey(this.name, this.modulus, this.exponent);
+        }
+    }
 }

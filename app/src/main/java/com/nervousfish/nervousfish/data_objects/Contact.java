@@ -1,7 +1,10 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import java.util.List;
  */
 public final class Contact implements Serializable {
 
+    private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
     private final List<IKey> keys = new ArrayList<IKey>();
 
@@ -71,4 +75,37 @@ public final class Contact implements Serializable {
         return this.name.hashCode() + this.keys.hashCode();
     }
 
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -4715364587956219157L;
+        private final String name;
+        private final IKey[] keys;
+
+        SerializationProxy(final Contact contact) {
+            this.name = contact.name;
+            this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
+        }
+
+        private Object readResolve() {
+            return new Contact(this.name, Arrays.asList(this.keys));
+        }
+    }
 }

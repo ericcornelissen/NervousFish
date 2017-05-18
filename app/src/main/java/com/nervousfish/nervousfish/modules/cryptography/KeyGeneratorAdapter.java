@@ -8,6 +8,9 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -19,7 +22,9 @@ import java.security.spec.RSAPublicKeySpec;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+    private static final long serialVersionUID = -5933759426888012276L;
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
+    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -30,6 +35,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     // This servicelocator will be used later on probably
     private KeyGeneratorAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
+        this.serviceLocator = serviceLocator;
     }
 
     /**
@@ -44,11 +50,9 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     }
 
     /**
-     * Generates a random KeyPair with the RSA algorithm.
-     *
-     * @return a randomly generated KeyPair
+     * {@inheritDoc}
      */
-    public static KeyPair generateRSAKeyPair(final String name) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public KeyPair generateRSAKeyPair(final String name) throws NoSuchAlgorithmException, InvalidKeySpecException {
         final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
 
@@ -63,5 +67,37 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final RSAKey rsaPrivateKey = new RSAKey(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
         return new KeyPair(name, rsaPublicKey, rsaPrivateKey);
+    }
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -5933759426888012276L;
+        private final IServiceLocator serviceLocator;
+
+        SerializationProxy(final KeyGeneratorAdapter keyGeneratorAdapter) {
+            this.serviceLocator = keyGeneratorAdapter.serviceLocator;
+        }
+
+        private Object readResolve() {
+            return new KeyGeneratorAdapter(this.serviceLocator);
+        }
     }
 }

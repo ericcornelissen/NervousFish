@@ -3,14 +3,17 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
  */
 public final class SimpleKey implements IKey {
-
-    private final static String TYPE = "simple";
+    private static final long serialVersionUID = -3865050366412869804L;
+    private static final String TYPE = "simple";
 
     private final String key;
     private final String name;
@@ -93,6 +96,41 @@ public final class SimpleKey implements IKey {
     @Override
     public int hashCode() {
         return this.key.hashCode() + this.name.hashCode();
+    }
+
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -3865050366412869804L;
+        private final String key;
+        private final String name;
+
+        SerializationProxy(final SimpleKey key) {
+            this.key = key.key;
+            this.name = key.name;
+        }
+
+        private Object readResolve() {
+            return new SimpleKey(this.key, this.name);
+        }
     }
 
 }
