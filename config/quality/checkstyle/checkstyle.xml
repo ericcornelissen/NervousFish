@@ -67,8 +67,8 @@
         </module>
         <module name="InnerAssignment" />
         <module name="MagicNumber" />
-        <!-- Conflicts with PMD. For experienced developers who know about hidden constructors PMD's way is more readable -->
         <module name="MissingCtor">
+            <!-- Conflicts with PMD. For experienced developers who know about hidden constructors PMD's way is more readable -->
             <property name="severity" value="ignore" />
         </module>
         <module name="MissingSwitchDefault" />

@@ -47,8 +47,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      * {@inheritDoc}
      */
     @Override
-    // final IKey key is actually useful here
-    @SuppressWarnings("PMD.AvoidFinalLocalVariable")
+    @SuppressWarnings("PMD.AvoidFinalLocalVariable")  // final IKey key is actually useful here
     public IKey read(final JsonReader reader) throws IOException {
         reader.beginArray();
         final String type = reader.nextString();

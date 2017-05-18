@@ -166,7 +166,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public List<Profile> getProfiles() throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         final Reader reader = this.fileSystem.getReader(this.profilesPath);
@@ -247,14 +248,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * Initialize the specified section in the database. This does nothing
      * if the specified section of the database already exists.
      */
-    private void initializeDatabase(final String databasePath) throws IOException {
-        final File file = new File(databasePath);
+    private void initializeDatabase(final String filePath) throws IOException {
+        final File file = new File(filePath);
         if (!file.exists()) {
-            LOGGER.warn("Part of the database didn't exist: " + databasePath);
-            final Writer writer = this.fileSystem.getWriter(databasePath);
+            LOGGER.warn("Part of the database didn't exist: " + filePath);
+            final Writer writer = this.fileSystem.getWriter(filePath);
             writer.write("[]");
             writer.close();
-            LOGGER.info("Created the part of the database: " + databasePath);
+            LOGGER.info("Created the part of the database: " + filePath);
         }
     }
 

@@ -44,7 +44,7 @@ public final class RSAKey implements IKey {
         this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
 
         if (this.name == null || this.modulus == null || this.exponent == null) {
-            throw new IllegalArgumentException("Couldn't find the name, modules and exponent in the map");
+            throw new IllegalArgumentException("Couldn't find the name, modulus or exponent in the map");
         }
     }
 

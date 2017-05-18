@@ -20,8 +20,7 @@ public final class ModuleWrapper<T extends IModule> {
         this.module = module;
     }
 
-    /* package */ T getModule() {
+    T getModule() {
         return this.module;
     }
-
 }

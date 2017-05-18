@@ -38,7 +38,7 @@ public final class SimpleKey implements IKey {
         this.key = map.get(KEYWORD_KEY);
 
         if (this.name == null || this.key == null) {
-            throw new IllegalArgumentException("Name and key could not be found in the map");
+            throw new IllegalArgumentException("Name or key could not be found in the map");
         }
     }
 
