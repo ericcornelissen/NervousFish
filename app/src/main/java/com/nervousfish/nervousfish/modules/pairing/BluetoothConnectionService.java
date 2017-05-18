@@ -12,7 +12,6 @@ import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
-import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +30,11 @@ import java.util.UUID;
 
 public final class BluetoothConnectionService extends APairingHandler implements IBluetoothHandler {
 
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
     // Constants that indicate the current connection state
     private static final int STATE_NONE = 0;       // we're doing nothing
     private static final int STATE_LISTEN = 1;     // now listening for incoming connections
     private static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    private static final int STATE_CONNECTED = 3;  // now connected to a remote device
     // Unique UUID for this application
     private static final UUID MY_UUID_SECURE =
             UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
@@ -55,7 +54,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private BluetoothConnectionService(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         mState = STATE_NONE;
-        EventBus.getDefault().post(new BluetoothDisconnectedEvent());
+        getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
     }
 
     /**
@@ -194,7 +193,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
 
             mState = STATE_NONE;
-            EventBus.getDefault().post(new BluetoothDisconnectedEvent());
+            getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
             updateUserInterfaceTitle();
         }
     }
@@ -234,7 +233,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void connectionFailed() {
 
         mState = STATE_NONE;
-        EventBus.getDefault().post(new BluetoothDisconnectedEvent());
+        getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
@@ -247,7 +246,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
     private void connectionLost() {
 
         mState = STATE_NONE;
-        EventBus.getDefault().post(new BluetoothDisconnectedEvent());
+        getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
@@ -288,7 +287,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
             serverSocket = tmp;
             mState = STATE_LISTEN;
-            EventBus.getDefault().post(new BluetoothListeningEvent());
+            getServiceLocator().postOnEventBus(new BluetoothListeningEvent());
         }
 
         public void run() {
@@ -370,7 +369,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;
-            EventBus.getDefault().post(new BluetoothConnectingEvent());
+            getServiceLocator().postOnEventBus(new BluetoothConnectingEvent());
         }
 
         public void run() {
@@ -442,7 +441,7 @@ public final class BluetoothConnectionService extends APairingHandler implements
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
             mState = STATE_CONNECTED;
-            EventBus.getDefault().post(new BluetoothConnectedEvent());
+            getServiceLocator().postOnEventBus(new BluetoothConnectedEvent());
         }
 
         public void run() {

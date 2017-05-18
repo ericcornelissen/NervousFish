@@ -147,6 +147,14 @@ final class ServiceLocator implements IServiceLocator {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void postOnEventBus(final Object object) {
+        EventBus.getDefault().post(object);
+    }
+
+    /**
      * Checks if the module is initialized and throws an error otherwise.
      *
      * @param object The object to check

@@ -22,6 +22,7 @@ abstract class APairingHandler implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
 
+    private final IServiceLocator serviceLocator;
     private final IDatabase database;
 
     /**
@@ -31,7 +32,8 @@ abstract class APairingHandler implements Serializable {
      */
     // This servicelocator will be used later on probably
     APairingHandler(final IServiceLocator serviceLocator) {
-        database = serviceLocator.getDatabase();
+        this.serviceLocator = serviceLocator;
+        this.database = serviceLocator.getDatabase();
     }
 
     /**
@@ -134,6 +136,10 @@ abstract class APairingHandler implements Serializable {
             return false;
         }
         return true;
+    }
+
+    IServiceLocator getServiceLocator() {
+        return this.serviceLocator;
     }
 
     /**
