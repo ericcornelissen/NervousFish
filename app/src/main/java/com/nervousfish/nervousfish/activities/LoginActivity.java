@@ -36,7 +36,7 @@ public final class LoginActivity extends Activity {
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
+        LOGGER.info("serviceLocator: " + this.serviceLocator);
 
         IDatabase database = this.serviceLocator.getDatabase();
         try {
@@ -44,7 +44,6 @@ public final class LoginActivity extends Activity {
         } catch (IOException e) {
             LOGGER.error("Failed to retrieve password from database", e);
         }
-
         LOGGER.info("LoginActivity created");
     }
 
@@ -56,9 +55,6 @@ public final class LoginActivity extends Activity {
 
         final View mError = findViewById(R.id.error);
         final EditText passwordInput = (EditText) findViewById(R.id.login_password_input);
-        if (passwordInput.getError() != null) {
-            mError.setVisibility(View.VISIBLE);
-        }
 
         final boolean skipPassword = passwordInput.getText().toString().isEmpty();
         if (skipPassword) {
@@ -68,6 +64,7 @@ public final class LoginActivity extends Activity {
         } else {
             final String providedPassword = passwordInput.getText().toString();
             final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
+            LOGGER.info("hoi " + this.actualPassword + " " + providedPassword);
             if (wrongPassword) {
                 LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);

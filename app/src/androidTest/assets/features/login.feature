@@ -9,9 +9,9 @@ Feature: Login
 
     Examples:
       | password  | should |
-      | 59505  | false |
-      | 12345  | true |
-      | 23235  | false |
+      | 59505     | false  |
+      | 12345     | true   |
+      | 23235     | false  |
 
   Scenario Outline: Check that wrong password gives error
       Given I have a LoginActivity
@@ -21,5 +21,5 @@ Feature: Login
 
       Examples:
         | password  |
-        | 75757  |
-        | 30572  |
+        | 75757     |
+        | 30572     |

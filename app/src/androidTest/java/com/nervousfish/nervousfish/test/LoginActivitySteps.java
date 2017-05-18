@@ -1,8 +1,9 @@
 package com.nervousfish.nervousfish.test;
 
-
 import android.app.Activity;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
@@ -14,13 +15,19 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
+import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 import cucumber.api.CucumberOptions;
+import cucumber.api.android.CucumberInstrumentation;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -33,29 +40,35 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
+
 @CucumberOptions(features = "features")
-public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class LoginActivitySteps extends ActivityInstrumentationTestCase2<LoginActivity> {
 
-    public LoginActivitySteps(EntryActivity activityClass) {
-        super(EntryActivity.class);
-    }
-    public LoginActivitySteps() {
-        super(EntryActivity.class);
+    private static final String CORRECT_PASSWORD = "12345";
+
+    public LoginActivitySteps(LoginActivity activityClass) throws IOException {
+        super(LoginActivity.class);
+
+        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+
+        IServiceLocator serviceLocator = mock(IServiceLocator.class, withSettings().serializable());
+        IDatabase database = mock(IDatabase.class, withSettings().serializable());
+        when(serviceLocator.getDatabase()).thenReturn(database);
+        when(database.getUserPassword()).thenReturn(CORRECT_PASSWORD);
+
+        Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        setActivityIntent(intent);
+
+        getActivity();
     }
 
-    private static Matcher<? super View> hasErrorText(final String expectedError) {
-        return new ErrorTextMatcher(expectedError);
-    }
-
-    @Given("^I have a LoginActivity")
+    @Given("^I have a LoginActivity$")
     public void iHaveALoginActivity() {
-        assertNotNull(getActivity());
-
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
-        getActivity().startActivity(intent);
-        assertTrue(getCurrentActivity() instanceof LoginActivity);
+        assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
     }
 
     @When("^I input password \"(.*?)\"$")
@@ -82,6 +95,11 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
         onView(withId(R.id.error)).check(matches(isDisplayed()));
     }
 
+    /* Helper methods */
+    private static Matcher<? super View> hasErrorText(final String expectedError) {
+        return new ErrorTextMatcher(expectedError);
+    }
+
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
         final Activity[] activity = new Activity[1];
@@ -99,11 +117,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
         return activity[0];
     }
 
-    /**
-     * Custom matcher to assert equal EditText.setError();
-     */
     private static class ErrorTextMatcher extends TypeSafeMatcher<View> {
-
         private final String mExpectedError;
 
         private ErrorTextMatcher(String expectedError) {
