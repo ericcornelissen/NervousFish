@@ -14,6 +14,8 @@ public final class Constants implements IConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private final static String DB_USERDATA_PATH = "/accountInformation.json";
     private final static String DB_CONTACTS_PATH = "/contacts.json";
+    private static final int QR_CODE_WIDTH = 400;
+    private static final int QR_CODE_HEIGHT = 400;
     private final String androidFilesDir;
 
     /**
@@ -51,6 +53,22 @@ public final class Constants implements IConstants {
     @Override
     public String getDatabaseUserdataPath() {
         return this.androidFilesDir + Constants.DB_USERDATA_PATH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getQRCodeWidth() {
+        return Constants.QR_CODE_WIDTH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getQRCodeHeight() {
+        return Constants.QR_CODE_HEIGHT;
     }
 
 }

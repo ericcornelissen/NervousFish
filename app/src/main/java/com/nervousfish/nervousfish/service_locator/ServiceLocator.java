@@ -16,13 +16,15 @@ import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
+import com.nervousfish.nervousfish.modules.util.AndroidUtils;
+import com.nervousfish.nervousfish.modules.util.IUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 /**
  * Manages all modules and provides access to them.
  */
-final class ServiceLocator implements IServiceLocator {
+public final class ServiceLocator implements IServiceLocator {
 
     private final String androidFilesDir;
     private final IDatabase database;
@@ -33,6 +35,7 @@ final class ServiceLocator implements IServiceLocator {
     private final IBluetoothHandler bluetoothHandler;
     private final INFCHandler nfcHandler;
     private final IQRHandler qrHandler;
+    private final IUtils utils;
 
     /**
      * Package-private constructor of the service locator
@@ -47,6 +50,7 @@ final class ServiceLocator implements IServiceLocator {
         this.bluetoothHandler = DummyBluetoothHandler.newInstance(this).get();
         this.nfcHandler = DummyNFCHandler.newInstance(this).get();
         this.qrHandler = DummyQRHandler.newInstance(this).get();
+        this.utils = AndroidUtils.newInstance(this).get();
     }
 
     /**
@@ -128,6 +132,15 @@ final class ServiceLocator implements IServiceLocator {
     public IQRHandler getQRHandler() {
         this.assertExists(this.qrHandler, "qrHandler");
         return this.qrHandler;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IUtils getUtils() {
+        this.assertExists(this.utils, "utils");
+        return this.utils;
     }
 
     /**
