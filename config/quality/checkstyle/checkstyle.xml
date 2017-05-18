@@ -216,7 +216,7 @@
         <module name="EmptyForIteratorPad" />
         <!-- Ignored because it costs a lot of time while it doesn't improve readability -->
         <module name="EmptyLineSeparator">
-            <property name="severity" value="ignore" />
+            <property name="tokens" value="PACKAGE_DEF, IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF" />
         </module>
         <module name="GenericWhitespace" />
         <module name="MethodParamPad" />

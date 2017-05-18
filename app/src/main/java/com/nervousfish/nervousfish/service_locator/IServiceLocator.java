@@ -18,13 +18,21 @@ import java.io.Serializable;
 public interface IServiceLocator extends Serializable {
 
     String getAndroidFilesDir();
+
     IDatabase getDatabase();
+
     IKeyGenerator getKeyGenerator();
+
     IEncryptor getEncryptor();
+
     IFileSystem getFileSystem();
+
     IConstants getConstants();
+
     IBluetoothHandler getBluetoothHandler();
+
     INfcHandler getNFCHandler();
+
     IQRHandler getQRHandler();
 
     /**

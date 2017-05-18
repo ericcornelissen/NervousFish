@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class LoginActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
+    private static final String DUMMY_PASS = "12345";
     private EditText mPassword;
     private View mError;
     private IServiceLocator serviceLocator;
@@ -62,8 +63,7 @@ public final class LoginActivity extends Activity {
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             startActivity(intent);
         } else {
-            final String dummyPass = "12345";
-            final boolean wrongPassword = !mPassword.getText().toString().equals(dummyPass);
+            final boolean wrongPassword = !mPassword.getText().toString().equals(DUMMY_PASS);
             if (wrongPassword) {
                 LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);
