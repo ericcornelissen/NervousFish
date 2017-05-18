@@ -31,10 +31,10 @@ import java.util.Hashtable;
 /**
  * Contains both the Android-specific util function as inherited cross-platform utils functions.
  */
-public class AndroidUtils extends AbstractUtils {
+public final class AndroidUtils extends AbstractUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
-    private final int qrcode_image_width;
-    private final int qrcode_image_height;
+    private final int qrcodeImageWidth;
+    private final int qrcodeImageHeight;
 
     /**
      * Prevents construction from outside the class.
@@ -45,8 +45,8 @@ public class AndroidUtils extends AbstractUtils {
     // This servicelocator will be used later on probably
     private AndroidUtils(final IServiceLocator serviceLocator) {
         final IConstants constants = serviceLocator.getConstants();
-        this.qrcode_image_width = constants.getQRCodeWidth();
-        this.qrcode_image_height = constants.getQRCodeHeight();
+        this.qrcodeImageWidth = constants.getQRCodeWidth();
+        this.qrcodeImageHeight = constants.getQRCodeHeight();
         LOGGER.info("Initialized");
     }
 
@@ -68,10 +68,10 @@ public class AndroidUtils extends AbstractUtils {
         final QRCodeWriter qrWriter = new QRCodeWriter();
         Bitmap bitmap = null;
         try {
-            final BitMatrix matrix = qrWriter.encode(publicKey, BarcodeFormat.QR_CODE, this.qrcode_image_width, this.qrcode_image_height);
-            bitmap = Bitmap.createBitmap(this.qrcode_image_width, this.qrcode_image_height, Bitmap.Config.RGB_565);
-            for (int x = 0; x < this.qrcode_image_width; x++) {
-                for (int y = 0; y < this.qrcode_image_height; y++) {
+            final BitMatrix matrix = qrWriter.encode(publicKey, BarcodeFormat.QR_CODE, this.qrcodeImageWidth, this.qrcodeImageHeight);
+            bitmap = Bitmap.createBitmap(this.qrcodeImageWidth, this.qrcodeImageHeight, Bitmap.Config.RGB_565);
+            for (int x = 0; x < this.qrcodeImageWidth; x++) {
+                for (int y = 0; y < this.qrcodeImageHeight; y++) {
                     final int color = (matrix.get(x, y) ? Color.BLACK : Color.WHITE);
                     bitmap.setPixel(x, y, color);
                 }

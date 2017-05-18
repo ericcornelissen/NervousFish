@@ -1,9 +1,6 @@
 package com.nervousfish.nervousfish.modules.util;
 
-import android.graphics.Bitmap;
-
 import com.nervousfish.nervousfish.modules.IModule;
-
 import java.io.InvalidClassException;
 
 /**
