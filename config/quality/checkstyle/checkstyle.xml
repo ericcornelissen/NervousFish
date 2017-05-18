@@ -100,10 +100,6 @@
         <!-- We suppress this warning because the Java creators themselves disagree on this one, for example in the newest JUnit 5 -->
         <module name="AvoidStaticImport" />
         <module name="IllegalImport" />
-        <!-- Suppressed because we don't have so many imports that this is necessary -->
-        <!-- <module name="ImportControl"/> -->
-        <!-- Suppressed because we don't have so many imports that this is necessary -->
-        <!-- <module name="ImportOrder"/> -->
         <module name="RedundantImport" />
         <module name="UnusedImports" />
 
