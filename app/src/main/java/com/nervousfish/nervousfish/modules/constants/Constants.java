@@ -80,7 +80,6 @@ public final class Constants implements IConstants {
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -2465684567600871939L;
         private final IServiceLocator serviceLocator;

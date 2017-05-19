@@ -23,12 +23,10 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private DummyQRHandler(final IServiceLocator serviceLocator) {
         super();
-        LOGGER.info("Initialized");
         this.serviceLocator = serviceLocator;
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -59,11 +57,10 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
+     * Represents the logical state of {@link DummyQRHandler} and copies the data from that class without
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1164062335787406761L;
         private final IServiceLocator serviceLocator;

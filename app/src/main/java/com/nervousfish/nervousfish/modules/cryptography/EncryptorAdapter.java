@@ -23,11 +23,9 @@ public final class EncryptorAdapter implements IEncryptor {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
-        LOGGER.info("Initialized");
         this.serviceLocator = serviceLocator;
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -61,7 +59,6 @@ public final class EncryptorAdapter implements IEncryptor {
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = 5930930748980177440L;
         private final IServiceLocator serviceLocator;

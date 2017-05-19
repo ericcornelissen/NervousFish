@@ -70,6 +70,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         } catch (final IOException e) {
             LOGGER.error("Failed to initialize database", e);
         }
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -326,7 +327,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -4101015873770268925L;
         private final IServiceLocator serviceLocator;

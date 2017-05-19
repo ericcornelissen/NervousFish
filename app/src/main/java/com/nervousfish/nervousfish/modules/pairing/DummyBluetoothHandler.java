@@ -23,12 +23,10 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private DummyBluetoothHandler(final IServiceLocator serviceLocator) {
         super();
-        LOGGER.info("Initialized");
         this.serviceLocator = serviceLocator;
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -63,7 +61,6 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -5120413770210148280L;
         private final IServiceLocator serviceLocator;

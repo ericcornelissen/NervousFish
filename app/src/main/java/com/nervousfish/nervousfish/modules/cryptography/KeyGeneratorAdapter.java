@@ -31,11 +31,9 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private KeyGeneratorAdapter(final IServiceLocator serviceLocator) {
-        LOGGER.info("Initialized");
         this.serviceLocator = serviceLocator;
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -89,7 +87,6 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -5933759426888012276L;
         private final IServiceLocator serviceLocator;

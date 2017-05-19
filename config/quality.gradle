@@ -44,11 +44,15 @@ task findbugs(type: FindBugs) {
     classpath = files()
 
     reports {
-        xml.enabled = false
-		xml.withMessages = true
-        html.enabled = !xml.isEnabled()
-        xml.destination "$reportsDir/findbugs/findbugs.xml"
-        html.destination "$reportsDir/findbugs/findbugs.html"
+        xml {
+            enabled = false
+            withMessages = true
+            destination "$reportsDir/findbugs/findbugs.xml"
+        }
+        html {
+            enabled = true
+            destination "$reportsDir/findbugs/findbugs.html"
+        }
     }
 }
 
