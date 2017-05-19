@@ -48,6 +48,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
+    private static final String NONE_FOUND = "none_found";
 
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
@@ -64,7 +65,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
-            if(!"none_found".equals(info)) {
+            if(!info.equals(NONE_FOUND)) {
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
                 LOGGER.info("Starting connection with" + address);
@@ -82,6 +83,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
         }
     };
+    @SuppressWarnings("PMD.SingularField")
     private IServiceLocator serviceLocator;
     private ArrayAdapter<String> newDevicesArrayAdapter;
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -247,7 +249,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
-        Intent discoverableIntent =
+        final Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);

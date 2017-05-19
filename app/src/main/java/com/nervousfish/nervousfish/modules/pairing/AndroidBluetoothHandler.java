@@ -5,12 +5,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
 import com.nervousfish.nervousfish.events.BluetoothDisconnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
-import com.nervousfish.nervousfish.events.ContactReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -450,8 +448,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                     final int bytes = mmInStream.read(buffer);
                     LOGGER.info(" Read " + bytes + " bytes");
 
-                    final Contact contact = saveContact(buffer);
-                    getServiceLocator().postOnEventBus(new ContactReceivedEvent(contact));
+                    saveContact(buffer);
+                    //getServiceLocator().postOnEventBus(new ContactReceivedEvent(contact));
                 } catch (final IOException e) {
                     LOGGER.warn("Disconnected from the paired device");
                     connectionLost();

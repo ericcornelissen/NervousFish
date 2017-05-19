@@ -110,12 +110,14 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
             contact = (Contact) ois.readObject();
         } catch (final ClassNotFoundException | IOException e) {
             LOGGER.error(" Couldn't start deserialization!");
-            throw new DeserializationException(" Couldn't start deserialization!");
+            e.printStackTrace();
+            throw new DeserializationException(" Couldn't start deserialization! description: " + e.toString());
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (final IOException e) {
+                    e.printStackTrace();
                     LOGGER.warn("Couldn't close the ByteArrayInputStream");
                 }
             }
@@ -123,21 +125,23 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
                 try {
                     ois.close();
                 } catch (final IOException e) {
+                    e.printStackTrace();
                     LOGGER.warn("Couldn't close the ObjectInputStream");
                 }
             }
         }
         try {
             LOGGER.info("Checking if the contact exists...");
-            if (!checkExists(contact)) {
+            if (checkExists(contact)) {
+                LOGGER.warn("Contact already existed...");
+            } else {
                 LOGGER.info("Adding contact to database...");
                 database.addContact(contact);
-            } else {
-                LOGGER.warn("Contact already existed...");
             }
         } catch (final IOException e) {
             LOGGER.warn("DB issued an error while saving contact");
-            throw new DatabaseException("DB issued an error while saving contact");
+            e.printStackTrace();
+            throw new DatabaseException("DB issued an error while saving contact description: " + e.toString());
         }
         return contact;
     }
