@@ -5,7 +5,7 @@ Feature: Login
     Given I have a LoginActivity
     When I input password "<password>"
     And I press submit button
-    Then I should continue to the MainActivity
+    Then I should stay in the LoginActivity
 
     Examples:
       | password |

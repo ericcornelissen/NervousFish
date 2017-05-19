@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.test;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
-import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import org.hamcrest.Description;
@@ -40,10 +38,6 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
         super(EntryActivity.class);
     }
 
-    private static Matcher<? super View> hasErrorText(final String expectedError) {
-        return new ErrorTextMatcher(expectedError);
-    }
-
     @Given("^I have a LoginActivity")
     public void iHaveALoginActivity() {
         assertNotNull(getActivity());
@@ -65,7 +59,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
     }
 
-    @Then("^I should continue to the MainActivity$")
+    @Then("^I should stay in the LoginActivity$")
     public void iShouldContinueToNextActivity() {
         assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
     }
@@ -119,4 +113,5 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
             description.appendText("with error: " + mExpectedError);
         }
     }
+
 }
