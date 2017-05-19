@@ -73,7 +73,10 @@
         </module>
         <module name="MissingSwitchDefault" />
         <module name="ModifiedControlVariable" />
-        <module name="MultipleStringLiterals" />
+        <module name="MultipleStringLiterals">
+            <!-- Ignore empty strings, ", " and line breaks -->
+            <property name="ignoreStringsRegexp" value='^(("\\n")|("")|(", "))$'/>
+        </module>
         <module name="MultipleVariableDeclarations" />
         <module name="NestedForDepth" />
         <module name="NestedIfDepth" />
@@ -85,7 +88,10 @@
         <module name="PackageDeclaration" />
         <module name="ParameterAssignment" />
         <module name="RequireThis" />
-        <module name="ReturnCount" />
+        <module name="ReturnCount">
+            <!-- 5 return statements are still comprehendable -->
+            <property name="max" value="5" />
+        </module>
         <module name="SimplifyBooleanExpression" />
         <module name="SimplifyBooleanReturn" />
         <module name="StringLiteralEquality" />
