@@ -52,14 +52,6 @@ public final class RSAKey implements IKey {
         }
     }
 
-    public String getExponent() {
-        return this.exponent;
-    }
-
-    public String getModulus() {
-        return this.modulus;
-    }
-
     /**
      * {@inheritDoc}
      */

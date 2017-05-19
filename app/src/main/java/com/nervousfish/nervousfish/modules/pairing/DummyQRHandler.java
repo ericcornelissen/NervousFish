@@ -16,7 +16,6 @@ import java.io.Serializable;
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
     private static final long serialVersionUID = -1164062335787406761L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
-    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -24,9 +23,16 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      * @param serviceLocator Can be used to get access to other modules
      */
     private DummyQRHandler(final IServiceLocator serviceLocator) {
-        super();
-        this.serviceLocator = serviceLocator;
+        super(serviceLocator);
         LOGGER.info("Initialized");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    void write(final byte[] buffer) {
+        //dummy
     }
 
     /**
@@ -69,7 +75,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
         private final IServiceLocator serviceLocator;
 
         SerializationProxy(final DummyQRHandler handler) {
-            this.serviceLocator = handler.serviceLocator;
+            this.serviceLocator = handler.getServiceLocator();
         }
 
         private Object readResolve() {

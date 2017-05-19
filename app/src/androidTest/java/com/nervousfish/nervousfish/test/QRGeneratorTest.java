@@ -3,17 +3,14 @@ package com.nervousfish.nervousfish.test;
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
-
-import com.nervousfish.nervousfish.QRGenerator;
+import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
-
+import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-@SuppressWarnings("PMD")
 public class QRGeneratorTest {
 
     private final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0" +
@@ -23,13 +20,9 @@ public class QRGeneratorTest {
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
 
-    // Tests if the decodes returns the same result after encoding a string.
     @Test
     public void testEncodeAsExpected() throws Exception{
-
         final Bitmap QRcode = QRGenerator.encode(publicKey);
-
-
         final String result = QRGenerator.decode(QRcode);
         assertEquals(publicKey, result);
     }
@@ -45,7 +38,5 @@ public class QRGeneratorTest {
         final Bitmap QRcode = QRGenerator.encode(publicKey);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }
-
-
 
 }

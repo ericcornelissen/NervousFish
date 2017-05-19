@@ -10,7 +10,7 @@ import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
-import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -49,7 +49,7 @@ final class ServiceLocator implements IServiceLocator {
         this.database = GsonDatabaseAdapter.newInstance(this).get();
         this.keyGenerator = KeyGeneratorAdapter.newInstance(this).get();
         this.encryptor = EncryptorAdapter.newInstance(this).get();
-        this.bluetoothHandler = DummyBluetoothHandler.newInstance(this).get();
+        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).get();
         this.nfcHandler = DummyNFCHandler.newInstance(this).get();
         this.qrHandler = DummyQRHandler.newInstance(this).get();
     }
@@ -165,6 +165,22 @@ final class ServiceLocator implements IServiceLocator {
     @Override
     public void registerToEventBus(final Object object) {
         EventBus.getDefault().register(object);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unregisterFromEventBus(final Object object) {
+        EventBus.getDefault().unregister(object);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void postOnEventBus(final Object object) {
+        EventBus.getDefault().post(object);
     }
 
     /**

@@ -16,7 +16,6 @@ import java.io.Serializable;
 public final class DummyNFCHandler extends APairingHandler implements INFCHandler {
     private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
-    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -24,9 +23,16 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
      * @param serviceLocator Can be used to get access to other modules
      */
     private DummyNFCHandler(final IServiceLocator serviceLocator) {
-        super();
-        this.serviceLocator = serviceLocator;
+        super(serviceLocator);
         LOGGER.info("Initialized");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    void write(final byte[] buffer) {
+        //dummy
     }
 
     /**
@@ -69,7 +75,7 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
         private final IServiceLocator serviceLocator;
 
         SerializationProxy(final DummyNFCHandler handler) {
-            this.serviceLocator = handler.serviceLocator;
+            this.serviceLocator = handler.getServiceLocator();
         }
 
         private Object readResolve() {
