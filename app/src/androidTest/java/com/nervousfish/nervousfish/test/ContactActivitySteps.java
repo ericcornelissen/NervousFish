@@ -40,9 +40,6 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
     public ContactActivitySteps() {
         super(EntryActivity.class);
     }
-    public ContactActivitySteps(EntryActivity activityClass) {
-        super(EntryActivity.class);
-    }
 
     private static Matcher<? super View> hasErrorText(final String expectedError) {
         return new ErrorTextMatcher(expectedError);

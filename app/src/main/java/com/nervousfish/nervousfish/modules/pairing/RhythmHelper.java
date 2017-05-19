@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.tap.AbstractTapData;
+import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.util.CircularList;
 
 import org.slf4j.Logger;
@@ -24,12 +25,20 @@ public final class RhythmHelper {
         this.slaveData = new CircularList<>(this.masterData.size());
     }
 
-    public void addSlaveData(final AbstractTapData data) {
+    /**
+     * Adds a single tap from the slave to the queue
+     * @param data The single tap
+     */
+    public void addSlaveData(final SingleTap data) {
         this.slaveData.add(data);
     }
 
-    public void setSlaveData(final List<AbstractTapData> data) {
-        for (final AbstractTapData elem : data) {
+    /**
+     * Adds an ordered ascending list by timestamp of taps from the slave to the queue
+     * @param data The list of taps
+     */
+    public void setSlaveData(final List<SingleTap> data) {
+        for (final SingleTap elem : data) {
             addSlaveData(elem);
         }
     }
@@ -59,7 +68,7 @@ public final class RhythmHelper {
             dist += Math.pow(difference, power);
         }
         dist /= masterData.size();
-        this.LOGGER.info("distance = " + Double.toString(dist));
+        LOGGER.info("distance = " + Double.toString(dist));
         return dist < threshold;
     }
 }

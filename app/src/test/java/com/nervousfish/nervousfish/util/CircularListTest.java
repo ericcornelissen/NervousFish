@@ -4,9 +4,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by jverb on 5/16/2017.
- */
 public class CircularListTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNoElements() throws Exception {
