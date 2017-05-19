@@ -63,11 +63,11 @@
                     android:src="@drawable/personplaceholder"
                     android:contentDescription="@string/contact_title" />
 
-                <TextView
-                    android:id="@+id/contact_name"
+                <EditText
+                    android:id="@+id/edit_contact_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/contact_name_margin"
+                    android:layout_height="match_parent"
+                    android:inputType="text"
                     android:text="@string/contact_title"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/contact_name_size"
