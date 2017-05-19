@@ -47,7 +47,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
     private final static String TEST_NAME = "TestPerson";
     private final static IKey TEST_KEY = new SimpleKey("my key", "key");
 
-    public ContactActivitySteps(EntryActivity activityClass) {
+    public ContactActivitySteps() {
         super(EntryActivity.class);
     }
 
