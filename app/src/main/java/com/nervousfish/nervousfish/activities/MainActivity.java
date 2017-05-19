@@ -128,7 +128,6 @@ public final class MainActivity extends AppCompatActivity {
         final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
         final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
         final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-        final Contact f = new Contact("Baas", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
         if (!database.getAllContacts().isEmpty()) {
             database.deleteContact(a);
             database.deleteContact(b);
@@ -137,10 +136,10 @@ public final class MainActivity extends AppCompatActivity {
             database.deleteContact(e);
         }
         database.addContact(f);
-//        database.addContact(b);
-//        database.addContact(c);
-//        database.addContact(d);
-//        database.addContact(e);
+        database.addContact(b);
+        database.addContact(c);
+        database.addContact(d);
+        database.addContact(e);
     }
 
 }
