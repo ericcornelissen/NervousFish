@@ -1,25 +1,23 @@
 package com.nervousfish.nervousfish.activities;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
-
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -66,8 +64,8 @@ public final class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(final View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                LOGGER.info("Bluetooth button clicked");
+                startBluetoothPairing();
             }
 
         });
@@ -108,6 +106,12 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
+    }
+
+    private void startBluetoothPairing() {
+        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        startActivity(intent);
     }
 
     /**
