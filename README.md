@@ -1,21 +1,7 @@
 # NervousFish
 [![Build Status](https://travis-ci.org/ericcornelissen/NervousFish.svg?branch=develop)](https://travis-ci.org/ericcornelissen/NervousFish)
 [![Coverage Status](https://coveralls.io/repos/github/ericcornelissen/NervousFish/badge.svg?branch=master)](https://coveralls.io/github/ericcornelissen/NervousFish?branch=master)
-
-## Waffle
 [![Sprint backlog](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=this%20week&title=Sprint%20backlog)](http://waffle.io/ericcornelissen/nervousfish)
-
-[![Ongoing user-stories](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=ongoing%20user%20stories&title=Ongoing%20user-stories)](http://waffle.io/ericcornelissen/nervousfish)
-
-[![Stories in Ready](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=ready&title=Ready)](http://waffle.io/ericcornelissen/nervousfish)
-
-[![Requirement testing](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=requirement%20testing&title=Requirement%20testing)](http://waffle.io/ericcornelissen/nervousfish)
-
-[![Unit testing](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=unit%20testing&title=Unit%20testing)](http://waffle.io/ericcornelissen/nervousfish)
-
-[![In Progress](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=in%20progress&title=In%20Progress)](http://waffle.io/ericcornelissen/nervousfish)
-
-[![Review](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=review&title=Review)](http://waffle.io/ericcornelissen/nervousfish)
 
 ## Nervous Fish :fish:
 
