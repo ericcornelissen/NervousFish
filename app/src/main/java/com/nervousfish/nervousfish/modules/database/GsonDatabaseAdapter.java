@@ -294,6 +294,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserPassword() throws IOException {
+        return null;
+    }
+
+    /**
      * Initialize the database.
      */
     private void initializeDatabase() throws IOException {

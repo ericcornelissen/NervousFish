@@ -90,4 +90,12 @@ public interface IDatabase extends IModule {
      * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
     void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException;
+
+    /**
+     * Get the password of the user.
+     *
+     * @throws IllegalArgumentException When user account is not in the database.
+     */
+    String getUserPassword() throws IOException;
+
 }
