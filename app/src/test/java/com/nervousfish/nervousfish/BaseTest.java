@@ -77,7 +77,6 @@ public final class BaseTest {
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException();
     }
 
     /**
