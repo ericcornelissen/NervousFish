@@ -1,7 +1,10 @@
 package com.nervousfish.nervousfish.test;
 
-import android.app.Activity;
+import android.app.*;
+import android.app.Instrumentation;
 import android.content.Intent;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -25,8 +28,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.app.Instrumentation.ActivityResult;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -40,7 +46,7 @@ public class LoginActivitySteps {
     private static final String CORRECT_PASSWORD = "12345";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class);
+    public IntentsTestRule<LoginActivity> mActivityRule = new IntentsTestRule<>(LoginActivity.class);
 
     @Before
     public void setUp() throws Exception {
@@ -51,6 +57,8 @@ public class LoginActivitySteps {
 
         Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        ActivityResult result = new ActivityResult(Activity.RESULT_OK, intent);
+        intending(anyIntent()).respondWith(result);
 
         mActivityRule.launchActivity(intent);
         mActivityRule.getActivity();
