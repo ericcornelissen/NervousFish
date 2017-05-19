@@ -15,6 +15,7 @@
     <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
     <string name="cancel">Cancel</string>
+
     <string name="yes_delete">Yes, delete it!</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -27,4 +28,7 @@
 
     <string name="edit_menu_item">Edit</string>
     <string name="delete_menu_item">Delete</string>
+
+    <string name="paired_devices">Paired devices</string>
+    <string name="discovered_devices">Discovered devices</string>
 </resources>
