@@ -37,7 +37,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     private Activity parent = null;
 
-    public ContactActivitySteps(EntryActivity activityClass) {
+    public ContactActivitySteps() {
         super(EntryActivity.class);
     }
 
