@@ -14,13 +14,13 @@ import java.util.List;
  */
 public final class RhythmHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmHelper");
-    private final List<AbstractTapData> masterData;
-    private final CircularList<AbstractTapData> slaveData;
+    private final List<SingleTap> masterData;
+    private final CircularList<SingleTap> slaveData;
 
     /**
      * Constructs a new RhythmHelper
      */
-    RhythmHelper(final List<AbstractTapData> masterData) {
+    RhythmHelper(final List<SingleTap> masterData) {
         this.masterData = masterData;
         this.slaveData = new CircularList<>(this.masterData.size());
     }
