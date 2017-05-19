@@ -12,8 +12,23 @@
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
 
-    <string name="delete_popup_you_sure">Are you sure?</string>
+    <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
     <string name="cancel">Cancel</string>
-    <string name="yes_delete">Yes,delete it!</string>
+
+    <string name="yes_delete">Yes, delete it!</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="change_contact_title">Change Contact</string>
+    <string name="go_back_changes_lost">Your changes will be lost</string>
+    <string name="yes_go_back">Yes, go back</string>
+
+    <string name="invalid_name">Invalid name entered</string>
+    <string name="invalid_name_explanation">The new name you entered is invalid, it can\'t be all whitespaces or empty.</string>
+
+    <string name="edit_menu_item">Edit</string>
+    <string name="delete_menu_item">Delete</string>
+
+    <string name="paired_devices">Paired devices</string>
+    <string name="discovered_devices">Discovered devices</string>
 </resources>

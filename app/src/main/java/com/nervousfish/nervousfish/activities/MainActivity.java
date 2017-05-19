@@ -1,25 +1,23 @@
 package com.nervousfish.nervousfish.activities;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
-
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -55,13 +53,6 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        try {
-            fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
 
@@ -73,8 +64,8 @@ public final class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(final View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                LOGGER.info("Bluetooth button clicked");
+                startBluetoothPairing();
             }
 
         });
@@ -84,7 +75,12 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         final ListView lv = (ListView) findViewById(R.id.listView);
-        lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        try {
+            fillDatabaseWithDemoData();
+            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+        } catch (final IOException e) {
+            LOGGER.error("Failed to retrieve contacts from database", e);
+        }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
@@ -112,37 +108,49 @@ public final class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
+    private void startBluetoothPairing() {
+        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        startActivity(intent);
+    }
+
     /**
      * Temporarily fill the database with demo data for development.
      */
     private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
-        try {
-            final Collection<IKey> keys = new ArrayList<>();
-            keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
-            keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
-            final Contact a = new Contact("Eric", keys);
-            final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
-            final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-            final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-            final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-            if (!database.getAllContacts().isEmpty()) {
-                database.deleteContact(a);
-                database.deleteContact(b);
-                database.deleteContact(c);
-                database.deleteContact(d);
-                database.deleteContact(e);
-            }
-            database.addContact(a);
-            database.addContact(b);
-            database.addContact(c);
-            database.addContact(d);
-            database.addContact(e);
-        } catch (final IOException e) {
-            e.printStackTrace();
+        final Collection<IKey> keys = new ArrayList<>();
+        keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
+        keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
+        final Contact a = new Contact("Eric", keys);
+        final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
+        final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+        final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+        final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+
+        final List<Contact> contacts = database.getAllContacts();
+        for (final Contact contact: contacts) {
+            database.deleteContact(contact.getName());
         }
+
+        database.addContact(a);
+        database.addContact(b);
+        database.addContact(c);
+        database.addContact(d);
+        database.addContact(e);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            final ListView lv = (ListView) findViewById(R.id.listView);
+            lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException");
+        }
+    }
 }
 
 /**
@@ -185,5 +193,4 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         return v;
     }
-
 }

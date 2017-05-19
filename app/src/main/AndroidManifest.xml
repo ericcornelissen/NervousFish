@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nervousfish.nervousfish"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.nervousfish.nervousfish">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -23,12 +27,21 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!-- This is an example Cucumber class that can be deleted safely after we're accustomed to using Cucumber -->
-        <activity android:name=".activities.LoginActivity" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/title_activity_contact" />
         <activity
             android:name=".activities.ContactActivity"
             android:label="@string/title_activity_contact"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.ChangeContactActivity"
+            android:label="@string/change_contact_title"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.VisualVerificationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.BluetoothConnectionActivity" />
     </application>
+
 
 </manifest>
