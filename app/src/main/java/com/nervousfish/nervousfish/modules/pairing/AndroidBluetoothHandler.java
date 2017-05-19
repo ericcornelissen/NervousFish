@@ -40,7 +40,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
-    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
+    private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
     private AcceptThread secureAcceptThread;
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
