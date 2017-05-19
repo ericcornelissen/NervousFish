@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.Serializable;
 
+
 /**
  * The interface for the standard Java representation of a (public/private) key.
  */
