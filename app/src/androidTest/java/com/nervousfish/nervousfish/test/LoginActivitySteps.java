@@ -60,7 +60,7 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
     }
 
     @Then("^I should stay in the LoginActivity$")
-    public void iShouldContinueToNextActivity() {
+    public void iShouldStayInLoginActivity() {
         assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
     }
 
