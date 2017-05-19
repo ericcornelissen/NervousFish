@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +23,7 @@ import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +68,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             if(!info.equals("none_found")) {
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
+                LOGGER.info("Starting connection with" + address);
                 bluetoothHandler.connect(device);
 
                 // Create the result Intent and include the MAC address
@@ -113,6 +114,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        EventBus.getDefault().register(this);
 
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -176,11 +179,12 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         enableBluetooth();
-        this.serviceLocator.registerToEventBus(this);
+        //this.serviceLocator.registerToEventBus(this);
         bluetoothHandler.start();
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
+        LOGGER.info("Started the service and started discovering");
     }
 
     /**
@@ -188,9 +192,9 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     public void onStop() {
+        LOGGER.info("Stopping from activity");
         super.onStop();
-        this.serviceLocator.unregisterFromEventBus(this);
-        bluetoothHandler.stop();
+        //bluetoothHandler.stop();
     }
 
     /**
@@ -224,6 +228,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         for (final BluetoothDevice device : pairedDevices) {
             pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
+        LOGGER.info("Pairing query done");
     }
 
     /**

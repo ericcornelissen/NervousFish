@@ -5,10 +5,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
 import com.nervousfish.nervousfish.events.BluetoothDisconnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
+import com.nervousfish.nervousfish.events.ContactReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -164,6 +166,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             // Start the thread to manage the connection and perform transmissions
             connectedThread = new ConnectedThread(socket);
             connectedThread.start();
+            getServiceLocator().postOnEventBus(new BluetoothConnectedEvent());
 
             updateUserInterfaceTitle();
         }
@@ -215,6 +218,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             ready = connectedThread;
         }
         // Perform the write unsynchronized
+        LOGGER.info("Write bytes : " + output);
         ready.write(output);
     }
 
@@ -305,6 +309,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
                                 // Situation normal. Start the connected thread.
+                                LOGGER.info("Start connecting with" + socket.getRemoteDevice().getName());
                                 connected(socket, socket.getRemoteDevice());
                                 break;
                             case STATE_NONE:
@@ -432,7 +437,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
             mState = STATE_CONNECTED;
-            getServiceLocator().postOnEventBus(new BluetoothConnectedEvent());
         }
 
         public void run() {
@@ -443,10 +447,11 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             while (mState == STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    mmInStream.read(buffer);
+                    int bytes = mmInStream.read(buffer);
+                    LOGGER.info(" Read " + bytes + " bytes");
 
-                    saveContact(buffer);
-
+                    final Contact contact = saveContact(buffer);
+                    getServiceLocator().postOnEventBus(new ContactReceivedEvent(contact));
                 } catch (final IOException e) {
                     LOGGER.warn("Disconnected from the paired device");
                     connectionLost();
@@ -461,6 +466,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
          * @param buffer The bytes to write
          */
         public void write(final byte[] buffer) {
+            LOGGER.info("Writing the bytes " + buffer + "to the outputstream");
             try {
                 mmOutStream.write(buffer);
             } catch (final IOException e) {
