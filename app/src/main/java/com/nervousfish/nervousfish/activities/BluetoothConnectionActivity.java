@@ -49,7 +49,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
 
-    // Device is now discoverable for 300 seconds
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> newDevices;
@@ -65,7 +64,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
 
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
-            if(!info.equals("none_found")) {
+            if(!"none_found".equals(info)) {
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
                 LOGGER.info("Starting connection with" + address);
@@ -248,6 +247,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
+        Intent discoverableIntent =
+                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
         bluetoothAdapter.startDiscovery();
     }
 

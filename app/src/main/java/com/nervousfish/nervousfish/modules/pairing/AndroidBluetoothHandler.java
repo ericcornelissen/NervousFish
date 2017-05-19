@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -140,8 +141,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * {@inheritDoc}
      */
     @Override
-    public void connected(final BluetoothSocket socket, final BluetoothDevice
-            device) {
+    public void connected(final BluetoothSocket socket, final BluetoothDevice device) {
         LOGGER.info("Connected Bluetooth thread started");
 
         synchronized (this) {
@@ -218,7 +218,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             ready = connectedThread;
         }
         // Perform the write unsynchronized
-        LOGGER.info("Write bytes : " + output);
+        LOGGER.info("Write bytes : " + Arrays.toString(output));
         ready.write(output);
     }
 
@@ -447,7 +447,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             while (mState == STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    int bytes = mmInStream.read(buffer);
+                    final int bytes = mmInStream.read(buffer);
                     LOGGER.info(" Read " + bytes + " bytes");
 
                     final Contact contact = saveContact(buffer);
@@ -466,7 +466,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
          * @param buffer The bytes to write
          */
         public void write(final byte[] buffer) {
-            LOGGER.info("Writing the bytes " + buffer + "to the outputstream");
+            LOGGER.info("Writing the bytes " + Arrays.toString(buffer) + "to the outputstream");
             try {
                 mmOutStream.write(buffer);
             } catch (final IOException e) {

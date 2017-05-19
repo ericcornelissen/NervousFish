@@ -138,11 +138,11 @@ public final class MainActivity extends AppCompatActivity {
         for (final Contact contact:database.getAllContacts()) {
             database.deleteContact(contact);
         }
-        //database.addContact(a);
+        database.addContact(a);
         database.addContact(b);
-        /*database.addContact(c);
+        database.addContact(c);
         database.addContact(d);
-        database.addContact(e);*/
+        database.addContact(e);
     }
 
     @Override
@@ -161,8 +161,14 @@ public final class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEvent(final ContactReceivedEvent event) {
-        contacts.add(event.getContact());
-        listviewAdapter.notifyDataSetChanged();
+/*        try {
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            final ListView lv = (ListView) findViewById(R.id.listView);
+            listviewAdapter.notifyDataSetChanged();
+            lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException");
+        }*/
     }
 }
 
