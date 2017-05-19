@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.data_objects.tap.AbstractTapData;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 
 import org.junit.Test;
@@ -14,7 +13,7 @@ import static org.junit.Assert.*;
 public class RhythmHelperTest {
     @Test
     public void testSingleMatchByAdd() throws Exception {
-        List<AbstractTapData> masterData = new ArrayList<>();
+        List<SingleTap> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         final RhythmHelper helper = new RhythmHelper(masterData);
 
@@ -36,7 +35,7 @@ public class RhythmHelperTest {
 
     @Test
     public void testFiveMatchByAdd() throws Exception {
-        List<AbstractTapData> masterData = new ArrayList<>();
+        List<SingleTap> masterData = new ArrayList<>();
         masterData.add(new SingleTap(new Timestamp(0L)));
         masterData.add(new SingleTap(new Timestamp(20L)));
         masterData.add(new SingleTap(new Timestamp(40L)));
