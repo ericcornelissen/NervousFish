@@ -5,13 +5,12 @@ Feature: Login
     Given I have a LoginActivity
     When I input password "<password>"
     And I press submit button
-    Then I <should> continue to the MainActivity
+    Then I should stay in the LoginActivity
 
     Examples:
-      | password  | should |
-      | 59505  | false |
-      | 12345  | true |
-      | 23235  | false |
+      | password |
+      | 59505    |
+      | 23235    |
 
   Scenario Outline: Check that wrong password gives error
       Given I have a LoginActivity
@@ -20,6 +19,6 @@ Feature: Login
       Then I should see an auth error
 
       Examples:
-        | password  |
-        | 75757  |
-        | 30572  |
+        | password |
+        | 75757    |
+        | 30572    |
