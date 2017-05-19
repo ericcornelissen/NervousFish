@@ -53,9 +53,9 @@ public final class RSAKey implements IKey {
      *
      * @param key An {@link RSAKey}.
      * @return The value for the exponent attribute of the {@code key}.
-     * @throws Exception If the provided {@link IKey} is not a {@link RSAKey}.
+     * @throws IllegalArgumentException If the provided {@link IKey} is not a {@link RSAKey}.
      */
-    public static String getExponent(final IKey key) throws IllegalArgumentException {
+    static String getExponent(final IKey key) throws IllegalArgumentException {
         final String type = key.getType();
         if (!type.equals(ConstantKeywords.RSA_KEY)) {
             throw new IllegalArgumentException();
@@ -69,9 +69,9 @@ public final class RSAKey implements IKey {
      *
      * @param key An {@link RSAKey}.
      * @return The value for the modulus attribute of the {@code key}.
-     * @throws Exception If the provided {@link IKey} is not a {@link RSAKey}.
+     * @throws IllegalArgumentException If the provided {@link IKey} is not a {@link RSAKey}.
      */
-    public static String getModulus(final IKey key) throws IllegalArgumentException {
+    static String getModulus(final IKey key) throws IllegalArgumentException {
         final String type = key.getType();
         if (!type.equals(ConstantKeywords.RSA_KEY)) {
             throw new IllegalArgumentException();

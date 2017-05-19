@@ -33,6 +33,10 @@ public final class WaitForSlaveActivity extends Activity {
         LOGGER.info("WaitForSlaveActivity created");
     }
 
+    /**
+     * Can be called by a button to cancel the pairing
+     * @param view The view that called this method
+     */
     public void cancelWaitingForSlave(final View view) {
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);

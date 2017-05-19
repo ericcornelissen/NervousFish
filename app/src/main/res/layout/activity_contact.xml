@@ -49,7 +49,9 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                app:srcCompat="@android:drawable/ic_menu_delete" />
+                app:srcCompat="@android:drawable/ic_menu_delete"
+                android:contentDescription="@string/delete"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

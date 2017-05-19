@@ -19,7 +19,6 @@ import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
-import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
