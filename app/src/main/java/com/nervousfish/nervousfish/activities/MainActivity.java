@@ -135,7 +135,7 @@ public final class MainActivity extends AppCompatActivity {
             database.deleteContact(d);
             database.deleteContact(e);
         }
-        database.addContact(f);
+        database.addContact(a);
         database.addContact(b);
         database.addContact(c);
         database.addContact(d);
