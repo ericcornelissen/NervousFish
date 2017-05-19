@@ -86,7 +86,10 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
      * Used for the Serialization Proxy Pattern.
+     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
+     * ordinary serialization - is far more dangerous
      */
+    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -5933759426888012276L;
         private final IServiceLocator serviceLocator;
