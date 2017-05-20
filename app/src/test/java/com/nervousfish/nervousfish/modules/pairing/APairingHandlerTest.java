@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +27,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class APairingHandlerTest {
-    private class PairingHandler extends APairingHandler {
+public class APairingHandlerTest implements Serializable {
+    private static final long serialVersionUID = -674831556056079552L;
+
+    private static class PairingHandler extends APairingHandler {
         private static final long serialVersionUID = 1767816444273833493L;
         byte[] myBuffer;
 

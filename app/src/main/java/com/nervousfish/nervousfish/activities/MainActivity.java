@@ -120,7 +120,7 @@ public final class MainActivity extends AppCompatActivity {
      * Temporarily fill the database with demo data for development.
      */
     private void fillDatabaseWithDemoData() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         final Collection<IKey> keys = new ArrayList<>();
         keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
         keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
@@ -129,18 +129,29 @@ public final class MainActivity extends AppCompatActivity {
         final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
         final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
         final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-        if (!database.getAllContacts().isEmpty()) {
-            database.deleteContact(a);
-            database.deleteContact(b);
-            database.deleteContact(c);
-            database.deleteContact(d);
-            database.deleteContact(e);
+
+        final List<Contact> contacts = database.getAllContacts();
+        for (final Contact contact: contacts) {
+            database.deleteContact(contact.getName());
         }
+
         database.addContact(a);
         database.addContact(b);
         database.addContact(c);
         database.addContact(d);
         database.addContact(e);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            final List<Contact> contacts = serviceLocator.getDatabase().getAllContacts();
+            final ListView lv = (ListView) findViewById(R.id.listView);
+            lv.setAdapter(new ContactListAdapter(this, contacts));
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException");
+        }
     }
 
     /**
