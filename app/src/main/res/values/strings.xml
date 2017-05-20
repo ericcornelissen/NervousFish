@@ -34,4 +34,6 @@
 
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>
+    <string name="show_options">Show options</string>
+    <string name="save">save</string>
 </resources>

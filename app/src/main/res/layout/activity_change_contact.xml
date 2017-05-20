@@ -9,7 +9,7 @@
     tools:context="com.nervousfish.nervousfish.activities.ContactActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/app_bar_change_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/backButtonChange"
+                android:id="@+id/btn_back_change_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -32,7 +32,6 @@
                 tools:targetApi="lollipop" />
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -43,14 +42,16 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/saveContactButton"
+                android:id="@+id/btn_save_change_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:onClick="saveContact"
-                app:srcCompat="@android:drawable/ic_menu_save" />
+                app:srcCompat="@android:drawable/ic_menu_save"
+                tools:targetApi="lollipop"
+                android:contentDescription="@string/save" />
 
         </LinearLayout>
 
@@ -70,7 +71,6 @@
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <ImageView
-                    android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/contact_title"
@@ -78,7 +78,6 @@
                     android:src="@drawable/seabackflipped" />
 
                 <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -99,7 +98,7 @@
                         android:src="@drawable/personplaceholder" />
 
                     <EditText
-                        android:id="@+id/edit_contact_name"
+                        android:id="@+id/edit_contact_name_change_contact"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:inputType="text"
@@ -125,7 +124,6 @@
                 android:orientation="vertical">
 
                 <ListView
-                    android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_keys_list_height"
                     android:layout_marginTop="@dimen/contact_keys_list_margin_top" />

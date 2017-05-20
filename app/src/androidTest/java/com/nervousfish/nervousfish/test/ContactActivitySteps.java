@@ -76,12 +76,12 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     @When("^I press the back arrow$")
     public void iPressBackArrow() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.btn_back_change_contact)).perform(click());
     }
 
     @When("^I press the menu$")
     public void iPressMenu() {
-        onView(withId(R.id.edit_menu_button)).perform(click());
+        onView(withId(R.id.btn_menu_contact)).perform(click());
     }
 
     @When("^I press delete$")
