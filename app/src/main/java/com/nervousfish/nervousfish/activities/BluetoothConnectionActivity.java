@@ -159,10 +159,9 @@ public class BluetoothConnectionActivity extends Activity {
      */
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         unregisterReceiver(this.broadcastReceiver);
         this.bluetoothAdapter = null;
+        super.onDestroy();
     }
 
     /**
@@ -184,9 +183,9 @@ public class BluetoothConnectionActivity extends Activity {
      */
     @Override
     public void onStop() {
-        super.onStop();
         this.serviceLocator.unregisterFromEventBus(this);
         bluetoothHandler.stop();
+        super.onStop();
     }
 
     /**
