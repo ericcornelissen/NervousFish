@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * An handler doing nothing.
@@ -30,14 +29,6 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    void write(final byte[] buffer) {
-        //dummy
-    }
-
-    /**
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
      * {@link IServiceLocator}
      *
@@ -49,7 +40,16 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    void write(final byte[] buffer) {
+        //dummy
+    }
+
+    /**
      * Deserialize the instance using readObject to ensure invariants and security.
+     *
      * @param stream The serialized object to be deserialized
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
@@ -59,6 +59,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
 
     /**
      * Used to improve performance / efficiency
+     *
      * @param stream The stream to which this object should be serialized to
      */
     private void writeObject(final ObjectOutputStream stream) throws IOException {
@@ -67,9 +68,10 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
 
     /**
      * Ensure that the instance meets its class invariant
+     *
      * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-
+        // No checks to perform
     }
 }

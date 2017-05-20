@@ -104,7 +104,9 @@
         <!-- See http://checkstyle.sourceforge.net/config_import.html -->
         <module name="AvoidStarImport" />
         <!-- We suppress this warning because the Java creators themselves disagree on this one, for example in the newest JUnit 5 -->
-        <module name="AvoidStaticImport" />
+        <module name="AvoidStaticImport">
+            <property name="severity" value="ignore" />
+        </module>
         <module name="IllegalImport" />
         <module name="RedundantImport" />
         <module name="UnusedImports" />

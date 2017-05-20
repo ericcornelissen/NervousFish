@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * An adapter to the default Java class for encrypting messages
@@ -24,6 +23,8 @@ public final class EncryptorAdapter implements IEncryptor {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
     }
@@ -41,6 +42,7 @@ public final class EncryptorAdapter implements IEncryptor {
 
     /**
      * Deserialize the instance using readObject to ensure invariants and security.
+     *
      * @param stream The serialized object to be deserialized
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
@@ -50,6 +52,7 @@ public final class EncryptorAdapter implements IEncryptor {
 
     /**
      * Used to improve performance / efficiency
+     *
      * @param stream The stream to which this object should be serialized to
      */
     private void writeObject(final ObjectOutputStream stream) throws IOException {
@@ -58,9 +61,10 @@ public final class EncryptorAdapter implements IEncryptor {
 
     /**
      * Ensure that the instance meets its class invariant
+     *
      * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-
+        // No checks to perform
     }
 }

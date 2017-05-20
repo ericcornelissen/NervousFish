@@ -131,7 +131,7 @@ public class GsonDatabaseAdapterTest {
         assertEquals("[]\n", read(CONTACTS_PATH));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDeleteContactThrowsWhenContactNotInDatabase() throws IOException {
         IKey key = new SimpleKey("Webserver", "key");
         Contact contact = new Contact("Zoidberg", key);

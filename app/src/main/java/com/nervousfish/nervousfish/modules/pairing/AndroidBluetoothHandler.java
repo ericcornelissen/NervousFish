@@ -18,13 +18,14 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * This Bluetooth service class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "PMD.NullAssignment", "PMD.AvoidFinalLocalVariable"})
+@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "PMD.NullAssignment", "PMD.TooManyMethods"})
 // 1) A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
 // 2) Suggested use by Android Bluetooth Manual
 // 3) explained where used
@@ -162,13 +163,14 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                 return;
             }
             ready = connectedThread;
+            assertNotNull(connectedThread);
+            ready.write(output);
         }
-        // Perform the write unsynchronized
-        ready.write(output);
     }
 
     /**
      * Called by the eventbus when the device connected with another Bluetooth device
+     *
      * @param event Data about the event
      */
     @Subscribe
@@ -204,6 +206,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
     /**
      * Called by the eventbus when Bluetooth connection with another device failed.
+     *
      * @param event Data about the event
      */
     @Subscribe
@@ -220,6 +223,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
     /**
      * Called by the eventbus when the connection with another Bluetooth device is lost.
+     *
      * @param event Datab about the event
      */
     @Subscribe
@@ -236,6 +240,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
     /**
      * Deserialize the instance using readObject to ensure invariants and security.
+     *
      * @param stream The serialized object to be deserialized
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
@@ -245,6 +250,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
     /**
      * Used to improve performance / efficiency
+     *
      * @param stream The stream to which this object should be serialized to
      */
     private void writeObject(final ObjectOutputStream stream) throws IOException {
@@ -253,9 +259,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
     /**
      * Ensure that the instance meets its class invariant
+     *
      * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-
+        // No checks to perform
     }
 }

@@ -36,6 +36,8 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
     }
@@ -96,6 +98,6 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-
+        // No checks to perform
     }
 }
