@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -117,7 +116,7 @@ public final class ChangeContactActivity extends Activity {
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        if(isValidName(editText.getText().toString())) {
+        if (isValidName(editText.getText().toString())) {
             //Update contact
             try {
                 final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
