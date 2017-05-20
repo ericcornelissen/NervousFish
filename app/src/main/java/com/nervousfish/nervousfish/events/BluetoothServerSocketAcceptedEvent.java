@@ -5,16 +5,16 @@ import android.bluetooth.BluetoothSocket;
 /**
  * Greenrobot's EventBus message event
  *
- * Sent when the device successfully paired with a Bluetooth device
+ * Sent when the request from the bluetooth server to pair is accepted
  */
-public final class BluetoothConnectedEvent {
+public final class BluetoothServerSocketAcceptedEvent {
     private final BluetoothSocket socket;
 
     /**
-     * Constructs a new BluetoothConnectedEvent
+     * Constructs a new BluetoothServerSocketAcceptedEvent
      * @param socket The socket to the server
      */
-    public BluetoothConnectedEvent(final BluetoothSocket socket) {
+    public BluetoothServerSocketAcceptedEvent(final BluetoothSocket socket) {
         this.socket = socket;
     }
 

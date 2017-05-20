@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Class implementing the main constants for the application.
@@ -19,6 +20,10 @@ public final class Constants implements IConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private static final String DB_USERDATA_PATH = "/accountInformation.json";
     private static final String DB_CONTACTS_PATH = "/contacts.json";
+    // Unique secure uuid for this application
+    private static final UUID MY_UUID = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
+    // Name for the SDP record when creating server socket
+    private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
     private final IServiceLocator serviceLocator;
     private final transient String androidFilesDir;
 
@@ -58,6 +63,22 @@ public final class Constants implements IConstants {
     @Override
     public String getDatabaseUserdataPath() {
         return this.androidFilesDir + Constants.DB_USERDATA_PATH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UUID getUUID() {
+        return MY_UUID;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getSDPRecord() {
+        return NAME_SDP_RECORD;
     }
 
     /**

@@ -21,6 +21,7 @@ import java.util.List;
 abstract class APairingHandler implements IPairingHandler, Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
+    private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
     private final IDatabase database;
@@ -135,7 +136,7 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
         return true;
     }
 
-    IServiceLocator getServiceLocator() {
+    protected IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }
 
