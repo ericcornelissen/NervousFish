@@ -118,7 +118,9 @@ public final class MainActivity extends AppCompatActivity {
 
     /**
      * Temporarily fill the database with demo data for development.
+     * Checkstyle is disabled, because this method is only temporarily
      */
+    @SuppressWarnings("checkstyle:multipleStringLiterals")
     private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
         final Collection<IKey> keys = new ArrayList<>();

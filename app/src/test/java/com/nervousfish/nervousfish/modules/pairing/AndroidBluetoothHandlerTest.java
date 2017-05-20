@@ -44,7 +44,10 @@ public class AndroidBluetoothHandlerTest {
         }
 
         this.bConService = (AndroidBluetoothHandler) accessConstructor(AndroidBluetoothHandler.class, serviceLocator);
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
     }
 
     /*
@@ -92,6 +95,7 @@ public class AndroidBluetoothHandlerTest {
         assertNull(getField(bConService, "connectedThread"));
     }
 
+<<<<<<< HEAD
     @Test
     public void writeNotConnectedTest() throws Exception {
         setField(bConService, "mState", AndroidBluetoothHandler.State.STATE_NONE); //not connected
@@ -108,6 +112,8 @@ public class AndroidBluetoothHandlerTest {
         // bluetoothServiceConnection is final
     }
 
+=======
+>>>>>>> develop
     @Test(expected = NullPointerException.class)
     public void threadStartConnectConnectedTest() {
         ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(uncaughtExceptionHandler);

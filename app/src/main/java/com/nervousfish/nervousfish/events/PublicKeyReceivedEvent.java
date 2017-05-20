@@ -5,7 +5,7 @@ package com.nervousfish.nervousfish.events;
  *
  * Sent when the a new public key is received
  */
-public class PublicKeyReceivedEvent {
+public final class PublicKeyReceivedEvent {
     private final String key;
 
     /**

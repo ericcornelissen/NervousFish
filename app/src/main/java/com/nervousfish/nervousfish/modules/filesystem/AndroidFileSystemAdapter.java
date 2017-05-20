@@ -6,13 +6,27 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.Writer;
+
 
 /**
  * An adapter to the default Android file system
  */
+// We suppress this warning because this class is by nature tightly coupled to the Java filesystem, which has a lot of separate classes unfortunately
+@SuppressWarnings("checkstyle:classdataabstractioncoupling")
 public final class AndroidFileSystemAdapter implements IFileSystem {
     private static final long serialVersionUID = 1937542180968231197L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
@@ -39,7 +53,6 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
         return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocator));
     }
 
-
     /**
      * Serialize the created proxy instead of this instance.
      */
@@ -53,6 +66,26 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
         throw new InvalidObjectException("Proxy required.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Writer getWriter(final String path) throws IOException {
+        final OutputStream outputStream = new FileOutputStream(path);
+        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, java.nio.charset.StandardCharsets.UTF_8);
+        return new BufferedWriter(outputStreamWriter);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Reader getReader(final String path) throws IOException {
+        final InputStream inputStream = new FileInputStream(path);
+        final InputStreamReader outputStreamReader = new InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8);
+        return new BufferedReader(outputStreamReader);
     }
 
     /**

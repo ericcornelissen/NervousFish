@@ -13,7 +13,7 @@ import java.io.Serializable;
 /**
  * An handler doing nothing.
  */
-public final class DummyNFCHandler extends APairingHandler implements INFCHandler {
+public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
     private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
 

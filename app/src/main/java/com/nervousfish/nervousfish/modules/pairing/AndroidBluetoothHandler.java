@@ -23,11 +23,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.UUID;
 
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.State.STATE_CONNECTED;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.State.STATE_CONNECTING;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.State.STATE_LISTEN;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.State.STATE_NONE;
-
 /**
  * This Bluetooth service class establishes and manages a bluetooth connection.
  */
@@ -38,19 +33,22 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandle
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = 7340362791131903553L;
 
+    /**
+     * A type safe enumeration to denote the current state of the bluetooth connection
+     */
     enum State { STATE_NONE, STATE_LISTEN, STATE_CONNECTING, STATE_CONNECTED }
 
     // Unique UUID for this application
-    private static final UUID MY_UUID_SECURE =
-            UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
+    private static final UUID MY_UUID_SECURE = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
+    private static final String CONNECTION_FAILED = "Connection failed";
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
+    private static final int BUFFER_SIZE_IN_BYTES = 1024;
     private transient AcceptThread secureAcceptThread;
     private transient ConnectThread connectThread;
     private transient ConnectedThread connectedThread;
     private State mState;
-
     /**
      * Constructor for the Bluetooth service which manages the connection.
      *
@@ -59,7 +57,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         synchronized (this) {
-            mState = STATE_NONE;
+            mState = State.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
         }
     }
@@ -103,7 +101,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -113,7 +110,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
-            if (mState == STATE_CONNECTING && connectThread != null) {
+            if (mState == State.STATE_CONNECTING && connectThread != null) {
                 connectThread.cancel();
                 connectThread = null;
             }
@@ -185,7 +182,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                 secureAcceptThread = null;
             }
 
-            mState = STATE_NONE;
+            mState = State.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
         }
     }
@@ -202,7 +199,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         final ConnectedThread ready;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) {
+            if (mState != State.STATE_CONNECTED) {
                 return;
             }
             ready = connectedThread;
@@ -216,7 +213,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private void connectionFailed() {
         synchronized (this) {
-            mState = STATE_NONE;
+            mState = State.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
 
             // Start the service over to restart listening mode
@@ -229,7 +226,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private void connectionLost() {
         synchronized (this) {
-            mState = STATE_NONE;
+            mState = State.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
 
             // Start the service over to restart listening mode
@@ -297,20 +294,20 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
                 }
                 serverSocket = tmp;
-                mState = STATE_LISTEN;
+                mState = AndroidBluetoothHandler.State.STATE_LISTEN;
                 getServiceLocator().postOnEventBus(new BluetoothListeningEvent());
             }
         }
 
         public void run() {
             LOGGER.info("Start listening on a rfcomm channel");
-            setName("AcceptThread" + "Secure");
+            setName("AcceptThreadSecure");
 
             BluetoothSocket socket;
 
             synchronized (AndroidBluetoothHandler.this) {
                 // Listen to the server socket if we're not connected
-                while (mState != STATE_CONNECTED) {
+                while (mState != AndroidBluetoothHandler.State.STATE_CONNECTED) {
                     try {
                         // This is a blocking call and will only return on a
                         // successful connection or an exception
@@ -371,7 +368,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             this.device = device;
             BluetoothSocket tmp = null;
 
-
             synchronized (AndroidBluetoothHandler.this) {
                 // Get a BluetoothSocket for a connection with the
                 // given BluetoothDevice
@@ -379,10 +375,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                     tmp = device.createRfcommSocketToServiceRecord(
                             MY_UUID_SECURE);
                 } catch (final IOException e) {
-                    LOGGER.error("Connection failed");
+                    LOGGER.error(CONNECTION_FAILED);
                 }
                 socket = tmp;
-                mState = STATE_CONNECTING;
+                mState = AndroidBluetoothHandler.State.STATE_CONNECTING;
                 getServiceLocator().postOnEventBus(new BluetoothConnectingEvent());
             }
         }
@@ -400,10 +396,9 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                 // successful connection or an exception
                 socket.connect();
             } catch (final IOException e) {
-                // Close the socket
                 try {
                     socket.close();
-                } catch (final IOException e2) {
+                } catch (final IOException eclose) {
                     LOGGER.error("Connection failed/couldn't close the socket");
                 }
                 connectionFailed();
@@ -453,21 +448,20 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                 } catch (final IOException e) {
                     LOGGER.error("Failed to create a temp socket");
                 }
-
                 inputStream = tmpIn;
                 outputStream = tmpOut;
-                mState = STATE_CONNECTED;
+                mState = AndroidBluetoothHandler.State.STATE_CONNECTED;
                 getServiceLocator().postOnEventBus(new BluetoothConnectedEvent());
             }
         }
 
         public void run() {
             LOGGER.info("Connected Bluetooth thread begin");
-            final byte[] buffer = new byte[1024];
+            final byte[] buffer = new byte[BUFFER_SIZE_IN_BYTES];
 
             // Keep listening to the InputStream while connected
             synchronized (AndroidBluetoothHandler.this) {
-                while (mState == STATE_CONNECTED) {
+                while (mState == AndroidBluetoothHandler.State.STATE_CONNECTED) {
                     try {
                         // Read from the InputStream
                         final int size = inputStream.read(buffer);

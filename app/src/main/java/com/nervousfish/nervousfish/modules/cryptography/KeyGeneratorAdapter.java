@@ -24,6 +24,8 @@ import java.security.spec.RSAPublicKeySpec;
 public final class KeyGeneratorAdapter implements IKeyGenerator {
     private static final long serialVersionUID = -5933759426888012276L;
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
+    private static final String RSA_KEY_ALGORITHM = "RSA";
+    private static final int RSA_KEY_SIZE = 2048;
     private final IServiceLocator serviceLocator;
 
     /**
@@ -48,14 +50,17 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     }
 
     /**
-     * {@inheritDoc}
+     * Generates a random KeyPair with the RSA algorithm.
+     *
+     * @param name The name of the key
+     * @return a randomly generated KeyPair
      */
     public KeyPair generateRSAKeyPair(final String name) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
+        final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
+        keyPairGenerator.initialize(RSA_KEY_SIZE);
 
         final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        final KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
         final RSAPublicKeySpec publicKeySpec = keyFactory.getKeySpec(keyPair.getPublic(),
                 RSAPublicKeySpec.class);
         final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),

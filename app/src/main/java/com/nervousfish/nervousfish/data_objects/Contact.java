@@ -39,16 +39,10 @@ public final class Contact implements Serializable {
         this.keys.addAll(keys);
     }
 
-    /**
-     * Get the name of the {@link Contact}.
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * Get the public key of the {@link Contact}.
-     */
     public List<IKey> getKeys() {
         return this.keys;
     }

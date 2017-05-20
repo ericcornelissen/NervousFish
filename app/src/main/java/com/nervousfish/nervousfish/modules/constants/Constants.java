@@ -17,10 +17,10 @@ public final class Constants implements IConstants {
 
     private static final long serialVersionUID = -2465684567600871939L;
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
-    private final static String DB_USERDATA_PATH = "/accountInformation.json";
-    private final static String DB_CONTACTS_PATH = "/contacts.json";
+    private static final String DB_USERDATA_PATH = "/accountInformation.json";
+    private static final String DB_CONTACTS_PATH = "/contacts.json";
     private final IServiceLocator serviceLocator;
-    private transient final String androidFilesDir;
+    private final transient String androidFilesDir;
 
     /**
      * Prevents construction from outside the class.

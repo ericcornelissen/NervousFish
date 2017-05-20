@@ -22,7 +22,7 @@ public interface IBluetoothHandler extends IPairingHandler, IModule {
      *
      * @param device The BluetoothDevice to connect
      */
-    void connect(final BluetoothDevice device);
+    void connect(BluetoothDevice device);
 
     /**
      * Start the ConnectedThread to begin managing a Bluetooth connection
@@ -30,7 +30,7 @@ public interface IBluetoothHandler extends IPairingHandler, IModule {
      * @param socket The BluetoothSocket on which the connection was made
      * @param device The BluetoothDevice that has been connected
      */
-    void connected(final BluetoothSocket socket, final BluetoothDevice
+    void connected(BluetoothSocket socket, BluetoothDevice
             device);
 
     /**

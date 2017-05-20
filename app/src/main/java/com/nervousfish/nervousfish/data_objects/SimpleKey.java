@@ -13,7 +13,10 @@ import java.util.Map;
  */
 public final class SimpleKey implements IKey {
     private static final long serialVersionUID = -3865050366412869804L;
+
     private static final String TYPE = "simple";
+    private static final String KEYWORD_NAME = "name";
+    private static final String KEYWORD_KEY = "key";
 
     private final String key;
     private final String name;
@@ -35,11 +38,11 @@ public final class SimpleKey implements IKey {
      * @param map A {@link Map} mapping {@link SimpleKey} attribute names to values.
      */
     public SimpleKey(final Map<String, String> map) throws IllegalArgumentException {
-        this.name = map.get("name");
-        this.key = map.get("key");
+        this.name = map.get(KEYWORD_NAME);
+        this.key = map.get(KEYWORD_KEY);
 
         if (this.name == null || this.key == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Name or key could not be found in the map");
         }
     }
 
@@ -71,9 +74,9 @@ public final class SimpleKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public void toJSON(final JsonWriter writer) throws IOException {
-        writer.name("name").value(this.name);
-        writer.name("key").value(this.key);
+    public void toJson(final JsonWriter writer) throws IOException {
+        writer.name(KEYWORD_NAME).value(this.name);
+        writer.name(KEYWORD_KEY).value(this.key);
     }
 
     /**

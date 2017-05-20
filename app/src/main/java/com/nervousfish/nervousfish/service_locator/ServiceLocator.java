@@ -14,7 +14,7 @@ import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
+import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,37 +36,43 @@ final class ServiceLocator implements IServiceLocator {
     private final IFileSystem fileSystem;
     private final IConstants constants;
     private final IBluetoothHandler bluetoothHandler;
-    private final INFCHandler nfcHandler;
+    private final INfcHandler nfcHandler;
     private final IQRHandler qrHandler;
 
     /**
      * Package-private constructor of the service locator
+     *
+     * @param androidFilesDir The directory of the Android-specific files
      */
     ServiceLocator(final String androidFilesDir) {
         this.androidFilesDir = androidFilesDir;
-        this.constants = Constants.newInstance(this).get();
-        this.fileSystem = AndroidFileSystemAdapter.newInstance(this).get();
-        this.database = GsonDatabaseAdapter.newInstance(this).get();
-        this.keyGenerator = KeyGeneratorAdapter.newInstance(this).get();
-        this.encryptor = EncryptorAdapter.newInstance(this).get();
-        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).get();
-        this.nfcHandler = DummyNFCHandler.newInstance(this).get();
-        this.qrHandler = DummyQRHandler.newInstance(this).get();
+        this.constants = Constants.newInstance(this).getModule();
+        this.fileSystem = AndroidFileSystemAdapter.newInstance(this).getModule();
+        this.database = GsonDatabaseAdapter.newInstance(this).getModule();
+        this.keyGenerator = KeyGeneratorAdapter.newInstance(this).getModule();
+        this.encryptor = EncryptorAdapter.newInstance(this).getModule();
+        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).getModule();
+        this.nfcHandler = DummyNFCHandler.newInstance(this).getModule();
+        this.qrHandler = DummyQRHandler.newInstance(this).getModule();
     }
 
     /**
      * Private constructor for deserializing the service locator
+     *
+     * @param androidFilesDir The directory of the Android-specific files
      */
-    @SuppressWarnings("checkstyle:parameternumber")
-    ServiceLocator(final String androidFilesDir,
-                   final IDatabase database,
-                   final IKeyGenerator keyGenerator,
-                   final IEncryptor encryptor,
-                   final IFileSystem fileSystem,
-                   final IConstants constants,
-                   final IBluetoothHandler bluetoothHandler,
-                   final INFCHandler nfcHandler,
-                   final IQRHandler qrHandler) {
+    // We suppress parameternumber and javadocmethod, because this method isn't meant to be used outside
+    // this class and it's needed for the serialization proxy
+    @SuppressWarnings({"checkstyle:parameternumber", "checkstyle:javadocmethod"})
+    private ServiceLocator(final String androidFilesDir,
+                           final IDatabase database,
+                           final IKeyGenerator keyGenerator,
+                           final IEncryptor encryptor,
+                           final IFileSystem fileSystem,
+                           final IConstants constants,
+                           final IBluetoothHandler bluetoothHandler,
+                           final INfcHandler nfcHandler,
+                           final IQRHandler qrHandler) {
         this.androidFilesDir = androidFilesDir;
         this.database = database;
         this.keyGenerator = keyGenerator;
@@ -145,7 +151,7 @@ final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public INFCHandler getNFCHandler() {
+    public INfcHandler getNFCHandler() {
         this.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }
@@ -197,23 +203,6 @@ final class ServiceLocator implements IServiceLocator {
     }
 
     /**
-     * Thrown when a module was called before it was initialized.
-     */
-    private static class ModuleNotFoundException extends RuntimeException {
-
-        /**
-         * Constructs a new exception to make clear that a module was requested before it was initialized.
-         *
-         * @param message A message describing in more detail what happened
-         */
-        ModuleNotFoundException(final String message) {
-            super(message);
-        }
-
-    }
-
-
-    /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
@@ -229,9 +218,28 @@ final class ServiceLocator implements IServiceLocator {
     }
 
     /**
+     * Thrown when a module was called before it was initialized.
+     */
+    private static class ModuleNotFoundException extends RuntimeException {
+
+        /**
+         * Constructs a new exception to make clear that a module was requested before it was initialized.
+         *
+         * @param message A message describing in more detail what happened
+         */
+        ModuleNotFoundException(final String message) {
+            super(message);
+        }
+
+    }
+
+    /**
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
+     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
+     * ordinary serialization - is far more dangerous
      */
+    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = 1408616442873653749L;
         private final String androidFilesDir;
@@ -241,7 +249,7 @@ final class ServiceLocator implements IServiceLocator {
         private final IFileSystem fileSystem;
         private final IConstants constants;
         private final IBluetoothHandler bluetoothHandler;
-        private final INFCHandler nfcHandler;
+        private final INfcHandler nfcHandler;
         private final IQRHandler qrHandler;
 
         SerializationProxy(final ServiceLocator serviceLocator) {

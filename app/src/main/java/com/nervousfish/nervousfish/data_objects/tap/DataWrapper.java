@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 public final class DataWrapper implements Serializable {
     private static final long serialVersionUID = -1704556072876435760L;
-    private final AbstractTapData tapData;
+    private final ATapData tapData;
     private final Class<?> clazz;
 
     /**
      * Creates a new DataWrapper
      *
-     * @param tapData The {@link AbstractTapData} object the wrapper wraps
+     * @param tapData The {@link ATapData} object the wrapper wraps
      */
-    public DataWrapper(final AbstractTapData tapData) {
+    public DataWrapper(final ATapData tapData) {
         this.tapData = tapData;
         this.clazz = tapData.getClass();
     }
@@ -25,7 +25,7 @@ public final class DataWrapper implements Serializable {
     /**
      * @return The tapData object it wraps
      */
-    public AbstractTapData getTapData() {
+    public ATapData getTapData() {
         return tapData;
     }
 
@@ -61,7 +61,7 @@ public final class DataWrapper implements Serializable {
     @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
-        private final AbstractTapData tapData;
+        private final ATapData tapData;
 
         SerializationProxy(final DataWrapper wrapper) {
             this.tapData = wrapper.tapData;

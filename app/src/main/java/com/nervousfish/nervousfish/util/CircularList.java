@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * Represents a circular list, that is, a List of seemingly infinite maxSize while the maxSize is fixed in fact.
+ *
+ * @param <E> The type of the elements of the circular list
  */
 public final class CircularList<E extends Serializable> extends AbstractList<E> implements Serializable {
     private static final long serialVersionUID = -4861606797222560124L;
@@ -25,7 +27,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
      */
     public CircularList(final int maxSize) {
         super();
-        if (maxSize <= 0){
+        if (maxSize <= 0) {
             throw new IllegalArgumentException("Illegal Capacity: " + maxSize);
         }
         this.data = new Serializable[maxSize];
@@ -96,6 +98,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
 
     /**
      * Returns the element at position index
+     *
      * @param index The position of the element
      * @return The element at position index
      */

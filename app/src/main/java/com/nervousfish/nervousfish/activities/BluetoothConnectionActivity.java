@@ -40,7 +40,7 @@ import java.util.Set;
 // 2) This is necessary for freeing up resources
 // 3) Temporary busy wait, needs eventbus
 
-public class BluetoothConnectionActivity extends AppCompatActivity {
+public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
@@ -56,23 +56,18 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     /**
      * The on-click listener for all devices in the ListViews
      */
-    private final AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
+    private final AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
             // Cancel discovery because it's costly and we're about to connect
             stopDiscovering();
-
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
             final String address = info.substring(info.length() - 17);
             final BluetoothDevice device = getDevice(address);
             bluetoothHandler.connect(device);
-
             // Create the result Intent and include the MAC address
             final Intent intent = new Intent();
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-
             // Set result and finish this Activity
             setResult(Activity.RESULT_OK, intent);
             finish();
@@ -252,6 +247,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when a new bluetooth device is connected
+     * @param event Details about the event
+     */
     @Subscribe
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
