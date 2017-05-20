@@ -207,14 +207,6 @@ Severity: EASY
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sourceforge.net/config_misc.html -->
         <module name="ArrayTypeStyle" />
-        <module name="TodoComment">
-            <property name="format" value="(?i)\s+TODO\s+" />
-            <property name="severity" value="info" />
-        </module>
-        <module name="TodoComment">
-            <property name="format" value="(?i)\s+CR\s+" />
-            <property name="severity" value="info" />
-        </module>
         <module name="UpperEll" />
         <module name="ModifiedControlVariable"/>
         <module name="RequireThis"/>

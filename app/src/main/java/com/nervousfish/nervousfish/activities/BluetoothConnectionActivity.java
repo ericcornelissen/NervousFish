@@ -121,7 +121,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         setResult(Activity.RESULT_CANCELED);
 
         // SetUp bluetooth adapter
-        setUp();
+        setup();
 
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
@@ -193,7 +193,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     /**
      * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
      */
-    public void setUp() {
+    public void setup() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth

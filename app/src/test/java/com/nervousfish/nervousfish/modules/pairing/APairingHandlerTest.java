@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 public class APairingHandlerTest {
     private class PairingHandler extends APairingHandler {
+        private static final long serialVersionUID = 1767816444273833493L;
         byte[] myBuffer;
 
         /**
@@ -69,7 +70,7 @@ public class APairingHandlerTest {
     private IDatabase database;
 
     @Before
-    public void setUp() throws Exception {
+    public void setup() throws Exception {
         IServiceLocator serviceLocator = mock(IServiceLocator.class);
         database = mock(IDatabase.class);
         when(serviceLocator.getDatabase()).thenReturn(database);

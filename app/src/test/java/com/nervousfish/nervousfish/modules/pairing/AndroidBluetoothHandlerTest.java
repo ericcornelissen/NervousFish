@@ -47,13 +47,6 @@ public class AndroidBluetoothHandlerTest {
 
     }
 
-
-    @Test
-    public void newInstanceTest() throws Exception {
-        this.bConService = (AndroidBluetoothHandler) accessConstructor(AndroidBluetoothHandler.class, mock(IServiceLocator.class));
-        assertEquals(0, bConService.getState());
-    }
-
     /*
      * This is done because all I can test is the creation of the necessary threads
      * and not their functionality
@@ -61,12 +54,7 @@ public class AndroidBluetoothHandlerTest {
     @Test(expected = NullPointerException.class)
     public void startThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "secureAcceptThread"));
-        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.out.println("Caught " + e);
-            }
-        });
+        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(uncaughtExceptionHandler);
         bConService.start();
         assertNotNull(getField(bConService, "secureAcceptThread"));
     }
@@ -79,12 +67,7 @@ public class AndroidBluetoothHandlerTest {
     public void connectThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "connectThread"));
 
-        ((Thread) getField(bConService, "connectThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.out.println("Caught " + e);
-            }
-        });
+        ((Thread) getField(bConService, "connectThread")).setUncaughtExceptionHandler(uncaughtExceptionHandler);
         bConService.connect(mock(BluetoothDevice.class));
         assertNotNull(getField(bConService, "connectThread"));
     }
@@ -96,12 +79,7 @@ public class AndroidBluetoothHandlerTest {
     @Test(expected = NullPointerException.class)
     public void connectedThreadCreatedTest() throws Exception {
         assertNull(getField(bConService, "connectedThread"));
-        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.out.println("Caught " + e);
-            }
-        });
+        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(uncaughtExceptionHandler);
         bConService.connect(mock(BluetoothDevice.class));
         assertNotNull(getField(bConService, "connectedThread"));
     }
@@ -116,7 +94,7 @@ public class AndroidBluetoothHandlerTest {
 
     @Test
     public void writeNotConnectedTest() throws Exception {
-        setField(bConService, "mState", 0); //not connected
+        setField(bConService, "mState", AndroidBluetoothHandler.State.STATE_NONE); //not connected
         bConService.write(new byte[]{});
         // need to test this with mocks but
         // bluetoothServiceConnection is final
@@ -124,25 +102,15 @@ public class AndroidBluetoothHandlerTest {
 
     @Test(expected = NullPointerException.class)
     public void writeConnectedTest() throws Exception {
-        setField(bConService, "mState", 3); //connected
+        setField(bConService, "mState", AndroidBluetoothHandler.State.STATE_CONNECTED); //connected
         bConService.write(new byte[]{});
         // need to test this with mocks but
         // bluetoothServiceConnection is final
     }
 
-    @Test
-    public void getStateNewInstanceTest() throws Exception {
-        assertEquals(0, bConService.getState());
-    }
-
     @Test(expected = NullPointerException.class)
     public void threadStartConnectConnectedTest() {
-        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.out.println("Caught " + e);
-            }
-        });
+        ((Thread) getField(bConService, "secureAcceptThread")).setUncaughtExceptionHandler(uncaughtExceptionHandler);
         bConService.start();
         bConService.connect(device);
         bConService.connected(socket, device);
@@ -150,16 +118,16 @@ public class AndroidBluetoothHandlerTest {
 
     @Test(expected = NullPointerException.class)
     public void threadConnectedConnectStartTest() {
-        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.out.println("Caught " + e);
-            }
-        });
+        ((Thread) getField(bConService, "connectedThread")).setUncaughtExceptionHandler(uncaughtExceptionHandler);
         bConService.connected(socket, device);
         bConService.connect(device);
         bConService.start();
     }
 
-
+    private static Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            System.out.println("Caught " + e);
+        }
+    };
 }

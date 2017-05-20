@@ -129,7 +129,7 @@ public final class SimpleKey implements IKey {
         }
 
         private Object readResolve() {
-            return new SimpleKey(this.key, this.name);
+            return new SimpleKey(this.name, this.key);
         }
     }
 

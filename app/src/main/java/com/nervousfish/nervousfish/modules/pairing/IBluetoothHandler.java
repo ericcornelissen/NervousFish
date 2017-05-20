@@ -12,17 +12,17 @@ import com.nervousfish.nervousfish.modules.IModule;
 public interface IBluetoothHandler extends IPairingHandler, IModule {
 
     /**
+     * Start the bluetooth service. Specifically start AcceptThread to begin a
+     * session in listening (server) mode.
+     */
+    void start();
+
+    /**
      * Start the ConnectThread to initiate a connection to a remote device.
      *
      * @param device The BluetoothDevice to connect
      */
     void connect(final BluetoothDevice device);
-
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
-    void start();
 
     /**
      * Start the ConnectedThread to begin managing a Bluetooth connection

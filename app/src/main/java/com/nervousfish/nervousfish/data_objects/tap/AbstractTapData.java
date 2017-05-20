@@ -21,13 +21,15 @@ public abstract class AbstractTapData implements Serializable {
      * @param timestamp The timestamp of the tap data
      */
     public AbstractTapData(final Timestamp timestamp) {
-        this.timestamp = timestamp;
+        // Defensive copying
+        this.timestamp = new Timestamp(timestamp.getTime());
     }
 
     /**
      * @return The time on which the AbstractTapData was instantiated
      */
     public Timestamp getTimestamp() {
-        return this.timestamp;
+        // Defensive copying
+        return new Timestamp(this.timestamp.getTime());
     }
 }
