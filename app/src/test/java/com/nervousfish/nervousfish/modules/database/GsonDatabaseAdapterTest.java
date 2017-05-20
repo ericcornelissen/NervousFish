@@ -9,7 +9,6 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
-import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -24,8 +23,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +32,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -116,7 +112,7 @@ public class GsonDatabaseAdapterTest {
         // Add the contact to remove from the database
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"key\"}]]}]", CONTACTS_PATH);
 
-        database.deleteContact(contact);
+        database.deleteContact(contact.getName());
         assertEquals("[]\n", read(CONTACTS_PATH));
     }
 
@@ -131,7 +127,7 @@ public class GsonDatabaseAdapterTest {
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"Webserver\",\"key\":\"keyA\"}]," +
                 "[\"simple\",{\"name\":\"Webmail\",\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
 
-        database.deleteContact(contact);
+        database.deleteContact(contact.getName());
         assertEquals("[]\n", read(CONTACTS_PATH));
     }
 
@@ -139,7 +135,7 @@ public class GsonDatabaseAdapterTest {
     public void testDeleteContactThrowsWhenContactNotInDatabase() throws IOException {
         IKey key = new SimpleKey("Webserver", "key");
         Contact contact = new Contact("Zoidberg", key);
-        database.deleteContact(contact);
+        database.deleteContact(contact.getName());
     }
 
     @Test
@@ -193,6 +189,16 @@ public class GsonDatabaseAdapterTest {
 
         List<Contact> actual = database.getAllContacts();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetContactWithName() throws IOException {
+        IKey zoidbergsKey = new RSAKey("FTP", "A", "B");
+        Contact zoidberg = new Contact("Zoidberg", zoidbergsKey);
+        database.addContact(zoidberg);
+
+        Contact actual = database.getContactWithName(zoidberg.getName());
+        assertEquals(zoidberg, actual);
     }
 
     @Test(expected = JsonSyntaxException.class)

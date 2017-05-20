@@ -30,7 +30,8 @@ import java.util.List;
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
 
-    private static final String CONTACT_NOT_FOUND = "Contact not found in database";
+    private final static String CONTACT_NOT_FOUND = "Contact not found in database";
+    private final static String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private static final Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>() {
     }.getType();
@@ -78,6 +79,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public void addContact(final Contact contact) throws IOException {
         // Get the list of contacts and add the new contact
+        if(contactExtists(contact.getName())) {
+            throw new IllegalArgumentException(CONTACT_DUPLICATE);
+        }
+
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
@@ -96,11 +101,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void deleteContact(final Contact contact) throws IllegalArgumentException, IOException {
+    public void deleteContact(final String contactName) throws IllegalArgumentException, IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
-        contacts.remove(contact);
+        for (final Contact contact : contacts) {
+            if(contactName.equals(contact.getName())) {
+                contacts.remove(contact);
+                break;
+            }
+        }
 
         // Throw if the contact to remove is not found
         if (contacts.size() == lengthBefore) {
@@ -159,6 +169,29 @@ public final class GsonDatabaseAdapter implements IDatabase {
         reader.close();
 
         return contacts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Contact getContactWithName(final String contactName) throws IOException {
+        final List<Contact> contacts = getAllContacts();
+        for (final Contact contact: contacts) {
+            if(contact.getName().equals(contactName)) {
+                return contact;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean contactExtists(final String name) throws IOException {
+        return getContactWithName(name) != null;
     }
 
     /**
@@ -243,6 +276,29 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final Writer writer = this.fileSystem.getWriter(this.profilesPath);
         gsonParser.toJson(profiles, writer);
         writer.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUserPassword() throws IOException {
+        return null;
+    }
+
+    /**
+     * Initialize the contacts in the database. This does nothing
+     * if the contacts section of the database already exists.
+     */
+    private void initializeContacts() throws IOException {
+        final File file = new File(this.contactsPath);
+        if (!file.exists()) {
+            LOGGER.warn("Contacts part of the database didn't exist");
+            final Writer writer = this.fileSystem.getWriter(this.contactsPath);
+            writer.write("[]");
+            writer.close();
+            LOGGER.info("Created the contacts part of the database");
+        }
     }
 
     /**

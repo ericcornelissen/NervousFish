@@ -23,10 +23,10 @@ public interface IDatabase extends IModule {
     /**
      * Delete a contact from the database.
      *
-     * @param contact The {@link Contact} to remove from the database.
+     * @param contactName The {@link String} with the name of the contact to remove from the database.
      * @throws IllegalArgumentException When {@code contact} is not in the database.
      */
-    void deleteContact(Contact contact) throws IllegalArgumentException, IOException;
+    void deleteContact(final String contactName) throws IllegalArgumentException, IOException;
 
     /**
      * Update an existing contact in the database.
@@ -43,6 +43,22 @@ public interface IDatabase extends IModule {
      * @return A {@link List} of {@link Contact Contacts}.
      */
     List<Contact> getAllContacts() throws IOException;
+
+    /**
+     * Get one Contact from the database given the contact's name as input.
+     *
+     * @param contactName - The name of the Contact as a {@link String}.
+     * @return A {@link Contact}.
+     */
+    Contact getContactWithName(final String contactName) throws IOException;
+
+    /**
+     * Returns true if the contact exists and fals otherwise.
+     *
+     * @param name - the name of the contact to check
+     * @return A {@link boolean} which is true if the contact exists in the database
+     */
+    boolean contactExtists(final String name) throws IOException;
 
     /**
      * Get the Profile list with user information.
@@ -73,5 +89,12 @@ public interface IDatabase extends IModule {
      * @param newProfile The new {@link Profile} details.
      * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
-    void updateProfile(Profile oldProfile, Profile newProfile) throws IllegalArgumentException, IOException;
+    void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException;
+
+    /**
+     * Get the password of the user.
+     *
+     * @throws IllegalArgumentException When user account is not in the database.
+     */
+    String getUserPassword() throws IOException;
 }
