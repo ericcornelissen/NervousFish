@@ -17,11 +17,18 @@ public final class DummyNFCHandler extends APairingHandler implements INFCHandle
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     // This servicelocator will be used later on probably
     private DummyNFCHandler(final IServiceLocator serviceLocator) {
-        super();
+        super(serviceLocator);
         LOGGER.info("Initialized");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    void write(final byte[] buffer) {
+        //dummy
     }
 
     /**

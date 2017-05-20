@@ -1,8 +1,7 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +44,7 @@
             android:visibility="gone"/>
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/login_password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/enter_password_field_margin_top"
@@ -63,8 +62,8 @@
             android:layout_marginTop="@dimen/submit_password_margin_top"
             android:background="@color/colorPrimary"
             android:gravity="center"
+            android:onClick="validateLoginAttempt"
             android:text="@string/submit"
             android:textSize="@dimen/submit_password_text_size" />
-
     </LinearLayout>
 </ScrollView>

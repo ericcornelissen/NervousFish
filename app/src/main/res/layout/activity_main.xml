@@ -63,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/stat_sys_data_bluetooth"
+                android:onClick="bluetoothButtonClicked"
                 fab:fab_label="@string/bluetooth" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -71,6 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/nfc_variant"
+                android:onClick="nfcButtonClicked"
                 fab:fab_label="@string/nfc" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -78,6 +80,7 @@
                 style="@style/MenuButtonsStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="qrButtonClicked"
                 android:src="@drawable/camera"
                 fab:fab_label="@string/qr" />
 

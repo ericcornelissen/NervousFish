@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * The main activity class that shows a list of all people with their public keys
  */
-public final class MainActivity extends AppCompatActivity {
+public final class MainActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
@@ -52,22 +53,13 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
+        final ListView lv = (ListView) findViewById(R.id.listView);
         try {
             fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to retrieve contacts from database", e);
         }
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        this.setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        final ListView lv = (ListView) findViewById(R.id.listView);
-        lv.setAdapter(new ContactListAdapter(this, this.contacts));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
@@ -83,6 +75,21 @@ public final class MainActivity extends AppCompatActivity {
         LOGGER.info("MainActivity created");
     }
 
+    public void bluetoothButtonClicked(final View view) {
+        LOGGER.info("Bluetooth button clicked");
+        startBluetoothPairing();
+    }
+
+    public void nfcButtonClicked(final View view) {
+        LOGGER.info("NFC button clicked");
+        startNFCPairing();
+    }
+
+    public void qrButtonClicked(final View view) {
+        LOGGER.info("QR button clicked");
+        startQRPairing();
+    }
+
     /**
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
@@ -92,7 +99,25 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
-        this.startActivity(intent);
+        startActivity(intent);
+    }
+
+    private void startBluetoothPairing() {
+        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    private void startNFCPairing() {
+        final Intent intent = new Intent(this, NFCActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    private void startQRPairing() {
+        final Intent intent = new Intent(this, QRActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
     }
 
     /**
@@ -100,32 +125,38 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
-        try {
-            final Collection<IKey> keys = new ArrayList<>();
-            keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
-            keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
-            final Contact a = new Contact("Eric", keys);
-            final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
-            final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-            final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-            final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-            if (!database.getAllContacts().isEmpty()) {
-                database.deleteContact(a);
-                database.deleteContact(b);
-                database.deleteContact(c);
-                database.deleteContact(d);
-                database.deleteContact(e);
-            }
-            database.addContact(a);
-            database.addContact(b);
-            database.addContact(c);
-            database.addContact(d);
-            database.addContact(e);
-        } catch (final IOException e) {
-            e.printStackTrace();
+        final Collection<IKey> keys = new ArrayList<>();
+        keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
+        keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
+        final Contact a = new Contact("Eric", keys);
+        final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
+        final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+        final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+        final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+
+        final List<Contact> contacts = database.getAllContacts();
+        for (final Contact contact : contacts) {
+            database.deleteContact(contact.getName());
         }
+
+        database.addContact(a);
+        database.addContact(b);
+        database.addContact(c);
+        database.addContact(d);
+        database.addContact(e);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            final ListView lv = (ListView) findViewById(R.id.listView);
+            lv.setAdapter(new ContactListAdapter(this, this.contacts));
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException");
+        }
+    }
 }
 
 /**
@@ -168,5 +199,4 @@ final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         return v;
     }
-
 }
