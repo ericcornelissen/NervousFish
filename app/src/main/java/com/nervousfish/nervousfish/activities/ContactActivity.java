@@ -120,7 +120,7 @@ public final class ContactActivity extends AppCompatActivity {
                 serviceLocator.getDatabase().deleteContact(contact.getName());
                 sDialog.setTitleText(getString(R.string.contact_deleted_title))
                         .setContentText(getString(R.string.contact_deleted_description))
-                        .setConfirmText(getResources().getString(R.string.dialog_ok))
+                        .setConfirmText(getString(R.string.dialog_ok))
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(final SweetAlertDialog sDialog) {
@@ -134,7 +134,7 @@ public final class ContactActivity extends AppCompatActivity {
                 LOGGER.error("IllegalArgumentException while deleting contact in ContactActivity");
                 sDialog.setTitleText(getString(R.string.contact_doesnt_exist))
                         .setContentText(getString(R.string.contact_already_deleted))
-                        .setConfirmText(getResources().getString(R.string.dialog_ok))
+                        .setConfirmText(getString(R.string.dialog_ok))
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(final SweetAlertDialog sDialog) {
@@ -148,7 +148,7 @@ public final class ContactActivity extends AppCompatActivity {
                 LOGGER.error("IOException while deleting contact in ContactActivity");
                 sDialog.setTitleText(getString(R.string.something_went_wrong))
                         .setContentText(getString(R.string.something_went_wrong_try_again))
-                        .setConfirmText(getResources().getString(R.string.dialog_ok))
+                        .setConfirmText(getString(R.string.dialog_ok))
                         .setConfirmClickListener(null)
                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
             }

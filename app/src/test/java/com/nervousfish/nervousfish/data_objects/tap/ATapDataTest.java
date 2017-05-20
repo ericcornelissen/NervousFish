@@ -8,27 +8,17 @@ import java.sql.Timestamp;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-<<<<<<< HEAD:app/src/test/java/com/nervousfish/nervousfish/data_objects/tap/AbstractTapDataTest.java
-public class AbstractTapDataTest implements Serializable {
+public class ATapDataTest implements Serializable {
+    // Must be done because the outer class of a serializable inner class must also be serializable
+    private static final long serialVersionUID = -2144496846163197196L;
 
-    private static final long serialVersionUID = -8153267197382895289L;
-
-    private static class Tmp extends AbstractTapData {
-        private static final long serialVersionUID = -7179812982754955801L;
-=======
-public class ATapDataTest {
-
-    class tmp extends ATapData {
->>>>>>> develop:app/src/test/java/com/nervousfish/nervousfish/data_objects/tap/ATapDataTest.java
+    private static class Tmp extends ATapData {
+        private static final long serialVersionUID = 2815002793347502764L;
     }
 
     @Test
     public void testTimestamp() {
-<<<<<<< HEAD:app/src/test/java/com/nervousfish/nervousfish/data_objects/tap/AbstractTapDataTest.java
-        AbstractTapData tap = new Tmp();
-=======
-        ATapData tap = new tmp();
->>>>>>> develop:app/src/test/java/com/nervousfish/nervousfish/data_objects/tap/ATapDataTest.java
+        ATapData tap = new Tmp();
         Timestamp stamp = tap.getTimestamp();
         assertTrue(System.currentTimeMillis() >= stamp.getTime());
         assertTrue(System.currentTimeMillis() < stamp.getTime() + 100);

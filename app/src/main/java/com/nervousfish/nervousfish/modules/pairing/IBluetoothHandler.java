@@ -1,10 +1,8 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 
 import com.nervousfish.nervousfish.modules.IModule;
-import com.nervousfish.nervousfish.modules.pairing.IPairingHandler;
 
 /**
  * Defines a module used for pairing over Bluetooth that can be used by a service locator.

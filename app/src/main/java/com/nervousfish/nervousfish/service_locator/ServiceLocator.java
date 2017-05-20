@@ -19,14 +19,16 @@ import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
  * Manages all modules and provides access to them.
  */
-final class ServiceLocator implements IServiceLocator {
+public final class ServiceLocator implements IServiceLocator {
     private static final long serialVersionUID = 1408616442873653749L;
 
     private final String androidFilesDir;
@@ -203,24 +205,11 @@ final class ServiceLocator implements IServiceLocator {
     }
 
     /**
-     * Serialize the created proxy instead of this instance.
-     */
-    private Object writeReplace() {
-        return new SerializationProxy(this);
-    }
-
-    /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
-     */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
-    }
-
-    /**
      * Thrown when a module was called before it was initialized.
      */
     private static class ModuleNotFoundException extends RuntimeException {
+
+        private static final long serialVersionUID = -2889621076876351934L;
 
         /**
          * Constructs a new exception to make clear that a module was requested before it was initialized.
@@ -230,50 +219,30 @@ final class ServiceLocator implements IServiceLocator {
         ModuleNotFoundException(final String message) {
             super(message);
         }
-
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     * Deserialize the instance using readObject to ensure invariants and security.
+     * @param stream The serialized object to be deserialized
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 1408616442873653749L;
-        private final String androidFilesDir;
-        private final IDatabase database;
-        private final IKeyGenerator keyGenerator;
-        private final IEncryptor encryptor;
-        private final IFileSystem fileSystem;
-        private final IConstants constants;
-        private final IBluetoothHandler bluetoothHandler;
-        private final INfcHandler nfcHandler;
-        private final IQRHandler qrHandler;
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
+    }
 
-        SerializationProxy(final ServiceLocator serviceLocator) {
-            this.androidFilesDir = serviceLocator.androidFilesDir;
-            this.database = serviceLocator.database;
-            this.keyGenerator = serviceLocator.keyGenerator;
-            this.encryptor = serviceLocator.encryptor;
-            this.fileSystem = serviceLocator.fileSystem;
-            this.constants = serviceLocator.constants;
-            this.bluetoothHandler = serviceLocator.bluetoothHandler;
-            this.nfcHandler = serviceLocator.nfcHandler;
-            this.qrHandler = serviceLocator.qrHandler;
-        }
+    /**
+     * Used to improve performance / efficiency
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
 
-        private Object readResolve() {
-            return new ServiceLocator(this.androidFilesDir,
-                    this.database,
-                    this.keyGenerator,
-                    this.encryptor,
-                    this.fileSystem,
-                    this.constants,
-                    this.bluetoothHandler,
-                    this.nfcHandler,
-                    this.qrHandler);
-        }
+    /**
+     * Ensure that the instance meets its class invariant
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     */
+    private void ensureClassInvariant() throws InvalidObjectException {
+
     }
 }

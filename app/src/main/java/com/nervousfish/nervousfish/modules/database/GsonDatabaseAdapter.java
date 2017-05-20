@@ -18,12 +18,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
@@ -43,7 +45,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     private final String contactsPath;
     private final String profilesPath;
-    private final IServiceLocator serviceLocator;
     private final IFileSystem fileSystem;
 
     /**
@@ -52,7 +53,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocator Can be used to get access to other modules
      */
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
-        this.serviceLocator = serviceLocator;
         final IConstants constants = serviceLocator.getConstants();
         this.fileSystem = serviceLocator.getFileSystem();
 
@@ -110,17 +110,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
     public void deleteContact(final String contactName) throws IllegalArgumentException, IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
-        final int lengthBefore = contacts.size();
         for (final Contact contact : contacts) {
             if (contactName.equals(contact.getName())) {
                 contacts.remove(contact);
                 break;
             }
-        }
-
-        // Throw if the contact to remove is not found
-        if (contacts.size() == lengthBefore) {
-            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
         // Update the database
@@ -322,40 +316,30 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
     }
 
-
     /**
-     * Serialize the created proxy instead of this instance.
+     * Deserialize the instance using readObject to ensure invariants and security.
+     * @param stream The serialized object to be deserialized
      */
-    private Object writeReplace() {
-        return new SerializationProxy(this);
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Used to improve performance / efficiency
+     * @param stream The stream to which this object should be serialized to
      */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     * Ensure that the instance meets its class invariant
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -4101015873770268925L;
-        private final IServiceLocator serviceLocator;
-
-        SerializationProxy(final GsonDatabaseAdapter gsonDatabaseAdapter) {
-            this.serviceLocator = gsonDatabaseAdapter.serviceLocator;
-        }
-
-        private Object readResolve() {
-            return new GsonDatabaseAdapter(this.serviceLocator);
-        }
+    private void ensureClassInvariant() throws InvalidObjectException {
+        assertNotNull(this.contactsPath);
+        assertNotNull(this.profilesPath);
+        assertNotNull(this.fileSystem);
     }
 }

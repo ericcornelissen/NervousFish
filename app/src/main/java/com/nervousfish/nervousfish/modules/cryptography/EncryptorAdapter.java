@@ -6,8 +6,10 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -16,7 +18,6 @@ import java.io.Serializable;
 public final class EncryptorAdapter implements IEncryptor {
     private static final long serialVersionUID = 5930930748980177440L;
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
-    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -24,7 +25,6 @@ public final class EncryptorAdapter implements IEncryptor {
      * @param serviceLocator Can be used to get access to other modules
      */
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
-        this.serviceLocator = serviceLocator;
         LOGGER.info("Initialized");
     }
 
@@ -40,38 +40,27 @@ public final class EncryptorAdapter implements IEncryptor {
     }
 
     /**
-     * Serialize the created proxy instead of this instance.
+     * Deserialize the instance using readObject to ensure invariants and security.
+     * @param stream The serialized object to be deserialized
      */
-    private Object writeReplace() {
-        return new SerializationProxy(this);
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Used to improve performance / efficiency
+     * @param stream The stream to which this object should be serialized to
      */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     * Ensure that the instance meets its class invariant
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 5930930748980177440L;
-        private final IServiceLocator serviceLocator;
+    private void ensureClassInvariant() throws InvalidObjectException {
 
-        SerializationProxy(final EncryptorAdapter encryptorAdapter) {
-            this.serviceLocator = encryptorAdapter.serviceLocator;
-        }
-
-        private Object readResolve() {
-            return new EncryptorAdapter(this.serviceLocator);
-        }
     }
 }

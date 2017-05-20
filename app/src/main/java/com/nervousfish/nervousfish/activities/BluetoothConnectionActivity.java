@@ -53,27 +53,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private final AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
-            stopDiscovering();
-            // Get the device MAC address, which is the last 17 chars in the View
-            final String info = ((TextView) v).getText().toString();
-            final String address = info.substring(info.length() - 17);
-            final BluetoothDevice device = getDevice(address);
-            bluetoothHandler.connect(device);
-            // Create the result Intent and include the MAC address
-            final Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-
-        }
-    };
     private IServiceLocator serviceLocator;
     private ArrayAdapter<String> newDevicesArrayAdapter;
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -91,7 +70,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setTitle("select_device");
                 if (newDevicesArrayAdapter.getCount() == 0) {
-                    newDevicesArrayAdapter.add("none_found");
+                    newDevicesArrayAdapter.add(getString(R.string.no_devices_found));
                 }
             }
 
@@ -127,13 +106,13 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         // Find and set up the ListView for paired devices
         final ListView pairedListView = (ListView) findViewById(R.id.paired_list);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
+        pairedListView.setOnItemClickListener(new DeviceClickListener());
 
 
         // Find and set up the ListView for newly discovered devices
         final ListView newDevicesListView = (ListView) findViewById(R.id.discovered_list);
         newDevicesListView.setAdapter(newDevicesArrayAdapter);
-        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
+        newDevicesListView.setOnItemClickListener(new DeviceClickListener());
 
 
         // Register for broadcasts when discovery has finished
@@ -249,6 +228,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     /**
      * Called when a new bluetooth device is connected
+     *
      * @param event Details about the event
      */
     @Subscribe
@@ -278,6 +258,37 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    /**
+     * The on-click listener for all devices in the ListViews
+     */
+    private final class DeviceClickListener implements AdapterView.OnItemClickListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            stopDiscovering();
+            // Get the device MAC address, which is the last 17 chars in the View
+            final String info = ((TextView) v).getText().toString();
+            if (!info.equals(getString(R.string.no_devices_found))) {
+                final String address = info.substring(info.length() - 17);
+                final BluetoothDevice device = getDevice(address);
+                bluetoothHandler.connect(device);
+
+                // Create the result Intent and include the MAC address
+                final Intent intent = new Intent();
+                intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+
+
+                // Set result and finish this Activity
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        }
     }
 
 }

@@ -14,24 +14,27 @@ import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
  * This Bluetooth service class establishes and manages a bluetooth connection.
  */
 
-@SuppressWarnings({"PMD.NullAssignment", "PMD.AvoidFinalLocalVariable"})
-// 4) Suggested use by Android Bluetooth Manual
-// 5) explained where used
+@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "PMD.NullAssignment", "PMD.AvoidFinalLocalVariable"})
+// 1) A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
+// 2) Suggested use by Android Bluetooth Manual
+// 3) explained where used
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = 7340362791131903553L;
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private transient AndroidAcceptThread acceptThread;
     private transient AndroidConnectThread connectThread;
     private transient AndroidConnectedThread connectedThread;
-    private State mState;
+    private transient BluetoothState mBluetoothState;
 
     /**
      * Constructor for the Bluetooth service which manages the connection.
@@ -40,7 +43,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        mState = State.STATE_NONE;
+        mBluetoothState = BluetoothState.STATE_NONE;
         serviceLocator.registerToEventBus(this);
     }
 
@@ -81,7 +84,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                 acceptThread.start();
             }
 
-            this.mState = State.STATE_LISTEN;
+            this.mBluetoothState = BluetoothState.STATE_LISTEN;
             getServiceLocator().postOnEventBus(new BluetoothListeningEvent());
         }
     }
@@ -95,7 +98,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
-            if (mState == State.STATE_CONNECTING && connectThread != null) {
+            if (mBluetoothState == BluetoothState.STATE_CONNECTING && connectThread != null) {
                 connectThread.cancel();
                 connectThread = null;
             }
@@ -110,7 +113,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             connectThread = new AndroidConnectThread(this, device);
             connectThread.start();
 
-            mState = State.STATE_CONNECTING;
+            mBluetoothState = BluetoothState.STATE_CONNECTING;
             getServiceLocator().postOnEventBus(new BluetoothConnectingEvent());
         }
     }
@@ -138,7 +141,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
                 acceptThread = null;
             }
 
-            mState = State.STATE_NONE;
+            mBluetoothState = BluetoothState.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothConnectionLostEvent());
         }
     }
@@ -155,7 +158,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         final AndroidConnectedThread ready;
         // Synchronize a copy of the AndroidConnectedThread
         synchronized (this) {
-            if (mState != State.STATE_CONNECTED) {
+            if (mBluetoothState != BluetoothState.STATE_CONNECTED) {
                 return;
             }
             ready = connectedThread;
@@ -164,6 +167,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         ready.write(output);
     }
 
+    /**
+     * Called by the eventbus when the device connected with another Bluetooth device
+     * @param event Data about the event
+     */
     @Subscribe
     public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("Connected Bluetooth thread started");
@@ -191,19 +198,20 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             connectedThread = new AndroidConnectedThread(this, event.getSocket());
             connectedThread.start();
 
-            this.mState = State.STATE_CONNECTED;
+            this.mBluetoothState = BluetoothState.STATE_CONNECTED;
         }
     }
 
     /**
-     * Indicate that the connection attempt failed and notify the UI Activity.
+     * Called by the eventbus when Bluetooth connection with another device failed.
+     * @param event Data about the event
      */
     @Subscribe
     public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
         LOGGER.warn("Bluetooth connection failed event");
 
         synchronized (this) {
-            mState = State.STATE_NONE;
+            mBluetoothState = BluetoothState.STATE_NONE;
 
             // Start the service over to restart listening mode
             this.start();
@@ -211,14 +219,15 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
-     * Indicate that the connection was lost and notify the UI Activity.
+     * Called by the eventbus when the connection with another Bluetooth device is lost.
+     * @param event Datab about the event
      */
     @Subscribe
     public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
         LOGGER.warn("Bluetooth connection lost event");
 
         synchronized (this) {
-            mState = State.STATE_NONE;
+            mBluetoothState = BluetoothState.STATE_NONE;
 
             // Start the service over to restart listening mode
             this.start();
@@ -226,38 +235,27 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
-     * Serialize the created proxy instead of this instance.
+     * Deserialize the instance using readObject to ensure invariants and security.
+     * @param stream The serialized object to be deserialized
      */
-    private Object writeReplace() {
-        return new AndroidBluetoothHandler.SerializationProxy(this);
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Used to improve performance / efficiency
+     * @param stream The stream to which this object should be serialized to
      */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     * Ensure that the instance meets its class invariant
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 7340362791131903553L;
-        private final IServiceLocator serviceLocator;
+    private void ensureClassInvariant() throws InvalidObjectException {
 
-        SerializationProxy(final AndroidBluetoothHandler handler) {
-            this.serviceLocator = handler.getServiceLocator();
-        }
-
-        private Object readResolve() {
-            return new AndroidBluetoothHandler(this.serviceLocator);
-        }
     }
 }

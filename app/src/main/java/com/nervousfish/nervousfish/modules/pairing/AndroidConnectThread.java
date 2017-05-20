@@ -30,6 +30,7 @@ class AndroidConnectThread extends Thread {
      * with a device. It runs straight through; the connection either
      * succeeds or fails.
      *
+     * @param bluetoothHandler The bluetooth handler that created this class
      * @param device The device to connect with
      */
     AndroidConnectThread(final AndroidBluetoothHandler bluetoothHandler, final BluetoothDevice device) {
@@ -39,11 +40,11 @@ class AndroidConnectThread extends Thread {
         final IConstants constants = serviceLocator.getConstants();
         BluetoothSocket tmp = null;
 
-        synchronized (AndroidConnectThread.this) {
+        synchronized (this) {
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
             try {
-                tmp = device.createRfcommSocketToServiceRecord(constants.getUUID());
+                tmp = device.createRfcommSocketToServiceRecord(constants.getUuid());
             } catch (final IOException e) {
                 LOGGER.error("Connection failed");
             }
@@ -56,7 +57,7 @@ class AndroidConnectThread extends Thread {
      */
     public void run() {
         LOGGER.info("Connect Bluetooth thread started");
-        setName("AndroidConnectThread" + "Secure");
+        setName("Android Connect Thread");
 
         // Always cancel discovery because it will slow down a connection
         BluetoothAdapter.getDefaultAdapter().cancelDiscovery();

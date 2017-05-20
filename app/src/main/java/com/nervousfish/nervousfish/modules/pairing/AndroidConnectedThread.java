@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothSocket;
 
-import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
 
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ class AndroidConnectedThread extends Thread {
      * It handles all incoming and outgoing transmissions.
      *
      * @param bluetoothHandler The {@link AndroidBluetoothHandler} that created this thread
-     * @param socket The socket over which can be communicated to the target
+     * @param socket           The socket over which can be communicated to the target
      */
     AndroidConnectedThread(final AndroidBluetoothHandler bluetoothHandler, final BluetoothSocket socket) {
         super();
@@ -40,7 +39,7 @@ class AndroidConnectedThread extends Thread {
         InputStream tmpIn = null;
         OutputStream tmpOut = null;
 
-        synchronized (AndroidConnectedThread.this) {
+        synchronized (this) {
             // Get the BluetoothSocket input and output streams
             try {
                 tmpIn = socket.getInputStream();
@@ -59,10 +58,11 @@ class AndroidConnectedThread extends Thread {
      */
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
+        setName("Android Connected Thread");
         final byte[] buffer = new byte[BUFFER_SIZE_IN_BYTES];
 
         // Keep listening to the InputStream while connected
-        synchronized (AndroidConnectedThread.this) {
+        synchronized (this) {
             try {
                 // Read from the InputStream
                 final int size = inputStream.read(buffer);

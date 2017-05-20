@@ -39,6 +39,7 @@ public final class MainActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
     private IServiceLocator serviceLocator;
+    private List<Contact> contacts;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -76,7 +77,8 @@ public final class MainActivity extends AppCompatActivity {
         final ListView lv = (ListView) findViewById(R.id.listView);
         try {
             fillDatabaseWithDemoData();
-            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            lv.setAdapter(new ContactListAdapter(this, this.contacts));
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
@@ -97,16 +99,11 @@ public final class MainActivity extends AppCompatActivity {
 
     /**
      * Temporary method to open the {@link ContactActivity} for a contact.
-     *
-     * @param index The index of the contact in {@code this.contacts}.
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter")
     private void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        // TODO this must be fixed in another PR
-        // This doesn't work because contacts was never assigned
-        //intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
+        intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
 
@@ -131,17 +128,19 @@ public final class MainActivity extends AppCompatActivity {
         final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
         final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
         final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-
-        final List<Contact> contacts = database.getAllContacts();
-        for (final Contact contact: contacts) {
-            database.deleteContact(contact.getName());
+        final Contact f = new Contact("Baas", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+        if (!database.getAllContacts().isEmpty()) {
+            database.deleteContact(a.getName());
+            database.deleteContact(b.getName());
+            database.deleteContact(c.getName());
+            database.deleteContact(d.getName());
+            database.deleteContact(e.getName());
         }
-
-        database.addContact(a);
-        database.addContact(b);
-        database.addContact(c);
-        database.addContact(d);
-        database.addContact(e);
+        database.addContact(f);
+        //        database.addContact(b);
+        //        database.addContact(c);
+        //        database.addContact(d);
+        //        database.addContact(e);
     }
 
     @Override

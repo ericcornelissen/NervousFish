@@ -27,7 +27,7 @@ public final class EntryActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         final String androidFileDir = this.getFilesDir().getPath();
-        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
+        final ServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
 
         LOGGER.info("EntryActivity created");
 

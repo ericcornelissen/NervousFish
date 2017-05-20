@@ -26,7 +26,7 @@ public interface IConstants extends IModule {
     /**
      * @return The unique UUID of this application
      */
-    UUID getUUID();
+    UUID getUuid();
 
     /**
      * @return The name of the SDP record used for the Bluetooth communication

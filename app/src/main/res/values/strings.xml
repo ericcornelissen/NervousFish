@@ -37,4 +37,5 @@
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="something_went_wrong_try_again">There went something wrong deleting this contact, please try again.</string>
+    <string name="no_devices_found">No devices found...</string>
 </resources>

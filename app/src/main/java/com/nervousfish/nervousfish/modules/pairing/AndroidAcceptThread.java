@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothServerSocketAcceptedEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -30,6 +29,8 @@ class AndroidAcceptThread extends Thread {
      * Constructs a new AndroidAcceptThread that runs while listening for incoming connections. It behaves
      * like a server-side client. It runs until a connection is accepted
      * (or until cancelled).
+     *
+     * @param serviceLocator The service locator to be used
      */
     AndroidAcceptThread(final IServiceLocator serviceLocator) {
         super();
@@ -37,11 +38,11 @@ class AndroidAcceptThread extends Thread {
         final IConstants constants = serviceLocator.getConstants();
         BluetoothServerSocket tmp = null;
 
-        synchronized (AndroidAcceptThread.this) {
+        synchronized (this) {
             // Create a new listening server socket
             try {
                 tmp = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(constants.getSDPRecord(),
-                        constants.getUUID());
+                        constants.getUuid());
 
             } catch (final IOException e) {
                 LOGGER.error("Couldn't setup an rfcomm channel");
@@ -56,11 +57,10 @@ class AndroidAcceptThread extends Thread {
      */
     public void run() {
         LOGGER.info("Start listening on a rfcomm channel");
-        setName("AcceptThreadSecure");
+        setName("Android Accept Thread");
 
-        BluetoothSocket socket;
-
-        synchronized (AndroidAcceptThread.this) {
+        synchronized (this) {
+            final BluetoothSocket socket;
             try {
                 // This is a blocking call and will only return on a
                 // successful connection or an exception

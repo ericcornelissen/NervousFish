@@ -6,10 +6,12 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.ObjectOutputStream;
 import java.util.UUID;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Class implementing the main constants for the application.
@@ -24,8 +26,7 @@ public final class Constants implements IConstants {
     private static final UUID MY_UUID = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
-    private final IServiceLocator serviceLocator;
-    private final transient String androidFilesDir;
+    private transient String androidFilesDir;
 
     /**
      * Prevents construction from outside the class.
@@ -33,7 +34,6 @@ public final class Constants implements IConstants {
      * @param serviceLocator Can be used to get access to other modules
      */
     private Constants(final IServiceLocator serviceLocator) {
-        this.serviceLocator = serviceLocator;
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
         LOGGER.info("Initialized");
     }
@@ -69,7 +69,7 @@ public final class Constants implements IConstants {
      * {@inheritDoc}
      */
     @Override
-    public UUID getUUID() {
+    public UUID getUuid() {
         return MY_UUID;
     }
 
@@ -82,38 +82,32 @@ public final class Constants implements IConstants {
     }
 
     /**
-     * Serialize the created proxy instead of this instance.
+     * Deserialize the instance using readObject to ensure invariants and security.
+     *
+     * @param stream The serialized object to be deserialized
      */
-    private Object writeReplace() {
-        return new SerializationProxy(this);
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        this.androidFilesDir = stream.readUTF();
+        ensureClassInvariant();
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
      */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+        stream.writeUTF(this.androidFilesDir);
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     * Ensure that the instance meets its class invariant
+     *
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -2465684567600871939L;
-        private final IServiceLocator serviceLocator;
-
-        SerializationProxy(final Constants constants) {
-            this.serviceLocator = constants.serviceLocator;
-        }
-
-        private Object readResolve() {
-            return new Constants(this.serviceLocator);
-        }
+    private void ensureClassInvariant() throws InvalidObjectException {
+        assertNotNull(this.androidFilesDir);
     }
 }

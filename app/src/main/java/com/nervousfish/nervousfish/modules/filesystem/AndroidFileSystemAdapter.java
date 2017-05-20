@@ -15,10 +15,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.Writer;
 
 
@@ -30,7 +30,6 @@ import java.io.Writer;
 public final class AndroidFileSystemAdapter implements IFileSystem {
     private static final long serialVersionUID = 1937542180968231197L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
-    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -38,7 +37,6 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      * @param serviceLocator Can be used to get access to other modules
      */
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
-        this.serviceLocator = serviceLocator;
         LOGGER.info("Initialized");
     }
 
@@ -51,21 +49,6 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     public static ModuleWrapper<AndroidFileSystemAdapter> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocator));
-    }
-
-    /**
-     * Serialize the created proxy instead of this instance.
-     */
-    private Object writeReplace() {
-        return new SerializationProxy(this);
-    }
-
-    /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
-     */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
     }
 
     /**
@@ -89,23 +72,30 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     * Deserialize the instance using readObject to ensure invariants and security.
+     *
+     * @param stream The serialized object to be deserialized
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 1937542180968231197L;
-        private final IServiceLocator serviceLocator;
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
+    }
 
-        SerializationProxy(final AndroidFileSystemAdapter androidFileSystemAdapter) {
-            this.serviceLocator = androidFileSystemAdapter.serviceLocator;
-        }
+    /**
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
 
-        private Object readResolve() {
-            return new AndroidFileSystemAdapter(this.serviceLocator);
-        }
+    /**
+     * Ensure that the instance meets its class invariant
+     *
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     */
+    private void ensureClassInvariant() throws InvalidObjectException {
+
     }
 }
