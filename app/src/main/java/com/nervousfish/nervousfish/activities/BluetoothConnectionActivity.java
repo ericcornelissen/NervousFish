@@ -83,7 +83,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
                     newDevices.add(device);
                     newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
@@ -106,6 +106,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // SetUp bluetooth adapter
+        setUp();
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, filter);
@@ -115,8 +117,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-        // SetUp bluetooth adapter
-        setUp();
 
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
@@ -167,9 +167,17 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        enableBluetooth();
         this.serviceLocator.registerToEventBus(this);
         bluetoothHandler.start();
+        enableBluetooth();
+
+        while(!bluetoothAdapter.isEnabled()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
@@ -201,9 +209,11 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * Enables bluetooth.
      */
     public void enableBluetooth() {
+        LOGGER.info("Requesting to enable Bluetooth");
         if (!bluetoothAdapter.isEnabled()) {
             final Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
+            LOGGER.info("Request to enable Bluetooth sent");
         }
     }
 

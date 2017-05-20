@@ -288,7 +288,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             BluetoothSocket socket;
 
             // Listen to the server socket if we're not connected
-            while (mState != AndroidBluetoothHandler.State.connected) {
+            while (mState != AndroidBluetoothHandler.State.connected && serverSocket != null) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
