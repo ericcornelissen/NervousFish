@@ -31,4 +31,10 @@
 
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>
+    <string name="contact_deleted_title">Deleted!</string>
+    <string name="contact_deleted_description">The contact has been deleted!</string>
+    <string name="contact_doesnt_exist">The contact doesn\'t exist</string>
+    <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="something_went_wrong_try_again">There went something wrong deleting this contact, please try again.</string>
 </resources>

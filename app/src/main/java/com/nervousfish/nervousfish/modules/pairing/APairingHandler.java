@@ -38,6 +38,7 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void writeAllContacts() throws IOException {
         final List<Contact> list = database.getAllContacts();
         for (final Contact e : list) {
@@ -143,5 +144,5 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
      *
      * @param buffer The bytes to write
      */
-    abstract void write(final byte[] buffer);
+    abstract void write(byte[] buffer);
 }

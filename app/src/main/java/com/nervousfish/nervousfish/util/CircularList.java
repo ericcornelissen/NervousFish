@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Represents a circular list, that is, a List of seemingly infinite maxSize while the maxSize is fixed in fact.
+ *
+ * @param <E> The type of the elements of the circular list
  */
 public final class CircularList<E> extends AbstractList<E> implements List<E>, Serializable {
     private final int maxSize;
@@ -22,7 +24,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
      */
     public CircularList(final int maxSize) {
         super();
-        if (maxSize <= 0){
+        if (maxSize <= 0) {
             throw new IllegalArgumentException("Illegal Capacity: " + maxSize);
         }
         this.data = new Object[maxSize];
@@ -78,6 +80,7 @@ public final class CircularList<E> extends AbstractList<E> implements List<E>, S
 
     /**
      * Returns the element at position index
+     *
      * @param index The position of the element
      * @return The element at position index
      */
