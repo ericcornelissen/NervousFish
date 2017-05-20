@@ -26,7 +26,7 @@ public interface IDatabase extends IModule {
      * @param contactName The {@link String} with the name of the contact to remove from the database.
      * @throws IllegalArgumentException When {@code contact} is not in the database.
      */
-    void deleteContact(final String contactName) throws IllegalArgumentException, IOException;
+    void deleteContact(String contactName) throws IllegalArgumentException, IOException;
 
     /**
      * Update an existing contact in the database.
@@ -50,7 +50,7 @@ public interface IDatabase extends IModule {
      * @param contactName - The name of the Contact as a {@link String}.
      * @return A {@link Contact}.
      */
-    Contact getContactWithName(final String contactName) throws IOException;
+    Contact getContactWithName(String contactName) throws IOException;
 
     /**
      * Returns true if the contact exists and fals otherwise.
@@ -58,7 +58,7 @@ public interface IDatabase extends IModule {
      * @param name - the name of the contact to check
      * @return A {@link boolean} which is true if the contact exists in the database
      */
-    boolean contactExtists(final String name) throws IOException;
+    boolean contactExtists(String name) throws IOException;
 
     /**
      * Get the Profile list with user information.
@@ -89,11 +89,12 @@ public interface IDatabase extends IModule {
      * @param newProfile The new {@link Profile} details.
      * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
-    void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException;
+    void updateProfile(Profile oldProfile, Profile newProfile) throws IllegalArgumentException, IOException;
 
     /**
      * Get the password of the user.
      *
+     * @return The password of the user
      * @throws IllegalArgumentException When user account is not in the database.
      */
     String getUserPassword() throws IOException;

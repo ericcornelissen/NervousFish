@@ -75,7 +75,7 @@
         <module name="ModifiedControlVariable" />
         <module name="MultipleStringLiterals">
             <!-- Ignore empty strings, ", " and line breaks -->
-            <property name="ignoreStringsRegexp" value='^(("\\n")|("")|(", "))$'/>
+            <property name="ignoreStringsRegexp" value='^(("\[\]")|("\\n")|("")|(", "))$'/>
         </module>
         <module name="MultipleVariableDeclarations" />
         <module name="NestedForDepth" />

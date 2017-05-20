@@ -48,8 +48,9 @@ public final class LoginActivity extends Activity {
 
     /**
      * Validate a login attempt.
+     * @param view The submit button that was clicked
      */
-    public void validateLoginAttempt(final View v) {
+    public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
 
         final View mError = findViewById(R.id.error);

@@ -1,6 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.data_objects.tap.AbstractTapData;
+import com.nervousfish.nervousfish.data_objects.tap.ATapData;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.util.CircularList;
 
@@ -19,6 +19,7 @@ public final class RhythmHelper {
 
     /**
      * Constructs a new RhythmHelper
+     * @param masterData The rhythm tapped by the master
      */
     RhythmHelper(final List<SingleTap> masterData) {
         this.masterData = masterData;
@@ -60,8 +61,8 @@ public final class RhythmHelper {
         double dist = 0d;
         final long offset = slaveData.get(0).getTimestamp().getTime();
         for (int i = 0; i < masterData.size(); i++) {
-            final AbstractTapData masterSample = masterData.get(i);
-            final AbstractTapData slaveSample = slaveData.get(i);
+            final ATapData masterSample = masterData.get(i);
+            final ATapData slaveSample = slaveData.get(i);
             final long masterTimeMilliseconds = masterSample.getTimestamp().getTime();
             final long slaveTimeMilliseconds = slaveSample.getTimestamp().getTime() - offset;
             final long difference = Math.abs(slaveTimeMilliseconds - masterTimeMilliseconds);
