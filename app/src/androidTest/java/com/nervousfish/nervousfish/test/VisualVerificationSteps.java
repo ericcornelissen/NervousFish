@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.test;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
@@ -20,7 +19,6 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertNotEquals;
 
@@ -49,14 +47,10 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
 
     @Given("^I am viewing the visual verification activity$")
     public void iHaveAVisualVerificationActivity() {
-        try {
-            onView(withId(R.id.password)).perform(closeSoftKeyboard());
-        } catch(NoMatchingViewException ignored) { }
         Intent intent = new Intent(getActivity(), VisualVerificationActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
-        assertEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
     }
 
     @When("^I press button (\\d+)$")
