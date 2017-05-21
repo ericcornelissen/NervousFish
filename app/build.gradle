@@ -45,10 +45,15 @@ cobertura {
     coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
     coverageExcludes = [
             // Exclude dependencies
-            '.*android.*', '.*cn.pedant.*', '.*com.pnikosis.*',
+            '.*android.*'
+            , '.*cn.pedant.*'
+            , '.*com.pnikosis.*'
 
             // Exclude hard to test code
-            '.*com.nervousfish.nervousfish.modules.pairing.*' // Bluetooth/NFC connections
+            , '.*com.nervousfish.nervousfish.modules.pairing.*' // Bluetooth/NFC connections
+            // Exclude activities
+            , '.*com.nervousfish.nervousfish.*.*Activity'
+            , '.*com.nervousfish.nervousfish.*.*Activity\\$.*'
     ]
 }
 
