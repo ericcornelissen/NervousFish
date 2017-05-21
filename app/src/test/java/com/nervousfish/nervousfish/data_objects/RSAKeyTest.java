@@ -37,6 +37,27 @@ public class RSAKeyTest {
         new RSAKey(map);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNameNull() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("name", "foo");
+        new RSAKey(map);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testModulusNull() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("modulus", "foo");
+        new RSAKey(map);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExponentNull() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("exponent", "foo");
+        new RSAKey(map);
+    }
+
     @Test
     public void testGetNameReturnsNotNull() {
         IKey key = new RSAKey("FTP", "foo", "bar");
@@ -83,6 +104,20 @@ public class RSAKeyTest {
     public void testEqualsReturnsFalseForDifferentKeyTypes() {
         IKey keyA = new RSAKey("Personal", "foo", "bar");
         IKey keyB = new SimpleKey("Computer", "Hello world!");
+        assertFalse(keyA.equals(keyB));
+    }
+
+    @Test
+    public void testEqualsModulusNotEquals() {
+        IKey keyA = new RSAKey("foo", "bar", "baz");
+        IKey keyB = new RSAKey("foo", "baz", "baz");
+        assertFalse(keyA.equals(keyB));
+    }
+
+    @Test
+    public void testEqualsExponentNotEquals() {
+        IKey keyA = new RSAKey("foo", "bar", "baz");
+        IKey keyB = new RSAKey("foo", "bar", "bar");
         assertFalse(keyA.equals(keyB));
     }
 

@@ -49,11 +49,17 @@ cobertura {
             , '.*cn.pedant.*'
             , '.*com.pnikosis.*'
 
-            // Exclude hard to test code
+            // Exclude Android-dependent code
             , '.*com.nervousfish.nervousfish.modules.pairing.*' // Bluetooth/NFC connections
             // Exclude activities
             , '.*com.nervousfish.nervousfish.*.*Activity'
             , '.*com.nervousfish.nervousfish.*.*Activity\\$.*'
+            // Exclude Android generated code
+            , '.*com.nervousfish.nervousfish.R'
+            , '.*com.nervousfish.nervousfish.R\\$.*'
+            , '.*com.nervousfish.nervousfish.BuildConfig'
+            // Exclude Android-dependent graphics modules
+            , '.*com.nervousfish.nervousfish.*.QRGenerator'
     ]
 }
 

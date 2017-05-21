@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.google.gson.stream.JsonWriter;
+import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.IOException;
 import java.util.Map;
@@ -10,7 +11,6 @@ import java.util.Map;
  */
 public final class SimpleKey implements IKey {
 
-    private static final String TYPE = "simple";
     private static final String KEYWORD_NAME = "name";
     private static final String KEYWORD_KEY = "key";
 
@@ -63,7 +63,7 @@ public final class SimpleKey implements IKey {
      */
     @Override
     public String getType() {
-        return SimpleKey.TYPE;
+        return ConstantKeywords.SIMPLE_KEY;
     }
 
     /**

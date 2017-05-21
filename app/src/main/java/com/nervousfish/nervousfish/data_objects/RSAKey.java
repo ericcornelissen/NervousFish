@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public final class RSAKey implements IKey {
 
-    private static final String TYPE = ConstantKeywords.RSA_KEY;
     private static final String JSON_CONSTANT_EXPONENT = "exponent";
     private static final String JSON_CONSTANT_MODULUS = "modulus";
     private static final String JSON_CONSTANT_NAME = "name";
@@ -101,7 +100,7 @@ public final class RSAKey implements IKey {
      */
     @Override
     public String getType() {
-        return RSAKey.TYPE;
+        return ConstantKeywords.RSA_KEY;
     }
 
     /**
