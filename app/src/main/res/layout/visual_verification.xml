@@ -30,7 +30,7 @@
         app:layout_heightPercent="25%">
 
         <Button
-            android:id="@+id/button00"
+            android:id="@+id/visual_verification_button00"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -38,7 +38,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button01"
+            android:id="@+id/visual_verification_button01"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -46,7 +46,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button02"
+            android:id="@+id/visual_verification_button02"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -63,7 +63,7 @@
         app:layout_heightPercent="25%">
 
         <Button
-            android:id="@+id/button10"
+            android:id="@+id/visual_verification_button10"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -71,7 +71,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button11"
+            android:id="@+id/visual_verification_button11"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button12"
+            android:id="@+id/visual_verification_button12"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -96,7 +96,7 @@
         app:layout_heightPercent="25%">
 
         <Button
-            android:id="@+id/button20"
+            android:id="@+id/visual_verification_button20"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -104,7 +104,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button21"
+            android:id="@+id/visual_verification_button21"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -112,7 +112,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button22"
+            android:id="@+id/visual_verification_button22"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -128,7 +128,7 @@
         app:layout_heightPercent="25%">
 
         <Button
-            android:id="@+id/button30"
+            android:id="@+id/visual_verification_button30"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -136,7 +136,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button31"
+            android:id="@+id/visual_verification_button31"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -144,7 +144,7 @@
             android:onClick="buttonAction"
             android:background="@drawable/visual_verification_button" />
         <Button
-            android:id="@+id/button32"
+            android:id="@+id/visual_verification_button32"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
