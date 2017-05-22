@@ -41,6 +41,7 @@ import static org.hamcrest.core.AllOf.allOf;
 @CucumberOptions(features = "features")
 public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
+    private Activity previousActivity;
     private Contact contact = null;
     private IServiceLocator serviceLocator = null;
     private final static String TEST_NAME = "TestPerson";
@@ -48,10 +49,6 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     public ContactActivitySteps() {
         super(EntryActivity.class);
-    }
-
-    private static Matcher<? super View> hasErrorText(final String expectedError) {
-        return new ErrorTextMatcher(expectedError);
     }
 
     @Given("^I am viewing the contact activity$")
@@ -67,10 +64,12 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         }
         serviceLocator.getDatabase().addContact(contact);
 
+        previousActivity = getCurrentActivity();
         Intent intent = new Intent(getActivity(), ContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        getActivity().startActivity(intent);
+        getCurrentActivity().startActivity(intent);
+        assertTrue(getCurrentActivity() instanceof ContactActivity);
     }
 
     @When("^I press the back arrow$")
@@ -100,7 +99,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     @Then("^I should go to the previous activity I visited$")
     public void iShouldGoToPreviousActivity() {
-        assertEquals(LoginActivity.class, getCurrentActivity().getClass());
+        assertEquals(previousActivity.getClass(), getCurrentActivity().getClass());
     }
 
     @Then("^the current contact should be deleted$")
@@ -133,33 +132,5 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
             throwable.printStackTrace();
         }
         return activity[0];
-    }
-
-    /**
-     * Custom matcher to assert equal EditText.setError();
-     */
-    private static class ErrorTextMatcher extends TypeSafeMatcher<View> {
-
-        private final String mExpectedError;
-
-        private ErrorTextMatcher(String expectedError) {
-            mExpectedError = expectedError;
-        }
-
-        @Override
-        public boolean matchesSafely(View view) {
-            if (!(view instanceof EditText)) {
-                return false;
-            }
-
-            EditText editText = (EditText) view;
-
-            return mExpectedError.equals(editText.getError());
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("with error: " + mExpectedError);
-        }
     }
 }
