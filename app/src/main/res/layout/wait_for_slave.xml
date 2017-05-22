@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/red_button"
+        android:background="@color/red_alert"
         android:text="@string/cancel_pairing"
         android:textColor="@android:color/white"
         android:onClick="cancelWaitingForSlave"/>
