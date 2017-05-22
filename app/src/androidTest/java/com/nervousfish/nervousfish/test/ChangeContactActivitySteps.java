@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
-import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -35,19 +34,22 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
 
 @CucumberOptions(features = "features")
-public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    private Contact contact = null;
     private IServiceLocator serviceLocator = null;
     private final static String TEST_NAME = "TestPerson";
     private final static IKey TEST_KEY = new SimpleKey("my key", "key");
+    private String differentname;
+    private Activity previousActivity;
 
-    public ContactActivitySteps() {
+    public ChangeContactActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
     }
 
@@ -55,68 +57,99 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         return new ErrorTextMatcher(expectedError);
     }
 
-    @Given("^I am viewing the contact activity$")
-    public void iAmViewingContactActivity() throws IOException {
+    @Given("^I am viewing the change contact activity$")
+    public void iAmViewingChangeContactActivity() throws IOException {
         assertNotNull(getActivity());
 
-        contact = new Contact(TEST_NAME, TEST_KEY);
+        final Contact contact = new Contact(TEST_NAME, TEST_KEY);
 
         serviceLocator = (IServiceLocator) getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         List<Contact> contacts = serviceLocator.getDatabase().getAllContacts();
-        for (Contact contact: contacts) {
-            serviceLocator.getDatabase().deleteContact(contact.getName());
+        for (Contact c: contacts) {
+            serviceLocator.getDatabase().deleteContact(c.getName());
         }
         serviceLocator.getDatabase().addContact(contact);
 
-        Intent intent = new Intent(getActivity(), ContactActivity.class);
+        previousActivity = getCurrentActivity();
+        Intent intent = new Intent(getCurrentActivity(), ChangeContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        getActivity().startActivity(intent);
+        getCurrentActivity().startActivity(intent);
     }
 
-    @When("^I press the back arrow$")
-    public void iPressBackArrow() {
+    @When("^I press the contact name$")
+    public void iPressContactName() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+        onView(withId(R.id.edit_contact_name)).perform(click());
+    }
+
+    @When("^I type \"(.*?)\"$")
+    public void iTypeDifferentName(final String differentname) {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+        this.differentname = differentname;
+        onView(withId(R.id.edit_contact_name)).perform(replaceText(differentname));
+    }
+
+    @When("^I press on the save button$")
+    public void iPressSave() {
+        onView(withId(R.id.saveContactButton)).perform(click());
+    }
+
+    @Then("^the contact should be updated$")
+    public void theContactShouldBeUpdated() throws IOException {
+        try {
+            serviceLocator.getDatabase().getContactWithName(TEST_NAME);
+
+        } catch (IllegalArgumentException e) {
+            assertEquals(serviceLocator.getDatabase().getContactWithName(differentname).getKeys().get(0), TEST_KEY);
+        }
+    }
+
+    @When("^I change the name$")
+    public void iChangeTheName() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+        onView(withId(R.id.edit_contact_name)).perform(typeText("aabbcc"));
+    }
+
+    @When("^I close the keyboard$")
+    public void iCloseKeyboard() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+        onView(withId(R.id.edit_contact_name)).perform(closeSoftKeyboard());
+    }
+
+    @When("^I press the back button$")
+    public void iPressBack() {
         onView(withId(R.id.backButtonChange)).perform(click());
     }
 
-    @When("^I press the menu$")
-    public void iPressMenu() {
-        onView(withId(R.id.edit_menu_button)).perform(click());
+    @When("^I press cancel on the popup$")
+    public void iPressCancelPopup() {
+        onView(withId(R.id.cancel_button)).perform(click());
     }
 
-    @When("^I press delete$")
-    public void iPressDeleteButton() {
-        onView(withText("Delete")).perform(click());
-    }
-
-    @When("^I press that I am sure$")
-    public void iAmSureToDelete() {
+    @When("^I press yes go back on the popup$")
+    public void iPressYesGoBack() {
         onView(withId(R.id.confirm_button)).perform(click());
     }
 
-    @When("^I press on the OK button$")
-    public void iPressOK() {
+    @When("^I press confirm on the popup$")
+    public void iPressConfirm() {
         onView(withId(R.id.confirm_button)).perform(click());
     }
 
-    @Then("^I should go to the previous activity I visited$")
-    public void iShouldGoToPreviousActivity() {
-        assertEquals(LoginActivity.class, getCurrentActivity().getClass());
-    }
-
-    @Then("^the current contact should be deleted$")
-    public void currentContactIsDeleted() throws IOException {
-        assertFalse(serviceLocator.getDatabase().getAllContacts().contains(contact));
-    }
-
-    @When("^I press edit$")
-    public void iPressEdit() {
-        onView(withText("Edit")).perform(click());
-    }
-
-    @Then("^I should go to the change contact activity$")
-    public void iShouldGoToChangeContactActivity() {
+    @Then("^I should stay on the page$")
+    public void iShouldStayOnPage() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+    }
+
+    @Then("^an error should be raised that the name is invalid$")
+    public void raiseErrorInvalidName() {
+        assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
+    }
+
+    @Then("^I should go to the previous activity$")
+    public void iShouldGoToPrevActivity() {
+        assertEquals(previousActivity.getClass(), getCurrentActivity().getClass());
     }
 
     private Activity getCurrentActivity() {

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An handler doing nothing.
  */
-public final class DummyNFCHandler extends APairingHandler implements INFCHandler {
+public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
 
     /**
