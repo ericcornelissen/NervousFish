@@ -35,13 +35,6 @@ public class SimpleKeyTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNameNull() {
-        Map<String, String> map = new ConcurrentHashMap<>();
-        map.put("name", "foo");
-        new SimpleKey(map);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testKeyNull() {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("key", "foo");
@@ -49,21 +42,9 @@ public class SimpleKeyTest {
     }
 
     @Test
-    public void testGetNameReturnsNotNull() {
-        IKey key = new SimpleKey("FTP", "foobar");
-        assertNotNull(key.getName());
-    }
-
-    @Test
     public void testGetNameReturnsProvidedName() {
         IKey key = new SimpleKey("Webserver", "foobar");
         assertEquals("Webserver", key.getName());
-    }
-
-    @Test
-    public void testGetKeyReturnsNotNull() {
-        IKey key = new SimpleKey("FTP", "foobar");
-        assertNotNull(key.getKey());
     }
 
     @Test
