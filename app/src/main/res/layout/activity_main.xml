@@ -30,10 +30,20 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
-        <include
-            layout="@layout/content_main"/>
+
+
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/content_main" />
+            <include layout="@layout/content_main_keytypes" />
+
+        </ViewFlipper>
+
 
     </android.support.design.widget.AppBarLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -43,5 +53,17 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@android:color/holo_blue_dark"
         app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_toLeftOf="@+id/fab"
+        android:clickable="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="16dp"
+
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
 </merge>
