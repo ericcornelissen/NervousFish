@@ -59,7 +59,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest"
     classDirectories = fileTree(
             dir: './build/intermediates/classes/debug',
             excludes: [
-                     // Exclude dependencies
+                    // Exclude dependencies
                     'android/**/*.class', 'cn/pedant/**/*.class', 'com/pnikosis/**/*.class',
 
                     // Exclude hard to test code
@@ -69,17 +69,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest"
     sourceDirectories = files(['src/main/java'])
     executionData = files('build/jacoco/testDebugUnitTest.exec')
 }
-
-//cobertura {
-//    coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
-//    coverageExcludes = [
-//            // Exclude dependencies
-//            '.*android.*', '.*cn.pedant.*', '.*com.pnikosis.*',
-//
-//            // Exclude hard to test code
-//            '.*com.nervousfish.nervousfish.modules.pairing.*' // Bluetooth/NFC connections
-//    ]
-//}
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'

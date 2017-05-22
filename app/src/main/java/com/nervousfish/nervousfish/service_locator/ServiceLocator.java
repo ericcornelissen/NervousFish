@@ -56,7 +56,7 @@ final class ServiceLocator implements IServiceLocator {
      */
     @Override
     public String getAndroidFilesDir() {
-        this.assertExists(this.androidFilesDir, "androidFileDir");
+        this.assertExists(this.androidFilesDir, "androidFilesDir");
         return this.androidFilesDir;
     }
 
@@ -172,7 +172,7 @@ final class ServiceLocator implements IServiceLocator {
     /**
      * Thrown when a module was called before it was initialized.
      */
-    private class ModuleNotFoundException extends RuntimeException {
+    class ModuleNotFoundException extends RuntimeException {
 
         /**
          * Constructs a new exception to make clear that a module was requested before it was initialized.
