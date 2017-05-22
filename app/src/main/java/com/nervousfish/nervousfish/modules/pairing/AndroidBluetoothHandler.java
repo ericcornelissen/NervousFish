@@ -1,8 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
 
 import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
@@ -35,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 // 3) explained where used
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = 7340362791131903553L;
-    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
+    private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
     private transient static AndroidAcceptThread acceptThread;
     private transient static AndroidConnectThread connectThread;
     private transient static AndroidConnectedThread connectedThread;
