@@ -124,7 +124,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void stop() {
-        LOGGER.info("Bluetooth service stopped");
+        /*LOGGER.info("Bluetooth service stopped");
 
         synchronized (this) {
             if (connectThread != null) {
@@ -144,7 +144,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
             mBluetoothState = BluetoothState.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothConnectionLostEvent());
-        }
+        }*/
     }
 
     /**
