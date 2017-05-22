@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/backButton"
+                android:id="@+id/backButtonChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -43,15 +43,14 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/deleteButton"
+                android:id="@+id/edit_menu_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                app:srcCompat="@android:drawable/ic_menu_delete"
-                android:contentDescription="@string/delete"
-                tools:targetApi="lollipop" />
+                android:onClick="showPopupMenu"
+                app:srcCompat="@android:drawable/ic_menu_more" />
 
         </LinearLayout>
 

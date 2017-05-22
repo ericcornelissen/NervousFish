@@ -44,14 +44,6 @@ public class AndroidBluetoothHandlerTest {
         }
 
         this.bConService = (AndroidBluetoothHandler) accessConstructor(AndroidBluetoothHandler.class, serviceLocator);
-
-    }
-
-
-    @Test
-    public void newInstanceTest() throws Exception {
-        this.bConService = (AndroidBluetoothHandler) accessConstructor(AndroidBluetoothHandler.class, mock(IServiceLocator.class));
-        assertEquals(0, bConService.getState());
     }
 
     /*
@@ -112,27 +104,6 @@ public class AndroidBluetoothHandlerTest {
         assertNull(getField(bConService, "secureAcceptThread"));
         assertNull(getField(bConService, "connectThread"));
         assertNull(getField(bConService, "connectedThread"));
-    }
-
-    @Test
-    public void writeNotConnectedTest() throws Exception {
-        setField(bConService, "mState", 0); //not connected
-        bConService.write(new byte[]{});
-        // need to test this with mocks but
-        // bluetoothServiceConnection is final
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void writeConnectedTest() throws Exception {
-        setField(bConService, "mState", 3); //connected
-        bConService.write(new byte[]{});
-        // need to test this with mocks but
-        // bluetoothServiceConnection is final
-    }
-
-    @Test
-    public void getStateNewInstanceTest() throws Exception {
-        assertEquals(0, bConService.getState());
     }
 
     @Test(expected = NullPointerException.class)
