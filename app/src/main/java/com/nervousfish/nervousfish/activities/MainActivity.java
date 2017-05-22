@@ -73,17 +73,17 @@ public final class MainActivity extends Activity {
         LOGGER.info("MainActivity created");
     }
 
-    public void bluetoothButtonClicked(final View view) {
+    public void onBluetoothButtonClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
         startBluetoothPairing();
     }
 
-    public void nfcButtonClicked(final View view) {
+    public void onNFCButtonClick(final View view) {
         LOGGER.info("NFC button clicked");
         startNFCPairing();
     }
 
-    public void qrButtonClicked(final View view) {
+    public void onQRButtonClicked(final View view) {
         LOGGER.info("QR button clicked");
         startQRPairing();
     }
@@ -100,18 +100,27 @@ public final class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * Starts the Bluetooth pairing activity.
+     */
     private void startBluetoothPairing() {
         final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }
 
+    /**
+     * Starts the NFC pairing activity.
+     */
     private void startNFCPairing() {
         final Intent intent = new Intent(this, NFCActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }
 
+    /**
+     * Starts the QR display or read activity.
+     */
     private void startQRPairing() {
         final Intent intent = new Intent(this, QRActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);

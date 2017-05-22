@@ -14,7 +14,7 @@
         tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/activity_main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/holo_blue_dark"
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="qrButtonClicked"
-                android:src="@drawable/camera"
+                android:src="@drawable/qr_code"
                 fab:fab_label="@string/qr" />
 
         </com.github.clans.fab.FloatingActionMenu>
