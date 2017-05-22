@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +24,7 @@ import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +49,13 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
+    private static final String NONE_FOUND = "none_found";
 
-    // Device is now discoverable for 300 seconds
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
-    private IServiceLocator serviceLocator;
+
     private ArrayAdapter<String> newDevicesArrayAdapter;
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -84,6 +86,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        EventBus.getDefault().register(this);
 
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -121,10 +125,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Get the serviceLocator.
         final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the AndroidBluetoothHandler.
-        this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+        this.bluetoothHandler = serviceLocator.getBluetoothHandler();
 
         this.newDevices = new HashSet<>();
     }
@@ -147,11 +151,12 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         enableBluetooth();
-        this.serviceLocator.registerToEventBus(this);
+        //this.serviceLocator.registerToEventBus(this);
         bluetoothHandler.start();
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
+        LOGGER.info("Started the service and started discovering");
     }
 
     /**
@@ -159,9 +164,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     public void onStop() {
+        LOGGER.info("Stopping from activity");
         super.onStop();
-        this.serviceLocator.unregisterFromEventBus(this);
-        bluetoothHandler.stop();
+        //bluetoothHandler.stop();
     }
 
     /**
@@ -195,6 +200,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         for (final BluetoothDevice device : pairedDevices) {
             pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
+        LOGGER.info("Pairing query done");
     }
 
     /**
@@ -214,6 +220,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
+        final Intent discoverableIntent =
+                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
         bluetoothAdapter.startDiscovery();
     }
 
@@ -280,13 +290,13 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
                 bluetoothHandler.connect(device);
 
                 // Create the result Intent and include the MAC address
-                final Intent intent = new Intent();
+                /*final Intent intent = new Intent();
                 intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
 
 
                 // Set result and finish this Activity
                 setResult(Activity.RESULT_OK, intent);
-                finish();
+                finish();*/
             }
         }
     }

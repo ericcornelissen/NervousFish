@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -70,7 +71,7 @@ class AndroidAcceptThread extends Thread {
                 return;
             }
 
-            serviceLocator.postOnEventBus(new BluetoothConnectedEvent(socket));
+            serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
         }
         LOGGER.info("End accept thread");
     }

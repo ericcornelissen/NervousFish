@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
@@ -77,7 +78,7 @@ class AndroidConnectThread extends Thread {
             return;
         }
 
-        this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(socket));
+        this.serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
     }
 
     /**

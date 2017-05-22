@@ -1,7 +1,10 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -32,10 +36,10 @@ import static org.junit.Assert.assertNotNull;
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = 7340362791131903553L;
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
-    private transient AndroidAcceptThread acceptThread;
-    private transient AndroidConnectThread connectThread;
-    private transient AndroidConnectedThread connectedThread;
-    private transient BluetoothState mBluetoothState;
+    private transient static AndroidAcceptThread acceptThread;
+    private transient static AndroidConnectThread connectThread;
+    private transient static AndroidConnectedThread connectedThread;
+    private transient static BluetoothState mBluetoothState;
 
     /**
      * Constructor for the Bluetooth service which manages the connection.
@@ -63,8 +67,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * {@inheritDoc}
      */
     @Override
-    public void start() {
-        LOGGER.info("Bleutooth Service started");
+    public synchronized void start() {
+        LOGGER.info("Bluetooth Service started");
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
@@ -94,7 +98,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * {@inheritDoc}
      */
     @Override
-    public void connect(final BluetoothDevice device) {
+    public synchronized void connect(final BluetoothDevice device) {
         LOGGER.info("Connect Bluetooth thread initialized");
 
         synchronized (this) {
@@ -123,25 +127,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * {@inheritDoc}
      */
     @Override
-    public void stop() {
+    public synchronized void stop() {
         /*LOGGER.info("Bluetooth service stopped");
-
-        synchronized (this) {
-            if (connectThread != null) {
-                connectThread.cancel();
-                connectThread = null;
-            }
-
-            if (connectedThread != null) {
-                connectedThread.cancel();
-                connectedThread = null;
-            }
-
-            if (acceptThread != null) {
-                acceptThread.cancel();
-                acceptThread = null;
-            }
-
             mBluetoothState = BluetoothState.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothConnectionLostEvent());
         }*/
@@ -154,7 +141,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @see AndroidConnectedThread#write(byte[])
      */
     @Override
-    public void write(final byte[] output) {
+    public synchronized void write(final byte[] output) {
         // Create temporary object
         final AndroidConnectedThread ready;
         // Synchronize a copy of the AndroidConnectedThread
@@ -162,8 +149,9 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             if (mBluetoothState != BluetoothState.STATE_CONNECTED) {
                 return;
             }
-            ready = connectedThread;
             assertNotNull(connectedThread);
+            ready = connectedThread;
+            LOGGER.info("Writing bytes : " + Arrays.toString(output));
             ready.write(output);
         }
     }
@@ -174,8 +162,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @param event Data about the event
      */
     @Subscribe
-    public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
-        LOGGER.info("Connected Bluetooth thread started");
+    public synchronized void onBluetoothAlmostConnectedEvent(final BluetoothAlmostConnectedEvent event) {
+        LOGGER.info("Almost Connected Bluetooth thread started");
 
         synchronized (this) {
             // Cancel the thread that completed the connection
@@ -200,7 +188,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
             connectedThread = new AndroidConnectedThread(this, event.getSocket());
             connectedThread.start();
 
-            this.mBluetoothState = BluetoothState.STATE_CONNECTED;
+            mBluetoothState = BluetoothState.STATE_CONNECTED;
+            getServiceLocator().postOnEventBus(new BluetoothConnectedEvent(connectedThread));
         }
     }
 
@@ -210,7 +199,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @param event Data about the event
      */
     @Subscribe
-    public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
+    public synchronized void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
         LOGGER.warn("Bluetooth connection failed event");
 
         synchronized (this) {
@@ -227,7 +216,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @param event Datab about the event
      */
     @Subscribe
-    public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
+    public synchronized void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
         LOGGER.warn("Bluetooth connection lost event");
 
         synchronized (this) {

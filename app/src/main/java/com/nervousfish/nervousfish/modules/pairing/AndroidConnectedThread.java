@@ -16,7 +16,7 @@ import java.io.OutputStream;
  * This thread runs during a connection with a remote Bluetooth device.
  * It handles all incoming and outgoing transmissions.
  */
-class AndroidConnectedThread extends Thread {
+public class AndroidConnectedThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidConnectedThread");
     private static final int BUFFER_SIZE_IN_BYTES = 1024;
     private final BluetoothSocket socket;
