@@ -129,7 +129,9 @@ public final class MainActivity extends Activity {
 
     /**
      * Temporarily fill the database with demo data for development.
+     * Checkstyle is disabled, because this method is only temporarily
      */
+    @SuppressWarnings("checkstyle:multipleStringLiterals")
     private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
         final Collection<IKey> keys = new ArrayList<>();
@@ -164,46 +166,47 @@ public final class MainActivity extends Activity {
             LOGGER.error("onResume in MainActivity threw an IOException");
         }
     }
-}
-
-/**
- * An Adapter which converts a list with contacts into List entries.
- */
-final class ContactListAdapter extends ArrayAdapter<Contact> {
 
     /**
-     * Create and initialize a ContactListAdapter.
-     *
-     * @param context  the Context where the ListView is created
-     * @param contacts the list with contacts
+     * An Adapter which converts a list with contacts into List entries.
      */
-    ContactListAdapter(final Context context, final List<Contact> contacts) {
-        super(context, 0, contacts);
-    }
+    private final class ContactListAdapter extends ArrayAdapter<Contact> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @NonNull
-    @Override
-    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
-        View v = convertView;
-
-        if (v == null) {
-            final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, null);
+        /**
+         * Create and initialize a ContactListAdapter.
+         *
+         * @param context  the Context where the ListView is created
+         * @param contacts the list with contacts
+         */
+        ContactListAdapter(final Context context, final List<Contact> contacts) {
+            super(context, 0, contacts);
         }
 
-        final Contact contact = getItem(position);
+        /**
+         * {@inheritDoc}
+         */
+        @NonNull
+        @Override
+        public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
+            View v = convertView;
 
-        if (contact != null) {
-            final TextView name = (TextView) v.findViewById(R.id.name);
-
-            if (name != null) {
-                name.setText(contact.getName());
+            if (v == null) {
+                final LayoutInflater vi = LayoutInflater.from(getContext());
+                v = vi.inflate(R.layout.contact_list_entry, null);
             }
+
+            final Contact contact = getItem(position);
+
+            if (contact != null) {
+                final TextView name = (TextView) v.findViewById(R.id.name);
+
+                if (name != null) {
+                    name.setText(contact.getName());
+                }
+            }
+
+            return v;
         }
 
-        return v;
     }
 }
