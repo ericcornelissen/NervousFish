@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -53,11 +52,16 @@ public class LoginActivitySteps {
     private static final String CORRECT_PASSWORD = "12345";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class);
+    public IntentsTestRule<LoginActivity> mActivityRule = new IntentsTestRule<>(LoginActivity.class, true, false);
 
     @Before
     public void setUp() throws Exception {
         Intents.init();
+
+        Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        ActivityResult result = new ActivityResult(Activity.RESULT_OK, intent);
+        intending(toPackage("com.nervousfish.nervousfish.activities")).respondWith(result);
     }
 
     @After
@@ -67,16 +71,7 @@ public class LoginActivitySteps {
 
     @Given("^I have a LoginActivity$")
     public void iHaveALoginActivity() {
-        Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        ActivityResult result = new ActivityResult(Activity.RESULT_OK, intent);
-        intending(anyIntent()).respondWith(result);
-
-        mActivityRule.launchActivity(intent);
-        mActivityRule.getActivity();
-
-        Activity activity = mActivityRule.getActivity();
-        assertEquals(activity.getClass(), LoginActivity.class);
+        mActivityRule.launchActivity(null);
     }
 
     @When("^I input password \"(.*?)\"$")
