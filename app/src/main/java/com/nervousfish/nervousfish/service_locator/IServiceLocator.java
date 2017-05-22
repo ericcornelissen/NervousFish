@@ -35,6 +35,7 @@ public interface IServiceLocator extends Serializable {
     INfcHandler getNFCHandler();
 
     IQRHandler getQRHandler();
+
     IUtils getUtils();
 
     /**
