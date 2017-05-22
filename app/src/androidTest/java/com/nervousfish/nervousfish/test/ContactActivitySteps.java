@@ -35,6 +35,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
+    private Activity previousActivity;
+
     public ContactActivitySteps() {
         super(EntryActivity.class);
     }
@@ -46,11 +48,13 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         IKey key = new SimpleKey("my key", "key");
         Contact contact = new Contact("Cornel",key );
 
+        previousActivity = getCurrentActivity();
         Intent intent = new Intent(getActivity(), ContactActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
+        assertTrue(getCurrentActivity() instanceof ContactActivity);
     }
 
     @When("^I press the back arrow$")
@@ -65,7 +69,7 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
 
     @Then("^I should go to the previous activity I visited$")
     public void iShouldGoToPreviousActivity() {
-        assertEquals(LoginActivity.class, getCurrentActivity().getClass());
+        assertEquals(previousActivity.getClass(), getCurrentActivity().getClass());
     }
 
     @Then("^I should get a popup asking if I am sure to delete the contact$")
