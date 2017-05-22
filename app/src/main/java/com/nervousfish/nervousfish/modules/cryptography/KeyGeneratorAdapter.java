@@ -56,21 +56,26 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @param name The name of the key
      * @return a randomly generated KeyPair
      */
-    public KeyPair generateRSAKeyPair(final String name) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
-        keyPairGenerator.initialize(RSA_KEY_SIZE);
+    public KeyPair generateRSAKeyPair(final String name) {
+        final KeyPairGenerator keyPairGenerator;
+        try {
+            keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
+            keyPairGenerator.initialize(RSA_KEY_SIZE);
 
-        final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        final KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
-        final RSAPublicKeySpec publicKeySpec = keyFactory.getKeySpec(keyPair.getPublic(),
-                RSAPublicKeySpec.class);
-        final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
-                RSAPrivateKeySpec.class);
+            final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            final KeyFactory keyFactory = KeyFactory.getInstance(RSA_KEY_ALGORITHM);
+            final RSAPublicKeySpec publicKeySpec = keyFactory.getKeySpec(keyPair.getPublic(),
+                    RSAPublicKeySpec.class);
+            final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
+                    RSAPrivateKeySpec.class);
 
-        final RSAKey rsaPublicKey = new RSAKey(name, publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
-        final RSAKey rsaPrivateKey = new RSAKey(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
+            final RSAKey rsaPublicKey = new RSAKey(name, publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
+            final RSAKey rsaPrivateKey = new RSAKey(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
-        return new KeyPair(name, rsaPublicKey, rsaPrivateKey);
+            return new KeyPair(name, rsaPublicKey, rsaPrivateKey);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new KeyGenerationException(e);
+        }
     }
 
     /**

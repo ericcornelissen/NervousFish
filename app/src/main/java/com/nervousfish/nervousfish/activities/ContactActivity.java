@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,7 +132,7 @@ public final class ContactActivity extends AppCompatActivity {
                         .showCancelButton(false)
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
             } catch (final IllegalArgumentException e) {
-                LOGGER.error("IllegalArgumentException while deleting contact in ContactActivity");
+                LOGGER.error("IllegalArgumentException while deleting contact in ContactActivity", e);
                 sDialog.setTitleText(getString(R.string.contact_doesnt_exist))
                         .setContentText(getString(R.string.contact_already_deleted))
                         .setConfirmText(getString(R.string.dialog_ok))
@@ -145,7 +146,7 @@ public final class ContactActivity extends AppCompatActivity {
                         .showCancelButton(false)
                         .changeAlertType(SweetAlertDialog.WARNING_TYPE);
             } catch (final IOException e) {
-                LOGGER.error("IOException while deleting contact in ContactActivity");
+                LOGGER.error("IOException while deleting contact in ContactActivity", e);
                 sDialog.setTitleText(getString(R.string.something_went_wrong))
                         .setContentText(getString(R.string.something_went_wrong_try_again))
                         .setConfirmText(getString(R.string.dialog_ok))

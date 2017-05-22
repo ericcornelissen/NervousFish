@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,6 +48,26 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
         this.head = head;
         this.lastElementLocation = lastElementLocation;
         this.currentSize = currentSize;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        CircularList<?> that = (CircularList<?>) o;
+
+        return maxSize == that.maxSize && Arrays.equals(data, that.data);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + maxSize;
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 
     /**

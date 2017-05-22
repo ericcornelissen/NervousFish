@@ -15,7 +15,7 @@ public final class Contact implements Serializable {
 
     private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
-    private final List<IKey> keys = new ArrayList<IKey>();
+    private final List<IKey> keys = new ArrayList<>();
 
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.

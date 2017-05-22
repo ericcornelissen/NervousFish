@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class KeyGeneratorAdapterTest {
 
     @Test
-    public void generateRandomKeyPairTest() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public void generateRandomKeyPairTest() throws KeyGenerationException {
         KeyPair keyPair = ((KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, mock(IServiceLocator.class))).generateRSAKeyPair("FTP");
 
         assertEquals(RSAKey.class, keyPair.getPublicKey().getClass());

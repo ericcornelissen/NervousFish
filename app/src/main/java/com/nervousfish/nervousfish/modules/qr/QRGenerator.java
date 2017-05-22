@@ -23,7 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Class that can be used to generate QR codes.
@@ -84,7 +87,7 @@ public final class QRGenerator {
         final BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
         try {
-            final Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<>();
+            final Map<DecodeHintType, Object> decodeHints = new EnumMap<>(DecodeHintType.class);
             decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
             final Result decoded = qrReader.decode(bitmap, decodeHints);
             return decoded.getText();

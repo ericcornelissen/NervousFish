@@ -18,6 +18,8 @@ import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 import org.greenrobot.eventbus.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -28,6 +30,7 @@ import java.io.ObjectOutputStream;
  * Manages all modules and provides access to them.
  */
 public final class ServiceLocator implements IServiceLocator {
+    private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocator");
     private static final long serialVersionUID = 1408616442873653749L;
 
     private final String androidFilesDir;
@@ -198,7 +201,7 @@ public final class ServiceLocator implements IServiceLocator {
      */
     private void assertExists(final Object object, final String name) {
         if (object == null) {
-            // TODO: log this when the logging branch is merged
+            LOGGER.error("The module \"%s\" is used before it is defined", name);
             throw new ModuleNotFoundException("The module \"" + name + "\" is used before it is defined");
         }
     }

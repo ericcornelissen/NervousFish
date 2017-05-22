@@ -314,11 +314,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeDatabase() throws IOException {
         final File file = new File(this.profilesPath);
         if (!file.exists()) {
-            LOGGER.warn("Part of the database didn't exist: " + this.profilesPath);
+            LOGGER.warn("Part of the database didn't exist: %s", this.profilesPath);
             final Writer writer = this.fileSystem.getWriter(this.profilesPath);
             writer.write("[]");
             writer.close();
-            LOGGER.info("Created the part of the database: " + this.profilesPath);
+            LOGGER.info("Created the part of the database: %s", this.profilesPath);
         }
     }
 

@@ -43,7 +43,6 @@ public class VisualVerificationActivity extends Activity {
      * Go to the next activity and provide it with the generated pattern.
      */
     private void nextActivity() {
-        // TODO: Progress to the correct activity
         final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SECURITY_CODE, this.securityCode);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
@@ -57,17 +56,17 @@ public class VisualVerificationActivity extends Activity {
      */
     public void buttonAction(final View v) {
         final String button = v.getContentDescription().toString();
-        LOGGER.info("button '" + button + "' clicked");
+        LOGGER.info("button '%s' clicked", button);
 
         if (this.securityCode.length() > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             LOGGER.info("Security code already long enough");
         } else if (this.securityCode.length() + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             this.securityCode += button;
-            LOGGER.info("final code is: " + this.securityCode);
+            LOGGER.info("final code is: %s", this.securityCode);
             this.nextActivity();
         } else {
             this.securityCode += button;
-            LOGGER.info("code so far: " + this.securityCode);
+            LOGGER.info("code so far: %s", this.securityCode);
         }
     }
 

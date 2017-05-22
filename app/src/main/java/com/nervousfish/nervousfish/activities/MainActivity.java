@@ -132,8 +132,8 @@ public final class MainActivity extends AppCompatActivity {
         final Contact a = new Contact("Eric", keys);
         final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
         final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-        final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-        final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+        //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+        //final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
 
         final List<Contact> contacts = database.getAllContacts();
         for (final Contact contact : contacts) {
@@ -153,7 +153,7 @@ public final class MainActivity extends AppCompatActivity {
             listviewAdapter.notifyDataSetChanged();
             lv.setAdapter(new ContactListAdapter(this, this.contacts));
         } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException");
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
         }
     }
 

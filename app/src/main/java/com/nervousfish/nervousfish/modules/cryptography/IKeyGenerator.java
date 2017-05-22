@@ -17,5 +17,5 @@ public interface IKeyGenerator extends IModule {
      * @param name The name of the newly generated key
      * @return a randomly generated KeyPair
      */
-    KeyPair generateRSAKeyPair(String name) throws NoSuchAlgorithmException, InvalidKeySpecException;
+    KeyPair generateRSAKeyPair(String name) throws KeyGenerationException;
 }
