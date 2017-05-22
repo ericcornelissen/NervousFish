@@ -73,16 +73,28 @@ public final class MainActivity extends Activity {
         LOGGER.info("MainActivity created");
     }
 
+    /**
+     * Gets triggered when the Bluetooth button is clicked.
+     * @param view - the ImageButton
+     */
     public void onBluetoothButtonClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
         startBluetoothPairing();
     }
 
+    /**
+     * Gets triggered when the NFC button is clicked.
+     * @param view - the ImageButton
+     */
     public void onNFCButtonClick(final View view) {
         LOGGER.info("NFC button clicked");
         startNFCPairing();
     }
 
+    /**
+     * Gets triggered when the QR button is clicked.
+     * @param view - the ImageButton
+     */
     public void onQRButtonClicked(final View view) {
         LOGGER.info("QR button clicked");
         startQRPairing();

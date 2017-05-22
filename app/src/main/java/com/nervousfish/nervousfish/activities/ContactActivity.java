@@ -31,6 +31,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The ContactActivity shows the contacts information and his public keys.
  */
+@SuppressWarnings({"checkstyle:AnonInnerLength", "checkstyle:MultipleStringLiterals"})
+//1. The anonymous length is needed for readability
+//2. A string should be used more than 1 time, it's also already in strings.xml
 public final class ContactActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ContactActivity");
@@ -138,8 +141,8 @@ public final class ContactActivity extends Activity {
                                     } catch (final IOException e) {
                                         LOGGER.error("IOException while deleting contact in ContactActivity");
                                         sDialog.setTitleText("Something went wrong")
-                                                .setContentText(("There went something wrong deleting this contact, "
-                                                        + "please try again."))
+                                                .setContentText("There went something wrong deleting this contact, "
+                                                        + "please try again.")
                                                 .setConfirmText("OK")
                                                 .setConfirmClickListener(null)
                                                 .changeAlertType(SweetAlertDialog.ERROR_TYPE);

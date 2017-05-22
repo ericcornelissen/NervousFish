@@ -29,6 +29,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The ContactActivity shows the contacts information and his public keys.
  */
+@SuppressWarnings("checkstyle:AnonInnerLength")
+//The anonymous length is needed for readability
 public final class ChangeContactActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
