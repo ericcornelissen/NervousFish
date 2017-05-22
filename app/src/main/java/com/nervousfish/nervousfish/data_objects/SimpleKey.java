@@ -126,11 +126,19 @@ public final class SimpleKey implements IKey {
         private final String key;
         private final String name;
 
+        /**
+         * Constructs a new SerializationProxy
+         * @param key The current instance of the proxy
+         */
         SerializationProxy(final SimpleKey key) {
             this.key = key.key;
             this.name = key.name;
         }
 
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
         private Object readResolve() {
             return new SimpleKey(this.name, this.key);
         }

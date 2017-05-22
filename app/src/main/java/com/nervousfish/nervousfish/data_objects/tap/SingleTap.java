@@ -51,13 +51,19 @@ public final class SingleTap extends ATapData {
      */
     @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
-
         private static final long serialVersionUID = 6955333968356740403L;
 
+        /**
+         * Constructs a new SerializationProxy
+         */
         SerializationProxy() {
             // Nothing to do here
         }
 
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
         private Object readResolve() {
             return new SingleTap();
         }

@@ -63,10 +63,18 @@ public final class DataWrapper implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
         private final ATapData tapData;
 
+        /**
+         * Constructs a new SerializationProxy
+         * @param wrapper The current instance of the proxy
+         */
         SerializationProxy(final DataWrapper wrapper) {
             this.tapData = wrapper.tapData;
         }
 
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
         private Object readResolve() {
             return new DataWrapper(tapData);
         }

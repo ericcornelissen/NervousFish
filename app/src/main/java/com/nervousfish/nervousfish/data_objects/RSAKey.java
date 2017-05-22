@@ -134,12 +134,20 @@ public final class RSAKey implements IKey {
         private final String modulus;
         private final String exponent;
 
+        /**
+         * Constructs a new SerializationProxy
+         * @param key The current instance of the proxy
+         */
         SerializationProxy(final RSAKey key) {
             this.name = key.name;
             this.modulus = key.modulus;
             this.exponent = key.exponent;
         }
 
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
         private Object readResolve() {
             return new RSAKey(this.name, this.modulus, this.exponent);
         }

@@ -93,11 +93,19 @@ public final class Contact implements Serializable {
         private final String name;
         private final IKey[] keys;
 
+        /**
+         * Constructs a new SerializationProxy
+         * @param contact The current instance of the proxy
+         */
         SerializationProxy(final Contact contact) {
             this.name = contact.name;
             this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
         }
 
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
         private Object readResolve() {
             return new Contact(this.name, Arrays.asList(this.keys));
         }

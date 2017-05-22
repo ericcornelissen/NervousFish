@@ -138,6 +138,10 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
         private final int lastElementLocation;
         private final int currentSize;
 
+        /**
+         * Constructs a new SerializationProxy
+         * @param list The current instance of the proxy
+         */
         SerializationProxy(final CircularList list) {
             this.maxSize = list.maxSize;
             this.data = list.data;
@@ -146,6 +150,10 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
             this.currentSize = list.currentSize;
         }
 
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
         private Object readResolve() {
             return new CircularList(this.maxSize, this.data, this.head, this.lastElementLocation, this.currentSize);
         }
