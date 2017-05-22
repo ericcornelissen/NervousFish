@@ -41,6 +41,12 @@
             android:name=".activities.VisualVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.WaitForSlaveActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.BluetoothConnectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -50,6 +56,4 @@
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
-
 </manifest>

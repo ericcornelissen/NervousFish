@@ -46,7 +46,7 @@ captures/
 .idea/dictionaries
 .idea/libraries
 .idea/markdown-navigator
-.idea/inspectionProfiles
+.idea/inspectionProfiles/
 
 # Keystore files
 *.jks

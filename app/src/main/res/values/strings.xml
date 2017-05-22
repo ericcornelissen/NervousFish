@@ -20,6 +20,10 @@
     <string name="cancel">Cancel</string>
 
     <string name="yes_delete">Yes, delete it!</string>
+    <string name="waiting_for_slave">Waiting for partner…</string>
+    <string name="cancel_pairing">Cancel</string>
+
+    <string name="delete">Delete</string>
     <string name="title_activity_settings">Settings</string>
 
     <string name="change_contact_title">Change Contact</string>
