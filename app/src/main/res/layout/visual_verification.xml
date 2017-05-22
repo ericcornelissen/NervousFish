@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="4"
+    android:rowCount="4"
+    android:baselineAligned="false">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/example_overlay"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:scaleType="fitXY"/>
+    </RelativeLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/first_row"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        app:layout_heightPercent="25%">
+
+        <Button
+            android:id="@+id/visual_verification_button00"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="A"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button01"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="B"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button02"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="C"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/second_row"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_below="@id/first_row"
+        app:layout_heightPercent="25%">
+
+        <Button
+            android:id="@+id/visual_verification_button10"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="D"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button11"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="E"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button12"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="F"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/third_row"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_below="@id/second_row"
+        app:layout_heightPercent="25%">
+
+        <Button
+            android:id="@+id/visual_verification_button20"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="G"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button21"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="H"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button22"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="I"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_below="@id/third_row"
+        app:layout_heightPercent="25%">
+
+        <Button
+            android:id="@+id/visual_verification_button30"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="J"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button31"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="K"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+        <Button
+            android:id="@+id/visual_verification_button32"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="L"
+            android:onClick="buttonAction"
+            android:background="@drawable/visual_verification_button" />
+    </LinearLayout>
+</android.support.percent.PercentRelativeLayout>
