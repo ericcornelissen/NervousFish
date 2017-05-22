@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#0673aa</color>
     <color name="colorAccent">#808183</color>
 
+    <color name="transparentWhite">#33FFFFFF</color>
     <color name="red_alert">#9A3334</color>
 </resources>

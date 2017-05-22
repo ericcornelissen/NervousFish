@@ -13,6 +13,6 @@ Feature: VisualVerification
     Examples:
       | first_button  | second_button | third_button | fourth_button | fifth_button |
       | 1             | 3             | 2            | 5             | 9            |
-      | 13            | 1             | 3            | 10            | 1            |
+      | 9             | 1             | 3            | 10            | 1            |
       | 2             | 4             | 2            | 4             | 2            |
-      | 2             | 15            | 7            | 14            | 8            |
+      | 2             | 10            | 7            | 11            | 8            |
