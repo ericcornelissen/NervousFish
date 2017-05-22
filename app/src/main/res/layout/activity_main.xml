@@ -36,8 +36,9 @@
             android:dividerHeight="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:layout_marginTop="@dimen/contacts_list_margin_top" />
+            android:layout_below="@id/activity_main_toolbar"
+            android:layout_marginTop="@dimen/contacts_list_margin_top"
+            android:background="@android:color/white"/>
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/pairing_button"

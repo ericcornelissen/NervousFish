@@ -28,7 +28,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:contentDescription="@string/contact_title"
-                app:srcCompat="?attr/actionModeCloseDrawable"
+                android:src="?attr/actionModeCloseDrawable"
                 tools:targetApi="lollipop" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:onClick="saveContact"
-                app:srcCompat="@android:drawable/ic_menu_save"
+                android:src="@android:drawable/ic_menu_save"
                 tools:targetApi="lollipop"
                 android:contentDescription="@string/save" />
 
@@ -124,6 +124,7 @@
                 android:orientation="vertical">
 
                 <ListView
+                    android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_keys_list_height"
                     android:layout_marginTop="@dimen/contact_keys_list_margin_top" />

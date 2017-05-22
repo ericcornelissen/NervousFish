@@ -149,6 +149,7 @@ public final class ContactActivity extends Activity {
                             .show();
                     return true;
                 } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
+                    LOGGER.error("Start ChangeContactActivity");
                     final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
                     intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                     intent.putExtra(ConstantKeywords.CONTACT, contact);
