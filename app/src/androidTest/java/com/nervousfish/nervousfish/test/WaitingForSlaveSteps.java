@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.test;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
@@ -11,7 +12,8 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.MainActivity;
+import com.nervousfish.nervousfish.activities.WaitForSlaveActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import org.hamcrest.Description;
@@ -25,47 +27,40 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class WaitingForSlaveSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
 
-    public LoginActivitySteps() {
+    public WaitingForSlaveSteps(EntryActivity activityClass) {
+        super(EntryActivity.class);
+    }
+    public WaitingForSlaveSteps() {
         super(EntryActivity.class);
     }
 
-    @Given("^I have a LoginActivity")
-    public void iHaveALoginActivity() {
+    private static Matcher<? super View> hasErrorText(final String expectedError) {
+        return new WaitingForSlaveSteps.ErrorTextMatcher(expectedError);
+    }
+
+    @Given("^I am viewing the waitingForSlave activity$")
+    public void iAmViewingWaitingForSlaveActivity() {
         assertNotNull(getActivity());
 
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        Intent intent = new Intent(getActivity(), WaitForSlaveActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
     }
 
-    @When("^I input password \"(.*?)\"$")
-    public void iInputPassword(final String password) {
-        onView(withId(R.id.login_password_input)).perform(typeText(password));
+    @When("^I press the cancel button$")
+    public void iPressDeleteButton() {
+        onView(withId(R.id.cancelWaitForSlave)).perform(click());
     }
 
-    @When("^I press submit button$")
-    public void iPressSubmit() {
-        onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
-    }
-
-    @Then("^I should stay in the LoginActivity$")
-    public void iShouldStayInLoginActivity() {
-        assertEquals(getCurrentActivity().getClass(), LoginActivity.class);
-    }
-
-    @Then("^I should see an auth error$")
-    public void iShouldSeeAuthError() {
-        onView(withId(R.id.error)).check(matches(isDisplayed()));
+    @Then("^I should go to the MainActivity$")
+    public void iShouldGoToMainActivity() {
+        assertEquals(MainActivity.class, getCurrentActivity().getClass());
     }
 
     private Activity getCurrentActivity() {
@@ -112,5 +107,4 @@ public class LoginActivitySteps extends ActivityInstrumentationTestCase2<EntryAc
             description.appendText("with error: " + mExpectedError);
         }
     }
-
 }

@@ -3,29 +3,14 @@ package com.nervousfish.nervousfish.test;
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
-<<<<<<< HEAD
-
-import com.nervousfish.nervousfish.modules.constants.IConstants;
-import com.nervousfish.nervousfish.modules.util.AndroidUtils;
-import com.nervousfish.nervousfish.modules.util.IUtils;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
-=======
-import com.nervousfish.nervousfish.modules.qr.QRGenerator;
->>>>>>> develop
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-<<<<<<< HEAD
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-=======
-import static junit.framework.Assert.assertEquals;
->>>>>>> develop
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class QRGeneratorTest {
@@ -42,28 +27,20 @@ public class QRGeneratorTest {
     }
 
     @Test
-    public void testEncodeAsExpected() throws Exception{
-<<<<<<< HEAD
-
+    public void testEncodeAsExpected() throws Exception {
         final Bitmap QRcode = (Bitmap) serviceLocator.getUtils().encodeQR(publicKey);
-
-
         final String result = serviceLocator.getUtils().decodeQR(QRcode);
-=======
-        final Bitmap QRcode = QRGenerator.encode(publicKey);
-        final String result = QRGenerator.decode(QRcode);
->>>>>>> develop
         assertEquals(publicKey, result);
     }
 
     @Test
-    public void testWidthIsAsExpected() throws Exception{
+    public void testWidthIsAsExpected() throws Exception {
         final Bitmap QRcode = (Bitmap) serviceLocator.getUtils().encodeQR(publicKey);
         assertEquals(serviceLocator.getConstants().getQRCodeWidth(), QRcode.getWidth());
     }
 
     @Test
-    public void testHeightIsAsExpected() throws Exception{
+    public void testHeightIsAsExpected() throws Exception {
         final Bitmap QRcode = (Bitmap) serviceLocator.getUtils().encodeQR(publicKey);
         assertEquals(serviceLocator.getConstants().getQRCodeHeight(), QRcode.getHeight());
     }

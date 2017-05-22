@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nervousfish.nervousfish"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.nervousfish.nervousfish">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -34,11 +34,17 @@
             android:name=".activities.ContactActivity"
             android:label="@string/title_activity_contact"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.ChangeContactActivity"
+            android:label="@string/change_contact_title"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.VisualVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.BluetoothConnectionActivity" />
+        <activity
+            android:name=".activities.WaitForSlaveActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.BluetoothConnectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
-
 </manifest>

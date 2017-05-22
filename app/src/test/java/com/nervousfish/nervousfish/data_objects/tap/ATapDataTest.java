@@ -7,14 +7,14 @@ import java.sql.Timestamp;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class AbstractTapDataTest {
+public class ATapDataTest {
 
-    class tmp extends AbstractTapData {
+    class tmp extends ATapData {
     }
 
     @Test
     public void testTimestamp() {
-        AbstractTapData tap = new tmp();
+        ATapData tap = new tmp();
         Timestamp stamp = tap.getTimestamp();
         assertTrue(System.currentTimeMillis() >= stamp.getTime());
         assertTrue(System.currentTimeMillis() < stamp.getTime() + 100);

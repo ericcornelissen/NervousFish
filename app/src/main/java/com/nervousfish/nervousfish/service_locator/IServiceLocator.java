@@ -5,7 +5,7 @@ import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.INFCHandler;
+import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.util.IUtils;
@@ -15,16 +15,25 @@ import java.io.Serializable;
 /**
  * Provides the interface that should be implemented by all Service Locators.
  */
+@SuppressWarnings("checkstyle:javadocmethod")
 public interface IServiceLocator extends Serializable {
 
     String getAndroidFilesDir();
+
     IDatabase getDatabase();
+
     IKeyGenerator getKeyGenerator();
+
     IEncryptor getEncryptor();
+
     IFileSystem getFileSystem();
+
     IConstants getConstants();
+
     IBluetoothHandler getBluetoothHandler();
-    INFCHandler getNFCHandler();
+
+    INfcHandler getNFCHandler();
+
     IQRHandler getQRHandler();
     IUtils getUtils();
 
@@ -33,18 +42,18 @@ public interface IServiceLocator extends Serializable {
      *
      * @param object The Object that should be registed to the EventBus
      */
-    void registerToEventBus(final Object object);
+    void registerToEventBus(Object object);
 
     /**
      * Unregisters the class specified from the EventBus
      *
      * @param object The Object that should be unregistered from the EventBus
      */
-    void unregisterFromEventBus(final Object object);
+    void unregisterFromEventBus(Object object);
 
     /**
      * Posts a message on the EventBus
      * @param message The message that should be posted
      */
-    void postOnEventBus(final Object message);
+    void postOnEventBus(Object message);
 }
