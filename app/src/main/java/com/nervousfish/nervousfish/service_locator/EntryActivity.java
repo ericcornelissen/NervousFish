@@ -32,7 +32,7 @@ public final class EntryActivity extends Activity {
 
         LOGGER.info("EntryActivity created");
 
-        final Intent intent = new Intent(this, WaitForSlaveActivity.class);
+        final Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         this.startActivity(intent);
     }
