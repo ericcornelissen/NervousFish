@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -76,6 +74,8 @@ public final class QRGenerator {
      * @return The decoded public key.
      * @throws IOException If the QR code could not be decoded.
      */
+    // We suppress this warning because an EnumMap is much more efficient than a hashmap for such small maps
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     public static String decode(final Bitmap qrCode) throws IOException {
         final Reader qrReader = new MultiFormatReader();
         final int[] intArray = new int[qrCode.getWidth() * qrCode.getHeight()];

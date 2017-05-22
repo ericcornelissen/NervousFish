@@ -144,6 +144,9 @@ public final class MainActivity extends AppCompatActivity {
         database.addContact(b);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,17 +160,17 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Called when a new contact is received
+     * @param event Contains additional data about the event
+     */
     @Subscribe
     public void onEvent(final ContactReceivedEvent event) {
-/*        try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-            final ListView lv = (ListView) findViewById(R.id.listView);
-            listviewAdapter.notifyDataSetChanged();
-            lv.setAdapter(new ContactListAdapter(this, this.contacts));
-        } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException");
-        }*/
+        try {
+            serviceLocator.getDatabase().addContact(event.getContact());
+        } catch (IOException e) {
+            LOGGER.error("Couldn't add contact to database", e);
+        }
     }
 
     /**

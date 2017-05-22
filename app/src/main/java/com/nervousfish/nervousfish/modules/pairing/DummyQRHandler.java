@@ -43,7 +43,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      * {@inheritDoc}
      */
     @Override
-    void write(final byte[] buffer) {
+    void send(final byte[] buffer) {
         //dummy
     }
 

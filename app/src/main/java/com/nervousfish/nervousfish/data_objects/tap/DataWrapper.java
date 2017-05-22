@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -48,7 +50,7 @@ public final class DataWrapper implements Serializable {
      * stream should only contain instances of the proxy.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
     }
 
     /**

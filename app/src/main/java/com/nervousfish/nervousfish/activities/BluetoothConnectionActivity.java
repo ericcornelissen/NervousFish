@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,12 +43,11 @@ import java.util.Set;
 
 public final class BluetoothConnectionActivity extends AppCompatActivity {
 
-    public static final String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
+    private static final int DISCOVERABLE_DURATION = 300;
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
-    private static final String NONE_FOUND = "none_found";
 
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
@@ -125,7 +123,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
         // Get the serviceLocator.
         final Intent intent = getIntent();
-        IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Get the AndroidBluetoothHandler.
         this.bluetoothHandler = serviceLocator.getBluetoothHandler();
@@ -222,7 +220,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         }
         final Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION);
         startActivity(discoverableIntent);
         bluetoothAdapter.startDiscovery();
     }
@@ -244,30 +242,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Subscribe
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
-            bluetoothHandler.writeAllContacts();
+            bluetoothHandler.sendAllContacts();
         } catch (final IOException e) {
-            LOGGER.warn("Writing all contacts issued an IOexception");
+            LOGGER.warn("Writing all contacts issued an IOexception", e);
         }
-    }
-
-    /**
-     * Gets the device corresponding to the address from either the paired or the new devices.
-     *
-     * @param address The MAC address corresponding to the device to be found
-     * @return The BLuetoothDevice corresponding to the mac address.
-     */
-    private BluetoothDevice getDevice(final String address) {
-        for (final BluetoothDevice device : pairedDevices) {
-            if (device.getAddress().equals(address)) {
-                return device;
-            }
-        }
-        for (final BluetoothDevice device : newDevices) {
-            if (device.getAddress().equals(address)) {
-                return device;
-            }
-        }
-        return null;
     }
 
     /**
@@ -298,6 +276,26 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
                 setResult(Activity.RESULT_OK, intent);
                 finish();*/
             }
+        }
+
+        /**
+         * Gets the device corresponding to the address from either the paired or the new devices.
+         *
+         * @param address The MAC address corresponding to the device to be found
+         * @return The BLuetoothDevice corresponding to the mac address.
+         */
+        private BluetoothDevice getDevice(final String address) {
+            for (final BluetoothDevice device : pairedDevices) {
+                if (device.getAddress().equals(address)) {
+                    return device;
+                }
+            }
+            for (final BluetoothDevice device : newDevices) {
+                if (device.getAddress().equals(address)) {
+                    return device;
+                }
+            }
+            return null;
         }
     }
 

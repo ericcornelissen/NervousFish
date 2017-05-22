@@ -44,7 +44,7 @@ public class APairingHandlerTest implements Serializable {
         }
 
         @Override
-        void write(byte[] buffer) {
+        void send(byte[] buffer) {
             myBuffer = buffer;
         }
 
@@ -84,20 +84,18 @@ public class APairingHandlerTest implements Serializable {
     @Test
     public void writeCheckContactSimpleKeyTest() throws IOException {
         Contact contact = new Contact("Test", new SimpleKey("Test", ""));
-        phspy.writeContact(contact);
-        verify(phspy).checkExists(contact);
-        verify(phspy).writeContact(contact);
-        verify(phspy).write(phspy.myBuffer);
+        phspy.sendContact(contact);
+        verify(phspy).sendContact(contact);
+        verify(phspy).send(phspy.myBuffer);
         assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
     }
 
     @Test
     public void writeCheckContactRSAKeyTest() throws IOException {
         Contact contact = new Contact("Test", new RSAKey("Test","1234", "0"));
-        phspy.writeContact(contact);
-        verify(phspy).checkExists(contact);
-        verify(phspy).writeContact(contact);
-        verify(phspy).write(phspy.myBuffer);
+        phspy.sendContact(contact);
+        verify(phspy).sendContact(contact);
+        verify(phspy).send(phspy.myBuffer);
         assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
     }
 
@@ -109,16 +107,16 @@ public class APairingHandlerTest implements Serializable {
         list.add(c1);
         list.add(c2);
         when(database.getAllContacts()).thenReturn(list);
-        phspy.writeAllContacts();
-        verify(phspy, times(1)).writeContact(c1);
-        verify(phspy, times(1)).writeContact(c2);
+        phspy.sendAllContacts();
+        verify(phspy, times(1)).sendContact(c1);
+        verify(phspy, times(1)).sendContact(c2);
     }
 
     @Test
     public void writeAllContactsEmptyTest() throws IOException {
         when(database.getAllContacts()).thenReturn(new LinkedList<Contact>());
-        phspy.writeAllContacts();
-        verify(phspy, never()).writeContact((Contact) any());
+        phspy.sendAllContacts();
+        verify(phspy, never()).sendContact((Contact) any());
     }
 
     @Test

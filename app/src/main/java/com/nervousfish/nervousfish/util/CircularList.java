@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.util;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public final class CircularList<E extends Serializable> extends AbstractList<E> implements Serializable {
     private static final long serialVersionUID = -4861606797222560124L;
+    private static final int HASH_SEED = 31;
     private final int maxSize;
     private final Serializable[] data;
     private int head;
@@ -51,13 +54,18 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
-        CircularList<?> that = (CircularList<?>) o;
-
+        final CircularList<?> that = (CircularList<?>) o;
         return maxSize == that.maxSize && Arrays.equals(data, that.data);
 
     }
@@ -65,8 +73,8 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + maxSize;
-        result = 31 * result + Arrays.hashCode(data);
+        result = HASH_SEED * result + maxSize;
+        result = HASH_SEED * result + Arrays.hashCode(data);
         return result;
     }
 
@@ -140,7 +148,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
      * stream should only contain instances of the proxy.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
     }
 
     /**

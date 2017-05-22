@@ -36,6 +36,7 @@ public final class EncryptorAdapter implements IEncryptor {
      * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
+    @SuppressWarnings("MethodReturnOfConcreteClass")
     public static ModuleWrapper<EncryptorAdapter> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new EncryptorAdapter(serviceLocator));
     }

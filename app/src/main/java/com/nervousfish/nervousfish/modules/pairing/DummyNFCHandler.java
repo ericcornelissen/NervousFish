@@ -43,7 +43,7 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      * {@inheritDoc}
      */
     @Override
-    void write(final byte[] buffer) {
+    void send(final byte[] buffer) {
         //dummy
     }
 

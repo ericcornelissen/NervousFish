@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.google.gson.stream.JsonWriter;
+import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -114,7 +115,7 @@ public final class SimpleKey implements IKey {
      * stream should only contain instances of the proxy.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
     }
 
     /**

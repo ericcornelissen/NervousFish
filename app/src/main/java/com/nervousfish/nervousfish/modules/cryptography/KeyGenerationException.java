@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -10,10 +12,18 @@ import java.io.Serializable;
 public final class KeyGenerationException extends RuntimeException {
     private static final long serialVersionUID = -2973457213678228010L;
 
-    private KeyGenerationException() {
-        super();
+    /**
+     * Constructs a new KeyGenerationException that's thrown when an error occurred while generating a new RSA key
+     * @param e The throwable that occurred that caused this throwable to happen
+     */
+    KeyGenerationException(final Throwable e) {
+        super(e);
     }
 
+    /**
+     * Constructs a new KeyGenerationException that's thrown when an error occurred while generating a new RSA key
+     * @param e The exception that occurred that caused this throwable to happen
+     */
     KeyGenerationException(final Exception e) {
         super(e);
     }
@@ -31,7 +41,7 @@ public final class KeyGenerationException extends RuntimeException {
      * stream should only contain instances of the proxy.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException("Proxy required.");
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
     }
 
     /**
@@ -40,12 +50,14 @@ public final class KeyGenerationException extends RuntimeException {
      */
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -2973457213678228010L;
+        private final Throwable throwable;
 
         /**
          * Constructs a new SerializationProxy
-         * @param contact The current instance of the proxy
+         * @param exception The current instance of the proxy
          */
-        SerializationProxy(final KeyGenerationException contact) {
+        SerializationProxy(final KeyGenerationException exception) {
+            this.throwable = exception.getCause();
         }
 
         /**
@@ -53,7 +65,7 @@ public final class KeyGenerationException extends RuntimeException {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new KeyGenerationException();
+            return new KeyGenerationException(this.throwable);
         }
     }
 }

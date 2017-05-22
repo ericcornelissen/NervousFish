@@ -16,7 +16,7 @@ import java.io.OutputStream;
  * This thread runs during a connection with a remote Bluetooth device.
  * It handles all incoming and outgoing transmissions.
  */
-public class AndroidConnectedThread extends Thread {
+public final class AndroidConnectedThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidConnectedThread");
     private static final int BUFFER_SIZE_IN_BYTES = 1024;
     private final BluetoothSocket socket;
@@ -45,7 +45,7 @@ public class AndroidConnectedThread extends Thread {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (final IOException e) {
-                LOGGER.error("Failed to create a temp socket");
+                LOGGER.error("Failed to create a temp socket", e);
             }
             inputStream = tmpIn;
             outputStream = tmpOut;
@@ -56,6 +56,7 @@ public class AndroidConnectedThread extends Thread {
     /**
      * Should not be called by the user; runs the thread
      */
+    @Override
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
         setName("Android Connected Thread");
@@ -73,7 +74,7 @@ public class AndroidConnectedThread extends Thread {
                 bluetoothHandler.saveContact(buffer);
 
             } catch (final IOException e) {
-                LOGGER.warn("Disconnected from the paired device");
+                LOGGER.warn("Disconnected from the paired device", e);
                 bluetoothHandler.getServiceLocator().postOnEventBus(new BluetoothConnectionLostEvent());
             }
         }
@@ -82,13 +83,13 @@ public class AndroidConnectedThread extends Thread {
     /**
      * Write to the connected OutStream.
      *
-     * @param buffer The bytes to write
+     * @param buffer The bytes to send
      */
-    public void write(final byte[] buffer) {
+    void write(final byte[] buffer) {
         try {
             outputStream.write(buffer);
         } catch (final IOException e) {
-            LOGGER.error("Exception during writing");
+            LOGGER.error("Exception during writing", e);
         }
     }
 
@@ -99,7 +100,7 @@ public class AndroidConnectedThread extends Thread {
         try {
             socket.close();
         } catch (final IOException e) {
-            LOGGER.error("Closing socket");
+            LOGGER.error("Closing socket", e);
         }
     }
 }

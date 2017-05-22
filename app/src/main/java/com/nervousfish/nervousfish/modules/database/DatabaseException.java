@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.exceptions;
+package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
@@ -7,17 +7,17 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
- * Thrown when there is an issue with deserization
+ * Thrown when there is an issue with the database
  */
-public final class DeserializationException extends RuntimeException {
-    private static final long serialVersionUID = -1930759199728515311L;
+public final class DatabaseException extends RuntimeException {
+    private static final long serialVersionUID = -5464890114687852303L;
 
     /**
-     * Constructs a new DeserializationException that's thrown when there is an issue with deserization
+     * Constructs a new Database Exception, thrown when there is an issue with the database
      *
-     * @param msg A string describing the event
+     * @param msg A message describing the event that happened
      */
-    public DeserializationException(final String msg) {
+    public DatabaseException(final String msg) {
         super(msg);
     }
 
@@ -41,7 +41,7 @@ public final class DeserializationException extends RuntimeException {
      * any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -1930759199728515311L;
+        private static final long serialVersionUID = -5464890114687852303L;
 
         private final String message;
         private final Throwable throwable;
@@ -51,7 +51,7 @@ public final class DeserializationException extends RuntimeException {
          *
          * @param exception The current instance of the proxy
          */
-        SerializationProxy(final DeserializationException exception) {
+        SerializationProxy(final DatabaseException exception) {
             message = exception.getMessage();
             throwable = exception.getCause();
         }
@@ -62,7 +62,7 @@ public final class DeserializationException extends RuntimeException {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return (DeserializationException) new DeserializationException(message).initCause(throwable);
+            return (DatabaseException) new DatabaseException(message).initCause(throwable);
         }
     }
 }
