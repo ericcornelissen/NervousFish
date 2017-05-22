@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * This thread runs while listening for incoming connections. It behaves
- * like a server-side client. It runs until a connection is accepted
+ * This thread runs while listening for incoming connections over Bluetooth. It behaves
+ * like a server-side Bluetooth client. It runs until a connection is accepted
  * (or until cancelled).
  */
 class AndroidAcceptThread extends Thread {

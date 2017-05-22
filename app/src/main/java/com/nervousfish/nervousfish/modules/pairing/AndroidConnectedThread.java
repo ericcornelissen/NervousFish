@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * This thread runs during a connection with a remote device.
+ * This thread runs during a connection with a remote Bluetooth device.
  * It handles all incoming and outgoing transmissions.
  */
 class AndroidConnectedThread extends Thread {
