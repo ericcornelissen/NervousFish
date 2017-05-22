@@ -22,7 +22,6 @@ import java.io.IOException;
 public final class LoginActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
-
     private IServiceLocator serviceLocator;
     private String actualPassword;
 
@@ -37,10 +36,10 @@ public final class LoginActivity extends Activity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        IDatabase database = this.serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         try {
             this.actualPassword = database.getUserPassword();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Failed to retrieve password from database", e);
         }
         LOGGER.info("LoginActivity created");
@@ -48,8 +47,9 @@ public final class LoginActivity extends Activity {
 
     /**
      * Validate a login attempt.
+     * @param view The submit button that was clicked
      */
-    public void validateLoginAttempt(final View v) {
+    public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
 
         final View mError = findViewById(R.id.error);
@@ -79,7 +79,7 @@ public final class LoginActivity extends Activity {
      * Go to the next activity from the {@link LoginActivity}.
      */
     private void nextActivity() {
-        final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }

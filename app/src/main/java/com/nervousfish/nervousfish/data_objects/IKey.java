@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.Serializable;
 
+
 /**
  * The interface for the standard Java representation of a (public/private) key.
  */
@@ -33,7 +34,8 @@ public interface IKey extends Serializable {
 
     /**
      * Write the key to a {@link JsonWriter}.
+     * @param writer Used to write the key to
      */
-    void toJSON(final JsonWriter writer) throws IOException;
+    void toJson(JsonWriter writer) throws IOException;
 
 }

@@ -52,12 +52,10 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
 
     @Given("^I am viewing the visual verification activity$")
     public void iHaveAVisualVerificationActivity() {
-        onView(withId(R.id.login_password_input)).perform(closeSoftKeyboard());
         Intent intent = new Intent(getActivity(), VisualVerificationActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
                 getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
         getActivity().startActivity(intent);
-        assertEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
     }
 
     @When("^I press button (\\d+)$")
