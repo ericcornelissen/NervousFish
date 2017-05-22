@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply from: '../config/quality.gradle'
 
@@ -39,35 +38,6 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
-}
-
-jacoco {
-    toolVersion = "0.7.6.201602180812"
-    reportsDir = file("$buildDir/JacocoReportDir")
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest") {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
-    reports {
-        csv.enabled false
-        html.enabled true
-        html.destination "${buildDir}/reports/jacoco/test/html"
-        xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-    }
-    classDirectories = fileTree(
-            dir: './build/intermediates/classes/debug',
-            excludes: [
-                    // Exclude dependencies
-                    'android/**/*.class', 'cn/pedant/**/*.class', 'com/pnikosis/**/*.class',
-
-                    // Exclude hard to test code
-                    'com/nervousfish/nervousfish/modules/pairing/*.class' // Bluetooth/NFC connections
-            ]
-    )
-    sourceDirectories = files(['src/main/java'])
-    executionData = files('build/jacoco/testDebugUnitTest.exec')
 }
 
 dependencies {
