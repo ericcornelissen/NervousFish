@@ -86,7 +86,9 @@ public final class MainActivity extends Activity {
      */
     public void onBluetoothButtonClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
-        startBluetoothPairing();
+        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
     }
 
     /**
@@ -95,7 +97,9 @@ public final class MainActivity extends Activity {
      */
     public void onNFCButtonClick(final View view) {
         LOGGER.info("NFC button clicked");
-        startNFCPairing();
+        final Intent intent = new Intent(this, NFCActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
     }
 
     /**
@@ -104,7 +108,9 @@ public final class MainActivity extends Activity {
      */
     public void onQRButtonClicked(final View view) {
         LOGGER.info("QR button clicked");
-        startQRPairing();
+        final Intent intent = new Intent(this, QRActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
     }
 
     /**
@@ -114,33 +120,6 @@ public final class MainActivity extends Activity {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
-        startActivity(intent);
-    }
-
-    /**
-     * Starts the Bluetooth pairing activity.
-     */
-    private void startBluetoothPairing() {
-        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
-    }
-
-    /**
-     * Starts the NFC pairing activity.
-     */
-    private void startNFCPairing() {
-        final Intent intent = new Intent(this, NFCActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
-    }
-
-    /**
-     * Starts the QR display or read activity.
-     */
-    private void startQRPairing() {
-        final Intent intent = new Intent(this, QRActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }
 
