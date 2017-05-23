@@ -63,6 +63,9 @@ public final class LoginActivity extends Activity {
         if (skipPassword) {
             LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
+            final Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            startActivity(intent);
             this.nextActivity();
         } else {
             final String providedPassword = passwordInput.getText().toString();
@@ -73,7 +76,9 @@ public final class LoginActivity extends Activity {
             } else {
                 LOGGER.info("Password correct");
                 mError.setVisibility(View.GONE);
-                this.nextActivity();
+                final Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+                startActivity(intent);
             }
         }
     }
