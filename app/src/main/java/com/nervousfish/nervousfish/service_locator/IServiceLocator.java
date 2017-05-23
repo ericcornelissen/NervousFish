@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
+import com.nervousfish.nervousfish.modules.util.IUtils;
 
 import java.io.Serializable;
 
@@ -34,6 +35,8 @@ public interface IServiceLocator extends Serializable {
     INfcHandler getNFCHandler();
 
     IQRHandler getQRHandler();
+
+    IUtils getUtils();
 
     /**
      * Registers the class specified to the EventBus
