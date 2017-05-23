@@ -11,11 +11,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -184,8 +182,13 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         bluetoothHandler.stop();
     }
 
+    /**
+     * Gets triggered when the back button is clicked.
+     *
+     * @param v - the {@link View} clicked
+     */
     public void onBackButtonClick(final View v) {
-        setResult(6);
+        setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
         finish();
     }
 

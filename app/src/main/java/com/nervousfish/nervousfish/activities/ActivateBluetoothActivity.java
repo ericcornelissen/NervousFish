@@ -22,14 +22,16 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Used as an in-between screen to the BluetoothConnectionActivity to activate the
  * Bluetooth before we go to that activity.
  */
+@SuppressWarnings("checkstyle:MultipleStringLiterals")
 public final class ActivateBluetoothActivity extends Activity {
+    //Request and result codes
+    static final int RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY = 6;
+    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
+    private static final int REQUEST_CODE_BLUETOOTH_ACTIVITY = 111;
+
     private static final Logger LOGGER = LoggerFactory.getLogger("ActivateBluetoothActivity");
     private IServiceLocator serviceLocator;
     private BluetoothAdapter bluetoothAdapter;
-
-    //Request codes
-    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
-    private static final int CODE_BLUETOOTH_ACTIVITY = 111;
 
     /**
      * {@inheritDoc}
@@ -46,9 +48,9 @@ public final class ActivateBluetoothActivity extends Activity {
         setUp();
 
         if (bluetoothAdapter.isEnabled()) {
-            final Intent intentConnection = new Intent(ActivateBluetoothActivity.this, BluetoothConnectionActivity.class);
+            final Intent intentConnection = new Intent(this, BluetoothConnectionActivity.class);
             intentConnection.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-            startActivityForResult(intentConnection, CODE_BLUETOOTH_ACTIVITY);
+            startActivityForResult(intentConnection, REQUEST_CODE_BLUETOOTH_ACTIVITY);
         }
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
@@ -99,15 +101,26 @@ public final class ActivateBluetoothActivity extends Activity {
      * {@inheritDoc}
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_ENABLE_BLUETOOTH){
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
             final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-            startActivityForResult(intent, CODE_BLUETOOTH_ACTIVITY);
-        } else if(requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
-            Log.d("test", "Neenee");
-        } else if(resultCode == 6 && requestCode == CODE_BLUETOOTH_ACTIVITY) {
+            startActivityForResult(intent, REQUEST_CODE_BLUETOOTH_ACTIVITY);
+        } else if (requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.activating_bluetooth_went_wrong))
+                    .setContentText(getString(R.string.activating_bluetooth_went_wrong_explanation))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(final SweetAlertDialog sDialog) {
+                            sDialog.dismiss();
+                            finish();
+                        }
+                    })
+                    .show();
+        } else if (resultCode == RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY && requestCode == REQUEST_CODE_BLUETOOTH_ACTIVITY) {
             finish();
         }
     }

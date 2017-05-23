@@ -33,6 +33,9 @@
     <string name="edit_menu_item">Edit</string>
     <string name="delete_menu_item">Delete</string>
 
+    <string name="activating_bluetooth_went_wrong">Bluetooth could not be activated</string>
+    <string name="activating_bluetooth_went_wrong_explanation">Bluetooth needs to be activated to share public keys over Bluetooth.
+    Please try again or use another method.</string>
     <string name="activating_bluetooth">Activating Bluetooth…</string>
     <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
         note that we don\'t do anything with this location.</string>
