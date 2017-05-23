@@ -126,7 +126,7 @@ public final class ChangeContactActivity extends Activity {
                     contact = newContact;
                 }
             } catch (final IOException e) {
-                LOGGER.error("IOException while updating contactname");
+                LOGGER.error("IOException while updating contactname", e);
             }
 
             setResult(RESULT_FIRST_USER,

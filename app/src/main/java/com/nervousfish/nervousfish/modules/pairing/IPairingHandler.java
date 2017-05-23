@@ -8,9 +8,9 @@ import java.io.IOException;
 public interface IPairingHandler {
 
     /**
-     * Luxury method that calls writeContact() for each contact of the database.
+     * Luxury method that calls sendContact() for each contact of the database.
      *
      * @throws IOException When deserialization doesn't go well.
      */
-    void writeAllContacts() throws IOException;
+    void sendAllContacts() throws IOException;
 }
