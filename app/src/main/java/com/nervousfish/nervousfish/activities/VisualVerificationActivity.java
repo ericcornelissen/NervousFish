@@ -31,7 +31,7 @@ public class VisualVerificationActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.grid);
+        this.setContentView(R.layout.visual_verification);
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -43,7 +43,8 @@ public class VisualVerificationActivity extends Activity {
      * Go to the next activity and provide it with the generated pattern.
      */
     private void nextActivity() {
-        final Intent intent = new Intent(this, LoginActivity.class);
+        // TODO: Progress to the correct activity
+        final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SECURITY_CODE, this.securityCode);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
@@ -59,7 +60,7 @@ public class VisualVerificationActivity extends Activity {
         LOGGER.info("button '%s' clicked", button);
 
         if (this.securityCode.length() > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
-            LOGGER.info("Security code already long enough");
+            LOGGER.warn("Security code already long enough");
         } else if (this.securityCode.length() + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             this.securityCode += button;
             LOGGER.info("final code is: %s", this.securityCode);
