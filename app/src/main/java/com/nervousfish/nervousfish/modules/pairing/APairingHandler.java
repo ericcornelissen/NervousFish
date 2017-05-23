@@ -1,72 +1,75 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.exceptions.DeserializationException;
+import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Contains common methods shared by all pairing modules.
  */
-@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
-abstract class APairingHandler {
+abstract class APairingHandler implements IPairingHandler, Serializable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
+    private static final long serialVersionUID = 1656974573024980860L;
+
+    private final IServiceLocator serviceLocator;
     private final IDatabase database;
 
     /**
      * Prevent instantiation by other classes outside it's package
-     * @param serviceLocator
+     *
+     * @param serviceLocator the serviceLocator which will provide means to access other modules
      */
-    @SuppressWarnings("PMD.UnusedFormalParameter") // This servicelocator will be used later on probably
     APairingHandler(final IServiceLocator serviceLocator) {
-        database = serviceLocator.getDatabase();
+        this.serviceLocator = serviceLocator;
+        this.database = serviceLocator.getDatabase();
     }
 
     /**
-     * Luxury method that calls writeContact() for each contact of the database.
-     * @throws IOException When deserialization doesn't go well.
+     * {@inheritDoc}
      */
-    void writeAllContacts() throws IOException {
+    @Override
+    public void sendAllContacts() throws IOException {
         final List<Contact> list = database.getAllContacts();
-        for (final Contact e: list) {
-            writeContact(e);
+        for (final Contact e : list) {
+            sendContact(e);
         }
     }
 
     /**
      * Serializes a contact object and writes it, which is implemented in the specific subclass.
+     *
      * @param contact contact to serialize
      * @throws IOException When deserialization doesn't go well.
      */
-    void writeContact(final Contact contact) throws IOException {
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = null;
-        ObjectOutputStream oos = null;
-        try {
-            bos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(bos);
+    void sendContact(final Contact contact) throws IOException {
+        LOGGER.info("Begin writing contact :" + contact.getName());
+        final byte[] bytes;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(contact);
             oos.flush();
             bytes = bos.toByteArray();
-        } finally {
-            if (oos != null) {
-                oos.close();
-            }
-            if (bos != null) {
-                bos.close();
-            }
         }
-        write(bytes);
+        send(bytes);
     }
 
     /**
      * Checks if a name of a given contact exists in the database.
+     *
      * @param contact A contact object
      * @return true when a contact with the same exists in the database
      * @throws IOException When database fails to respond
@@ -74,9 +77,8 @@ abstract class APairingHandler {
     boolean checkExists(final Contact contact) throws IOException {
         final String name = contact.getName();
         final List<Contact> list = database.getAllContacts();
-        for (final Contact e: list) {
+        for (final Contact e : list) {
             if (e.getName().equals(name)) {
-                showWarning();
                 return true;
             }
         }
@@ -85,57 +87,37 @@ abstract class APairingHandler {
 
     /**
      * Deserializes a contact through a byte array and sends it to the database.
+     *
      * @param bytes byte array representing a contact
      * @return Whether or not the process finished successfully
      */
-    boolean saveContact(final byte[] bytes){
-        Contact contact = null;
-        ByteArrayInputStream bis = null;
-        ObjectInputStream ois = null;
-        try {
-            bis = new ByteArrayInputStream(bytes);
-            ois = new ObjectInputStream(bis);
+    Contact saveContact(final byte[] bytes) {
+        LOGGER.info("Saving these bytes: %s", bytes);
+        final Contact contact;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
             contact = (Contact) ois.readObject();
-        } catch (final ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (final IOException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (ois != null) {
-                try {
-                    ois.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        } catch (final ClassNotFoundException | IOException e) {
+            LOGGER.error(" Couldn't start deserialization!", e);
+            throw (DeserializationException) new DeserializationException("The contact could not be deserialized").initCause(e);
         }
         try {
             database.addContact(contact);
-        } catch (final IOException e) {
-            e.printStackTrace();
-            return false;
+        } catch (IOException e) {
+            LOGGER.warn("Contact already existed", e);
+            throw (DatabaseException) new DatabaseException("Contact already existed in the database").initCause(e);
         }
-        return true;
+        return contact;
+    }
+
+    protected IServiceLocator getServiceLocator() {
+        return this.serviceLocator;
     }
 
     /**
-     * Abstract method in order to write to the connected Device via outputstream.
+     * Write the buffer to the world
      *
-     * @param buffer The bytes to write
+     * @param buffer The bytes to send
      */
-    abstract void write(final byte[] buffer);
-
-    /**
-     * Abstract method that handles warnings/errors and shows them to the user.
-     */
-    abstract void showWarning();
+    abstract void send(byte[] buffer);
 }

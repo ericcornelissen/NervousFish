@@ -23,12 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Class that can be used to generate QR codes.
  */
-final public class QRGenerator {
+public final class QRGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRGenerator");
     private static final int QRCODE_IMAGE_HEIGHT = 400;
@@ -55,7 +56,7 @@ final public class QRGenerator {
             final BitMatrix matrix = qrWriter.encode(publicKey, BarcodeFormat.QR_CODE, QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT);
             for (int x = 0; x < QRCODE_IMAGE_WIDTH; x++) {
                 for (int y = 0; y < QRCODE_IMAGE_HEIGHT; y++) {
-                    final int color = (matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                    final int color = matrix.get(x, y) ? Color.BLACK : Color.WHITE;
                     bitmap.setPixel(x, y, color);
                 }
             }
@@ -69,22 +70,24 @@ final public class QRGenerator {
     /**
      * Decodes the QRcode to a public key string.
      *
-     * @param QRCode The QR code as a bitmap.
+     * @param qrCode The QR code as a bitmap
      * @return The decoded public key.
      * @throws IOException If the QR code could not be decoded.
      */
-    public static String decode(final Bitmap QRCode) throws IOException {
+    // We suppress this warning because an EnumMap is much more efficient than a hashmap for such small maps
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    public static String decode(final Bitmap qrCode) throws IOException {
         final Reader qrReader = new MultiFormatReader();
-        final int[] intArray = new int[QRCode.getWidth() * QRCode.getHeight()];
+        final int[] intArray = new int[qrCode.getWidth() * qrCode.getHeight()];
 
-        // copy pixel data from the Bitmap into the 'intArray' array
-        QRCode.getPixels(intArray, 0, QRCode.getWidth(), 0, 0, QRCode.getWidth(), QRCode.getHeight());
+        //copy pixel data from the Bitmap into the 'intArray' array
+        qrCode.getPixels(intArray, 0, qrCode.getWidth(), 0, 0, qrCode.getWidth(), qrCode.getHeight());
 
-        final LuminanceSource source = new RGBLuminanceSource(QRCode.getWidth(), QRCode.getHeight(), intArray);
+        final LuminanceSource source = new RGBLuminanceSource(qrCode.getWidth(), qrCode.getHeight(), intArray);
         final BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
         try {
-            final Hashtable<DecodeHintType, Object> decodeHints = new Hashtable<>();
+            final Map<DecodeHintType, Object> decodeHints = new EnumMap<>(DecodeHintType.class);
             decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
             final Result decoded = qrReader.decode(bitmap, decodeHints);
             return decoded.getText();

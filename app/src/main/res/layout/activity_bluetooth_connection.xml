@@ -5,29 +5,29 @@
     android:layout_height="match_parent">
 
 
-    <EditText
-        android:id="@+id/editText"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Paired devices" />
+        android:gravity="center"
+        android:text="@string/paired_devices"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
 
     <ListView
-        android:id="@+id/pairedlist"
+        android:id="@+id/paired_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/editText2"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Discovered devices" />
+        android:gravity="center"
+        android:text="@string/discovered_devices"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
 
     <ListView
-        android:id="@+id/discoveredlist"
+        android:id="@+id/discovered_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
