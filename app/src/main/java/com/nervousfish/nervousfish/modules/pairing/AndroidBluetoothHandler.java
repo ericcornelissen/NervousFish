@@ -49,6 +49,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         mState = State.none;
+        getServiceLocator().postOnEventBus(new BluetoothDisconnectedEvent());
     }
 
     /**
