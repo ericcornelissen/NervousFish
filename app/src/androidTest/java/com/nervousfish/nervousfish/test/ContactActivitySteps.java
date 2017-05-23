@@ -40,8 +40,9 @@ import static org.hamcrest.core.AllOf.allOf;
 
 @CucumberOptions(features = "features")
 public class ContactActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+    private static final Activity[] activity = new Activity[1];
 
-    private Activity previousActivity;
+    private Activity previousActivity = null;
     private Contact contact = null;
     private IServiceLocator serviceLocator = null;
     private final static String TEST_NAME = "TestPerson";
@@ -117,20 +118,22 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
     }
 
+
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
         try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
+            runTestOnUiThread(new GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return activity[0];
+    }
+
+    private static class GetCurrentActivityRunnable implements Runnable {
+        @Override
+        public void run() {
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            activity[0] = Iterables.getOnlyElement(activities);
+        }
     }
 }
