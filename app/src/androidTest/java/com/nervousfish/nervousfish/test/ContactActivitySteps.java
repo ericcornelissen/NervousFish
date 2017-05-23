@@ -70,7 +70,6 @@ public class ContactActivitySteps extends ActivityInstrumentationTestCase2<Entry
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         getCurrentActivity().startActivity(intent);
-        assertTrue(getCurrentActivity() instanceof ContactActivity);
     }
 
     @When("^I press the back arrow$")
