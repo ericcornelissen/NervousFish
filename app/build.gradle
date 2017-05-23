@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
+
+apply from: '../config/coverage.gradle'
 apply from: '../config/quality.gradle'
 
 android {
@@ -41,22 +42,6 @@ android {
     }
 }
 
-cobertura {
-    coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
-    coverageExcludes = [
-            // Exclude dependencies
-            '.*android.*'
-            , '.*cn.pedant.*'
-            , '.*com.pnikosis.*'
-
-            // Exclude hard to test code
-            , '.*com.nervousfish.nervousfish.modules.pairing.*' // Bluetooth/NFC connections
-            // Exclude activities
-            , '.*com.nervousfish.nervousfish.*.*Activity'
-            , '.*com.nervousfish.nervousfish.*.*Activity\\$.*'
-    ]
-}
-
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:percent:25.3.1'
@@ -78,7 +63,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
     androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
