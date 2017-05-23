@@ -110,7 +110,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void startBluetoothPairing() {
-        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        final Intent intent = new Intent(this, BluetoothNotActiveActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
     }

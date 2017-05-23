@@ -33,6 +33,10 @@
     <string name="edit_menu_item">Edit</string>
     <string name="delete_menu_item">Delete</string>
 
+    <string name="activating_bluetooth">Activating Bluetooth…</string>
+    <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
+        note that we don\'t do anything with this location.</string>
+
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>
     <string name="contact_deleted_title">Deleted!</string>

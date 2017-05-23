@@ -44,6 +44,9 @@
             android:name=".activities.WaitForSlaveActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.BluetoothNotActiveActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
