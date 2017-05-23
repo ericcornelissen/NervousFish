@@ -93,7 +93,7 @@ public final class ServiceLocator implements IServiceLocator {
      */
     @Override
     public String getAndroidFilesDir() {
-        this.assertExists(this.androidFilesDir, "androidFileDir");
+        this.assertExists(this.androidFilesDir, "androidFilesDir");
         return this.androidFilesDir;
     }
 
