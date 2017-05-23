@@ -21,4 +21,14 @@ public interface IConstants extends IModule {
      */
     String getDatabaseUserdataPath();
 
+    /**
+     * @return The width in pixels of the qr code encoding the public key
+     */
+    int getQRCodeWidth();
+
+    /**
+     * @return The height in pixels of the qr code encoding the public key
+     */
+    int getQRCodeHeight();
+
 }

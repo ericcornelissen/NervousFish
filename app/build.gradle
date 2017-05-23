@@ -64,6 +64,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'org.mockito:mockito-core:2.7.22'
     androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
     androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
 }
