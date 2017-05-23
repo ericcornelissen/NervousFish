@@ -31,16 +31,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
 public class WaitingForSlaveSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+    private static final Activity[] activity = new Activity[1];
 
     public WaitingForSlaveSteps(EntryActivity activityClass) {
         super(EntryActivity.class);
     }
     public WaitingForSlaveSteps() {
         super(EntryActivity.class);
-    }
-
-    private static Matcher<? super View> hasErrorText(final String expectedError) {
-        return new WaitingForSlaveSteps.ErrorTextMatcher(expectedError);
     }
 
     @Given("^I am viewing the waitingForSlave activity$")
@@ -63,21 +60,23 @@ public class WaitingForSlaveSteps extends ActivityInstrumentationTestCase2<Entry
         assertEquals(MainActivity.class, getCurrentActivity().getClass());
     }
 
+
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
         try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
+            runTestOnUiThread(new GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return activity[0];
+    }
+
+    private static class GetCurrentActivityRunnable implements Runnable {
+        @Override
+        public void run() {
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            activity[0] = Iterables.getOnlyElement(activities);
+        }
     }
 
     /**
