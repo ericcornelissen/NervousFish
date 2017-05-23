@@ -38,7 +38,7 @@
     Please try again or use another method.</string>
     <string name="activating_bluetooth">Activating Bluetooth…</string>
     <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
-        note that we don\'t do anything with this location.</string>
+        note that we won\'t do anything with your location.</string>
 
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -23,6 +22,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Bluetooth before we go to that activity.
  */
 @SuppressWarnings("checkstyle:MultipleStringLiterals")
+//We want to use a string multiple times
 public final class ActivateBluetoothActivity extends Activity {
     //Request and result codes
     static final int RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY = 6;
@@ -62,14 +62,13 @@ public final class ActivateBluetoothActivity extends Activity {
     }
 
     /**
-     * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
+     * Sets up a {@link BluetoothAdapter}. If Bluetooth isn't supported the activity is canceled.
      */
     public void setUp() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (this.bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
             setResult(Activity.RESULT_CANCELED);
-            Log.d("test", "11111");
             finish();
         }
     }
@@ -80,8 +79,6 @@ public final class ActivateBluetoothActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-
-        Log.d("test", "onStart");
         enableBluetooth();
     }
 
@@ -89,8 +86,8 @@ public final class ActivateBluetoothActivity extends Activity {
      * Enables bluetooth.
      */
     public void enableBluetooth() {
-        LOGGER.info("Requesting to enable Bluetooth");
         if (!bluetoothAdapter.isEnabled()) {
+            LOGGER.info("Requesting to enable Bluetooth");
             final Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             this.startActivityForResult(enableIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
             LOGGER.info("Request to enable Bluetooth sent");
