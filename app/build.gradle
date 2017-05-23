@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.kt3k.coveralls'
+
+apply from: '../config/coverage.gradle'
 apply from: '../config/quality.gradle'
 
 android {
@@ -40,12 +42,6 @@ android {
     }
 }
 
-task moveCoverageReport(type: Copy) {
-    file("${buildDir}/reports/coverage/debug/report.xml").renameTo(file("${buildDir}/reports/coverage/debug/jacocoTestReport.xml"))
-    file("${buildDir}/reports/coverage/debug").renameTo(file("${buildDir}/reports/coverage/test"))
-    file("${buildDir}/reports/coverage").renameTo(file("${buildDir}/reports/jacoco"))
-}
-
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -65,7 +61,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
     androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
