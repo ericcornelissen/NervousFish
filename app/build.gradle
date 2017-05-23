@@ -40,6 +40,12 @@ android {
     }
 }
 
+task moveCoverageReport(type: Copy) {
+    file("${buildDir}/reports/coverage/debug/report.xml").renameTo(file("${buildDir}/reports/coverage/debug/jacocoTestReport.xml"))
+    file("${buildDir}/reports/coverage/debug").renameTo(file("${buildDir}/reports/coverage/test"))
+    file("${buildDir}/reports/coverage").renameTo(file("${buildDir}/reports/jacoco"))
+}
+
 dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
