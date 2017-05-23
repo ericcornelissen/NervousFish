@@ -22,6 +22,7 @@ import cucumber.api.java.en.When;
 
 @CucumberOptions(features = "features")
 public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+    private static final Activity[] activity = new Activity[1];
 
     public BluetoothActivitySteps(EntryActivity activityClass) {
         super(EntryActivity.class);
@@ -49,18 +50,19 @@ public class BluetoothActivitySteps extends ActivityInstrumentationTestCase2<Ent
 
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
         try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
+            runTestOnUiThread(new GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return activity[0];
+    }
+
+    private static class GetCurrentActivityRunnable implements Runnable {
+        @Override
+        public void run() {
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            activity[0] = Iterables.getOnlyElement(activities);
+        }
     }
 }

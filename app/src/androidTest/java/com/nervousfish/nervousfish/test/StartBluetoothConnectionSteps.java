@@ -23,9 +23,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 
 @CucumberOptions(features = "features")
-public class startBluetoothConnectionSteps extends ActivityInstrumentationTestCase2<MainActivity> {
+public class StartBluetoothConnectionSteps extends ActivityInstrumentationTestCase2<MainActivity> {
+    private static final Activity[] activity = new Activity[1];
 
-    public startBluetoothConnectionSteps(EntryActivity activityClass) {
+    public StartBluetoothConnectionSteps(EntryActivity activityClass) {
         super(MainActivity.class);
     }
 
@@ -44,21 +45,23 @@ public class startBluetoothConnectionSteps extends ActivityInstrumentationTestCa
         assertEquals(getCurrentActivity().getClass(), BluetoothConnectionActivity.class);
     }
 
+
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
         try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
+            runTestOnUiThread(new GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return activity[0];
+    }
+
+    private static class GetCurrentActivityRunnable implements Runnable {
+        @Override
+        public void run() {
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            activity[0] = Iterables.getOnlyElement(activities);
+        }
     }
 
 }
