@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,9 +45,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
-
-    //Request codes
-    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
 
     // Device is now discoverable for 300 seconds
     private BluetoothAdapter bluetoothAdapter;
@@ -106,8 +104,12 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // SetUp bluetooth adapter
+        final Intent intent = getIntent();
+        // Get the serviceLocator.
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
         setUp();
+
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, filter);
@@ -140,14 +142,20 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(broadcastReceiver, filter);
 
-        // Get the serviceLocator.
-        final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
         // Get the AndroidBluetoothHandler.
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
 
         this.newDevices = new HashSet<>();
+
+        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                final Intent intentMain = new Intent(BluetoothConnectionActivity.this, MainActivity.class);
+                intentMain.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentMain);
+            }
+        });
     }
 
     /**
@@ -169,15 +177,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
         bluetoothHandler.start();
-        enableBluetooth();
 
-        while(!bluetoothAdapter.isEnabled()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
@@ -202,18 +202,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             // consequence for device not supporting bluetooth
             setResult(Activity.RESULT_CANCELED);
             finish();
-        }
-    }
-
-    /**
-     * Enables bluetooth.
-     */
-    public void enableBluetooth() {
-        LOGGER.info("Requesting to enable Bluetooth");
-        if (!bluetoothAdapter.isEnabled()) {
-            final Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
-            LOGGER.info("Request to enable Bluetooth sent");
         }
     }
 

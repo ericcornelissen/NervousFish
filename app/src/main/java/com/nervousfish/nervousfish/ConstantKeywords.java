@@ -8,6 +8,8 @@ public final class ConstantKeywords {
     public static final String SECURITY_CODE = "Security Code";
     public static final String RSA_KEY = "RSA";
     public static final String CONTACT = "contact";
+    public static final String BLUETOOTH_ADAPTER = "Bluetooth Adapter";
+
 
     /**
      * Prevent instantiation
