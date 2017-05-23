@@ -1,6 +1,9 @@
 # NervousFish
 [![Build Status](https://travis-ci.org/ericcornelissen/NervousFish.svg?branch=develop)](https://travis-ci.org/ericcornelissen/NervousFish)
 [![Coverage Status](https://coveralls.io/repos/github/ericcornelissen/NervousFish/badge.svg?branch=master)](https://coveralls.io/github/ericcornelissen/NervousFish?branch=master)
+[![Sprint backlog](https://badge.waffle.io/ericcornelissen/nervousfish.png?label=this%20week&title=Sprint%20backlog)](http://waffle.io/ericcornelissen/nervousfish)
+
+## Nervous Fish :fish:
 
 An app for your :iphone: to exchange public-keys in a secure manner.
 
