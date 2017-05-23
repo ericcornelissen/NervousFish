@@ -71,7 +71,6 @@ final class AndroidAcceptThread extends Thread {
             }
 
             this.bluetoothHandler.notifyAlmostConnected(socket);
-            //serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
         }
         LOGGER.info("End accept thread");
     }

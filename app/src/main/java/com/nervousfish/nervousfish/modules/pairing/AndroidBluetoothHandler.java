@@ -29,10 +29,12 @@ import java.util.Arrays;
 // 1) A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
 // 2) Suggested use by Android Bluetooth Manual
 // 3) explained where used
+// 4) getServiceLocator() is defined in the superclass to retrieve the service locator. Refractoring the variable into every subclass
+//    would add a duplicate variable / initializer in all subclasses
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = 7340362791131903553L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
-    private final Object lock = new Object();
+    private final transient Object lock = new Object();
     @Nullable
     private transient AndroidAcceptThread acceptThread;
     @Nullable
