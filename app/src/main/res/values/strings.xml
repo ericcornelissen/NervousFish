@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NervousFish</string>
+    <string name="app_name" translatable="false">NervousFish</string>
 
     <string name="loginMessage">Enter your password below</string>
     <string name="password">Password</string>

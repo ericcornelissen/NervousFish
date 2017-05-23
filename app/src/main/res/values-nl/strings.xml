@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NervousFish</string>
+    <string name="cancel">Annuleren</string>
+    <string name="cancel_pairing">Annuleren</string>
+    <string name="change_contact_title">Wijzig Contact</string>
+    <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
+    <string name="contact_deleted_description">Het contact is al verwijderd!</string>
+    <string name="contact_deleted_title">Verwijderd!</string>
+    <string name="contact_doesnt_exist">Het contact bestaat niet</string>
+    <string name="contact_title">Contact</string>
+    <string name="delete">Verwijder</string>
+    <string name="delete_menu_item">Verwijder</string>
+    <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
+    <string name="discovered_devices">Ontdekte apparaten</string>
+    <string name="edit_menu_item">Wijzig</string>
+    <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
+    <string name="invalid_name">Ongeldige naam ingevoerd</string>
+    <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
+    <string name="loginMessage">Vul je wachtwoord hieronder in</string>
+    <string name="msg_mismatch">Je wachtwoord is incorrect</string>
+    <string name="name">Naam</string>
+    <string name="no_devices_found">Geen apparaten gevonden...</string>
+    <string name="paired_devices">Verbonden apparaten</string>
+    <string name="password">Wachtwoord</string>
+    <string name="popup_you_sure">Weet je het zeker?</string>
+    <string name="public_key_snippet">Gedeeltelijke Public Key</string>
+    <string name="something_went_wrong">Er is iets fout gegaan</string>
+    <string name="something_went_wrong_try_again">Er is iets fout gegaan met het verwijderen van het contact, probeer het later nog eens.</string>
+    <string name="submit">Inloggen</string>
+    <string name="title_activity_contact">Contact</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="waiting_for_slave">Wachten op partner...</string>
+    <string name="yes_delete">Ja, verwijder het!</string>
+    <string name="yes_go_back">Ja, ga terug!</string>
+</resources>
