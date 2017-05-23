@@ -4,6 +4,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.exceptions.DeserializationException;
 import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,6 +29,7 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
 
     private final IServiceLocator serviceLocator;
     private final IDatabase database;
+    private final IFileSystem fileSystem;
 
     /**
      * Prevent instantiation by other classes outside it's package
@@ -36,6 +39,7 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
     APairingHandler(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
         this.database = serviceLocator.getDatabase();
+        this.fileSystem = serviceLocator.getFileSystem();
     }
 
     /**
@@ -108,6 +112,14 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
             throw (DatabaseException) new DatabaseException("Contact already existed in the database").initCause(e);
         }
         return contact;
+    }
+
+    void sendContactFile() throws IOException {
+        //get the path via Ifilesystem, for now use a dummy
+        RandomAccessFile f = new RandomAccessFile("temp", "rw"); //to ensure that the file is not modified during read
+        final byte[] bytes = new byte[(int)f.length()];
+        f.readFully(bytes);
+        send(bytes);
     }
 
     protected IServiceLocator getServiceLocator() {
