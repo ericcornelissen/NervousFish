@@ -26,7 +26,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:src="?attr/actionModeCloseDrawable"
-                android:contentDescription="@string/contact_title" />
+                android:contentDescription="@string/contact_title"
+                android:onClick="onBackButtonClick"/>
 
             <TextView
                 android:id="@+id/toolbar_title"

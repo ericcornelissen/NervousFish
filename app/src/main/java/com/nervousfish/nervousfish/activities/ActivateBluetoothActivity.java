@@ -29,6 +29,7 @@ public final class ActivateBluetoothActivity extends Activity {
 
     //Request codes
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
+    private static final int CODE_BLUETOOTH_ACTIVITY = 111;
 
     /**
      * {@inheritDoc}
@@ -47,7 +48,7 @@ public final class ActivateBluetoothActivity extends Activity {
         if (bluetoothAdapter.isEnabled()) {
             final Intent intentConnection = new Intent(ActivateBluetoothActivity.this, BluetoothConnectionActivity.class);
             intentConnection.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-            startActivity(intentConnection);
+            startActivityForResult(intentConnection, CODE_BLUETOOTH_ACTIVITY);
         }
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
@@ -103,9 +104,11 @@ public final class ActivateBluetoothActivity extends Activity {
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_ENABLE_BLUETOOTH){
             final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-            startActivity(intent);
-        } else{
+            startActivityForResult(intent, CODE_BLUETOOTH_ACTIVITY);
+        } else if(requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
             Log.d("test", "Neenee");
+        } else if(resultCode == 6 && requestCode == CODE_BLUETOOTH_ACTIVITY) {
+            finish();
         }
     }
 }

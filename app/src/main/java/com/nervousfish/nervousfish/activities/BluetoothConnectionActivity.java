@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -146,16 +147,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
 
         this.newDevices = new HashSet<>();
-
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                final Intent intentMain = new Intent(BluetoothConnectionActivity.this, MainActivity.class);
-                intentMain.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                intentMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intentMain);
-            }
-        });
     }
 
     /**
@@ -191,6 +182,11 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStop();
         this.serviceLocator.unregisterFromEventBus(this);
         bluetoothHandler.stop();
+    }
+
+    public void onBackButtonClick(final View v) {
+        setResult(6);
+        finish();
     }
 
     /**
