@@ -3,10 +3,9 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -37,12 +37,13 @@ import java.util.List;
  * The main activity class that shows a list of all people with their public keys
  */
 public final class MainActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
+    private static final int BACK_EXIT_DELAY_MS = 3000;
 
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private ArrayAdapter<Contact> listviewAdapter;
+    private boolean exit;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -56,27 +57,6 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.serviceLocator.registerToEventBus(this);
         this.setContentView(R.layout.activity_main);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        this.setSupportActionBar(toolbar);
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                LOGGER.info("Bluetooth button clicked");
-                startBluetoothPairing();
-            }
-
-        });
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
 
         try {
             fillDatabaseWithDemoData();
@@ -101,6 +81,16 @@ public final class MainActivity extends AppCompatActivity {
         });
 
         LOGGER.info("MainActivity created");
+    }
+
+    /**
+     * Called when the floating action button is called
+     *
+     * @param view The floating action buttion (fab)
+     */
+    public void onClickFab(final View view) {
+        LOGGER.info("Bluetooth button clicked");
+        startBluetoothPairing();
     }
 
     /**
@@ -162,6 +152,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /**
      * Called when a new contact is received
+     *
      * @param event Contains additional data about the event
      */
     @Subscribe
@@ -170,6 +161,28 @@ public final class MainActivity extends AppCompatActivity {
             serviceLocator.getDatabase().addContact(event.getContact());
         } catch (IOException e) {
             LOGGER.error("Couldn't add contact to database", e);
+        }
+    }
+
+    /**
+     * Exit the application when the user taps the back button twice
+     */
+    @Override
+    public void onBackPressed() {
+        if (this.exit) {
+            final Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press Back again to exit.", Toast.LENGTH_SHORT).show();
+            this.exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MainActivity.this.exit = false;
+                }
+            }, BACK_EXIT_DELAY_MS);
         }
     }
 
