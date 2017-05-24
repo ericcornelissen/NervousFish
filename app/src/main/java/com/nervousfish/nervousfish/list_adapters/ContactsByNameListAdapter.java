@@ -15,12 +15,12 @@ import java.util.List;
 
 /**
  * An Adapter which converts a list with contacts into List entries.
- * {@link ContactsByNameListAdapter}
+ *
  */
 public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
 
     /**
-     * Create and initialize a ContactsByNameListAdapter.
+     * Create and initialize a {@link ContactsByNameListAdapter}.
      *
      * @param context  the Context where the ListView is created
      * @param contacts the list with contacts

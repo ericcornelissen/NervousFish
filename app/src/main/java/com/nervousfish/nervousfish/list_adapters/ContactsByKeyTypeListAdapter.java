@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@code ContactsByKeyTypeListAdapter }
  * Class that is a expandable list adapter to sort contacts by key types in a expandable view
  */
 
@@ -31,7 +30,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
     private final Activity context;
 
     /**
-     * Constructor for this listadapter
+     * Constructor for this {@code ContactsByKeyTypeListAdapter } listadapter
      * @param context The Activity in which the adapter is needed
      * @param types The list of keytypes
      * @param contacts  The list of contacts to be sorted
