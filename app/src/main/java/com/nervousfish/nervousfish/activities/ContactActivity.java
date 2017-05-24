@@ -120,7 +120,7 @@ public final class ContactActivity extends AppCompatActivity {
                 serviceLocator.getDatabase().deleteContact(contact.getName());
                 sDialog.setTitleText(getString(R.string.contact_deleted_title))
                         .setContentText(getString(R.string.contact_deleted_description))
-                        .setConfirmText(getResources().getString(R.string.dialog_ok))
+                        .setConfirmText(getString(R.string.dialog_ok))
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(final SweetAlertDialog sDialog) {
@@ -131,10 +131,10 @@ public final class ContactActivity extends AppCompatActivity {
                         .showCancelButton(false)
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
             } catch (final IllegalArgumentException e) {
-                LOGGER.error("IllegalArgumentException while deleting contact in ContactActivity");
+                LOGGER.error("IllegalArgumentException while deleting contact in ContactActivity", e);
                 sDialog.setTitleText(getString(R.string.contact_doesnt_exist))
                         .setContentText(getString(R.string.contact_already_deleted))
-                        .setConfirmText(getResources().getString(R.string.dialog_ok))
+                        .setConfirmText(getString(R.string.dialog_ok))
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(final SweetAlertDialog sDialog) {
@@ -145,10 +145,10 @@ public final class ContactActivity extends AppCompatActivity {
                         .showCancelButton(false)
                         .changeAlertType(SweetAlertDialog.WARNING_TYPE);
             } catch (final IOException e) {
-                LOGGER.error("IOException while deleting contact in ContactActivity");
+                LOGGER.error("IOException while deleting contact in ContactActivity", e);
                 sDialog.setTitleText(getString(R.string.something_went_wrong))
                         .setContentText(getString(R.string.something_went_wrong_try_again))
-                        .setConfirmText(getResources().getString(R.string.dialog_ok))
+                        .setConfirmText(getString(R.string.dialog_ok))
                         .setConfirmClickListener(null)
                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
             }

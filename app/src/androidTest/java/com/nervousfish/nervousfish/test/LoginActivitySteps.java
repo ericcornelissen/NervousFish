@@ -46,6 +46,7 @@ import static junit.framework.Assert.assertEquals;
 
 @CucumberOptions(features = "features")
 public class LoginActivitySteps {
+    private static final Activity[] activity = new Activity[1];
 
     public static final String CORRECT_PASSWORD = "12345";
 

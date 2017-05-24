@@ -6,10 +6,16 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * An handler doing nothing.
  */
 public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
+    private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
 
     /**
@@ -17,18 +23,9 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    // This servicelocator will be used later on probably
     private DummyNFCHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         LOGGER.info("Initialized");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    void write(final byte[] buffer) {
-        //dummy
     }
 
     /**
@@ -40,5 +37,41 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      */
     public static ModuleWrapper<DummyNFCHandler> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new DummyNFCHandler(serviceLocator));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    void send(final byte[] buffer) {
+        //dummy
+    }
+
+    /**
+     * Deserialize the instance using readObject to ensure invariants and security.
+     *
+     * @param stream The serialized object to be deserialized
+     */
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
+    }
+
+    /**
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     *
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     */
+    private void ensureClassInvariant() throws InvalidObjectException {
+        // No checks to perform
     }
 }

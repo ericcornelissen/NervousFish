@@ -24,24 +24,21 @@ import static org.junit.Assert.assertNotEquals;
 
 @CucumberOptions(features = "features")
 public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+    private static final Activity[] activity = new Activity[1];
 
     private int[] buttons = new int[] {
-        R.id.button00,
-        R.id.button01,
-        R.id.button02,
-        R.id.button03,
-        R.id.button10,
-        R.id.button11,
-        R.id.button12,
-        R.id.button13,
-        R.id.button10,
-        R.id.button21,
-        R.id.button22,
-        R.id.button23,
-        R.id.button30,
-        R.id.button31,
-        R.id.button32,
-        R.id.button33
+        R.id.visual_verification_button00,
+        R.id.visual_verification_button01,
+        R.id.visual_verification_button02,
+        R.id.visual_verification_button10,
+        R.id.visual_verification_button11,
+        R.id.visual_verification_button12,
+        R.id.visual_verification_button10,
+        R.id.visual_verification_button21,
+        R.id.visual_verification_button22,
+        R.id.visual_verification_button30,
+        R.id.visual_verification_button31,
+        R.id.visual_verification_button32,
     };
 
     public VisualVerificationSteps() {
@@ -71,19 +68,20 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
 
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
         try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
+            runTestOnUiThread(new GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return activity[0];
+    }
+
+    private static class GetCurrentActivityRunnable implements Runnable {
+        @Override
+        public void run() {
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            activity[0] = Iterables.getOnlyElement(activities);
+        }
     }
 
 }

@@ -24,7 +24,6 @@ public interface IDatabase extends IModule {
      * Delete a contact from the database.
      *
      * @param contactName The {@link String} with the name of the contact to remove from the database.
-     * @throws IllegalArgumentException When {@code contact} is not in the database.
      */
     void deleteContact(String contactName) throws IllegalArgumentException, IOException;
 
