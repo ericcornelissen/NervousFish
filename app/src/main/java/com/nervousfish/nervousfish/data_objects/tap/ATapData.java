@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  * This class denotes a touch event on the screen.
  */
 public abstract class ATapData implements Serializable {
+    private static final long serialVersionUID = 6581521113517232361L;
     private final Timestamp timestamp;
 
     /**
@@ -18,16 +19,18 @@ public abstract class ATapData implements Serializable {
 
     /**
      * <b>Should only be used for testing purposes!</b>
+     *
      * @param timestamp The timestamp of the tap data
      */
     public ATapData(final Timestamp timestamp) {
-        this.timestamp = timestamp;
+        this.timestamp = new Timestamp(timestamp.getTime());
     }
 
     /**
      * @return The time on which the ATapData was instantiated
      */
     public Timestamp getTimestamp() {
-        return this.timestamp;
+        // Defensive copying
+        return new Timestamp(this.timestamp.getTime());
     }
 }

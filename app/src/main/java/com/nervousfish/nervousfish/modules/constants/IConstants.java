@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.modules.constants;
 
 import com.nervousfish.nervousfish.modules.IModule;
 
+import java.util.UUID;
+
 /**
  * Interface for a class containing all main constants of the application.
  */
@@ -21,4 +23,13 @@ public interface IConstants extends IModule {
      */
     String getDatabaseUserdataPath();
 
+    /**
+     * @return The unique UUID of this application
+     */
+    UUID getUuid();
+
+    /**
+     * @return The name of the SDP record used for the Bluetooth communication
+     */
+    String getSDPRecord();
 }

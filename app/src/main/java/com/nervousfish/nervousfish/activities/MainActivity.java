@@ -1,30 +1,40 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.events.ContactReceivedEvent;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -67,11 +77,6 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            LOGGER.info("getting contacts threw an IOException");
-        }
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
 
@@ -91,6 +96,13 @@ public final class MainActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        try {
+            fillDatabaseWithDemoData();
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
         sortOnName();
@@ -133,7 +145,6 @@ public final class MainActivity extends AppCompatActivity {
      * Temporarily fill the database with demo data for development.
      * Checkstyle is disabled, because this method is only temporarily
      */
-    /*
     @SuppressWarnings("checkstyle:multipleStringLiterals")
     private void fillDatabaseWithDemoData() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
@@ -143,29 +154,41 @@ public final class MainActivity extends AppCompatActivity {
         final Contact a = new Contact("Eric", keys);
         final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
         final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-        final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-        final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+        //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+        //final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
 
         final List<Contact> contacts = database.getAllContacts();
-        for (final Contact contact: contacts) {
+        for (final Contact contact : contacts) {
             database.deleteContact(contact.getName());
         }
 
         database.addContact(a);
         database.addContact(b);
-        database.addContact(c);
-        database.addContact(d);
-        database.addContact(e);
-    }*/
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onResume() {
         super.onResume();
         try {
             this.contacts = serviceLocator.getDatabase().getAllContacts();
-
         } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException");
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
+        }
+    }
+
+    /**
+     * Called when a new contact is received
+     * @param event Contains additional data about the event
+     */
+    @Subscribe
+    public void onEvent(final ContactReceivedEvent event) {
+        try {
+            serviceLocator.getDatabase().addContact(event.getContact());
+        } catch (IOException e) {
+            LOGGER.error("Couldn't add contact to database", e);
         }
     }
 
@@ -248,6 +271,5 @@ public final class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
 }
