@@ -18,6 +18,10 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +38,16 @@ public final class QRGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger("QRGenerator");
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
+    private static final int COMPONENT_KEYTYPE = 0;
+    private static final int COMPONENT_KEYNAME = 1;
+    private static final int COMPONENT_SIMPLE_KEY = 2;
+    private static final int COMPONENT_RSA_MODULUS = 2;
+    private static final int COMPONENT_RSA_EXPONENT = 3;
+
+
+
+
+
 
     /**
      * Unused constructor for utility class.
@@ -100,6 +114,32 @@ public final class QRGenerator {
         }
 
         throw new IOException();
+    }
+
+
+    /**
+     * Deconstructs a decrypted qrmessage to a key.
+     * @param QRMessage The decrypted QRCode in a string.
+     * @return The key it corresponds to.
+     */
+    public static IKey deconstructToKey(final String QRMessage) {
+        String[] messageComponents = QRMessage.split(" ");
+        IKey key = null;
+        switch(messageComponents[COMPONENT_KEYTYPE]) {
+            case    ConstantKeywords.RSA_KEY    :
+                key = new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
+                        messageComponents[COMPONENT_RSA_EXPONENT]);
+                break;
+            case    "simple"    :
+                key = new SimpleKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
+                break;
+            default :
+                LOGGER.error("Key Type Not Found");
+                break;
+        }
+        return key;
+
+
     }
 
 }
