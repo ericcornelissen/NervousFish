@@ -74,6 +74,20 @@ public final class MainActivity extends AppCompatActivity {
 
         });
 
+        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onClick(final View view) {
+                LOGGER.info("QR button clicked");
+                startQRExchangeActivity();
+            }
+
+        });
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
@@ -110,6 +124,15 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
+        this.startActivity(intent);
+    }
+
+    /**
+     * Starts the QR Exchange Activity.
+     */
+    private void startQRExchangeActivity() {
+        final Intent intent = new Intent(this, QRExchangeKeyActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
 

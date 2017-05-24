@@ -44,4 +44,12 @@
         app:backgroundTint="@android:color/holo_blue_dark"
         app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@android:color/black" />
+
 </merge>

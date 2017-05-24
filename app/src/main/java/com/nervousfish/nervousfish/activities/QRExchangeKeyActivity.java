@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -124,6 +126,16 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     }
 
     private void showQRCode(final Bitmap QRCode) {
+
+        Matrix matrix = new Matrix();
+
+        // resize the bit map
+        matrix.postScale(4, 4);
+        Bitmap largerCode = Bitmap.createBitmap(QRCode, 0, 0, QRCode.getWidth(), QRCode.getHeight(), matrix, true);
+
+        ImageView imageView = (ImageView) findViewById(R.id.imageViewQR);
+        imageView.setImageBitmap(largerCode);
+        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         final AlertDialog dialog = builder.create();
@@ -137,10 +149,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface d) {
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.QRCodeImage);
+                ImageView imageView = (ImageView) dialog.findViewById(R.id.imageViewQR);
                 imageView.setImageBitmap(QRCode);
+
             }
-        });
+        });*/
     }
 
 

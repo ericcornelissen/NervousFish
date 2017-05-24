@@ -46,5 +46,8 @@
         <activity
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.QRExchangeKeyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>
