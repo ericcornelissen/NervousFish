@@ -1,4 +1,4 @@
-Feature: ContactPage
+Feature: Contact activity
   Do several things on the contact activity page
 
   Scenario: Click on the back button

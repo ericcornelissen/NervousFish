@@ -15,8 +15,6 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.junit.Rule;
 
-import java.io.IOException;
-
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -42,7 +40,7 @@ public class ContactActivitySteps {
             new ActivityTestRule<>(ContactActivity.class, true, false);
 
     @Given("^I am viewing the contact activity$")
-    public void iAmViewingContactActivity() throws IOException {
+    public void iAmViewingTheContactActivity() {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
