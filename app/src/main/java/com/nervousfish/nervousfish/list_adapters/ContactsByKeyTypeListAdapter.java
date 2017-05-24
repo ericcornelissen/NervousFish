@@ -79,7 +79,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
     public View getChildView(final int groupPosition, final int childPosition,
                              final boolean isLastChild, final View convertView, final ViewGroup parent) {
         final Contact contact = (Contact) getChild(groupPosition, childPosition);
-        final View v ;
+        final View v;
 
         if (convertView == null) {
             final LayoutInflater vi = context.getLayoutInflater();
