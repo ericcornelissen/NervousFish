@@ -67,7 +67,6 @@ public final class LoginActivity extends Activity {
         } else {
             final String providedPassword = passwordInput.getText().toString();
             final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
-            LOGGER.info("hoi " + this.actualPassword + " " + providedPassword);
             if (wrongPassword) {
                 LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);

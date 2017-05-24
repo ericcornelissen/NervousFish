@@ -49,8 +49,8 @@ public final class ContactActivity extends AppCompatActivity {
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
-        contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 

@@ -2,7 +2,7 @@ Feature: Login
   Perform login when a password is entered
 
   Scenario Outline: Input password and go to MainActivity or not
-    Given I have a LoginActivity
+    Given I am viewing the login activity
     When I input password "<password>"
     And I press submit button
     Then I should stay in the LoginActivity
@@ -13,7 +13,7 @@ Feature: Login
       | 23235    |
 
   Scenario Outline: Check that wrong password gives error
-      Given I have a LoginActivity
+      Given I am viewing the login activity
       When I input password "<password>"
       And I press submit button
       Then I should see an auth error
