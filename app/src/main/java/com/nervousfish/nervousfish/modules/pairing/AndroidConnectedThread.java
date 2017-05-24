@@ -71,7 +71,7 @@ public final class AndroidConnectedThread extends Thread {
                     LOGGER.warn("Bluetooth stream damaged");
                 }
 
-                bluetoothHandler.saveContact(buffer);
+                bluetoothHandler.parseInput(buffer);
 
             } catch (final IOException e) {
                 LOGGER.warn("Disconnected from the paired device", e);

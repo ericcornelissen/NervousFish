@@ -19,7 +19,7 @@ public final class DataWrapper implements Serializable {
      *
      * @param data The {@link Serializable} object the wrapper wraps
      */
-    public DataWrapper(Serializable data) {
+    public DataWrapper(final Serializable data) {
         this.data = data;
         this.clazz = data.getClass();
     }

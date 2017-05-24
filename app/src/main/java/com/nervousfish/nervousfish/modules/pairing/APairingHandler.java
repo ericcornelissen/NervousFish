@@ -26,11 +26,13 @@ import java.util.List;
 /**
  * Contains common methods shared by all pairing modules.
  */
+// default value is now 7, I have 9 with one probably gone soon
+@SuppressWarnings("checkstyle:classdataabstractioncoupling")
 abstract class APairingHandler implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
     private static final long serialVersionUID = 1656974573024980860L;
-
+    private static final String CONTACT_CLASS = "Contact";
     private final IServiceLocator serviceLocator;
     private final IDatabase database;
     private final IConstants constants;
@@ -48,12 +50,13 @@ abstract class APairingHandler implements Serializable {
 
     /**
      * A QOL mehtod that will send a certain list of contacts
+     *
      * @param contacts A list with contacts
      */
-    public void sendAllContacts(Collection<Contact> contacts) throws IOException {
+    public void sendAllContacts(final Collection<Contact> contacts) throws IOException {
         LOGGER.info("Begin writing multiple contacts :" + contacts.toString());
         final byte[] bytes;
-        DataWrapper dWrapper = new DataWrapper(new ArrayList<>(contacts));
+        final DataWrapper dWrapper = new DataWrapper(new ArrayList<>(contacts));
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(dWrapper);
@@ -72,7 +75,7 @@ abstract class APairingHandler implements Serializable {
     void sendContact(final Contact contact) throws IOException {
         LOGGER.info("Begin writing contact :" + contact.getName());
         final byte[] bytes;
-        DataWrapper dWrapper = new DataWrapper(contact);
+        final DataWrapper dWrapper = new DataWrapper(contact);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(dWrapper);
@@ -100,6 +103,13 @@ abstract class APairingHandler implements Serializable {
         return false;
     }
 
+    /**
+     * The main method that deals with the result of the scocket stream
+     * and dispatches the data approprietly in order to parse it.
+     *
+     * @param bytes Data represented as bytes (usually received from the socket)
+     */
+    @SuppressWarnings("UCF_USELESS_CONTROL_FLOW") // only for now
     void parseInput(final byte[] bytes) {
         LOGGER.info("Reading these bytes: %s", bytes);
         final DataWrapper dataWrapper;
@@ -110,14 +120,24 @@ abstract class APairingHandler implements Serializable {
             LOGGER.error(" Couldn't start deserialization!", e);
             throw (DeserializationException) new DeserializationException("The contact could not be deserialized").initCause(e);
         }
-        switch (dataWrapper.getClazz().getName()) {
-            case "Contact" : saveContact((Contact) dataWrapper.getData());
-                    break;
-            case "" :
+        switch (dataWrapper.getClazz().getSimpleName()) {
+            case CONTACT_CLASS:
+                saveContact((Contact) dataWrapper.getData());
                 break;
-            case "MultiTap" : //yet to be implemented
+            case "ArrayList":
+                final ArrayList<Object> list = (ArrayList<Object>) dataWrapper.getData();
+                if (!list.isEmpty()) {
+                    for (Object o : list) {
+                        if (o.getClass().getSimpleName().equals(CONTACT_CLASS)) {
+                            saveContact((Contact) o);
+                        } /*else if (o.getClass().getSimpleName().equals("MultiTap")) {
+                           //analyzeTaps(o);
+                        }*/
+                    }
+                }
                 break;
-            default: break;
+            default:
+                break;
             /*case "FileWrapper" : new File(((FileWrapper) dataWrapper.getData()).getData();
                 break;*/
         }
@@ -129,7 +149,7 @@ abstract class APairingHandler implements Serializable {
      * @param contact the {@link Contact} to save
      * @return Whether or not the process finished successfully
      */
-    Contact saveContact(Contact contact) {
+    Contact saveContact(final Contact contact) {
         LOGGER.info("Saving this contact: %s", contact);
         try {
             database.addContact(contact);
@@ -140,16 +160,24 @@ abstract class APairingHandler implements Serializable {
         return contact;
     }
 
+    /*
+    void analayzeTaps(final MultiTap multiTap) {
+
+    }
+    */
+
     /**
      * A method to send a contact file
+     *
      * @throws IOException
      */
     void sendContactFile() throws IOException {
-        RandomAccessFile f = new RandomAccessFile(constants.getDatabaseContactsPath(), "rw"); //to ensure that the file is not modified during read
-        final byte[] fileData = new byte[(int)f.length()];
+        //to ensure that the file is not modified during read
+        final RandomAccessFile f = new RandomAccessFile(constants.getDatabaseContactsPath(), "rw");
+        final byte[] fileData = new byte[(int) f.length()];
         final byte[] bytes;
         f.readFully(fileData);
-        FileWrapper fWrapper = new FileWrapper(fileData);
+        final FileWrapper fWrapper = new FileWrapper(fileData);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(fWrapper);
