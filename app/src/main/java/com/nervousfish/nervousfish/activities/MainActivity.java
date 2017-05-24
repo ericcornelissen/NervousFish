@@ -1,20 +1,15 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -57,7 +52,7 @@ public final class MainActivity extends AppCompatActivity {
     private Integer currentSorting = 0;
 
 
-    private final Comparator<Contact> nameSorter = new Comparator<Contact>() {
+    private static final Comparator<Contact> nameSorter = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
             return o1.getName().compareTo(o2.getName());
@@ -153,7 +148,7 @@ public final class MainActivity extends AppCompatActivity {
         keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
         final Contact a = new Contact("Eric", keys);
         final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
-        final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
+        //final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
         //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
         //final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
 
