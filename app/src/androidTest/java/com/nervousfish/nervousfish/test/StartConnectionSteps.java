@@ -25,7 +25,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
-public class StartBluetoothConnectionSteps {
+public class StartConnectionSteps {
+
+    private final IServiceLocator serviceLocator = new TestServiceLocator();
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
@@ -33,25 +35,23 @@ public class StartBluetoothConnectionSteps {
 
     @Given("^I am viewing the main activity$")
     public void iAmViewingMainActivity() {
-        final IServiceLocator serviceLocator = new TestServiceLocator();
         final Intent intent = new Intent();
-
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         mActivityRule.launchActivity(intent);
     }
 
-    @When("^I press the connect fab")
+    @When("^I press the connect button")
     public void iPressTheConnectButton() {
         onView(withId(R.id.fab)).perform(click());
     }
 
-    @When("^I select the Bluetooth option$")
-    public void iPressTheBluetoothButton() {
-        assertTrue(true); // TODO: update when the fab is updated in #148
+    @When("^I select the Bluetooth as connection method$")
+    public void iSelectBluetoothAsConnectionMethod() {
+        // TODO: update when the fab is updated in #148
     }
 
     @Then("^I go to the BluetoothConnectionActivity$")
-    public void iGoToBluetoothConnection() {
+    public void iGoToTheBluetoothConnectionActivity() {
         intended(hasComponent(BluetoothConnectionActivity.class.getName()));
     }
 
