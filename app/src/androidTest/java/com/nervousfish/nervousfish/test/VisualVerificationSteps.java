@@ -1,16 +1,17 @@
 package com.nervousfish.nervousfish.test;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.test.espresso.core.deps.guava.collect.Iterables;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.TestServiceLocator;
+import com.nervousfish.nervousfish.activities.ContactActivity;
+import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+
+import org.junit.Rule;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -19,13 +20,14 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertNotEquals;
 
 @CucumberOptions(features = "features")
-public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
-    private static final Activity[] activity = new Activity[1];
+public class VisualVerificationSteps {
 
+    private final IServiceLocator serviceLocator = new TestServiceLocator();
     private int[] buttons = new int[] {
         R.id.visual_verification_button00,
         R.id.visual_verification_button01,
@@ -41,17 +43,16 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
         R.id.visual_verification_button32,
     };
 
-    public VisualVerificationSteps() {
-        super(EntryActivity.class);
-    }
+    @Rule
+    public ActivityTestRule<VisualVerificationActivity> mActivityRule =
+            new ActivityTestRule<>(VisualVerificationActivity.class, true, false);
 
 
     @Given("^I am viewing the visual verification activity$")
     public void iHaveAVisualVerificationActivity() {
-        Intent intent = new Intent(getActivity(), VisualVerificationActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
-        getActivity().startActivity(intent);
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        mActivityRule.launchActivity(intent);
     }
 
     @When("^I press button (\\d+)$")
@@ -62,26 +63,7 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
 
     @Then("^I leave the visual verification activity$")
     public void iLeaveTheVisualVerificationActivity() {
-        assertNotEquals(getCurrentActivity().getClass(), VisualVerificationActivity.class);
-    }
-
-
-    private Activity getCurrentActivity() {
-        getInstrumentation().waitForIdleSync();
-        try {
-            runTestOnUiThread(new GetCurrentActivityRunnable());
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        return activity[0];
-    }
-
-    private static class GetCurrentActivityRunnable implements Runnable {
-        @Override
-        public void run() {
-            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-            activity[0] = Iterables.getOnlyElement(activities);
-        }
+        intended(hasComponent(MainActivity.class.getName()));
     }
 
 }

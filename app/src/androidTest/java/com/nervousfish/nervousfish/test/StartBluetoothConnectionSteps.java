@@ -28,7 +28,8 @@ import static junit.framework.Assert.assertTrue;
 public class StartBluetoothConnectionSteps {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, true, false);
+    public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class, true, false);
 
     @Given("^I am viewing the main activity$")
     public void iAmViewingMainActivity() {

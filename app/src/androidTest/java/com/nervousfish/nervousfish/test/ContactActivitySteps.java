@@ -38,7 +38,8 @@ public class ContactActivitySteps {
     private final Contact contact = new Contact(contactName, key);
 
     @Rule
-    public ActivityTestRule<ContactActivity> mActivityRule = new ActivityTestRule<>(ContactActivity.class, true, false);
+    public ActivityTestRule<ContactActivity> mActivityRule =
+            new ActivityTestRule<>(ContactActivity.class, true, false);
 
     @Given("^I am viewing the contact activity$")
     public void iAmViewingContactActivity() throws IOException {

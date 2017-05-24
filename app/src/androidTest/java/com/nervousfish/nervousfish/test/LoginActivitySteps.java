@@ -35,7 +35,8 @@ public class LoginActivitySteps {
     public static final String CORRECT_PASSWORD = "12345";
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class, true, false);
+    public ActivityTestRule<LoginActivity> mActivityRule =
+            new ActivityTestRule<>(LoginActivity.class, true, false);
 
     @Given("^I am viewing the login activity$")
     public void iAmViewingLoginActivity() throws IOException {
