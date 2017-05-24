@@ -104,7 +104,9 @@
         <!-- See http://checkstyle.sourceforge.net/config_import.html -->
         <module name="AvoidStarImport" />
         <!-- We suppress this warning because the Java creators themselves disagree on this one, for example in the newest JUnit 5 -->
-        <module name="AvoidStaticImport" />
+        <module name="AvoidStaticImport">
+            <property name="severity" value="ignore" />
+        </module>
         <module name="IllegalImport" />
         <module name="RedundantImport" />
         <module name="UnusedImports" />
@@ -152,14 +154,6 @@
         <module name="FinalParameters" />
         <module name="Indentation" />
         <module name="OuterTypeFilename" />
-        <module name="TodoComment">
-            <property name="format" value="(?i)\s+CR\s+" />
-            <property name="severity" value="info" />
-        </module>
-        <module name="TodoComment">
-            <property name="format" value="(?i)\s+TODO\s+" />
-            <property name="severity" value="info" />
-        </module>
         <!-- Depends on the project if you want this. It generates a lot of warnings while it doesn't really improve the readability of the code -->
         <module name="TrailingComment">
             <property name="severity" value="ignore"/>
@@ -246,6 +240,5 @@
         <module name="TypecastParenPad" />
         <module name="WhitespaceAfter" />
         <module name="WhitespaceAround" />
-
     </module>
 </module>

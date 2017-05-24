@@ -36,24 +36,24 @@ checkstyle {
 task findbugs(type: FindBugs) {
     ignoreFailures = false
     effort = "max"
-    reportLevel = "high"
+    reportLevel = "low"
     excludeFilter = file("$configDir/findbugs/findbugs-filter.xml")
     classes = files("${project.rootDir}/app/build/intermediates/classes")
 
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
+    source fileTree('src/main/java/')
+    classpath = files()
 
     reports {
-        xml.enabled = false
-		xml.withMessages = true
-        html.enabled = true
+        xml {
+            enabled = false
+            withMessages = true
+            destination "$reportsDir/findbugs/findbugs.xml"
+        }
         html {
+            enabled = true
             destination "$reportsDir/findbugs/findbugs.html"
         }
     }
-
-    classpath = files()
 }
 
 task pmd(type: Pmd) {

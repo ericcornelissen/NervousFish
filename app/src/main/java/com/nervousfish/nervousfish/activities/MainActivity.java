@@ -20,9 +20,11 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.events.ContactReceivedEvent;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,7 @@ public final class MainActivity extends AppCompatActivity {
 
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
+    private ArrayAdapter<Contact> listviewAdapter;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -51,6 +54,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator.registerToEventBus(this);
         this.setContentView(R.layout.activity_main);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -74,13 +78,16 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        final ListView lv = (ListView) findViewById(R.id.listView);
         try {
             fillDatabaseWithDemoData();
-            lv.setAdapter(new ContactListAdapter(this, serviceLocator.getDatabase().getAllContacts()));
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
+
+        final ListView lv = (ListView) findViewById(R.id.listView);
+        this.listviewAdapter = new ContactListAdapter(this, this.contacts);
+        lv.setAdapter(listviewAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             /**
@@ -98,8 +105,6 @@ public final class MainActivity extends AppCompatActivity {
 
     /**
      * Temporary method to open the {@link ContactActivity} for a contact.
-     *
-     * @param index The index of the contact in {@code this.contacts}.
      */
     private void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
@@ -127,37 +132,51 @@ public final class MainActivity extends AppCompatActivity {
         final Contact a = new Contact("Eric", keys);
         final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
         final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-        final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-        final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
+        //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
+        //final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
 
         final List<Contact> contacts = database.getAllContacts();
-        for (final Contact contact: contacts) {
+        for (final Contact contact : contacts) {
             database.deleteContact(contact.getName());
         }
-
+        database.addContact(c);
         database.addContact(a);
         database.addContact(b);
-        database.addContact(c);
-        database.addContact(d);
-        database.addContact(e);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onResume() {
         super.onResume();
         try {
             this.contacts = serviceLocator.getDatabase().getAllContacts();
             final ListView lv = (ListView) findViewById(R.id.listView);
+            listviewAdapter.notifyDataSetChanged();
             lv.setAdapter(new ContactListAdapter(this, this.contacts));
         } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException");
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
+        }
+    }
+
+    /**
+     * Called when a new contact is received
+     * @param event Contains additional data about the event
+     */
+    @Subscribe
+    public void onEvent(final ContactReceivedEvent event) {
+        try {
+            serviceLocator.getDatabase().addContact(event.getContact());
+        } catch (IOException e) {
+            LOGGER.error("Couldn't add contact to database", e);
         }
     }
 
     /**
      * An Adapter which converts a list with contacts into List entries.
      */
-    private final class ContactListAdapter extends ArrayAdapter<Contact> {
+    private static final class ContactListAdapter extends ArrayAdapter<Contact> {
 
         /**
          * Create and initialize a ContactListAdapter.
