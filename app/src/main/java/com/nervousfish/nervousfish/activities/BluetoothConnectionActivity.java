@@ -23,7 +23,6 @@ import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
