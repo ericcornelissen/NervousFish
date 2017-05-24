@@ -1,10 +1,12 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.communication.FileWrapper;
+import com.nervousfish.nervousfish.data_objects.tap.DataWrapper;
 import com.nervousfish.nervousfish.exceptions.DeserializationException;
+import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -17,19 +19,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Contains common methods shared by all pairing modules.
  */
-abstract class APairingHandler implements IPairingHandler, Serializable {
+abstract class APairingHandler implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
     private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
     private final IDatabase database;
-    private final IFileSystem fileSystem;
+    private final IConstants constants;
 
     /**
      * Prevent instantiation by other classes outside it's package
@@ -39,18 +43,24 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
     APairingHandler(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
         this.database = serviceLocator.getDatabase();
-        this.fileSystem = serviceLocator.getFileSystem();
+        this.constants = serviceLocator.getConstants();
     }
 
     /**
-     * {@inheritDoc}
+     * A QOL mehtod that will send a certain list of contacts
+     * @param contacts A list with contacts
      */
-    @Override
-    public void sendAllContacts() throws IOException {
-        final List<Contact> list = database.getAllContacts();
-        for (final Contact e : list) {
-            sendContact(e);
+    public void sendAllContacts(Collection<Contact> contacts) throws IOException {
+        LOGGER.info("Begin writing multiple contacts :" + contacts.toString());
+        final byte[] bytes;
+        DataWrapper dWrapper = new DataWrapper(new ArrayList<>(contacts));
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(dWrapper);
+            oos.flush();
+            bytes = bos.toByteArray();
         }
+        send(bytes);
     }
 
     /**
@@ -62,9 +72,10 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
     void sendContact(final Contact contact) throws IOException {
         LOGGER.info("Begin writing contact :" + contact.getName());
         final byte[] bytes;
+        DataWrapper dWrapper = new DataWrapper(contact);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(contact);
+            oos.writeObject(dWrapper);
             oos.flush();
             bytes = bos.toByteArray();
         }
@@ -89,22 +100,37 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
         return false;
     }
 
-    /**
-     * Deserializes a contact through a byte array and sends it to the database.
-     *
-     * @param bytes byte array representing a contact
-     * @return Whether or not the process finished successfully
-     */
-    Contact saveContact(final byte[] bytes) {
-        LOGGER.info("Saving these bytes: %s", bytes);
-        final Contact contact;
+    void parseInput(final byte[] bytes) {
+        LOGGER.info("Reading these bytes: %s", bytes);
+        final DataWrapper dataWrapper;
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
-            contact = (Contact) ois.readObject();
+            dataWrapper = (DataWrapper) ois.readObject();
         } catch (final ClassNotFoundException | IOException e) {
             LOGGER.error(" Couldn't start deserialization!", e);
             throw (DeserializationException) new DeserializationException("The contact could not be deserialized").initCause(e);
         }
+        switch (dataWrapper.getClazz().getName()) {
+            case "Contact" : saveContact((Contact) dataWrapper.getData());
+                    break;
+            case "" :
+                break;
+            case "MultiTap" : //yet to be implemented
+                break;
+            default: break;
+            /*case "FileWrapper" : new File(((FileWrapper) dataWrapper.getData()).getData();
+                break;*/
+        }
+    }
+
+    /**
+     * Deserializes a contact through a byte array and sends it to the database.
+     *
+     * @param contact the {@link Contact} to save
+     * @return Whether or not the process finished successfully
+     */
+    Contact saveContact(Contact contact) {
+        LOGGER.info("Saving this contact: %s", contact);
         try {
             database.addContact(contact);
         } catch (IOException e) {
@@ -114,11 +140,22 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
         return contact;
     }
 
+    /**
+     * A method to send a contact file
+     * @throws IOException
+     */
     void sendContactFile() throws IOException {
-        //get the path via Ifilesystem, for now use a dummy
-        RandomAccessFile f = new RandomAccessFile("temp", "rw"); //to ensure that the file is not modified during read
-        final byte[] bytes = new byte[(int)f.length()];
-        f.readFully(bytes);
+        RandomAccessFile f = new RandomAccessFile(constants.getDatabaseContactsPath(), "rw"); //to ensure that the file is not modified during read
+        final byte[] fileData = new byte[(int)f.length()];
+        final byte[] bytes;
+        f.readFully(fileData);
+        FileWrapper fWrapper = new FileWrapper(fileData);
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(fWrapper);
+            oos.flush();
+            bytes = bos.toByteArray();
+        }
         send(bytes);
     }
 

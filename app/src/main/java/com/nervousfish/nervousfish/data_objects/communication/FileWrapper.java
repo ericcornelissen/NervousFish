@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.data_objects.tap;
+package com.nervousfish.nervousfish.data_objects.communication;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
@@ -7,42 +7,33 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
- * This class is used to let the other party know what kind of class it contains.
+ *
  */
-public final class DataWrapper implements Serializable {
-    private static final long serialVersionUID = -1704556072876435760L;
-    private final Serializable data;
-    private final Class<?> clazz;
+public class FileWrapper implements Serializable {
+    private static final long serialVersionUID = -7254574342369065265L;
+    private final byte[] fileData;
 
     /**
      * Creates a new DataWrapper
      *
-     * @param data The {@link Serializable} object the wrapper wraps
+     * @param bytes The bytes of a file
      */
-    public DataWrapper(Serializable data) {
-        this.data = data;
-        this.clazz = data.getClass();
+    public FileWrapper(final byte[] bytes) {
+        this.fileData = bytes;
     }
 
     /**
-     * @return The data object {@link DataWrapper} wraps
+     * @return The bytes representing the file
      */
-    public Serializable getData() {
-        return data;
-    }
-
-    /**
-     * @return The class of the thing the {@link DataWrapper} wraps
-     */
-    public Class getClazz() {
-        return clazz;
+    public byte[] getData() {
+        return fileData;
     }
 
     /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new DataWrapper.SerializationProxy(this);
+        return new FileWrapper.SerializationProxy(this);
     }
 
     /**
@@ -60,18 +51,17 @@ public final class DataWrapper implements Serializable {
      * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
      * ordinary serialization - is far more dangerous
      */
-    // A private constructor is safer than a hidden constructor
     @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -1704556072876435760L;
-        private final Serializable data;
+        private static final long serialVersionUID = -7254574342369065265L;
+        private final byte[] fileData;
 
         /**
          * Constructs a new SerializationProxy
          * @param wrapper The current instance of the proxy
          */
-        SerializationProxy(final DataWrapper wrapper) {
-            this.data = wrapper.data;
+        SerializationProxy(final FileWrapper wrapper) {
+            this.fileData = wrapper.fileData;
         }
 
         /**
@@ -79,7 +69,7 @@ public final class DataWrapper implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new DataWrapper(data);
+            return new FileWrapper(fileData);
         }
     }
 }
