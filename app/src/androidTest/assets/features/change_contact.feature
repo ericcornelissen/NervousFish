@@ -15,10 +15,10 @@ Feature: Change contact activity
     And the contact should be updated
 
     Examples:
-      | newname      |
-      | OtherName    |
-      | 6j206j206j20 |
-      | @&#%$)^(     |
+      | newname   |
+      | OtherName |
+      | Peter     |
+      | @&#%$)^(  |
 
   Scenario: Change a contacts name to an empty string
     Given I am viewing the change contact activity

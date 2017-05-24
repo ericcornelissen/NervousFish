@@ -7,10 +7,8 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.TestServiceLocator;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
-import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.junit.Rule;
@@ -26,11 +24,9 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
@@ -53,7 +49,7 @@ public class ChangeContactSteps {
 
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.CONTACT, contact);
+        intent.putExtra(ConstantKeywords.CONTACT, this.contact);
         mActivityRule.launchActivity(intent);
     }
 
