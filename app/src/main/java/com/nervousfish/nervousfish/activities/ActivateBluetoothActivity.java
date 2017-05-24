@@ -45,7 +45,7 @@ public final class ActivateBluetoothActivity extends Activity {
         LOGGER.info("ActivateBluetoothActivity created");
 
         // Setup bluetooth adapter
-        setup();
+        setupBluetoothAdapter();
 
         if (bluetoothAdapter.isEnabled()) {
             final Intent intentConnection = new Intent(this, BluetoothConnectionActivity.class);
@@ -64,7 +64,7 @@ public final class ActivateBluetoothActivity extends Activity {
     /**
      * Sets up a {@link BluetoothAdapter}. If Bluetooth isn't supported the activity is canceled.
      */
-    public void setup() {
+    public void setupBluetoothAdapter() {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (this.bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth

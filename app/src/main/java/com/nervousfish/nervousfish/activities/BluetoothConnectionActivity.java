@@ -86,7 +86,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         // Get the serviceLocator.
         final IServiceLocator serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        setup();
+        setupBluetoothAdapter();
 
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -173,7 +173,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     /**
      * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
      */
-    public void setup() {
+    public void setupBluetoothAdapter() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
