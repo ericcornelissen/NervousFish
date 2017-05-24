@@ -74,7 +74,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'org.mockito:mockito-android:2.7.22'
     androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'

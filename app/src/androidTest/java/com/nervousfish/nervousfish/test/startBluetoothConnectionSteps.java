@@ -6,9 +6,9 @@ import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;

@@ -9,12 +9,9 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
-import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;

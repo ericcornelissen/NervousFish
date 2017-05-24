@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
-import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
