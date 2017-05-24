@@ -17,10 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Kilian on 22/05/2017.
+ * {@code ContactsByKeyTypeListAdapter }
+ * Class that is a expandable list adapter to sort contacts by key types in a expandable view
  */
 
 @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+//  1)  At line 42 in ContactsByKeyTypeListAdapter  a new arraylist should be instantiated at every
+//      type in the map
 public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapter {
 
     private final Map<String, List<Contact>> groupedContacts;
@@ -52,26 +55,37 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getChild(final int groupPosition, final int childPosition) {
 
         return groupedContacts.get(types.get(groupPosition)).get(childPosition);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getChildId(final int groupPosition, final int childPosition) {
         return childPosition;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getChildView(final int groupPosition, final int childPosition,
                              final boolean isLastChild, final View convertView, final ViewGroup parent) {
         final Contact contact = (Contact) getChild(groupPosition, childPosition);
-        View v = convertView;
+        final View v ;
 
-        if (v == null) {
+        if (convertView == null) {
             final LayoutInflater vi = context.getLayoutInflater();
             v = vi.inflate(R.layout.contact_list_entry, null);
+        } else {
+            v = convertView;
         }
 
 
@@ -86,47 +100,70 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         return v;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getChildrenCount(final int groupPosition) {
         return groupedContacts.get(types.get(groupPosition)).size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getGroup(final int groupPosition) {
         return types.get(groupPosition);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getGroupCount() {
         return types.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getGroupId(final int groupPosition) {
         return groupPosition;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View getGroupView(final int groupPosition, final boolean isExpanded,
                              final View convertView, final ViewGroup parent) {
         final String type = (String) getGroup(groupPosition);
-        View view = convertView;
+        final View view;
         if (convertView == null) {
             final LayoutInflater vi = context.getLayoutInflater();
             view = vi.inflate(R.layout.key_type, null);
+        } else {
+            view = convertView;
         }
 
-        final TextView item = (TextView) view.findViewById(R.id.type);
+        final TextView item = (TextView) view.findViewById(R.id.keytype);
         item.setTypeface(null, Typeface.BOLD);
         item.setText("Keytype: " + type);
         return view;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasStableIds() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isChildSelectable(final int groupPosition, final int childPosition) {
         return true;

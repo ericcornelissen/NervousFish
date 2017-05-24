@@ -37,9 +37,17 @@ import java.util.Set;
 
 /**
  * The main activity class that shows a list of all people with their public keys
+ *
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
         "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement"})
+//  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
+//      which will be deleted later on
+//  2)  This warning means there are too many instantiations of other classes within this class,
+//      which basically comes down to the same problem as the last
+//  3)  Another suppression based on the same problem as the previous 2
+//  4)  The switch statement for switching sorting types does not have enough branches, because it is designed
+//      to be extended when necessairy to more sorting types.
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
@@ -76,7 +84,7 @@ public final class MainActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bluetoothButton);
         fab.setOnClickListener(new View.OnClickListener() {
 
             /**
@@ -103,7 +111,7 @@ public final class MainActivity extends AppCompatActivity {
 
         sortOnName();
 
-        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.sortButton);
         fab2.setOnClickListener(new View.OnClickListener() {
 
             /**
@@ -251,7 +259,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandableListView);
+        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandableContactListByKeytype);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter = new ContactsByKeyTypeListAdapter(this, getKeyTypes(), contacts);
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {

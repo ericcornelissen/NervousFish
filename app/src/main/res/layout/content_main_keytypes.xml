@@ -5,7 +5,7 @@
     android:layout_height="wrap_content" >
 
     <ExpandableListView
-        android:id="@+id/expandableListView"
+        android:id="@+id/expandableContactListByKeytype"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.5dp"
         android:layout_width="match_parent"

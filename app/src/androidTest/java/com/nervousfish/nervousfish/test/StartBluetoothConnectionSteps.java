@@ -37,7 +37,7 @@ public class StartBluetoothConnectionSteps extends ActivityInstrumentationTestCa
 
     @When("^I press the connect button$")
     public void iPressTheConnectButton() {
-        onView(withId(R.id.fab)).perform(click());
+        onView(withId(R.id.bluetoothButton)).perform(click());
     }
 
     @Then("^I go to the BluetoothConnectionActivity$")

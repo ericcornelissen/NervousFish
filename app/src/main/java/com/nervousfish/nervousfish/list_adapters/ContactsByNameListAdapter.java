@@ -1,9 +1,5 @@
 package com.nervousfish.nervousfish.list_adapters;
 
-/**
- * Created by Kilian on 22/05/2017.
- */
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -19,6 +15,7 @@ import java.util.List;
 
 /**
  * An Adapter which converts a list with contacts into List entries.
+ * {@link ContactsByNameListAdapter}
  */
 public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
 
@@ -38,11 +35,13 @@ public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
     @NonNull
     @Override
     public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
-        View v = convertView;
+        final View v;
 
-        if (v == null) {
+        if (convertView == null) {
             final LayoutInflater vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.contact_list_entry, null);
+        } else {
+            v = convertView;
         }
 
         final Contact contact = getItem(position);
