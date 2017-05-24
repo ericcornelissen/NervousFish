@@ -1,39 +1,39 @@
-package com.nervousfish.nervousfish.data_objects.tap;
+package com.nervousfish.nervousfish.modules.cryptography;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
- * This class contains the bare minimum functionality of a tap event.
+ * Thrown when an error occurred while generating a new RSA key
  */
-public final class SingleTap extends ATapData {
-    private static final long serialVersionUID = 6955333968356740403L;
+public final class KeyGenerationException extends RuntimeException {
+    private static final long serialVersionUID = -2973457213678228010L;
+
     /**
-     * Constructs a new tap data object that denotes a single tap event.
-     * The time on which the tap event happened is assumed to be the moment that this
-     * constructor is called.
+     * Constructs a new KeyGenerationException that's thrown when an error occurred while generating a new RSA key
+     * @param e The throwable that occurred that caused this throwable to happen
      */
-    public SingleTap() {
-        super();
+    KeyGenerationException(final Throwable e) {
+        super(e);
     }
 
     /**
-     * Constructs a new tap data object that denotes a single tap event.
-     * @param timestamp The time on which the tap event happened
+     * Constructs a new KeyGenerationException that's thrown when an error occurred while generating a new RSA key
+     * @param e The exception that occurred that caused this throwable to happen
      */
-    public SingleTap(final Timestamp timestamp) {
-        super(timestamp);
+    KeyGenerationException(final Exception e) {
+        super(e);
     }
+
 
     /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy();
+        return new SerializationProxy(this);
     }
 
     /**
@@ -47,19 +47,17 @@ public final class SingleTap extends ATapData {
     /**
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
-     * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 6955333968356740403L;
+        private static final long serialVersionUID = -2973457213678228010L;
+        private final Throwable throwable;
 
         /**
          * Constructs a new SerializationProxy
+         * @param exception The current instance of the proxy
          */
-        SerializationProxy() {
-            // Nothing to do here
+        SerializationProxy(final KeyGenerationException exception) {
+            this.throwable = exception.getCause();
         }
 
         /**
@@ -67,7 +65,7 @@ public final class SingleTap extends ATapData {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new SingleTap();
+            return new KeyGenerationException(this.throwable);
         }
     }
 }

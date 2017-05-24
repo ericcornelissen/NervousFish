@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotEquals;
 
 @CucumberOptions(features = "features")
 public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+    private static final Activity[] activity = new Activity[1];
 
     private int[] buttons = new int[] {
         R.id.visual_verification_button00,
@@ -67,19 +68,20 @@ public class VisualVerificationSteps extends ActivityInstrumentationTestCase2<En
 
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
         try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
+            runTestOnUiThread(new GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         return activity[0];
+    }
+
+    private static class GetCurrentActivityRunnable implements Runnable {
+        @Override
+        public void run() {
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            activity[0] = Iterables.getOnlyElement(activities);
+        }
     }
 
 }

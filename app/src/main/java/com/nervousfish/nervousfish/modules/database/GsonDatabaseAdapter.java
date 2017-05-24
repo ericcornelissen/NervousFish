@@ -16,11 +16,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
@@ -29,7 +34,7 @@ import java.util.List;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
-
+    private static final long serialVersionUID = -4101015873770268925L;
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
@@ -60,6 +65,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         } catch (final IOException e) {
             LOGGER.error("Failed to initialize database", e);
         }
+        LOGGER.info("Initialized");
     }
 
     /**
@@ -308,12 +314,38 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeDatabase() throws IOException {
         final File file = new File(this.profilesPath);
         if (!file.exists()) {
-            LOGGER.warn("Part of the database didn't exist: " + this.profilesPath);
+            LOGGER.warn("Part of the database didn't exist: %s", this.profilesPath);
             final Writer writer = this.fileSystem.getWriter(this.profilesPath);
             writer.write("[]");
             writer.close();
-            LOGGER.info("Created the part of the database: " + this.profilesPath);
+            LOGGER.info("Created the part of the database: %s", this.profilesPath);
         }
     }
 
+    /**
+     * Deserialize the instance using readObject to ensure invariants and security.
+     * @param stream The serialized object to be deserialized
+     */
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
+    }
+
+    /**
+     * Used to improve performance / efficiency
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     */
+    private void ensureClassInvariant() throws InvalidObjectException {
+        assertNotNull(this.contactsPath);
+        assertNotNull(this.profilesPath);
+        assertNotNull(this.fileSystem);
+    }
 }
