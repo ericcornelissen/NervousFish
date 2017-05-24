@@ -3,20 +3,20 @@ Feature: ContactPage
 
   Scenario: Click on the back button
     Given I am viewing the contact activity
-    When I press the back arrow
-    Then I should go to the previous activity I visited
+    When I press the contact activity back button
+    Then I should go to the activity I visited before the contact activity
 
   Scenario: Click on the delete menu button delete contact
     Given I am viewing the contact activity
-    When I press the menu
-    And I press delete
-    And I press that I am sure
-    And I press on the OK button
-    Then the current contact should be deleted
-    And I should go to the previous activity I visited
+    When I open the contact activity menu
+    And I select delete contact
+    And I verify that I am sure I want to delete the contact
+    And I confirm the contact is deleted
+    Then I should go to the activity I visited before the contact activity
+    And the contact should be deleted
 
   Scenario: Click on the edit button to go change contact activity
     Given I am viewing the contact activity
-    When I press the menu
-    And I press edit
+    When I open the contact activity menu
+    And I select edit contact
     Then I should go to the change contact activity

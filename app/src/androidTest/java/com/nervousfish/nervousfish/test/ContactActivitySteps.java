@@ -49,49 +49,49 @@ public class ContactActivitySteps {
         mActivityRule.launchActivity(intent);
     }
 
-    @When("^I press the back arrow$")
-    public void iPressBackArrow() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+    @When("^I confirm the contact is deleted$")
+    public void iConfirmTheContactIsDeleted() {
+        onView(withId(R.id.confirm_button)).perform(click());
     }
 
-    @When("^I press the menu$")
-    public void iPressMenu() {
+    @When("^I open the contact activity menu$")
+    public void iOpenTheContactActivityMenu() {
         onView(withId(R.id.edit_menu_button)).perform(click());
     }
 
-    @When("^I press delete$")
+    @When("^I press the contact activity back button")
+    public void iPressTheContactActivityBackButton() {
+        onView(withId(R.id.backButtonChange)).perform(click());
+    }
+
+    @When("^I select delete contact$")
     public void iPressDeleteButton() {
         onView(withText("Delete")).perform(click());
     }
 
-    @When("^I press that I am sure$")
-    public void iAmSureToDelete() {
-        onView(withId(R.id.confirm_button)).perform(click());
-    }
-
-    @When("^I press on the OK button$")
-    public void iPressOK() {
-        onView(withId(R.id.confirm_button)).perform(click());
-    }
-
-    @When("^I press edit$")
-    public void iPressEdit() {
+    @When("^I select edit contact$")
+    public void iSelectEditContact() {
         onView(withText("Edit")).perform(click());
     }
 
-    @Then("^I should go to the previous activity I visited$")
-    public void iShouldGoToPreviousActivity() {
-        intended(hasComponent(ContactActivity.class.getName()));
-    }
-
-    @Then("^the current contact should be deleted$")
-    public void currentContactIsDeleted() throws IOException {
-        // TODO: Add assertion
+    @When("^I verify that I am sure I want to delete the contact$")
+    public void iVerifyThatIAmSureIWantToDeleteTheContact() {
+        onView(withId(R.id.confirm_button)).perform(click());
     }
 
     @Then("^I should go to the change contact activity$")
     public void iShouldGoToChangeContactActivity() {
         intended(hasComponent(ChangeContactActivity.class.getName()));
+    }
+
+    @Then("^I should go to the activity I visited before the contact activity$")
+    public void iShouldGoToTheActivityIVisitedBeforeTheContactActivity() {
+        intended(hasComponent(ContactActivity.class.getName()));
+    }
+
+    @Then("^the contact should be deleted$")
+    public void theContactShouldBeDeleted() {
+        // TODO: Add assertion
     }
 
 }
