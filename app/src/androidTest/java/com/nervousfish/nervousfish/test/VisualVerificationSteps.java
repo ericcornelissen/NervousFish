@@ -6,7 +6,6 @@ import android.support.test.rule.ActivityTestRule;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.TestServiceLocator;
-import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -49,14 +48,14 @@ public class VisualVerificationSteps {
 
 
     @Given("^I am viewing the visual verification activity$")
-    public void iHaveAVisualVerificationActivity() {
+    public void iAmViewingTheVisualVerificationActivity() {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         mActivityRule.launchActivity(intent);
     }
 
-    @When("^I press button (\\d+)$")
-    public void iPressButton(final int button) {
+    @When("^I press button (\\d+) in the verification grid$")
+    public void iPressButtonXInTheVerificationGrid(final int button) {
         int btn = this.buttons[button];
         onView(withId(btn)).perform(click());
     }

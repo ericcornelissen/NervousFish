@@ -1,13 +1,13 @@
-Feature: VisualVerification
+Feature: Visual verification
   Do several things on the VisualVerificationActivity
 
   Scenario Outline: Fill out a correct pattern
     Given I am viewing the visual verification activity
-    When I press button <first_button>
-    And I press button <second_button>
-    And I press button <third_button>
-    And I press button <fourth_button>
-    And I press button <fifth_button>
+    When I press button <first_button> in the verification grid
+    And I press button <second_button> in the verification grid
+    And I press button <third_button> in the verification grid
+    And I press button <fourth_button> in the verification grid
+    And I press button <fifth_button> in the verification grid
     Then I leave the visual verification activity
 
     Examples:
