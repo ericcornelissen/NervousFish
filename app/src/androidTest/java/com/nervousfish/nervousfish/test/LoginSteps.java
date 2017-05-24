@@ -26,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class LoginActivitySteps {
+public class LoginSteps {
 
     public static final String CORRECT_PASSWORD = "12345";
     private final IServiceLocator serviceLocator = new TestServiceLocator();

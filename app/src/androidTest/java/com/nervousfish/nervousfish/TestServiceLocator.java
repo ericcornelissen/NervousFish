@@ -12,12 +12,13 @@ import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.test.LoginActivitySteps;
+import com.nervousfish.nervousfish.test.LoginSteps;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("PMD") // PMD rules don't apply to this test class
 public class TestServiceLocator implements IServiceLocator {
 
     private IDatabase database = new IDatabase() {
@@ -40,7 +41,8 @@ public class TestServiceLocator implements IServiceLocator {
 
         @Override
         public void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException {
-
+            this.contacts.remove(oldContact);
+            this.contacts.add(newContact);
         }
 
         @Override
@@ -80,7 +82,7 @@ public class TestServiceLocator implements IServiceLocator {
 
         @Override
         public String getUserPassword() throws IOException {
-            return LoginActivitySteps.CORRECT_PASSWORD;
+            return LoginSteps.CORRECT_PASSWORD;
         }
     };
 

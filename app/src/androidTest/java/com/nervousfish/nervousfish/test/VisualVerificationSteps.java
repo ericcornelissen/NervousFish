@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.TestServiceLocator;
+import com.nervousfish.nervousfish.TestServiceLocator;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;

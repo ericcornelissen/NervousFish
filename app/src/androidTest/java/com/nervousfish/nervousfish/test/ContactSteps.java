@@ -26,9 +26,10 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
-public class ContactActivitySteps {
+public class ContactSteps {
 
     private final IServiceLocator serviceLocator = new TestServiceLocator();
     private final String contactName = "Henk";
@@ -84,7 +85,7 @@ public class ContactActivitySteps {
 
     @Then("^I should go to the activity I visited before the contact activity$")
     public void iShouldGoToTheActivityIVisitedBeforeTheContactActivity() {
-        intended(hasComponent(ContactActivity.class.getName()));
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
     @Then("^the contact should be deleted$")
