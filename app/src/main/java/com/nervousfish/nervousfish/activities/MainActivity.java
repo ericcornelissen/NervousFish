@@ -47,18 +47,19 @@ public final class MainActivity extends AppCompatActivity {
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
 
-    private IServiceLocator serviceLocator;
-    private List<Contact> contacts;
-    private Integer currentSorting = 0;
-
-
-    private static final Comparator<Contact> nameSorter = new Comparator<Contact>() {
+    private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
             return o1.getName().compareTo(o2.getName());
         }
     };
 
+    private IServiceLocator serviceLocator;
+    private List<Contact> contacts;
+    private Integer currentSorting = 0;
+
+
+   
 
     /**
      * Creates the new activity, should only be called by Android
@@ -230,7 +231,7 @@ public final class MainActivity extends AppCompatActivity {
     private void sortOnName() {
         final ListView lv = (ListView) findViewById(R.id.listView);
         final ContactsByNameListAdapter contactsByNameListAdapter = new ContactsByNameListAdapter(this, this.contacts);
-        contactsByNameListAdapter.sort(nameSorter);
+        contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
