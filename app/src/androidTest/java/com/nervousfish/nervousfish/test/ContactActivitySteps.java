@@ -85,7 +85,7 @@ public class ContactActivitySteps {
 
     @Then("^the current contact should be deleted$")
     public void currentContactIsDeleted() throws IOException {
-
+        // TODO: Add assertion
     }
 
     @Then("^I should go to the change contact activity$")

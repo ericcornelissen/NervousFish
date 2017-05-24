@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
@@ -14,11 +15,19 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.test.LoginActivitySteps;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestServiceLocator implements IServiceLocator {
 
     private IDatabase database = new IDatabase() {
+
+        private List<Contact> contacts = new ArrayList() {{
+            add(new Contact("Henk", new SimpleKey("Webserver", "AoghnSJIoihGIOJowigKSDGhE")));
+            add(new Contact("Karel", new SimpleKey("FTP", "EFJOIjwogSJOFIhwgijSdohio")));
+            add(new Contact("Peter", new SimpleKey("PGP", "qweRTyasDffOobARlefaoLjWZ")));
+        }};
+
         @Override
         public void addContact(Contact contact) throws IOException {
 
@@ -36,7 +45,7 @@ public class TestServiceLocator implements IServiceLocator {
 
         @Override
         public List<Contact> getAllContacts() throws IOException {
-            return null;
+            return this.contacts;
         }
 
         @Override
