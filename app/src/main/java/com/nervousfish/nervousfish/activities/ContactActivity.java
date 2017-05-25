@@ -45,12 +45,12 @@ public final class ContactActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_contact);
+        this.setContentView(R.layout.activity_contact);
+
         final Intent intent = this.getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
-        serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
-        contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 
