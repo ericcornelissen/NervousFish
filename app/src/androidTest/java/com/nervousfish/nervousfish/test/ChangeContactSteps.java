@@ -54,7 +54,6 @@ public class ChangeContactSteps {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contact);
         mActivityRule.launchActivity(intent);
-        System.out.println("hoi: " + mActivityRule.getActivity().getFilesDir());
     }
 
     @When("^I press the change contact back button$")
