@@ -13,15 +13,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
+
 /**
  * An adapter to the default Android file system
  */
+// We suppress this warning because this class is by nature tightly coupled to the Java filesystem, which has a lot of separate classes unfortunately
+@SuppressWarnings("checkstyle:classdataabstractioncoupling")
 public final class AndroidFileSystemAdapter implements IFileSystem {
+    private static final long serialVersionUID = 1937542180968231197L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
 
     /**
@@ -29,8 +36,8 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      *
      * @param serviceLocator Can be used to get access to other modules
      */
+    // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
     @SuppressWarnings("PMD.UnusedFormalParameter")
-    // This servicelocator will be used later on probably
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
     }
@@ -64,5 +71,33 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
         final InputStream inputStream = new FileInputStream(path);
         final InputStreamReader outputStreamReader = new InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8);
         return new BufferedReader(outputStreamReader);
+    }
+
+    /**
+     * Deserialize the instance using readObject to ensure invariants and security.
+     *
+     * @param stream The serialized object to be deserialized
+     */
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        ensureClassInvariant();
+    }
+
+    /**
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     *
+     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     */
+    private void ensureClassInvariant() throws InvalidObjectException {
+        // No checks to perform
     }
 }

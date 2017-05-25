@@ -69,7 +69,7 @@ public final class RhythmHelper {
             dist += Math.pow(difference, power);
         }
         dist /= masterData.size();
-        LOGGER.info("distance = " + Double.toString(dist));
+        LOGGER.info("distance = %s", dist);
         return dist < threshold;
     }
 }
