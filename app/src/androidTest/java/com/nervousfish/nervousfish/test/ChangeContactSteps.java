@@ -73,18 +73,18 @@ public class ChangeContactSteps {
 
     @When("^I remove all text from the name$")
     public void iRemoveAllTextFromTheName() {
-        onView(withId(R.id.edit_contact_name)).perform(replaceText(""));
+        onView(withId(R.id.edit_contact_name_input)).perform(replaceText(""));
     }
 
     @When("^I select the contact name$")
     public void iSelectTheContactName() {
-        onView(withId(R.id.edit_contact_name)).perform(click());
+        onView(withId(R.id.edit_contact_name_input)).perform(click());
     }
 
     @When("^I type (.*?) as new name$")
     public void iTypeNewNameAsNewName(final String newName) {
         this.newName = newName;
-        onView(withId(R.id.edit_contact_name)).perform(replaceText(newName));
+        onView(withId(R.id.edit_contact_name_input)).perform(replaceText(newName));
     }
 
     @When("^I verify that I want to dismiss the contact changes$")
