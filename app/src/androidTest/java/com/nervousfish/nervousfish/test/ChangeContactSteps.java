@@ -27,6 +27,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
@@ -63,9 +64,9 @@ public class ChangeContactSteps {
         onView(withId(R.id.saveContactButton)).perform(click());
     }
 
-    @When("^I press confirm on the change contact error popup$")
-    public void iPressConfirm() {
-        onView(withId(R.id.confirm_button)).perform(click());
+    @When("^I press OK on the change contact error popup$")
+    public void iPressOKOnTheChangeContactErrorPopup() {
+        onView(withText(R.string.dialog_ok)).perform(click());
     }
 
     @When("^I remove all text from the name$")
@@ -86,7 +87,7 @@ public class ChangeContactSteps {
 
     @When("^I verify that I want to dismiss the contact changes$")
     public void iVerifyThatIWantToDismissTheContactChanges() {
-        onView(withId(R.id.confirm_button)).perform(click());
+        onView(withText(R.string.yes_go_back)).perform(click());
     }
 
     @Then("^I should go to the activity I visited before the change contact activity$")

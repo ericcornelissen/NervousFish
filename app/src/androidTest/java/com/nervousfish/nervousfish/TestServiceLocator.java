@@ -24,9 +24,9 @@ public class TestServiceLocator implements IServiceLocator {
     private IDatabase database = new IDatabase() {
 
         private List<Contact> contacts = new ArrayList() {{
-            add(new Contact("Henk", new SimpleKey("Webserver", "AoghnSJIoihGIOJowigKSDGhE")));
-            add(new Contact("Karel", new SimpleKey("FTP", "EFJOIjwogSJOFIhwgijSdohio")));
-            add(new Contact("Peter", new SimpleKey("PGP", "qweRTyasDffOobARlefaoLjWZ")));
+            add(new Contact("This is not a name anyone is ever going to use", new SimpleKey("Webserver", "AoghnSJIoihGIOJowigKSDGhE")));
+            add(new Contact("Neither is this apparently", new SimpleKey("FTP", "EFJOIjwogSJOFIhwgijSdohio")));
+            add(new Contact("And hopefully this one will also never be used", new SimpleKey("PGP", "qweRTyasDffOobARlefaoLjWZ")));
         }};
 
         @Override
