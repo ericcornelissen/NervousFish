@@ -20,7 +20,7 @@
     <string name="loginMessage">Vul je wachtwoord hieronder in</string>
     <string name="msg_mismatch">Je wachtwoord is incorrect</string>
     <string name="name">Naam</string>
-    <string name="no_devices_found">Geen apparaten gevonden...</string>
+    <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="paired_devices">Verbonden apparaten</string>
     <string name="password">Wachtwoord</string>
     <string name="popup_you_sure">Weet je het zeker?</string>
@@ -30,7 +30,9 @@
     <string name="submit">Inloggen</string>
     <string name="title_activity_contact">Contact</string>
     <string name="title_activity_settings">Instellingen</string>
-    <string name="waiting_for_slave">Wachten op partner...</string>
+    <string name="waiting_for_slave">Wachten op partner…</string>
     <string name="yes_delete">Ja, verwijder het!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
+    <string name="save">Opslaan</string>
+    <string name="more">Meer</string>
 </resources>

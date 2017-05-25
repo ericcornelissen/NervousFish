@@ -50,7 +50,9 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:onClick="saveContact"
-                app:srcCompat="@android:drawable/ic_menu_save" />
+                app:srcCompat="@android:drawable/ic_menu_save"
+                tools:targetApi="lollipop"
+                android:contentDescription="@string/save" />
 
         </LinearLayout>
 
