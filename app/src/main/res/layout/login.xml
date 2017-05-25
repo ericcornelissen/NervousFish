@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="@dimen/enter_password_padding_top"
-            android:text="@string/loginMessage"
+            android:text="@string/login_message"
             android:textSize="@dimen/enter_password_text_size" />
 
         <TextView
