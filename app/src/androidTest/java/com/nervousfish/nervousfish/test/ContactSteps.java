@@ -3,15 +3,16 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
+import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.TestServiceLocator;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Rule;
 
@@ -31,7 +32,7 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ContactSteps {
 
-    private final IServiceLocator serviceLocator = new TestServiceLocator();
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
     private final String contactName = "Henk";
     private final IKey key = new SimpleKey("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
     private final Contact contact = new Contact(contactName, key);

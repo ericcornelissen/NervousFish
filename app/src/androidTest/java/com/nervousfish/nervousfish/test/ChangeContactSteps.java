@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.test;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
@@ -37,10 +36,10 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ChangeContactSteps {
 
-    private String filesDir = "/data/user/0/com.nervousfish.nervousfish/files";
-    private IServiceLocator serviceLocator;
-    private IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
-    private Contact contact = new Contact("Illio", this.key);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
+    private final Contact contact = new Contact("Illio", this.key);
+
     private String newName;
 
     @Rule
@@ -49,7 +48,6 @@ public class ChangeContactSteps {
 
     @Given("^I am viewing the change contact activity$")
     public void iAmViewingChangeContactActivity() throws IOException {
-        this.serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, this.filesDir);
         final IDatabase database = this.serviceLocator.getDatabase();
         for(Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());

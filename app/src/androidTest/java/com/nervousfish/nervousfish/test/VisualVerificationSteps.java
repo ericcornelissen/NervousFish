@@ -3,13 +3,13 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
+import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.TestServiceLocator;
-import com.nervousfish.nervousfish.TestServiceLocator;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Rule;
 
@@ -27,8 +27,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class VisualVerificationSteps {
 
-    private final IServiceLocator serviceLocator = new TestServiceLocator();
-    private int[] buttons = new int[] {
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final int[] buttons = new int[] {
         R.id.visual_verification_button00,
         R.id.visual_verification_button01,
         R.id.visual_verification_button02,

@@ -10,6 +10,7 @@ import cucumber.api.java.Before;
 
 public class Instrumentation extends MonitoringInstrumentation {
 
+    public static final String filesDir = "/data/user/0/com.nervousfish.nervousfish/files";
     private final CucumberInstrumentationCore mInstrumentationCore = new CucumberInstrumentationCore(this);
 
     @Override
