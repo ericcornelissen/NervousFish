@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
-import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
@@ -77,19 +76,19 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     @When("^I press the contact name$")
     public void iPressContactName() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
-        onView(withId(R.id.edit_contact_name)).perform(click());
+        onView(withId(R.id.edit_contact_name_change_contact)).perform(click());
     }
 
     @When("^I type \"(.*?)\"$")
     public void iTypeDifferentName(final String differentname) {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
         this.differentname = differentname;
-        onView(withId(R.id.edit_contact_name)).perform(replaceText(differentname));
+        onView(withId(R.id.edit_contact_name_change_contact)).perform(replaceText(differentname));
     }
 
     @When("^I press on the save button$")
     public void iPressSave() {
-        onView(withId(R.id.saveContactButton)).perform(click());
+        onView(withId(R.id.btn_save_change_contact)).perform(click());
     }
 
     @Then("^the contact should be updated$")
@@ -105,18 +104,18 @@ public class ChangeContactActivitySteps extends ActivityInstrumentationTestCase2
     @When("^I change the name$")
     public void iChangeTheName() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
-        onView(withId(R.id.edit_contact_name)).perform(typeText("aabbcc"));
+        onView(withId(R.id.edit_contact_name_change_contact)).perform(typeText("aabbcc"));
     }
 
     @When("^I close the keyboard$")
     public void iCloseKeyboard() {
         assertEquals(ChangeContactActivity.class, getCurrentActivity().getClass());
-        onView(withId(R.id.edit_contact_name)).perform(closeSoftKeyboard());
+        onView(withId(R.id.edit_contact_name_change_contact)).perform(closeSoftKeyboard());
     }
 
     @When("^I press the back button$")
     public void iPressBack() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.btn_back_change_contact)).perform(click());
     }
 
     @When("^I press cancel on the popup$")

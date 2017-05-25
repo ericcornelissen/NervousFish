@@ -9,6 +9,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.NFCActivity;
+import com.nervousfish.nervousfish.activities.QRActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
@@ -35,9 +37,24 @@ public class StartBluetoothConnectionSteps extends ActivityInstrumentationTestCa
         assertNotNull(getActivity());
     }
 
-    @When("^I press the connect button$")
-    public void iPressTheConnectButton() {
-        onView(withId(R.id.bluetoothButton)).perform(click());
+    @When("^I press the pairing button$")
+    public void iPressThePairingButton() {
+        onView(withId(R.id.pairing_button)).perform(click());
+    }
+
+    @When("^I press the bluetooth button$")
+    public void iPressTheBluetoothButton() {
+        onView(withId(R.id.pairing_menu_bluetooth)).perform(click());
+    }
+
+    @When("^I press the qr button$")
+    public void iPressTheQRButton() {
+        onView(withId(R.id.pairing_menu_qr)).perform(click());
+    }
+
+    @When("^I press the nfc button$")
+    public void iPressTheNFCButton() {
+        onView(withId(R.id.pairing_menu_nfc)).perform(click());
     }
 
     @Then("^I go to the BluetoothConnectionActivity$")
@@ -45,6 +62,15 @@ public class StartBluetoothConnectionSteps extends ActivityInstrumentationTestCa
         assertEquals(getCurrentActivity().getClass(), BluetoothConnectionActivity.class);
     }
 
+    @Then("^I go to the QRActivity$")
+    public void iGoToQR() {
+        assertEquals(getCurrentActivity().getClass(), QRActivity.class);
+    }
+
+    @Then("^I go to the NFCActivity$")
+    public void iGoToNFC() {
+        assertEquals(getCurrentActivity().getClass(), NFCActivity.class);
+    }
 
     private Activity getCurrentActivity() {
         getInstrumentation().waitForIdleSync();

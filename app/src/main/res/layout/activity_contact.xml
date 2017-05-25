@@ -9,7 +9,7 @@
     tools:context="com.nervousfish.nervousfish.activities.ContactActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/contact_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -21,18 +21,17 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/backButtonChange"
+                android:id="@+id/btn_back_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                app:srcCompat="?attr/actionModeCloseDrawable"
+                android:src="?attr/actionModeCloseDrawable"
                 android:contentDescription="@string/contact_title"
                 tools:targetApi="lollipop" />
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -43,14 +42,16 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/edit_menu_button"
+                android:id="@+id/btn_menu_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:onClick="showPopupMenu"
-                app:srcCompat="@android:drawable/ic_menu_more" />
+                android:src="@android:drawable/ic_menu_more"
+                android:contentDescription="@string/show_options"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

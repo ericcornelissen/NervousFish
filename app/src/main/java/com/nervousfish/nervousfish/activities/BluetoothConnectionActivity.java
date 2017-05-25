@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,7 +39,7 @@ import java.util.Set;
 // 2) This is necessary for freeing up resources
 // 3) Temporary busy wait, needs eventbus
 
-public final class BluetoothConnectionActivity extends AppCompatActivity {
+public class BluetoothConnectionActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
     private static final int DISCOVERABLE_DURATION = 300;
@@ -130,10 +129,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         unregisterReceiver(this.broadcastReceiver);
         this.bluetoothAdapter = null;
+        super.onDestroy();
     }
 
     /**

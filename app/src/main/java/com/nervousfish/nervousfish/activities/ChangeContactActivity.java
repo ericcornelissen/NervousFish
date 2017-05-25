@@ -1,8 +1,8 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -29,7 +29,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The ContactActivity shows the contacts information and his public keys.
  */
-public final class ChangeContactActivity extends AppCompatActivity {
+@SuppressWarnings("checkstyle:AnonInnerLength")
+//The anonymous length is needed for readability
+public final class ChangeContactActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
     private IServiceLocator serviceLocator;
@@ -48,16 +50,33 @@ public final class ChangeContactActivity extends AppCompatActivity {
 
         serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
         contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
-        backButton.setOnClickListener(new BackButtonListener());
+        final ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_change_contact);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                final EditText editText = (EditText) findViewById(R.id.edit_contact_name_change_contact);
+                if (editText.getText().toString().equals(contact.getName())) {
+                    finish();
+                } else {
+                    new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.popup_you_sure))
+                            .setContentText(getString(R.string.go_back_changes_lost))
+                            .setCancelText(getString(R.string.cancel))
+                            .setConfirmText(getString(R.string.yes_go_back))
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(final SweetAlertDialog sDialog) {
+                                    sDialog.dismiss();
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
     }
 
     /**
@@ -66,7 +85,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * @param name The name.
      */
     private void setName(final String name) {
-        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name);
+        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name_change_contact);
         tv.setText(name);
     }
 
@@ -97,7 +116,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+        final EditText editText = (EditText) findViewById(R.id.edit_contact_name_change_contact);
         if (isValidName(editText.getText().toString())) {
             //Update contact
             try {
@@ -140,7 +159,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final View v) {
-            final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
+            final EditText editText = (EditText) findViewById(R.id.edit_contact_name_change_contact);
             if (editText.getText().toString().equals(contact.getName())) {
                 finish();
             } else {

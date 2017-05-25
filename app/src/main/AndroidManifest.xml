@@ -50,5 +50,11 @@
         <activity
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.QRActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.NFCActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>

@@ -1,10 +1,8 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -48,7 +46,7 @@ import java.util.Set;
 //  3)  Another suppression based on the same problem as the previous 2
 //  4)  The switch statement for switching sorting types does not have enough branches, because it is designed
 //      to be extended when necessairy to more sorting types.
-public final class MainActivity extends AppCompatActivity {
+public final class MainActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
     private static final int NUMBER_OF_SORTING_MODES = 2;
@@ -81,27 +79,6 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        this.setSupportActionBar(toolbar);
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bluetoothButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                LOGGER.info("Bluetooth button clicked");
-                startBluetoothPairing();
-            }
-
-        });
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
         try {
             fillDatabaseWithDemoData();
             this.contacts = serviceLocator.getDatabase().getAllContacts();
@@ -111,20 +88,64 @@ public final class MainActivity extends AppCompatActivity {
 
         sortOnName();
 
-        final FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.sortButton);
-        fab2.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                switchSorting();
-            }
-
-        });
-
         LOGGER.info("MainActivity created");
+    }
+
+    /**
+     * Gets triggered when the Bluetooth button is clicked.
+     * @param view - the ImageButton
+     */
+    public void onBluetoothButtonClick(final View view) {
+        LOGGER.info("Bluetooth button clicked");
+        final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
+     * Gets triggered when the NFC button is clicked.
+     * @param view - the ImageButton
+     */
+    public void onNFCButtonClick(final View view) {
+        LOGGER.info("NFC button clicked");
+        final Intent intent = new Intent(this, NFCActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
+     * Gets triggered when the QR button is clicked.
+     * @param view - the ImageButton
+     */
+    public void onQRButtonClicked(final View view) {
+        LOGGER.info("QR button clicked");
+        final Intent intent = new Intent(this, QRActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
+     * Switches the sorting mode.
+     *
+     * @param view The floating action button that was clicked
+     */
+    public void onSortingButtonClicked(final View view) {
+        currentSorting++;
+        if (currentSorting >= NUMBER_OF_SORTING_MODES) {
+            currentSorting = 0;
+        }
+        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        flipper.showNext();
+        switch (currentSorting) {
+            case SORT_BY_NAME:
+                sortOnName();
+                break;
+            case SORT_BY_KEY_TYPE:
+                sortOnKeyType();
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -136,12 +157,6 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
-        this.startActivity(intent);
-    }
-
-    private void startBluetoothPairing() {
-        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         startActivity(intent);
     }
 
@@ -209,28 +224,6 @@ public final class MainActivity extends AppCompatActivity {
             }
         }
         return new ArrayList<>(typeSet);
-    }
-
-    /**
-     * Switches the sorting mode.
-     */
-    private void switchSorting() {
-        currentSorting++;
-        if (currentSorting >= NUMBER_OF_SORTING_MODES) {
-            currentSorting = 0;
-        }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
-        flipper.showNext();
-        switch (currentSorting) {
-            case SORT_BY_NAME:
-                sortOnName();
-                break;
-            case SORT_BY_KEY_TYPE:
-                sortOnKeyType();
-                break;
-            default:
-                break;
-        }
     }
 
     /**
