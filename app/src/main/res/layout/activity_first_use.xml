@@ -27,7 +27,7 @@
             android:gravity="center"
             android:paddingTop="20dp"
             android:text="@string/welcome_message"
-            android:textSize="42dp" />
+            android:textSize="42sp" />
 
         <View
             android:layout_width="200dp"
@@ -43,7 +43,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:text="@string/welcome_message_subpart"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/getStarted"
@@ -55,6 +55,6 @@
             android:gravity="center"
             android:onClick="onGetStartedClick"
             android:text="Get started!"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
     </LinearLayout>
 </ScrollView>
