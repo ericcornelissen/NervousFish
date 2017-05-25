@@ -14,6 +14,7 @@
 
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
+    <string name="type">Type</string>
 
     <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
@@ -35,6 +36,12 @@
 
     <string name="edit_menu_item">Edit</string>
     <string name="delete_menu_item">Delete</string>
+
+    <string name="activating_bluetooth_went_wrong">Bluetooth could not be activated</string>
+    <string name="activating_bluetooth_went_wrong_explanation">Please enable Bluetooth if you want to exchange keys over Bluetooth.</string>
+    <string name="activating_bluetooth">Activating Bluetooth…</string>
+    <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
+        note that we won\'t do anything with your location.</string>
 
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>

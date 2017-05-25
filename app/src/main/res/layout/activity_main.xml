@@ -30,15 +30,22 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
-        <ListView
-            android:id="@+id/listView"
-            android:divider="@color/colorAccent"
-            android:dividerHeight="0dp"
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/activity_main_toolbar"
-            android:layout_marginTop="@dimen/contacts_list_margin_top"
-            android:background="@android:color/white"/>
+            android:layout_height="wrap_content">
+            <ListView
+                android:id="@+id/listView"
+                android:divider="@color/colorAccent"
+                android:dividerHeight="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/activity_main_toolbar"
+                android:layout_marginTop="@dimen/contacts_list_margin_top"
+                android:background="@android:color/white"/>
+            <include layout="@layout/content_main_keytypes" />
+
+        </ViewFlipper>
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/pairing_button"
@@ -87,6 +94,18 @@
                 fab:fab_label="@string/qr" />
 
         </com.github.clans.fab.FloatingActionMenu>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/sortButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            android:onClick="onSortingButtonClicked"
+            android:layout_marginBottom="@dimen/fab_second_button_from_bottom"
+            android:layout_marginRight="@dimen/fab_margin"
+
+            app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
     </RelativeLayout>
 </merge>
