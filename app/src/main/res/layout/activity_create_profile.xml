@@ -27,64 +27,64 @@
         </android.support.v7.widget.Toolbar>
 
         <TextView
-            android:layout_width="300dp"
+            android:layout_width="@dimen/create_profile_message_width"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/create_profile_message_margin_top"
             android:text="@string/create_profile_message"
-            android:textSize="19sp" />
+            android:textSize="@dimen/create_profile_message_size" />
 
         <EditText
             android:id="@+id/profileEnterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/enter_password_field_margin_right"
-            android:layout_marginStart="@dimen/enter_password_field_margin_left"
-            android:layout_marginTop="@dimen/enter_password_field_margin_top"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top"
             android:hint="@string/enter_profile_name"
             android:imeOptions="actionSend"
             android:drawableStart="@drawable/user"
-            android:drawablePadding="10dp"/>
+            android:drawablePadding="@dimen/normal_drawable_padding"/>
 
         <EditText
             android:id="@+id/profileEnterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/enter_password_field_margin_right"
-            android:layout_marginStart="@dimen/enter_password_field_margin_left"
-            android:layout_marginTop="@dimen/enter_password_field_margin_top"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top"
             android:hint="@string/password"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
             android:drawableStart="@drawable/key"
-            android:drawablePadding="10dp" />
+            android:drawablePadding="@dimen/normal_drawable_padding" />
 
         <EditText
             android:id="@+id/profileRepeatPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/enter_password_field_margin_right"
-            android:layout_marginStart="@dimen/enter_password_field_margin_left"
-            android:layout_marginTop="@dimen/enter_password_field_margin_top"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top"
             android:hint="@string/repeat_password"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
             android:drawableStart="@drawable/key"
-            android:drawablePadding="10dp"/>
+            android:drawablePadding="@dimen/normal_drawable_padding"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/enter_password_field_margin_top"
-            android:layout_marginEnd="@dimen/enter_password_field_margin_right"
-            android:layout_marginStart="@dimen/enter_password_field_margin_left"
-            android:text="Key to generate:" />
+            android:layout_marginTop="@dimen/field_margin_top"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:text="@string/key_to_generate" />
 
         <RadioGroup
             android:id="@+id/radioKeyType"
-            android:layout_marginEnd="@dimen/enter_password_field_margin_right"
-            android:layout_marginStart="@dimen/enter_password_field_margin_left"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
@@ -113,6 +113,6 @@
             android:gravity="center"
             android:onClick="onSubmitClick"
             android:text="@string/submit"
-            android:textSize="18sp" />
+            android:textSize="@dimen/submit_text_size" />
     </LinearLayout>
 </ScrollView>
