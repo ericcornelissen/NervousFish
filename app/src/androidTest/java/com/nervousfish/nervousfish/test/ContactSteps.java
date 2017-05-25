@@ -11,10 +11,13 @@ import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Rule;
+
+import java.io.IOException;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -27,22 +30,24 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
 public class ContactSteps {
 
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-    private final String contactName = "Henk";
     private final IKey key = new SimpleKey("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
-    private final Contact contact = new Contact(contactName, key);
+    private final Contact contact = new Contact("Yashuo", this.key);
 
     @Rule
     public ActivityTestRule<ContactActivity> mActivityRule =
             new ActivityTestRule<>(ContactActivity.class, true, false);
 
     @Given("^I am viewing the contact activity$")
-    public void iAmViewingTheContactActivity() {
+    public void iAmViewingTheContactActivity() throws IOException {
+        this.initDatabase();
+
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
@@ -90,8 +95,20 @@ public class ContactSteps {
     }
 
     @Then("^the contact should be deleted$")
-    public void theContactShouldBeDeleted() {
-        // TODO: Add assertion
+    public void theContactShouldBeDeleted() throws IOException {
+        IDatabase database = this.serviceLocator.getDatabase();
+        assertFalse(database.contactExtists(contact.getName()));
+    }
+
+    /**
+     * Initialize the database for the ContactSteps.
+     */
+    private void initDatabase() throws IOException {
+        final IDatabase database = this.serviceLocator.getDatabase();
+        for(Contact contact : database.getAllContacts()) {
+            database.deleteContact(contact.getName());
+        }
+        database.addContact(this.contact);
     }
 
 }

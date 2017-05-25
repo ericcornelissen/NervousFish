@@ -3,13 +3,16 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
+import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.TestServiceLocator;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Rule;
+
+import java.io.IOException;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -24,19 +27,19 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertFalse;
 
 @CucumberOptions(features = "features")
 public class LoginSteps {
 
-    public static final String CORRECT_PASSWORD = "12345";
-    private final IServiceLocator serviceLocator = new TestServiceLocator();
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule =
             new ActivityTestRule<>(LoginActivity.class, true, false);
 
     @Given("^I am viewing the login activity$")
-    public void iAmViewingTheLoginActivity() {
+    public void iAmViewingTheLoginActivity() throws IOException {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         mActivityRule.launchActivity(intent);
@@ -54,7 +57,7 @@ public class LoginSteps {
 
     @Then("^I should stay in the LoginActivity$")
     public void iShouldStayInLoginActivity() {
-        // TODO: add assertion
+        assertFalse(mActivityRule.getActivity().isDestroyed());
     }
 
     @Then("^I should see an authentication error$")

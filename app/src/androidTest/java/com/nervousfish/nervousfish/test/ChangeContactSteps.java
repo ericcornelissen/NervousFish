@@ -48,11 +48,7 @@ public class ChangeContactSteps {
 
     @Given("^I am viewing the change contact activity$")
     public void iAmViewingChangeContactActivity() throws IOException {
-        final IDatabase database = this.serviceLocator.getDatabase();
-        for(Contact contact : database.getAllContacts()) {
-            database.deleteContact(contact.getName());
-        }
-        database.addContact(this.contact);
+        this.initDatabase();
 
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
@@ -111,6 +107,17 @@ public class ChangeContactSteps {
     public void theContactShouldBeUpdated() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
         assertNotNull(database.getContactWithName(this.newName));
+    }
+
+    /**
+     * Initialize the database for the ChangeContactSteps.
+     */
+    private void initDatabase() throws IOException {
+        final IDatabase database = this.serviceLocator.getDatabase();
+        for(Contact contact : database.getAllContacts()) {
+            database.deleteContact(contact.getName());
+        }
+        database.addContact(this.contact);
     }
 
 }
