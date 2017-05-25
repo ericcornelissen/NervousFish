@@ -1,20 +1,23 @@
 package com.nervousfish.nervousfish.test;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
+import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.TestServiceLocator;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Rule;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -28,15 +31,16 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
 public class ChangeContactSteps {
 
-    private final IServiceLocator serviceLocator = new TestServiceLocator();
-
-    private Contact contact;
-    private Collection<IKey> keys;
+    private String filesDir = "/data/user/0/com.nervousfish.nervousfish/files";
+    private IServiceLocator serviceLocator;
+    private IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
+    private Contact contact = new Contact("Illio", this.key);
     private String newName;
 
     @Rule
@@ -45,13 +49,18 @@ public class ChangeContactSteps {
 
     @Given("^I am viewing the change contact activity$")
     public void iAmViewingChangeContactActivity() throws IOException {
-        this.contact = serviceLocator.getDatabase().getAllContacts().get(0);
-        this.keys = this.contact.getKeys();
+        this.serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, this.filesDir);
+        final IDatabase database = this.serviceLocator.getDatabase();
+        for(Contact contact : database.getAllContacts()) {
+            database.deleteContact(contact.getName());
+        }
+        database.addContact(this.contact);
 
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contact);
         mActivityRule.launchActivity(intent);
+        System.out.println("hoi: " + mActivityRule.getActivity().getFilesDir());
     }
 
     @When("^I press the change contact back button$")
@@ -102,9 +111,8 @@ public class ChangeContactSteps {
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
-        // TODO: Add assertion
-//        Contact updatedContact = new Contact(this.newName, this.keys);
-//        assertTrue(serviceLocator.getDatabase().getAllContacts().contains(updatedContact));
+        final IDatabase database = this.serviceLocator.getDatabase();
+        assertNotNull(database.getContactWithName(this.newName));
     }
 
 }

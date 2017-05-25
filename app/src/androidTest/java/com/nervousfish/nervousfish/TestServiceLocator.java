@@ -41,6 +41,7 @@ public class TestServiceLocator implements IServiceLocator {
 
         @Override
         public void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException {
+            System.out.println("hallo: " + oldContact.getName() + newContact.getName());
             this.contacts.remove(oldContact);
             this.contacts.add(newContact);
         }
