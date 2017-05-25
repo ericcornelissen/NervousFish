@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
@@ -18,10 +17,10 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.events.ContactReceivedEvent;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
@@ -37,7 +36,6 @@ import java.util.Set;
 
 /**
  * The main activity class that shows a list of all people with their public keys
- *
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
         "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement"})
@@ -67,8 +65,6 @@ public final class MainActivity extends AppCompatActivity {
     private Integer currentSorting = 0;
 
 
-   
-
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -83,20 +79,6 @@ public final class MainActivity extends AppCompatActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bluetoothButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                LOGGER.info("Bluetooth button clicked");
-                startBluetoothPairing();
-            }
-
-        });
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -128,6 +110,43 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Gets triggered when the Bluetooth button is clicked.
+     *
+     * @param view - the ImageButton
+     */
+    public void onBluetoothButtonClick(final View view) {
+        LOGGER.info("Bluetooth button clicked");
+        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+
+    /**
+     * Gets triggered when the NFC button is clicked.
+     *
+     * @param view - the ImageButton
+     */
+    public void onNFCButtonClick(final View view) {
+        LOGGER.info("NFC button clicked");
+        final Intent intent = new Intent(this, NFCActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
+     * Gets triggered when the QR button is clicked.
+     *
+     * @param view - the ImageButton
+     */
+    public void onQRButtonClicked(final View view) {
+        LOGGER.info("QR button clicked");
+        final Intent intent = new Intent(this, QRActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
      * @param index The index of the contact in {@code this.contacts}.
@@ -137,12 +156,6 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
-    }
-
-    private void startBluetoothPairing() {
-        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        startActivity(intent);
     }
 
     /**
@@ -185,6 +198,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /**
      * Called when a new contact is received
+     *
      * @param event Contains additional data about the event
      */
     @Subscribe
