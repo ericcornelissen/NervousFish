@@ -5,16 +5,19 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
         csv.enabled false
         html.enabled true
         html.destination "${buildDir}/reports/jacoco/test/html"
-        xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        xml.enabled false
     }
 
     def fileFilter = [
             // Not useful
-            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*',
+            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*'
 
             // Not (properly) testable
-            'com/nervousfish/nervousfish/modules/pairing/*.*' // Bluetooth/NFC connections
+            , 'com/nervousfish/nervousfish/modules/pairing/*.*' // Bluetooth/NFC connections
+            , 'com/nervousfish/nervousfish/activities/BluetoothConnectionActivity**'
+            , 'com/nervousfish/nervousfish/activities/BluetoothConnectionActivity$**'
+            , 'com/nervousfish/nervousfish/activities/ActivateBluetoothActivity**'
+            , 'com/nervousfish/nervousfish/activities/ActivateBluetoothActivity$**'
     ]
     def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"
