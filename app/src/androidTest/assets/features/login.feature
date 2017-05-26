@@ -1,24 +1,15 @@
-Feature: Login
+Feature: Login activity
   Perform login when a password is entered
 
-  Scenario Outline: Input password and go to MainActivity or not
-    Given I have a LoginActivity
-    When I input password "<password>"
-    And I press submit button
-    Then I should stay in the LoginActivity
+  Scenario Outline: Entering an incorrect password gives an error
+    Given I am viewing the login activity
+    When I type <password> as password
+    And I press the login button
+    Then I should see an authentication error
+    And I should stay in the LoginActivity
 
     Examples:
       | password |
       | 59505    |
-      | 23235    |
-
-  Scenario Outline: Check that wrong password gives error
-      Given I have a LoginActivity
-      When I input password "<password>"
-      And I press submit button
-      Then I should see an auth error
-
-      Examples:
-        | password |
-        | 75757    |
-        | 30572    |
+      | 75757    |
+      | 30572    |

@@ -43,43 +43,21 @@ public final class ChangeContactActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_change_contact);
-        final Intent intent = this.getIntent();
+        this.setContentView(R.layout.activity_change_contact);
 
-        serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        final Intent intent = this.getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        this.setName(contact.getName());
-        this.setKeys(contact.getKeys());
+        this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        this.setName(this.contact.getName());
+        this.setKeys(this.contact.getKeys());
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-                if (editText.getText().toString().equals(contact.getName())) {
-                    finish();
-                } else {
-                    new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(getString(R.string.popup_you_sure))
-                            .setContentText(getString(R.string.go_back_changes_lost))
-                            .setCancelText(getString(R.string.cancel))
-                            .setConfirmText(getString(R.string.yes_go_back))
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(final SweetAlertDialog sDialog) {
-                                    sDialog.dismiss();
-                                    finish();
-                                }
-                            })
-                            .show();
-                }
-            }
-        });
-
+        backButton.setOnClickListener(new BackButtonListener());
     }
 
     /**
@@ -88,7 +66,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * @param name The name.
      */
     private void setName(final String name) {
-        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name);
+        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name_input);
         tv.setText(name);
     }
 
@@ -119,8 +97,8 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name);
-        if(isValidName(editText.getText().toString())) {
+        final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
+        if (isValidName(editText.getText().toString())) {
             //Update contact
             try {
                 final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
@@ -129,7 +107,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
                     contact = newContact;
                 }
             } catch (final IOException e) {
-                LOGGER.error("IOException while updating contactname");
+                LOGGER.error("IOException while updating contactname", e);
             }
 
             setResult(RESULT_FIRST_USER,
@@ -154,6 +132,33 @@ public final class ChangeContactActivity extends AppCompatActivity {
      */
     private boolean isValidName(final String name) {
         return name != null && !name.isEmpty() && !name.trim().isEmpty();
+    }
+
+    private final class BackButtonListener implements View.OnClickListener {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(final View v) {
+            final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
+            if (editText.getText().toString().equals(contact.getName())) {
+                finish();
+            } else {
+                new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.popup_you_sure))
+                        .setContentText(getString(R.string.go_back_changes_lost))
+                        .setCancelText(getString(R.string.cancel))
+                        .setConfirmText(getString(R.string.yes_go_back))
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(final SweetAlertDialog sDialog) {
+                                sDialog.dismiss();
+                                finish();
+                            }
+                        })
+                        .show();
+            }
+        }
     }
 
 }

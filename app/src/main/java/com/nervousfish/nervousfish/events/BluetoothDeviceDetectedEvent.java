@@ -6,7 +6,7 @@ package com.nervousfish.nervousfish.events;
  * Sent when the a new Bluetooth Device is detected
  */
 public final class BluetoothDeviceDetectedEvent {
-    final String name;
+    private final String name;
 
     /**
      * Constructs a new BluetoothDeviceDetectedEvent
@@ -14,5 +14,9 @@ public final class BluetoothDeviceDetectedEvent {
      */
     public BluetoothDeviceDetectedEvent(final String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

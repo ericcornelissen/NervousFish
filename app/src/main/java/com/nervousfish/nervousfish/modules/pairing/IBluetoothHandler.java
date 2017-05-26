@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 
 import com.nervousfish.nervousfish.modules.IModule;
 
@@ -12,26 +11,17 @@ import com.nervousfish.nervousfish.modules.IModule;
 public interface IBluetoothHandler extends IPairingHandler, IModule {
 
     /**
-     * Start the ConnectThread to initiate a connection to a remote device.
-     *
-     * @param device The BluetoothDevice to connect
-     */
-    void connect(final BluetoothDevice device);
-
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
+     * Start the bluetooth service. Specifically start AndroidAcceptThread to begin a
+     * session in listening (server) mode.
      */
     void start();
 
     /**
-     * Start the ConnectedThread to begin managing a Bluetooth connection
+     * Start the AndroidConnectThread to initiate a connection to a remote device.
      *
-     * @param socket The BluetoothSocket on which the connection was made
-     * @param device The BluetoothDevice that has been connected
+     * @param device The BluetoothDevice to connect
      */
-    void connected(final BluetoothSocket socket, final BluetoothDevice
-            device);
+    void connect(BluetoothDevice device);
 
     /**
      * Stop all threads

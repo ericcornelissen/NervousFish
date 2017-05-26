@@ -15,6 +15,8 @@
     <rule ref="rulesets/java/clone.xml" />
     <rule ref="rulesets/java/codesize.xml" />
     <rule ref="rulesets/java/controversial.xml" >
+        <!-- Often you use a variable only in a single method, but the variable should stay constant in that method -->
+        <exclude name="AvoidFinalLocalVariable" />
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
         <!-- Multiple returns are allowed in some cases, but have to be used with caution -->

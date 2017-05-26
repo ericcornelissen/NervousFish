@@ -35,5 +35,4 @@ public final class EntryActivity extends Activity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         this.startActivity(intent);
     }
-
 }
