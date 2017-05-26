@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.STATE_CONNECTED;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTED;
 
 /**
  * This thread runs during a connection with a remote device.
@@ -21,9 +21,9 @@ class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
-    private final AndroidBluetoothHandler handler;
+    private final AndroidBluetoothService handler;
 
-    ConnectedThread(final AndroidBluetoothHandler handler, final BluetoothSocket socket) {
+    ConnectedThread(final AndroidBluetoothService handler, final BluetoothSocket socket) {
         super();
 
         LOGGER.info("Connected Bluetooth thread created");
@@ -47,7 +47,7 @@ class ConnectedThread extends Thread {
 
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
-        final byte[] buffer = new byte[1024];
+        final byte[] buffer = new byte[4096];
 
         // Keep listening to the InputStream while connected
         while (handler.mState == STATE_CONNECTED) {

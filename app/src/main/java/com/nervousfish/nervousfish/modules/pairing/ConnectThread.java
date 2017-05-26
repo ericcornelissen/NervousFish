@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.MY_UUID_SECURE;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.STATE_CONNECTING;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.MY_UUID_SECURE;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTING;
 
 /**
  * This thread runs while attempting to make an outgoing connection
@@ -23,9 +23,9 @@ class ConnectThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("ConnectThread");
     private final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
-    private final AndroidBluetoothHandler handler;
+    private final AndroidBluetoothService handler;
 
-    ConnectThread(final AndroidBluetoothHandler handler, final BluetoothDevice device) {
+    ConnectThread(final AndroidBluetoothService handler, final BluetoothDevice device) {
         super();
 
         mmDevice = device;
@@ -41,7 +41,7 @@ class ConnectThread extends Thread {
         }
         mmSocket = tmp;
         handler.mState = STATE_CONNECTING;
-        handler.getServiceLocator().postOnEventBus(new BluetoothConnectingEvent());
+        handler.serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
         this.handler = handler;
     }
 

@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.MY_UUID_SECURE;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.NAME_SECURE;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.STATE_CONNECTED;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.STATE_CONNECTING;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.STATE_LISTEN;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler.STATE_NONE;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.MY_UUID_SECURE;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.NAME_SECURE;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTED;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTING;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_LISTEN;
+import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_NONE;
 
 /**
  * This thread runs while listening for incoming connections. It behaves
@@ -28,9 +28,9 @@ class AcceptThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AcceptThread");
     // The local server socket
     private final BluetoothServerSocket serverSocket;
-    private final AndroidBluetoothHandler handler;
+    private final AndroidBluetoothService handler;
 
-    AcceptThread(AndroidBluetoothHandler handler, IServiceLocator serviceLocator) {
+    AcceptThread(AndroidBluetoothService handler, IServiceLocator serviceLocator) {
         super();
         BluetoothServerSocket tmp = null;
 

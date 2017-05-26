@@ -10,7 +10,6 @@ import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
-import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -30,7 +29,6 @@ final class ServiceLocator implements IServiceLocator {
     private final IEncryptor encryptor;
     private final IFileSystem fileSystem;
     private final IConstants constants;
-    private final IBluetoothHandler bluetoothHandler;
     private final INFCHandler nfcHandler;
     private final IQRHandler qrHandler;
 
@@ -44,7 +42,6 @@ final class ServiceLocator implements IServiceLocator {
         this.database = GsonDatabaseAdapter.newInstance(this).get();
         this.keyGenerator = KeyGeneratorAdapter.newInstance(this).get();
         this.encryptor = EncryptorAdapter.newInstance(this).get();
-        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).get();
         this.nfcHandler = DummyNFCHandler.newInstance(this).get();
         this.qrHandler = DummyQRHandler.newInstance(this).get();
     }
@@ -101,15 +98,6 @@ final class ServiceLocator implements IServiceLocator {
     public IConstants getConstants() {
         this.assertExists(this.constants, "constants");
         return this.constants;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IBluetoothHandler getBluetoothHandler() {
-        this.assertExists(this.bluetoothHandler, "bluetoothHandler");
-        return this.bluetoothHandler;
     }
 
     /**

@@ -38,6 +38,7 @@
             android:name=".activities.VisualVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.BluetoothConnectionActivity" />
+        <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
 
 

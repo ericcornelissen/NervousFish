@@ -2,13 +2,17 @@ package com.nervousfish.nervousfish.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,11 +24,14 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
+import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +58,11 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     private static final String NONE_FOUND = "none_found";
 
     private BluetoothAdapter bluetoothAdapter;
-    private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
+    private AndroidBluetoothService bluetoothService;
+    private volatile boolean bound;
+
     /**
      * The on-click listener for all devices in the ListViews
      */
@@ -69,16 +78,11 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
                 LOGGER.info("Starting connection with" + address);
-                bluetoothHandler.connect(device);
+                bluetoothService.connect(device);
 
                 // Create the result Intent and include the MAC address
                 final Intent intent = new Intent();
                 intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-
-                // Set result and finish this Activity
-                setResult(Activity.RESULT_OK, intent);
-                finish();
             }
 
         }
@@ -156,11 +160,22 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        // Get the AndroidBluetoothHandler.
-        this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-
         this.newDevices = new HashSet<>();
     }
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
+            BluetoothConnectionActivity.this.bluetoothService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
 
     /**
      * {@inheritDoc}
@@ -181,7 +196,8 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         super.onStart();
         enableBluetooth();
         //this.serviceLocator.registerToEventBus(this);
-        bluetoothHandler.start();
+        final Intent serviceIntent = new Intent(this, AndroidBluetoothService.class);
+        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
@@ -194,8 +210,13 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         LOGGER.info("Stopping from activity");
+
+        if (bound) {
+            unbindService(connection);
+            bound = false;
+        }
+
         super.onStop();
-        //bluetoothHandler.stop();
     }
 
     /**
@@ -265,10 +286,12 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
-            bluetoothHandler.writeAllContacts();
+            if (bound) {
+                bluetoothService.writeAllContacts();
+            }
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception");
         }
