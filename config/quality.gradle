@@ -9,6 +9,27 @@ check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
 def configDir = "${project.rootDir}/config/quality"
 def reportsDir = "${project.buildDir}/reports"
 
+
+checkstyle {
+    toolVersion = "7.7"
+}
+pmd {
+    toolVersion = "5.5.0"
+}
+
+
+android {
+    lintOptions {
+        abortOnError true
+        xmlReport false
+        htmlReport true
+        lintConfig file("$configDir/lint/lint.xml")
+        htmlOutput file("$reportsDir/lint/lint-result.html")
+        disable "InvalidPackage", "GoogleAppIndexingWarning"
+    }
+}
+
+
 task checkstyle(type: Checkstyle) {
     configFile file("$configDir/checkstyle/checkstyle.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
@@ -19,7 +40,6 @@ task checkstyle(type: Checkstyle) {
     exclude '**/test/**'
     classpath = files()
 }
-
 task checkstyleTest(type: Checkstyle) {
     configFile file("$configDir/checkstyle/checkstyleTest.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
@@ -27,10 +47,6 @@ task checkstyleTest(type: Checkstyle) {
     include '**/*.java'
     exclude '**/gen/**'
     classpath = files()
-}
-
-checkstyle {
-    toolVersion = "7.7"
 }
 
 task findbugs(type: FindBugs) {
@@ -60,10 +76,9 @@ task pmd(type: Pmd) {
     ignoreFailures = false
     ruleSetFiles = files("$configDir/pmd/pmd-ruleset.xml")
     ruleSets = []
-    source 'src'
+    source 'src/main'
     include '**/*.java'
     exclude '**/gen/**'
-    exclude '**/test/**'
 
     reports {
         xml.enabled = false
@@ -71,21 +86,6 @@ task pmd(type: Pmd) {
         html {
             destination "$reportsDir/pmd/pmd.html"
         }
-    }
-}
-
-pmd {
-    toolVersion = "5.5.0"
-}
-
-android {
-    lintOptions {
-        abortOnError true
-        xmlReport false
-        htmlReport true
-        lintConfig file("$configDir/lint/lint.xml")
-        htmlOutput file("$reportsDir/lint/lint-result.html")
-        disable "InvalidPackage", "GoogleAppIndexingWarning"
     }
 }
 

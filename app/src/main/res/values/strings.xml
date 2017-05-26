@@ -20,6 +20,7 @@
 
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
+    <string name="type">Type</string>
 
     <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
