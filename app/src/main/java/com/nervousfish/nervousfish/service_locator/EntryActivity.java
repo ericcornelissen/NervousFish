@@ -7,9 +7,14 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.FirstUseActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.data_objects.Profile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main activity class that shows a list of all people with their public keys
@@ -32,8 +37,20 @@ public final class EntryActivity extends Activity {
 
         LOGGER.info("EntryActivity created");
 
-        final Intent intent = new Intent(this, FirstUseActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        this.startActivity(intent);
+        List<Profile> profiles = new ArrayList<>();
+        try {
+            profiles = serviceLocator.getDatabase().getProfiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (profiles.isEmpty()) {
+            final Intent intent = new Intent(this, FirstUseActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+            this.startActivity(intent);
+        } else {
+            final Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+            this.startActivity(intent);
+        }
     }
 }
