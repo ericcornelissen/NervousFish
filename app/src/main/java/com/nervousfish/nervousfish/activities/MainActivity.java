@@ -138,11 +138,11 @@ public final class MainActivity extends AppCompatActivity {
         for (final Contact contact:database.getAllContacts()) {
             database.deleteContact(contact);
         }
-        database.addContact(a);
+        /*database.addContact(a);
         database.addContact(b);
         database.addContact(c);
         database.addContact(d);
-        database.addContact(e);
+        database.addContact(e);*/
     }
 
     @Override
