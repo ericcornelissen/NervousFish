@@ -24,23 +24,20 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
 class AndroidBluetoothConnectThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectThread");
     private final BluetoothSocket socket;
-    private final BluetoothDevice mmDevice;
     private final IServiceLocator serviceLocator;
 
     AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
         super();
 
         this.serviceLocator = serviceLocator;
-        mmDevice = device;
         BluetoothSocket tmp = null;
 
         // Get a BluetoothSocket for a connection with the
         // given BluetoothDevice
         try {
-            tmp = device.createRfcommSocketToServiceRecord(
-                    MY_UUID_SECURE);
+            tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
         } catch (final IOException e) {
-            LOGGER.error("Connection failed");
+            LOGGER.error("Connection failed", e);
         }
         socket = tmp;
         serviceLocator.postOnEventBus(new BluetoothConnectingEvent());

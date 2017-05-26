@@ -9,6 +9,7 @@ import android.os.IBinder;
 import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
+import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
 import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -76,10 +77,10 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
 
             // Start the thread to listen on a BluetoothServerSocket
             if (acceptThread == null) {
+                this.state = STATE_LISTEN;
                 acceptThread = new AndroidBluetoothAcceptThread(this.serviceLocator);
                 acceptThread.start();
                 this.serviceLocator.postOnEventBus(new BluetoothListeningEvent());
-                this.state = STATE_LISTEN;
             }
         }
     }
@@ -103,11 +104,11 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
                 connectedThread = null;
             }
 
+            this.state = STATE_CONNECTING;
             // Start the thread to connect with the given device
             connectThread = new AndroidBluetoothConnectThread(this.serviceLocator, device);
             connectThread.start();
             this.serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
-            this.state = STATE_CONNECTING;
         }
     }
 
@@ -118,7 +119,7 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
         synchronized (this) {
             // Cancel the thread that completed the connection
             if (connectThread != null) {
-                connectThread.cancel();
+                //connectThread.cancel();
                 connectThread = null;
             }
 
@@ -134,11 +135,11 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
                 acceptThread = null;
             }
 
+            this.state = STATE_CONNECTED;
             // Start the thread to manage the connection and perform transmissions
             connectedThread = new AndroidBluetoothConnectedThread(this.serviceLocator, event.getSocket());
             connectedThread.start();
             this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(connectedThread));
-            this.state = STATE_CONNECTED;
         }
     }
 
@@ -189,24 +190,24 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
     }
 
     /**
-     * Indicate that the connection was lost and notify the UI Activity.
-     */
-    void connectionLost() {
-
-        state = STATE_NONE;
-        this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
-
-        // Start the service over to restart listening mode
-        this.start();
-    }
-
-    /**
      * Return the current connection state.
      */
     public BluetoothState getState() {
         synchronized (this) {
             return state;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
+        this.state = STATE_NONE;
+        this.start();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
+        this.state = STATE_NONE;
+        this.start();
     }
 
     /**

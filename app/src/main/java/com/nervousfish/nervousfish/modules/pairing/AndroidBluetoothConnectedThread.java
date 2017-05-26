@@ -20,16 +20,16 @@ import java.util.Arrays;
  */
 public class AndroidBluetoothConnectedThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectedThread");
-    private final BluetoothSocket mmSocket;
-    private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
+    private final BluetoothSocket socket;
+    private final InputStream inStream;
+    private final OutputStream outStream;
     private final IServiceLocator serviceLocator;
 
     AndroidBluetoothConnectedThread(final IServiceLocator serviceLocator, final BluetoothSocket socket) {
         super();
 
         LOGGER.info("Connected Bluetooth thread created");
-        mmSocket = socket;
+        this.socket = socket;
         InputStream tmpIn = null;
         OutputStream tmpOut = null;
 
@@ -41,8 +41,8 @@ public class AndroidBluetoothConnectedThread extends Thread {
             LOGGER.error("Failed to create a temp socket");
         }
 
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
+        inStream = tmpIn;
+        outStream = tmpOut;
         this.serviceLocator = serviceLocator;
     }
 
@@ -51,12 +51,12 @@ public class AndroidBluetoothConnectedThread extends Thread {
         final byte[] buffer = new byte[4096];
         try {
             // Read from the InputStream
-            final int bytes = mmInStream.read(buffer);
+            final int bytes = inStream.read(buffer);
             LOGGER.info(" Read " + bytes + " bytes");
 
             this.serviceLocator.postOnEventBus(new SerializedBufferReceivedEvent(buffer));
         } catch (final IOException e) {
-            LOGGER.warn("Disconnected from the paired device");
+            LOGGER.warn("Disconnected from the paired device", e);
             this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
         }
     }
@@ -69,7 +69,7 @@ public class AndroidBluetoothConnectedThread extends Thread {
     public void write(final byte[] buffer) {
         LOGGER.info("Writing the bytes " + Arrays.toString(buffer) + "to the outputstream");
         try {
-            mmOutStream.write(buffer);
+            outStream.write(buffer);
         } catch (final IOException e) {
             LOGGER.error("Exception during writing");
         }
@@ -78,7 +78,7 @@ public class AndroidBluetoothConnectedThread extends Thread {
 
     void cancel() {
         try {
-            mmSocket.close();
+            socket.close();
         } catch (final IOException e) {
             LOGGER.error("Closing socket");
         }
