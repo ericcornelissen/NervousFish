@@ -122,12 +122,14 @@ abstract class APairingHandler implements Serializable {
         }
         switch (dataWrapper.getClazz().getSimpleName()) {
             case CONTACT_CLASS:
+                LOGGER.info("Content was a contact");
                 saveContact((Contact) dataWrapper.getData());
                 break;
             case "ArrayList":
+                LOGGER.info("Content was a List");
                 final ArrayList<Object> list = (ArrayList<Object>) dataWrapper.getData();
                 if (!list.isEmpty()) {
-                    for (Object o : list) {
+                    for (final Object o : list) {
                         if (o.getClass().getSimpleName().equals(CONTACT_CLASS)) {
                             saveContact((Contact) o);
                         } /*else if (o.getClass().getSimpleName().equals("MultiTap")) {
@@ -167,11 +169,12 @@ abstract class APairingHandler implements Serializable {
     */
 
     /**
-     * A method to send a contact file
+     * * A method to send a contact file
      *
+     * @return content of the file to be sent in bytes
      * @throws IOException
      */
-    void sendContactFile() throws IOException {
+    byte[] sendContactFile() throws IOException {
         //to ensure that the file is not modified during read
         final RandomAccessFile f = new RandomAccessFile(constants.getDatabaseContactsPath(), "rw");
         final byte[] fileData = new byte[(int) f.length()];
@@ -185,6 +188,7 @@ abstract class APairingHandler implements Serializable {
             bytes = bos.toByteArray();
         }
         send(bytes);
+        return bytes;
     }
 
     protected IServiceLocator getServiceLocator() {

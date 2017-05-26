@@ -5,9 +5,10 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
- *
+ * A wrapper class for file data in the form of bytes.
  */
 public class FileWrapper implements Serializable {
     private static final long serialVersionUID = -7254574342369065265L;
@@ -18,15 +19,16 @@ public class FileWrapper implements Serializable {
      *
      * @param bytes The bytes of a file
      */
+    @SuppressWarnings("EI_EXPOSE_REP2") // This is intended for proxy
     public FileWrapper(final byte[] bytes) {
-        this.fileData = bytes;
+        this.fileData = Arrays.copyOf(bytes, bytes.length);
     }
 
     /**
      * @return The bytes representing the file
      */
     public byte[] getData() {
-        return fileData;
+        return new FileWrapper(this.fileData).fileData;
     }
 
     /**

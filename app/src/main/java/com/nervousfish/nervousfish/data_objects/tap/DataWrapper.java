@@ -28,7 +28,7 @@ public final class DataWrapper implements Serializable {
      * @return The data object {@link DataWrapper} wraps
      */
     public Serializable getData() {
-        return data;
+        return new DataWrapper(this.data).data;
     }
 
     /**
