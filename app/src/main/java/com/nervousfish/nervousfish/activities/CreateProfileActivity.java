@@ -7,13 +7,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -54,20 +59,35 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     public void onSubmitClick(final View v) {
         if(validateInputFields()) {
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText(getString(R.string.profile_created))
-                    .setContentText(getString(R.string.profile_created_explanation))
-                    .setConfirmText(getString(R.string.dialog_ok))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(final SweetAlertDialog sDialog) {
-                            sDialog.dismiss();
-                            final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
-                            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                            CreateProfileActivity.this.startActivity(intent);
-                        }
-                    })
-                    .show();
+            final EditText nameInputField = (EditText) this.findViewById(R.id.profileEnterName);
+            final String name = nameInputField.getText().toString();
+
+            final KeyPair keyPair = this.generateKeyPair();
+
+            try {
+                serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
+                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(getString(R.string.profile_created))
+                        .setContentText(getString(R.string.profile_created_explanation))
+                        .setConfirmText(getString(R.string.dialog_ok))
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(final SweetAlertDialog sDialog) {
+                                sDialog.dismiss();
+                                final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
+                                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                                CreateProfileActivity.this.startActivity(intent);
+                            }
+                        })
+                        .show();
+            } catch (IOException e) {
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.could_not_create_profile))
+                        .setContentText(getString(R.string.could_not_create_profile_explanation))
+                        .setConfirmText(getString(R.string.dialog_ok))
+                        .setConfirmClickListener(null)
+                        .show();
+            }
         } else {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.could_not_create_profile))
@@ -76,6 +96,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
                     .setConfirmClickListener(null)
                     .show();
         }
+    }
+
+    /**
+     * Generates a KeyPair based on the type selected.
+     *
+     * @return a {@link KeyPair} with the key type selected
+     */
+    private KeyPair generateKeyPair() {
+        final RadioButton rsaKeyButton = (RadioButton)findViewById(R.id.radioRSAKey);
+        if (rsaKeyButton.isSelected()) {
+            return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
+        }
+        return null;
     }
 
     /**
