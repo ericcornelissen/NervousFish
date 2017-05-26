@@ -10,6 +10,7 @@ import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
+import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -38,6 +39,7 @@ public final class ServiceLocator implements IServiceLocator {
     private final IEncryptor encryptor;
     private final IFileSystem fileSystem;
     private final IConstants constants;
+    private final IBluetoothHandler bluetoothHandler;
     private final INfcHandler nfcHandler;
     private final IQRHandler qrHandler;
 
@@ -53,6 +55,7 @@ public final class ServiceLocator implements IServiceLocator {
         this.database = GsonDatabaseAdapter.newInstance(this).getModule();
         this.keyGenerator = KeyGeneratorAdapter.newInstance(this).getModule();
         this.encryptor = EncryptorAdapter.newInstance(this).getModule();
+        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).getModule();
         this.nfcHandler = DummyNFCHandler.newInstance(this).getModule();
         this.qrHandler = DummyQRHandler.newInstance(this).getModule();
     }
@@ -71,6 +74,7 @@ public final class ServiceLocator implements IServiceLocator {
                            final IEncryptor encryptor,
                            final IFileSystem fileSystem,
                            final IConstants constants,
+                           final IBluetoothHandler bluetoothHandler,
                            final INfcHandler nfcHandler,
                            final IQRHandler qrHandler) {
         this.androidFilesDir = androidFilesDir;
@@ -79,6 +83,7 @@ public final class ServiceLocator implements IServiceLocator {
         this.encryptor = encryptor;
         this.fileSystem = fileSystem;
         this.constants = constants;
+        this.bluetoothHandler = bluetoothHandler;
         this.nfcHandler = nfcHandler;
         this.qrHandler = qrHandler;
     }
@@ -135,6 +140,15 @@ public final class ServiceLocator implements IServiceLocator {
     public IConstants getConstants() {
         this.assertExists(this.constants, "constants");
         return this.constants;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IBluetoothHandler getBluetoothHandler() {
+        this.assertExists(this.bluetoothHandler, "bluetoothHandler");
+        return this.bluetoothHandler;
     }
 
     /**

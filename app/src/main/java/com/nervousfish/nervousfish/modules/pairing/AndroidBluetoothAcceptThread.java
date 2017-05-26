@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
-import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
+import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -14,10 +14,6 @@ import java.io.IOException;
 
 import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.MY_UUID_SECURE;
 import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.NAME_SECURE;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTED;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTING;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_LISTEN;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_NONE;
 
 /**
  * This thread runs while listening for incoming connections. It behaves
@@ -28,12 +24,12 @@ class AndroidBluetoothAcceptThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothAcceptThread");
     // The local server socket
     private final BluetoothServerSocket serverSocket;
-    private final AndroidBluetoothService handler;
+    private final IServiceLocator serviceLocator;
 
-    AndroidBluetoothAcceptThread(AndroidBluetoothService handler, IServiceLocator serviceLocator) {
+    AndroidBluetoothAcceptThread(IServiceLocator serviceLocator) {
         super();
         BluetoothServerSocket tmp = null;
-
+        this.serviceLocator = serviceLocator;
 
         // Create a new listening server socket
         try {
@@ -45,8 +41,6 @@ class AndroidBluetoothAcceptThread extends Thread {
 
         }
         serverSocket = tmp;
-        handler.mState = STATE_LISTEN;
-        this.handler = handler;
     }
 
     public void run() {
@@ -55,42 +49,17 @@ class AndroidBluetoothAcceptThread extends Thread {
 
         BluetoothSocket socket;
 
-        // Listen to the server socket if we're not connected
-        while (handler.mState != STATE_CONNECTED) {
-            try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
-                socket = serverSocket.accept();
-            } catch (final IOException e) {
-                LOGGER.error("Listening on the socket failed");
-                break;
-            }
-
-            // If a connection was accepted
-            if (socket != null) {
-                synchronized (handler) {
-                    switch (handler.mState) {
-                        case STATE_LISTEN:
-                        case STATE_CONNECTING:
-                            // Situation normal. Start the connected thread.
-                            LOGGER.info("Start connecting with" + socket.getRemoteDevice().getName());
-                            handler.connected(socket, socket.getRemoteDevice());
-                            break;
-                        case STATE_NONE:
-                        case STATE_CONNECTED:
-                            // Either not ready or already connected. Terminate new socket.
-                            try {
-                                socket.close();
-                            } catch (final IOException e) {
-                                LOGGER.info("Couldn't close unwanted socket");
-                            }
-                            break;
-                        default: //nothing
-                            break;
-                    }
-                }
-            }
+        try {
+            // This is a blocking call and will only return on a
+            // successful connection or an exception
+            socket = serverSocket.accept();
+        } catch (final IOException e) {
+            LOGGER.error("Listening on the socket failed");
+            return;
         }
+
+        LOGGER.info("Start connecting with" + socket.getRemoteDevice().getName());
+        this.serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
         LOGGER.info("End accept thread");
     }
 

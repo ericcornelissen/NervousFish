@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
@@ -18,10 +17,10 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.events.NewContactsReceivedEvent;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,7 +37,6 @@ import java.util.Set;
 
 /**
  * The main activity class that shows a list of all people with their public keys
- *
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
         "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement"})
@@ -56,6 +54,8 @@ public final class MainActivity extends AppCompatActivity {
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
 
+    private IServiceLocator serviceLocator;
+
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
@@ -63,12 +63,8 @@ public final class MainActivity extends AppCompatActivity {
         }
     };
 
-    private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private Integer currentSorting = 0;
-
-
-   
 
     /**
      * Creates the new activity, should only be called by Android
@@ -105,7 +101,7 @@ public final class MainActivity extends AppCompatActivity {
 
         try {
             fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
@@ -125,6 +121,8 @@ public final class MainActivity extends AppCompatActivity {
 
         });
 
+        this.serviceLocator.getBluetoothHandler().start();
+
         LOGGER.info("MainActivity created");
     }
 
@@ -132,6 +130,11 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
+        try {
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
+        }
     }
 
     @Override
@@ -154,7 +157,7 @@ public final class MainActivity extends AppCompatActivity {
 
     private void startBluetoothPairing() {
         final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }
 
@@ -179,25 +182,13 @@ public final class MainActivity extends AppCompatActivity {
             database.deleteContact(contact.getName());
         }
 
-        /*database.addContact(a);
-        database.addContact(b);*/
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException", e);
-        }
+        database.addContact(a);
+        database.addContact(b);
     }
 
     /**
      * Called when a new contact is received
+     *
      * @param event Contains additional data about the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

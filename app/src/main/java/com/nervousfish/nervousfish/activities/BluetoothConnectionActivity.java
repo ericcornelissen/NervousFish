@@ -24,6 +24,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -53,10 +54,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
-    private AndroidBluetoothService bluetoothService;
-    private volatile boolean bound;
 
     private IServiceLocator serviceLocator;
+
     private ArrayAdapter<String> newDevicesArrayAdapter;
 
     @SuppressWarnings("PMD.SingularField")
@@ -89,10 +89,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
+        
         setupBluetoothAdapter();
 
         // Register for broadcasts when a device is discovered.
@@ -129,21 +128,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.newDevices = new HashSet<>();
     }
 
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
-            BluetoothConnectionActivity.this.bluetoothService = binder.getService();
-            binder.getService().setServiceLocator(BluetoothConnectionActivity.this.serviceLocator);
-            bound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            bound = false;
-        }
-    };
-
     /**
      * {@inheritDoc}
      */
@@ -152,7 +136,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onDestroy();
 
         unregisterReceiver(this.broadcastReceiver);
-        this.bluetoothAdapter = null;
     }
 
     /**
@@ -162,8 +145,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
-        final Intent serviceIntent = new Intent(this, AndroidBluetoothService.class);
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
@@ -177,12 +158,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStop() {
         LOGGER.info("Stopping from activity");
         this.serviceLocator.unregisterFromEventBus(this);
-
-        if (bound) {
-            unbindService(connection);
-            bound = false;
-        }
-
         super.onStop();
     }
 
@@ -255,9 +230,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
-            if (bound) {
-                bluetoothService.writeAllContacts();
-            }
+            this.serviceLocator.getBluetoothHandler().writeAllContacts();
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception", e);
         }
@@ -279,7 +252,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             if (!info.equals(getString(R.string.no_devices_found))) {
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
-                bluetoothService.connect(device);
+                BluetoothConnectionActivity.this.serviceLocator.getBluetoothHandler().connect(device);
             }
         }
 
@@ -303,5 +276,4 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             return null;
         }
     }
-
 }

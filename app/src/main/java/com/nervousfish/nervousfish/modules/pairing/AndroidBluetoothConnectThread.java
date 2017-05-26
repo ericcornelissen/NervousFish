@@ -4,7 +4,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
+import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.MY_UUID_SECURE;
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTING;
 
 /**
  * This thread runs while attempting to make an outgoing connection
@@ -21,13 +23,14 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  */
 class AndroidBluetoothConnectThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectThread");
-    private final BluetoothSocket mmSocket;
+    private final BluetoothSocket socket;
     private final BluetoothDevice mmDevice;
-    private final AndroidBluetoothService handler;
+    private final IServiceLocator serviceLocator;
 
-    AndroidBluetoothConnectThread(final AndroidBluetoothService bluetoothService, final BluetoothDevice device) {
+    AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
         super();
 
+        this.serviceLocator = serviceLocator;
         mmDevice = device;
         BluetoothSocket tmp = null;
 
@@ -39,10 +42,8 @@ class AndroidBluetoothConnectThread extends Thread {
         } catch (final IOException e) {
             LOGGER.error("Connection failed");
         }
-        mmSocket = tmp;
-        bluetoothService.mState = STATE_CONNECTING;
-        bluetoothService.serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
-        this.handler = bluetoothService;
+        socket = tmp;
+        serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
     }
 
     public void run() {
@@ -56,32 +57,26 @@ class AndroidBluetoothConnectThread extends Thread {
         try {
             // This is a blocking call and will only return on a
             // successful connection or an exception
-            mmSocket.connect();
+            socket.connect();
         } catch (final IOException e) {
-            // Close the socket
+            LOGGER.warn("Exception while connecting over Bluetooth", e);
             try {
-                mmSocket.close();
+                socket.close();
             } catch (final IOException e2) {
-                LOGGER.error("Connection failed/couldn't close the socket");
+                LOGGER.error("Connection failed/couldn't close the socket", e2);
             }
-            handler.connectionFailed();
+            serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
             return;
         }
 
-        // Reset the AndroidBluetoothConnectThread because we're done
-        synchronized (handler) {
-            handler.connectThread = null;
-        }
-
-        // Start the connected thread
-        handler.connected(mmSocket, mmDevice);
+        serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
     }
 
     void cancel() {
         try {
-            mmSocket.close();
+            socket.close();
         } catch (final IOException e) {
-            LOGGER.error("Closing socket failed");
+            LOGGER.error("Closing socket failed", e);
         }
     }
 }

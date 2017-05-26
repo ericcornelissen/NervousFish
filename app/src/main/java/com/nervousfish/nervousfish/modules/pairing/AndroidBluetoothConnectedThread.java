@@ -2,6 +2,10 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
+import com.nervousfish.nervousfish.events.SerializedBufferReceivedEvent;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-
-import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService.STATE_CONNECTED;
 
 /**
  * This thread runs during a connection with a remote device.
@@ -21,9 +23,9 @@ public class AndroidBluetoothConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
-    private final AndroidBluetoothService handler;
+    private final IServiceLocator serviceLocator;
 
-    AndroidBluetoothConnectedThread(final AndroidBluetoothService handler, final BluetoothSocket socket) {
+    AndroidBluetoothConnectedThread(final IServiceLocator serviceLocator, final BluetoothSocket socket) {
         super();
 
         LOGGER.info("Connected Bluetooth thread created");
@@ -41,27 +43,21 @@ public class AndroidBluetoothConnectedThread extends Thread {
 
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
-        handler.mState = STATE_CONNECTED;
-        this.handler = handler;
+        this.serviceLocator = serviceLocator;
     }
 
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
         final byte[] buffer = new byte[4096];
+        try {
+            // Read from the InputStream
+            final int bytes = mmInStream.read(buffer);
+            LOGGER.info(" Read " + bytes + " bytes");
 
-        // Keep listening to the InputStream while connected
-        while (handler.mState == STATE_CONNECTED) {
-            try {
-                // Read from the InputStream
-                final int bytes = mmInStream.read(buffer);
-                LOGGER.info(" Read " + bytes + " bytes");
-
-                handler.newContact(buffer);
-            } catch (final IOException e) {
-                LOGGER.warn("Disconnected from the paired device");
-                handler.connectionLost();
-                break;
-            }
+            this.serviceLocator.postOnEventBus(new SerializedBufferReceivedEvent(buffer));
+        } catch (final IOException e) {
+            LOGGER.warn("Disconnected from the paired device");
+            this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
         }
     }
 

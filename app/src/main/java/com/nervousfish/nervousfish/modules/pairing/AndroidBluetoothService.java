@@ -2,73 +2,51 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
+import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
-import com.nervousfish.nervousfish.events.NewContactsReceivedEvent;
-import com.nervousfish.nervousfish.exceptions.DeserializationException;
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by jverb on 5/26/2017.
- */
+import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_CONNECTED;
+import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_CONNECTING;
+import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_LISTEN;
+import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_NONE;
 
-public class AndroidBluetoothService extends Service {
-    // Constants that indicate the current connection state
-    static final int STATE_NONE = 0;       // we're doing nothing
-    static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    static final int STATE_CONNECTED = 3;  // now connected to a remote device
+/**
+ * Runs on the background and accepts incoming Bluetooth pairing requests
+ */
+public class AndroidBluetoothService extends Service implements IBluetoothHandlerService {
     // Unique UUID for this application
     static final UUID MY_UUID_SECURE =
             UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     static final String NAME_SECURE = "BluetoothChatSecure";
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
-    AndroidBluetoothConnectThread connectThread;
-    int mState = STATE_NONE;
-    private AndroidBluetoothAcceptThread acceptThread;
-    private AndroidBluetoothConnectedThread connectedThread;
-    IServiceLocator serviceLocator;
-    private IDatabase database;
-
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
-
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
-    public class LocalBinder extends Binder {
-        public AndroidBluetoothService getService() {
-            // Return this instance of LocalService so clients can call public methods
-            return AndroidBluetoothService.this;
-        }
-    }
+    AndroidBluetoothConnectThread connectThread;
+    private BluetoothState state = STATE_NONE;
+    private AndroidBluetoothAcceptThread acceptThread;
+    private AndroidBluetoothConnectedThread connectedThread;
+    private IServiceLocator serviceLocator;
 
     public void setServiceLocator(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
-        this.database = serviceLocator.getDatabase();
+        this.serviceLocator.registerToEventBus(this);
     }
 
     @Override
@@ -79,6 +57,7 @@ public class AndroidBluetoothService extends Service {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void start() {
         LOGGER.info("Bluetooth Service started");
 
@@ -97,12 +76,13 @@ public class AndroidBluetoothService extends Service {
 
             // Start the thread to listen on a BluetoothServerSocket
             if (acceptThread == null) {
-                acceptThread = new AndroidBluetoothAcceptThread(this, this.serviceLocator);
+                acceptThread = new AndroidBluetoothAcceptThread(this.serviceLocator);
                 acceptThread.start();
+                this.serviceLocator.postOnEventBus(new BluetoothListeningEvent());
+                this.state = STATE_LISTEN;
             }
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -112,7 +92,7 @@ public class AndroidBluetoothService extends Service {
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
-            if (mState == STATE_CONNECTING && connectThread != null) {
+            if (state == STATE_CONNECTING && connectThread != null) {
                 connectThread.cancel();
                 connectThread = null;
             }
@@ -124,15 +104,15 @@ public class AndroidBluetoothService extends Service {
             }
 
             // Start the thread to connect with the given device
-            connectThread = new AndroidBluetoothConnectThread(this, device);
+            connectThread = new AndroidBluetoothConnectThread(this.serviceLocator, device);
             connectThread.start();
+            this.serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
+            this.state = STATE_CONNECTING;
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void connected(final BluetoothSocket socket, final BluetoothDevice device) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBluetoothAlmostConnectedEvent(final BluetoothAlmostConnectedEvent event) {
         LOGGER.info("Connected Bluetooth thread started");
 
         synchronized (this) {
@@ -155,9 +135,10 @@ public class AndroidBluetoothService extends Service {
             }
 
             // Start the thread to manage the connection and perform transmissions
-            connectedThread = new AndroidBluetoothConnectedThread(this, socket);
+            connectedThread = new AndroidBluetoothConnectedThread(this.serviceLocator, event.getSocket());
             connectedThread.start();
             this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(connectedThread));
+            this.state = STATE_CONNECTED;
         }
     }
 
@@ -183,41 +164,28 @@ public class AndroidBluetoothService extends Service {
                 acceptThread = null;
             }
 
-            mState = STATE_NONE;
+            this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
+            state = STATE_NONE;
         }
     }
 
     /**
-     * Write to the AndroidBluetoothConnectedThread in an unsynchronized manner
-     *
-     * @param output The bytes to write
-     * @see AndroidBluetoothConnectedThread#write(byte[])
+     * {@inheritDoc}
      */
+    @Override
     public void write(final byte[] output) {
         // Create temporary object
         final AndroidBluetoothConnectedThread ready;
         // Synchronize a copy of the AndroidBluetoothConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) {
+            if (state != STATE_CONNECTED) {
                 return;
             }
             ready = connectedThread;
         }
         // Perform the write unsynchronized
-        LOGGER.info("Write bytes : " + Arrays.toString(output));
+        LOGGER.info("Write bytes: {}", Arrays.toString(output));
         ready.write(output);
-    }
-
-    /**
-     * Indicate that the connection attempt failed and notify the UI Activity.
-     */
-    void connectionFailed() {
-
-        mState = STATE_NONE;
-        this.serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
-
-        // Start the service over to restart listening mode
-        this.start();
     }
 
     /**
@@ -225,7 +193,7 @@ public class AndroidBluetoothService extends Service {
      */
     void connectionLost() {
 
-        mState = STATE_NONE;
+        state = STATE_NONE;
         this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
 
         // Start the service over to restart listening mode
@@ -235,131 +203,20 @@ public class AndroidBluetoothService extends Service {
     /**
      * Return the current connection state.
      */
-    public int getState() {
+    public BluetoothState getState() {
         synchronized (this) {
-            return mState;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public void writeAllContacts() throws IOException {
-        final List<Contact> list = database.getAllContacts();
-        for (final Contact e : list) {
-            writeContact(e);
+            return state;
         }
     }
 
     /**
-     * Serializes a contact object and writes it, which is implemented in the specific subclass.
-     *
-     * @param contact contact to serialize
-     * @throws IOException When deserialization doesn't go well.
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
      */
-    void writeContact(final Contact contact) throws IOException {
-        LOGGER.info("Begin writing contact :" + contact.getName());
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = null;
-        ObjectOutputStream oos = null;
-        try {
-            bos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(bos);
-            oos.writeObject(contact);
-            oos.flush();
-            bytes = bos.toByteArray();
-        } finally {
-            if (oos != null) {
-                oos.close();
-            }
-            if (bos != null) {
-                bos.close();
-            }
+    public class LocalBinder extends Binder {
+        public AndroidBluetoothService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return AndroidBluetoothService.this;
         }
-        write(bytes);
-    }
-
-    /**
-     * Checks if a name of a given contact exists in the database.
-     *
-     * @param contact A contact object
-     * @return true when a contact with the same exists in the database
-     * @throws IOException When database fails to respond
-     */
-    boolean checkExists(final Contact contact) throws IOException {
-        final String name = contact.getName();
-        final List<Contact> list = database.getAllContacts();
-        for (final Contact e : list) {
-            if (e.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Deserializes a contact through a byte array and sends it to the database.
-     *
-     * @param bytes byte array representing a contact
-     * @return Whether or not the process finished successfully
-     */
-    Contact newContact(final byte[] bytes) {
-        LOGGER.info("Saving these bytes :" + bytes);
-        Contact contact = null;
-        ByteArrayInputStream bis = null;
-        ObjectInputStream ois = null;
-        try {
-            bis = new ByteArrayInputStream(bytes);
-            ois = new ObjectInputStream(bis);
-            contact = (Contact) ois.readObject();
-        } catch (final ClassNotFoundException | IOException e) {
-            LOGGER.error(" Couldn't start deserialization!");
-            e.printStackTrace();
-            throw new DeserializationException(" Couldn't start deserialization! description: " + e.toString());
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    LOGGER.warn("Couldn't close the ByteArrayInputStream");
-                }
-            }
-            if (ois != null) {
-                try {
-                    ois.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    LOGGER.warn("Couldn't close the ObjectInputStream");
-                }
-            }
-        }
-        try {
-            LOGGER.info("Checking if the contact exists...");
-            if (checkExists(contact)) {
-                LOGGER.warn("Contact already existed...");
-            } else {
-                LOGGER.info("Adding contact to database...");
-                database.addContact(contact);
-            }
-        } catch (final IOException e) {
-            LOGGER.warn("DB issued an error while saving contact");
-            e.printStackTrace();
-            throw new DatabaseException("DB issued an error while saving contact description: " + e.toString());
-        }
-        serviceLocator.postOnEventBus(new NewContactsReceivedEvent());
-        return contact;
     }
 }

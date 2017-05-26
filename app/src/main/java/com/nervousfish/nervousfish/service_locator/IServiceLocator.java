@@ -29,6 +29,8 @@ public interface IServiceLocator extends Serializable {
 
     IConstants getConstants();
 
+    IBluetoothHandler getBluetoothHandler();
+
     INfcHandler getNFCHandler();
 
     IQRHandler getQRHandler();

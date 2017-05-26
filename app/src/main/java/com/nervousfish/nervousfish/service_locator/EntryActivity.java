@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.LocalServerSocket;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -22,9 +23,6 @@ public final class EntryActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("EntryActivity");
 
-    private AndroidBluetoothService service;
-    private IServiceLocator serviceLocator;
-
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -34,31 +32,20 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final String androidFileDir = this.getFilesDir().getPath();
-        serviceLocator = new ServiceLocator(androidFileDir);
-
         LOGGER.info("EntryActivity created");
 
-        final Intent serviceIntent = new Intent(this, AndroidBluetoothService.class);
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+        final String androidFileDir = EntryActivity.this.getFilesDir().getPath();
+        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
 
-        final Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        this.startActivity(intent);
+        ((INervousFish) getApplicationContext()).setOnServiceBound(new Runnable() {
+            @Override
+            public void run() {
+                ((NervousFish) getApplicationContext()).getBluetoothService().setServiceLocator(serviceLocator);
+
+                final Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                startActivity(intent);
+            }
+        });
     }
-
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
-            EntryActivity.this.service = binder.getService();
-            binder.getService().setServiceLocator(EntryActivity.this.serviceLocator);
-            binder.getService().start();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
-    };
 }
