@@ -8,6 +8,7 @@ public final class ConstantKeywords {
     public static final String SECURITY_CODE = "Security Code";
     public static final String RSA_KEY = "RSA";
     public static final String CONTACT = "contact";
+    public static final String PROXY_REQUIRED = "Proxy required.";
 
     /**
      * Prevent instantiation

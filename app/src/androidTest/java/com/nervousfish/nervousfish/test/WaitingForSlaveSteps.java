@@ -1,24 +1,17 @@
 package com.nervousfish.nervousfish.test;
 
-
-import android.app.Activity;
 import android.content.Intent;
-import android.support.test.espresso.core.deps.guava.collect.Iterables;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
-import android.test.ActivityInstrumentationTestCase2;
-import android.view.View;
-import android.widget.EditText;
+import android.support.test.rule.ActivityTestRule;
 
+import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.WaitForSlaveActivity;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.junit.internal.matchers.TypeSafeMatcher;
+import org.junit.Rule;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -27,84 +20,34 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class WaitingForSlaveSteps extends ActivityInstrumentationTestCase2<EntryActivity> {
+public class WaitingForSlaveSteps {
 
-    public WaitingForSlaveSteps(EntryActivity activityClass) {
-        super(EntryActivity.class);
-    }
-    public WaitingForSlaveSteps() {
-        super(EntryActivity.class);
-    }
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
-    private static Matcher<? super View> hasErrorText(final String expectedError) {
-        return new WaitingForSlaveSteps.ErrorTextMatcher(expectedError);
-    }
+    @Rule
+    public ActivityTestRule<WaitForSlaveActivity> mActivityRule =
+            new ActivityTestRule<>(WaitForSlaveActivity.class, true, false);
 
-    @Given("^I am viewing the waitingForSlave activity$")
+    @Given("^I am viewing the waiting for slave activity$")
     public void iAmViewingWaitingForSlaveActivity() {
-        assertNotNull(getActivity());
-
-        Intent intent = new Intent(getActivity(), WaitForSlaveActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR,
-                getCurrentActivity().getIntent().getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR));
-        getActivity().startActivity(intent);
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        mActivityRule.launchActivity(intent);
     }
 
-    @When("^I press the cancel button$")
-    public void iPressDeleteButton() {
+    @When("^I press the cancel waiting for slave button$")
+    public void iPressTheCancelWaitingForSlaveButton() {
         onView(withId(R.id.cancelWaitForSlave)).perform(click());
     }
 
-    @Then("^I should go to the MainActivity$")
-    public void iShouldGoToMainActivity() {
-        assertEquals(MainActivity.class, getCurrentActivity().getClass());
+    @Then("^I should go to the main activity$")
+    public void iShouldGoToTheMainActivity() {
+        intended(hasComponent(MainActivity.class.getName()));
     }
 
-    private Activity getCurrentActivity() {
-        getInstrumentation().waitForIdleSync();
-        final Activity[] activity = new Activity[1];
-        try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-                    activity[0] = Iterables.getOnlyElement(activities);
-                }
-            });
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        return activity[0];
-    }
-
-    /**
-     * Custom matcher to assert equal EditText.setError();
-     */
-    private static class ErrorTextMatcher extends TypeSafeMatcher<View> {
-
-        private final String mExpectedError;
-
-        private ErrorTextMatcher(String expectedError) {
-            mExpectedError = expectedError;
-        }
-
-        @Override
-        public boolean matchesSafely(View view) {
-            if (!(view instanceof EditText)) {
-                return false;
-            }
-
-            EditText editText = (EditText) view;
-
-            return mExpectedError.equals(editText.getError());
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("with error: " + mExpectedError);
-        }
-    }
 }
