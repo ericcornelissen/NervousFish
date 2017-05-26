@@ -109,6 +109,7 @@ abstract class APairingHandler implements Serializable {
      *
      * @param bytes Data represented as bytes (usually received from the socket)
      */
+    @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity"})
     void parseInput(final byte[] bytes) {
         LOGGER.info("Reading these bytes: %s", bytes);
         final DataWrapper dataWrapper;
@@ -134,18 +135,25 @@ abstract class APairingHandler implements Serializable {
                             saveContact((Contact) o);
                         } else if (o.getClass().getSimpleName().equals("SingleTap")) {
                             LOGGER.info("Call to analyze this tap :" + o);
-                            //analyzeTaps(o); pr something like that
+                            //analyzeTaps(o); or something like that
                         }
                     }
                 }
                 break;
             case "String" :
-                LOGGER.info("Content was a String");
+                final String verification = (String) dataWrapper.getData();
+                LOGGER.info("Content was a String" + verification);
+                if (verification.contains("Rhythm")) {
+                    LOGGER.info("");
+                    //go to rhythm activity
+                } else if (verification.contains("Visual")) {
+                    LOGGER.info("");
+                    //go to visual activity
+                }
                 break;
             default:
+                LOGGER.info("Content was unknown for the parser :" + dataWrapper.getClazz().getSimpleName());
                 break;
-            /*case "FileWrapper" : new File(((FileWrapper) dataWrapper.getData()).getData();
-                break;*/
         }
     }
 
