@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -175,11 +176,23 @@ public class APairingHandlerTest implements Serializable {
     }
 
     @Test
-    public void parseInputTest() throws IOException {
+    public void parseInputSingleContactTest() throws IOException {
         Contact contact = new Contact("Test", new SimpleKey("Test", ""));
         DataWrapper dataWrapper = new DataWrapper(contact);
         phspy.parseInput(serialize(dataWrapper));
         verify(phspy).saveContact(any(Contact.class));
+    }
+
+    @Test
+    public void parseInputMultipleContactTest() throws IOException {
+        List<Contact> list = new ArrayList<>();
+        Contact c1 = new Contact("Test", new SimpleKey("Test", ""));
+        Contact c2 = new Contact("Test2", new RSAKey("Test", "1234", "0"));
+        list.add(c1);
+        list.add(c2);
+        DataWrapper dataWrapper = new DataWrapper((ArrayList)list);
+        phspy.parseInput(serialize(dataWrapper));
+        verify(phspy, times(2)).saveContact(any(Contact.class));
     }
 
 }

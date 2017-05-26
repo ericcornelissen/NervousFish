@@ -130,15 +130,18 @@ abstract class APairingHandler implements Serializable {
                 if (!list.isEmpty()) {
                     for (final Object o : list) {
                         if (o.getClass().getSimpleName().equals(CONTACT_CLASS)) {
+                            LOGGER.info("Call to save this contact: " + o);
                             saveContact((Contact) o);
                         } else if (o.getClass().getSimpleName().equals("SingleTap")) {
-                           //analyzeTaps(o); pr something like that
+                            LOGGER.info("Call to analyze this tap :" + o);
+                            //analyzeTaps(o); pr something like that
                         }
                     }
                 }
                 break;
             case "String" :
                 LOGGER.info("Content was a String");
+                break;
             default:
                 break;
             /*case "FileWrapper" : new File(((FileWrapper) dataWrapper.getData()).getData();
@@ -172,8 +175,8 @@ abstract class APairingHandler implements Serializable {
     /**
      * * A method to send a contact file
      *
-     * @return content of the file to be sent in bytes
-     * @throws IOException
+     * @return content of the file to be sent in byte
+     * @throws IOException Can be because of serialization or if there is a read error
      */
     byte[] sendContactFile() throws IOException {
         //to ensure that the file is not modified during read
