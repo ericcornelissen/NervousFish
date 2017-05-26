@@ -5,6 +5,6 @@ import org.junit.Test;
 public class BluetoothConnectedEventTest {
     @Test
     public void testBluetoothConnectedEvent() {
-        new BluetoothConnectedEvent();
+        new BluetoothConnectedEvent(null);
     }
 }
