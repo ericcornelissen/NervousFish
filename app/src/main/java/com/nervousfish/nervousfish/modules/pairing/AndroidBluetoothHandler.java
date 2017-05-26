@@ -1,23 +1,16 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
 import com.nervousfish.nervousfish.events.BluetoothDisconnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -42,10 +35,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     // Name for the SDP record when creating server socket
     static final String NAME_SECURE = "BluetoothChatSecure";
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
-    private AcceptThread secureAcceptThread;
     ConnectThread connectThread;
-    private ConnectedThread connectedThread;
     int mState;
+    private AcceptThread secureAcceptThread;
+    private ConnectedThread connectedThread;
 
     /**
      * Constructor for the Bluetooth service which manages the connection.
@@ -83,7 +76,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void start() {
-        LOGGER.info("Bleutooth Service started");
+        LOGGER.info("Bluetooth Service started");
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
