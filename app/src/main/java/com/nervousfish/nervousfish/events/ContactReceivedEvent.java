@@ -7,8 +7,8 @@ import com.nervousfish.nervousfish.data_objects.Contact;
  *
  * Sent when the a new public key is received
  */
-public class ContactReceivedEvent {
-    final Contact contact;
+public final class ContactReceivedEvent {
+    private final Contact contact;
 
     /**
      * Constructs a new PublicKeyReceivedEvent

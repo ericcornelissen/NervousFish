@@ -1,8 +1,8 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.exceptions.DeserializationException;
+import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -23,6 +23,7 @@ import java.util.List;
 abstract class APairingHandler implements IPairingHandler, Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
+    private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
     private final IDatabase database;
@@ -40,10 +41,11 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
     /**
      * {@inheritDoc}
      */
-    public void writeAllContacts() throws IOException {
+    @Override
+    public void sendAllContacts() throws IOException {
         final List<Contact> list = database.getAllContacts();
         for (final Contact e : list) {
-            writeContact(e);
+            sendContact(e);
         }
     }
 
@@ -53,26 +55,16 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
      * @param contact contact to serialize
      * @throws IOException When deserialization doesn't go well.
      */
-    void writeContact(final Contact contact) throws IOException {
+    void sendContact(final Contact contact) throws IOException {
         LOGGER.info("Begin writing contact :" + contact.getName());
-            byte[] bytes = null;
-            ByteArrayOutputStream bos = null;
-            ObjectOutputStream oos = null;
-            try {
-                bos = new ByteArrayOutputStream();
-                oos = new ObjectOutputStream(bos);
-                oos.writeObject(contact);
-                oos.flush();
-                bytes = bos.toByteArray();
-            } finally {
-                if (oos != null) {
-                    oos.close();
-                }
-                if (bos != null) {
-                    bos.close();
-                }
-            }
-            write(bytes);
+        final byte[] bytes;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(contact);
+            oos.flush();
+            bytes = bos.toByteArray();
+        }
+        send(bytes);
     }
 
     /**
@@ -100,60 +92,32 @@ abstract class APairingHandler implements IPairingHandler, Serializable {
      * @return Whether or not the process finished successfully
      */
     Contact saveContact(final byte[] bytes) {
-        LOGGER.info("Saving these bytes :" + bytes);
-        Contact contact = null;
-        ByteArrayInputStream bis = null;
-        ObjectInputStream ois = null;
-        try {
-            bis = new ByteArrayInputStream(bytes);
-            ois = new ObjectInputStream(bis);
+        LOGGER.info("Saving these bytes: %s", bytes);
+        final Contact contact;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
             contact = (Contact) ois.readObject();
         } catch (final ClassNotFoundException | IOException e) {
-            LOGGER.error(" Couldn't start deserialization!");
-            e.printStackTrace();
-            throw new DeserializationException(" Couldn't start deserialization! description: " + e.toString());
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    LOGGER.warn("Couldn't close the ByteArrayInputStream");
-                }
-            }
-            if (ois != null) {
-                try {
-                    ois.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    LOGGER.warn("Couldn't close the ObjectInputStream");
-                }
-            }
+            LOGGER.error(" Couldn't start deserialization!", e);
+            throw (DeserializationException) new DeserializationException("The contact could not be deserialized").initCause(e);
         }
         try {
-            LOGGER.info("Checking if the contact exists...");
-            if (checkExists(contact)) {
-                LOGGER.warn("Contact already existed...");
-            } else {
-                LOGGER.info("Adding contact to database...");
-                database.addContact(contact);
-            }
-        } catch (final IOException e) {
-            LOGGER.warn("DB issued an error while saving contact");
-            e.printStackTrace();
-            throw new DatabaseException("DB issued an error while saving contact description: " + e.toString());
+            database.addContact(contact);
+        } catch (IOException e) {
+            LOGGER.warn("Contact already existed", e);
+            throw (DatabaseException) new DatabaseException("Contact already existed in the database").initCause(e);
         }
         return contact;
     }
 
-    IServiceLocator getServiceLocator() {
+    protected IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }
 
     /**
-     * Write to the buffer to the world
+     * Write the buffer to the world
      *
-     * @param buffer The bytes to write
+     * @param buffer The bytes to send
      */
-    abstract void write(final byte[] buffer);
+    abstract void send(byte[] buffer);
 }

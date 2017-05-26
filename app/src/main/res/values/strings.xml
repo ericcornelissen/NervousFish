@@ -11,11 +11,42 @@
 
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
+    <string name="type">Type</string>
 
-    <string name="delete_popup_you_sure">Are you sure?</string>
+    <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
     <string name="cancel">Cancel</string>
-    <string name="yes_delete">Yes,delete it!</string>
+
+    <string name="yes_delete">Yes, delete it!</string>
+    <string name="waiting_for_slave">Waiting for partner…</string>
+    <string name="cancel_pairing">Cancel</string>
+
+    <string name="delete">Delete</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="change_contact_title">Change Contact</string>
+    <string name="go_back_changes_lost">Your changes will be lost</string>
+    <string name="yes_go_back">Yes, go back</string>
+
+    <string name="invalid_name">Invalid name entered</string>
+    <string name="invalid_name_explanation">The new name you entered is invalid, it can\'t be all whitespaces or empty.</string>
+
+    <string name="edit_menu_item">Edit</string>
+    <string name="delete_menu_item">Delete</string>
+
+    <string name="activating_bluetooth_went_wrong">Bluetooth could not be activated</string>
+    <string name="activating_bluetooth_went_wrong_explanation">Please enable Bluetooth if you want to exchange keys over Bluetooth.</string>
+    <string name="activating_bluetooth">Activating Bluetooth…</string>
+    <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
+        note that we won\'t do anything with your location.</string>
+
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>
+    <string name="contact_deleted_title">Deleted!</string>
+    <string name="contact_deleted_description">The contact has been deleted!</string>
+    <string name="contact_doesnt_exist">The contact doesn\'t exist</string>
+    <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="something_went_wrong_try_again">There went something wrong deleting this contact, please try again.</string>
+    <string name="no_devices_found">No devices found...</string>
 </resources>

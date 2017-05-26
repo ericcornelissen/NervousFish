@@ -29,7 +29,6 @@ import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -48,48 +47,22 @@ import java.util.Set;
 // 2) This is necessary for freeing up resources
 // 3) Temporary busy wait, needs eventbus
 
-public class BluetoothConnectionActivity extends AppCompatActivity {
+public final class BluetoothConnectionActivity extends AppCompatActivity {
 
-    public static final String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
+    private static final int DISCOVERABLE_DURATION = 300;
 
-    //Request codes
-    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
-    private static final String NONE_FOUND = "none_found";
-
+    // Device is now discoverable for 300 seconds
     private BluetoothAdapter bluetoothAdapter;
     private Set<BluetoothDevice> newDevices;
     private Set<BluetoothDevice> pairedDevices;
     private AndroidBluetoothService bluetoothService;
     private volatile boolean bound;
 
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private final AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
-            stopDiscovering();
-
-            // Get the device MAC address, which is the last 17 chars in the View
-            final String info = ((TextView) v).getText().toString();
-            if(!info.equals(NONE_FOUND)) {
-                final String address = info.substring(info.length() - 17);
-                final BluetoothDevice device = getDevice(address);
-                LOGGER.info("Starting connection with" + address);
-                bluetoothService.connect(device);
-
-                // Create the result Intent and include the MAC address
-                final Intent intent = new Intent();
-                intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-            }
-
-        }
-    };
-    @SuppressWarnings("PMD.SingularField")
     private IServiceLocator serviceLocator;
     private ArrayAdapter<String> newDevicesArrayAdapter;
+
+    @SuppressWarnings("PMD.SingularField")
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(final Context context, final Intent intent) {
@@ -97,7 +70,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
                     newDevices.add(device);
                     newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
@@ -105,7 +78,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setTitle("select_device");
                 if (newDevicesArrayAdapter.getCount() == 0) {
-                    newDevicesArrayAdapter.add("none_found");
+                    newDevicesArrayAdapter.add(getString(R.string.no_devices_found));
                 }
             }
 
@@ -120,7 +93,10 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EventBus.getDefault().register(this);
+        final Intent intent = getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+        setupBluetoothAdapter();
 
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -131,9 +107,6 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-        // SetUp bluetooth adapter
-        setUp();
-
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         pairedDevicesArrayAdapter =
@@ -143,22 +116,18 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         // Find and set up the ListView for paired devices
         final ListView pairedListView = (ListView) findViewById(R.id.paired_list);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
+        pairedListView.setOnItemClickListener(new DeviceClickListener());
 
 
         // Find and set up the ListView for newly discovered devices
         final ListView newDevicesListView = (ListView) findViewById(R.id.discovered_list);
         newDevicesListView.setAdapter(newDevicesArrayAdapter);
-        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
+        newDevicesListView.setOnItemClickListener(new DeviceClickListener());
 
 
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(broadcastReceiver, filter);
-
-        // Get the serviceLocator.
-        final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         this.newDevices = new HashSet<>();
     }
@@ -168,6 +137,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
             BluetoothConnectionActivity.this.bluetoothService = binder.getService();
+            binder.getService().setServiceLocator(BluetoothConnectionActivity.this.serviceLocator);
             bound = true;
         }
 
@@ -194,8 +164,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        enableBluetooth();
-        //this.serviceLocator.registerToEventBus(this);
+        this.serviceLocator.registerToEventBus(this);
         final Intent serviceIntent = new Intent(this, AndroidBluetoothService.class);
         bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         // Get the Paired Devices list
@@ -210,6 +179,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         LOGGER.info("Stopping from activity");
+        this.serviceLocator.unregisterFromEventBus(this);
 
         if (bound) {
             unbindService(connection);
@@ -220,24 +190,23 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
     }
 
     /**
+     * Gets triggered when the back button is clicked.
+     */
+    @Override
+    public void onBackPressed() {
+        setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
+        finish();
+    }
+
+    /**
      * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
      */
-    public void setUp() {
+    public void setupBluetoothAdapter() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // consequence for device not supporting bluetooth
             setResult(Activity.RESULT_CANCELED);
             finish();
-        }
-    }
-
-    /**
-     * Enables bluetooth.
-     */
-    public void enableBluetooth() {
-        if (!bluetoothAdapter.isEnabled()) {
-            final Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
         }
     }
 
@@ -272,7 +241,7 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
         }
         final Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION);
         startActivity(discoverableIntent);
         bluetoothAdapter.startDiscovery();
     }
@@ -293,28 +262,49 @@ public class BluetoothConnectionActivity extends AppCompatActivity {
                 bluetoothService.writeAllContacts();
             }
         } catch (final IOException e) {
-            LOGGER.warn("Writing all contacts issued an IOexception");
+            LOGGER.warn("Writing all contacts issued an IOexception", e);
         }
     }
 
     /**
-     * Gets the device corresponding to the address from either the paired or the new devices.
-     *
-     * @param address The MAC address corresponding to the device to be found
-     * @return The BLuetoothDevice corresponding to the mac address.
+     * The on-click listener for all devices in the ListViews
      */
-    private BluetoothDevice getDevice(final String address) {
-        for (final BluetoothDevice device : pairedDevices) {
-            if (device.getAddress().equals(address)) {
-                return device;
+    private final class DeviceClickListener implements AdapterView.OnItemClickListener {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            stopDiscovering();
+            // Get the device MAC address, which is the last 17 chars in the View
+            final String info = ((TextView) v).getText().toString();
+            if (!info.equals(getString(R.string.no_devices_found))) {
+                final String address = info.substring(info.length() - 17);
+                final BluetoothDevice device = getDevice(address);
+                bluetoothService.connect(device);
             }
         }
-        for (final BluetoothDevice device : newDevices) {
-            if (device.getAddress().equals(address)) {
-                return device;
+
+        /**
+         * Gets the device corresponding to the address from either the paired or the new devices.
+         *
+         * @param address The MAC address corresponding to the device to be found
+         * @return The BLuetoothDevice corresponding to the mac address.
+         */
+        private BluetoothDevice getDevice(final String address) {
+            for (final BluetoothDevice device : pairedDevices) {
+                if (device.getAddress().equals(address)) {
+                    return device;
+                }
             }
+            for (final BluetoothDevice device : newDevices) {
+                if (device.getAddress().equals(address)) {
+                    return device;
+                }
+            }
+            return null;
         }
-        return null;
     }
 
 }

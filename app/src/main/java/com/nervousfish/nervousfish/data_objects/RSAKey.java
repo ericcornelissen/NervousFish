@@ -4,27 +4,31 @@ import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * RSA variant of {@link IKey}.
  */
 public final class RSAKey implements IKey {
+    private static final long serialVersionUID = -5286281533321045061L;
 
-    private final static String TYPE = ConstantKeywords.RSA_KEY;
-    private final static String JSON_CONSTANT_EXPONENT = "exponent";
-    private final static String JSON_CONSTANT_MODULUS = "modulus";
-    private final static String JSON_CONSTANT_NAME = "name";
+    private static final String TYPE = ConstantKeywords.RSA_KEY;
+    private static final String JSON_CONSTANT_EXPONENT = "exponent";
+    private static final String JSON_CONSTANT_MODULUS = "modulus";
+    private static final String JSON_CONSTANT_NAME = "name";
 
-    private final String exponent;
-    private final String modulus;
     private final String name;
+    private final String modulus;
+    private final String exponent;
 
     /**
      * Constructor for a RSA key.
      *
      * @param name     The name for the key.
-     * @param modulus  The modules of the RSA key.
+     * @param modulus  The modulus of the RSA key.
      * @param exponent The exponent of the RSA key.
      */
     public RSAKey(final String name, final String modulus, final String exponent) {
@@ -44,40 +48,8 @@ public final class RSAKey implements IKey {
         this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
 
         if (this.name == null || this.modulus == null || this.exponent == null) {
-           throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Couldn't find the name, modulus or exponent in the map");
         }
-    }
-
-    /**
-     * Get the exponent of an {@link RSAKey}.
-     *
-     * @param key An {@link RSAKey}.
-     * @return The value for the exponent attribute of the {@code key}.
-     * @throws IllegalArgumentException If the provided {@link IKey} is not a {@link RSAKey}.
-     */
-    static String getExponent(final IKey key) throws IllegalArgumentException {
-        final String type = key.getType();
-        if (!type.equals(ConstantKeywords.RSA_KEY)) {
-            throw new IllegalArgumentException();
-        }
-
-        return ((RSAKey) key).exponent;
-    }
-
-    /**
-     * Get the modulus of an {@link RSAKey}.
-     *
-     * @param key An {@link RSAKey}.
-     * @return The value for the modulus attribute of the {@code key}.
-     * @throws IllegalArgumentException If the provided {@link IKey} is not a {@link RSAKey}.
-     */
-    static String getModulus(final IKey key) throws IllegalArgumentException {
-        final String type = key.getType();
-        if (!type.equals(ConstantKeywords.RSA_KEY)) {
-            throw new IllegalArgumentException();
-        }
-
-        return ((RSAKey) key).modulus;
     }
 
     /**
@@ -108,7 +80,7 @@ public final class RSAKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public void toJSON(final JsonWriter writer) throws IOException {
+    public void toJson(final JsonWriter writer) throws IOException {
         writer.name(RSAKey.JSON_CONSTANT_NAME).value(this.name);
         writer.name(RSAKey.JSON_CONSTANT_MODULUS).value(this.modulus);
         writer.name(RSAKey.JSON_CONSTANT_EXPONENT).value(this.exponent);
@@ -137,4 +109,47 @@ public final class RSAKey implements IKey {
         return this.name.hashCode() + this.modulus.hashCode() + this.exponent.hashCode();
     }
 
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = -5286281533321045061L;
+        private final String name;
+        private final String modulus;
+        private final String exponent;
+
+        /**
+         * Constructs a new SerializationProxy
+         * @param key The current instance of the proxy
+         */
+        SerializationProxy(final RSAKey key) {
+            this.name = key.name;
+            this.modulus = key.modulus;
+            this.exponent = key.exponent;
+        }
+
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         * @return The object resolved by this proxy
+         */
+        private Object readResolve() {
+            return new RSAKey(this.name, this.modulus, this.exponent);
+        }
+    }
 }

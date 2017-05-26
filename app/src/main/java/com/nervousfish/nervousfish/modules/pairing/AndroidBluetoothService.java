@@ -9,9 +9,10 @@ import android.os.IBinder;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothDisconnectedEvent;
-import com.nervousfish.nervousfish.exceptions.DatabaseException;
+import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
+import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
 import com.nervousfish.nervousfish.exceptions.DeserializationException;
+import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -43,10 +44,10 @@ public class AndroidBluetoothService extends Service {
     // Name for the SDP record when creating server socket
     static final String NAME_SECURE = "BluetoothChatSecure";
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
-    ConnectThread connectThread;
+    AndroidBluetoothConnectThread connectThread;
     int mState = STATE_NONE;
-    private AcceptThread acceptThread;
-    private ConnectedThread connectedThread;
+    private AndroidBluetoothAcceptThread acceptThread;
+    private AndroidBluetoothConnectedThread connectedThread;
     IServiceLocator serviceLocator;
     private IDatabase database;
 
@@ -95,7 +96,7 @@ public class AndroidBluetoothService extends Service {
 
             // Start the thread to listen on a BluetoothServerSocket
             if (acceptThread == null) {
-                acceptThread = new AcceptThread(this, this.serviceLocator);
+                acceptThread = new AndroidBluetoothAcceptThread(this, this.serviceLocator);
                 acceptThread.start();
             }
         }
@@ -122,7 +123,7 @@ public class AndroidBluetoothService extends Service {
             }
 
             // Start the thread to connect with the given device
-            connectThread = new ConnectThread(this, device);
+            connectThread = new AndroidBluetoothConnectThread(this, device);
             connectThread.start();
         }
     }
@@ -153,9 +154,9 @@ public class AndroidBluetoothService extends Service {
             }
 
             // Start the thread to manage the connection and perform transmissions
-            connectedThread = new ConnectedThread(this, socket);
+            connectedThread = new AndroidBluetoothConnectedThread(this, socket);
             connectedThread.start();
-            this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent());
+            this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(connectedThread));
         }
     }
 
@@ -182,20 +183,19 @@ public class AndroidBluetoothService extends Service {
             }
 
             mState = STATE_NONE;
-            this.serviceLocator.postOnEventBus(new BluetoothDisconnectedEvent());
         }
     }
 
     /**
-     * Write to the ConnectedThread in an unsynchronized manner
+     * Write to the AndroidBluetoothConnectedThread in an unsynchronized manner
      *
      * @param output The bytes to write
-     * @see ConnectedThread#write(byte[])
+     * @see AndroidBluetoothConnectedThread#write(byte[])
      */
     public void write(final byte[] output) {
         // Create temporary object
-        final ConnectedThread ready;
-        // Synchronize a copy of the ConnectedThread
+        final AndroidBluetoothConnectedThread ready;
+        // Synchronize a copy of the AndroidBluetoothConnectedThread
         synchronized (this) {
             if (mState != STATE_CONNECTED) {
                 return;
@@ -213,7 +213,7 @@ public class AndroidBluetoothService extends Service {
     void connectionFailed() {
 
         mState = STATE_NONE;
-        this.serviceLocator.postOnEventBus(new BluetoothDisconnectedEvent());
+        this.serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
 
         // Start the service over to restart listening mode
         this.start();
@@ -225,7 +225,7 @@ public class AndroidBluetoothService extends Service {
     void connectionLost() {
 
         mState = STATE_NONE;
-        this.serviceLocator.postOnEventBus(new BluetoothDisconnectedEvent());
+        this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
 
         // Start the service over to restart listening mode
         this.start();
