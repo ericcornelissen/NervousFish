@@ -109,7 +109,6 @@ abstract class APairingHandler implements Serializable {
      *
      * @param bytes Data represented as bytes (usually received from the socket)
      */
-    @SuppressWarnings("UCF_USELESS_CONTROL_FLOW") // only for now
     void parseInput(final byte[] bytes) {
         LOGGER.info("Reading these bytes: %s", bytes);
         final DataWrapper dataWrapper;
@@ -132,12 +131,14 @@ abstract class APairingHandler implements Serializable {
                     for (final Object o : list) {
                         if (o.getClass().getSimpleName().equals(CONTACT_CLASS)) {
                             saveContact((Contact) o);
-                        } /*else if (o.getClass().getSimpleName().equals("MultiTap")) {
-                           //analyzeTaps(o);
-                        }*/
+                        } else if (o.getClass().getSimpleName().equals("SingleTap")) {
+                           //analyzeTaps(o); pr something like that
+                        }
                     }
                 }
                 break;
+            case "String" :
+                LOGGER.info("Content was a String");
             default:
                 break;
             /*case "FileWrapper" : new File(((FileWrapper) dataWrapper.getData()).getData();
