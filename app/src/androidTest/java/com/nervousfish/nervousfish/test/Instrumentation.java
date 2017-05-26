@@ -1,47 +1,42 @@
 package com.nervousfish.nervousfish.test;
 
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
-import android.support.test.runner.AndroidJUnitRunner;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.runner.MonitoringInstrumentation;
 
 import cucumber.api.android.CucumberInstrumentationCore;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 
-@SuppressWarnings("PMD")
-public class Instrumentation extends AndroidJUnitRunner {
+public class Instrumentation extends MonitoringInstrumentation {
 
+    public static final String filesDir = "/data/user/0/com.nervousfish.nervousfish/files";
     private final CucumberInstrumentationCore mInstrumentationCore = new CucumberInstrumentationCore(this);
 
     @Override
-    public void onCreate(Bundle arguments) {
-        MultiDex.install(getTargetContext());
-        mInstrumentationCore.create(arguments);
-        super.onCreate(arguments);
-       // start();
+    public void onCreate(final Bundle bundle) {
+        super.onCreate(bundle);
+
+        mInstrumentationCore.create(bundle);
+        start();
     }
 
     @Override
     public void onStart() {
-        mInstrumentationCore.start();
-        waitForIdleSync();
         super.onStart();
 
-        allFinished();
+        waitForIdleSync();
+        mInstrumentationCore.start();
     }
 
-    private int mResultCode;
-    private Bundle mResults = new Bundle();
-
-    /**
-     * Catch calls to finish() and aggregate results into a bundle
-     */
-    @Override
-    public void finish(int resultCode, Bundle results) {
-        mResultCode = resultCode;
-        mResults.putAll(results);
+    @Before
+    public void setUp() throws Exception {
+        Intents.init();
     }
 
-    private void allFinished() {
-        super.finish(mResultCode, mResults);
+    @After
+    public void tearDown() {
+        Intents.release();
     }
+
 }
