@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -25,8 +24,6 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
-import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;

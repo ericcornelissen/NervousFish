@@ -56,8 +56,7 @@ public class AndroidBluetoothConnectedThread extends Thread {
                 final int bytes = mmInStream.read(buffer);
                 LOGGER.info(" Read " + bytes + " bytes");
 
-                handler.saveContact(buffer);
-                //getServiceLocator().postOnEventBus(new ContactReceivedEvent(contact));
+                handler.newContact(buffer);
             } catch (final IOException e) {
                 LOGGER.warn("Disconnected from the paired device");
                 handler.connectionLost();

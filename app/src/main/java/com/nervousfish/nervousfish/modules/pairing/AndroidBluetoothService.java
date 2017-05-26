@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
+import com.nervousfish.nervousfish.events.NewContactsReceivedEvent;
 import com.nervousfish.nervousfish.exceptions.DeserializationException;
 import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -314,7 +315,7 @@ public class AndroidBluetoothService extends Service {
      * @param bytes byte array representing a contact
      * @return Whether or not the process finished successfully
      */
-    Contact saveContact(final byte[] bytes) {
+    Contact newContact(final byte[] bytes) {
         LOGGER.info("Saving these bytes :" + bytes);
         Contact contact = null;
         ByteArrayInputStream bis = null;
@@ -358,6 +359,7 @@ public class AndroidBluetoothService extends Service {
             e.printStackTrace();
             throw new DatabaseException("DB issued an error while saving contact description: " + e.toString());
         }
+        serviceLocator.postOnEventBus(new NewContactsReceivedEvent());
         return contact;
     }
 }

@@ -17,13 +17,14 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.events.ContactReceivedEvent;
+import com.nervousfish.nervousfish.events.NewContactsReceivedEvent;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,6 +128,18 @@ public final class MainActivity extends AppCompatActivity {
         LOGGER.info("MainActivity created");
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
     /**
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
@@ -166,8 +179,8 @@ public final class MainActivity extends AppCompatActivity {
             database.deleteContact(contact.getName());
         }
 
-        database.addContact(a);
-        database.addContact(b);
+        /*database.addContact(a);
+        database.addContact(b);*/
     }
 
     /**
@@ -187,10 +200,11 @@ public final class MainActivity extends AppCompatActivity {
      * Called when a new contact is received
      * @param event Contains additional data about the event
      */
-    @Subscribe
-    public void onEvent(final ContactReceivedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewContactsReceivedEvent(final NewContactsReceivedEvent event) {
         try {
-            serviceLocator.getDatabase().addContact(event.getContact());
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+            sortOnName();
         } catch (IOException e) {
             LOGGER.error("Couldn't add contact to database", e);
         }
