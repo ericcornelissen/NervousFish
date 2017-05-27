@@ -3,20 +3,15 @@ package com.nervousfish.nervousfish.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -72,9 +67,9 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         scanButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 LOGGER.info("Started scanning QR code");
-                IntentIntegrator integrator = new IntentIntegrator(QRExchangeKeyActivity.this);
+                final IntentIntegrator integrator = new IntentIntegrator(QRExchangeKeyActivity.this);
                 integrator.initiateScan();
 
             }
@@ -83,10 +78,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final Button generateButton = (Button) findViewById(R.id.generateQRbutton);
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 LOGGER.info("Started generating QR code");
-                Bitmap qrCode = QRGenerator.encode(publicKey.getType() + " " + publicKey.getName() +
-                        " " + publicKey.getKey());
+                final String space = " ";
+                final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
+                        + space + publicKey.getKey());
                 showQRCode(qrCode);
             }
         });
@@ -94,7 +90,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonQRExchange);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 finish();
             }
         });
@@ -106,7 +102,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
         final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             final String result = scanResult.getContents();
@@ -123,17 +119,17 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     /**
      * Adds new contact with the scanned key and opens change
      *
-     * @param QRMessage
+     * @param qrMessage The information we got from the QR code.
      */
-    private void addNewContact(final String QRMessage) {
+    private void addNewContact(final String qrMessage) {
         //TODO: Add recognizer for contact name to avoid saving the same key twice (add your personal name to QR code)
-        final IKey key = QRGenerator.deconstructToKey(QRMessage);
+        final IKey key = QRGenerator.deconstructToKey(qrMessage);
         final EditText editName = new EditText(this);
         editName.setInputType(InputType.TYPE_CLASS_TEXT);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).
-                setTitle(getString(R.string.contact_set_name)).
-                setView(editName).
-                setPositiveButton(getString(R.string.popup_done), new EditNameClickListener(editName, key));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.contact_set_name))
+                .setView(editName)
+                .setPositiveButton(getString(R.string.popup_done), new EditNameClickListener(editName, key));
         builder.show();
 
     }
@@ -141,23 +137,21 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     /**
      * Shows the QR Code in an alert dialog popup screen
      *
-     * @param QRCode The QR code to be shown.
+     * @param qrCode The QR code to be shown.
      */
-    private void showQRCode(final Bitmap QRCode) {
+    private void showQRCode(final Bitmap qrCode) {
 
-        Matrix matrix = new Matrix();
 
-        // resize the bit map
-        matrix.postScale(4, 4);
-        Bitmap largerCode = Bitmap.createBitmap(QRCode, 0, 0, QRCode.getWidth(), QRCode.getHeight(), matrix, true);
-
-        ImageView imageView = new ImageView(this);
-        imageView.setImageBitmap(largerCode);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).
-                setView(imageView).
-                setPositiveButton(getString(R.string.popup_done), new DialogInterface.OnClickListener() {
+        final ImageView imageView = new ImageView(this);
+        imageView.setImageBitmap(qrCode);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setView(imageView)
+                .setPositiveButton(getString(R.string.popup_done), new DialogInterface.OnClickListener() {
+                    /**
+                     * {@inheritDoc}
+                     */
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(final DialogInterface dialog, final int which) {
                         dialog.dismiss();
                     }
                 });
@@ -168,15 +162,15 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private final class EditNameClickListener implements DialogInterface.OnClickListener {
 
-        final EditText editName;
-        final IKey key;
+        private final EditText editName;
+        private final IKey key;
 
         /**
          * Constructor for editname click listener.
          * @param editName The textinput from which we show and get the name from.
          * @param key The key made from the QR code.
          */
-        public EditNameClickListener(EditText editName, IKey key){
+        private EditNameClickListener(final EditText editName, final IKey key) {
             this.editName = editName;
             this.key = key;
         }
@@ -185,9 +179,9 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
          * {@inheritDoc}
          */
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(final DialogInterface dialog, final int which) {
             try {
-                String name = editName.getText().toString();
+                final String name = editName.getText().toString();
 
                 final Contact contact = new Contact(name, key);
                 final IDatabase database = serviceLocator.getDatabase();
@@ -197,7 +191,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 intent.putExtra(ConstantKeywords.CONTACT, contact);
                 QRExchangeKeyActivity.this.startActivity(intent);
-            }catch (final IOException e) {
+            } catch (final IOException e) {
                 LOGGER.error(e.getMessage());
             } catch (final IllegalArgumentException e) {
                 LOGGER.error(e.getMessage());
@@ -210,6 +204,9 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                 LOGGER.error("Wrong input for scanner");
             }
         }
+
+
+
     }
 
 

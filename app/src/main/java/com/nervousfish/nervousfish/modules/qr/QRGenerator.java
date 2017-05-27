@@ -2,21 +2,11 @@ package com.nervousfish.nervousfish.modules.qr;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.FormatException;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -26,9 +16,6 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * Class that can be used to generate QR codes.
@@ -44,9 +31,7 @@ public final class QRGenerator {
     private static final int COMPONENT_RSA_MODULUS = 2;
     private static final int COMPONENT_RSA_EXPONENT = 3;
 
-
-
-
+    private static final int RESIZE_QR_CODE = 4;
 
 
     /**
@@ -78,7 +63,13 @@ public final class QRGenerator {
             LOGGER.error("Failed to encode bitmap", e);
         }
 
-        return bitmap;
+        final Matrix matrix = new Matrix();
+
+        // resize the bit map
+        matrix.postScale(RESIZE_QR_CODE, RESIZE_QR_CODE);
+        final Bitmap largerCode = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        return largerCode;
     }
 
     /**
@@ -89,6 +80,7 @@ public final class QRGenerator {
      * @throws IOException If the QR code could not be decoded.
      */
     // We suppress this warning because an EnumMap is much more efficient than a hashmap for such small maps
+    /*
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     public static String decode(final Bitmap qrCode) throws IOException {
         final Reader qrReader = new MultiFormatReader();
@@ -115,30 +107,26 @@ public final class QRGenerator {
 
         throw new IOException();
     }
+    */
 
 
     /**
      * Deconstructs a decrypted qrmessage to a key.
-     * @param QRMessage The decrypted QRCode in a string.
+     * @param qrMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */
-    public static IKey deconstructToKey(final String QRMessage) throws NullPointerException{
-        String[] messageComponents = QRMessage.split(" ");
-        IKey key = null;
-        switch(messageComponents[COMPONENT_KEYTYPE]) {
-            case    ConstantKeywords.RSA_KEY    :
-                key = new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
+    public static IKey deconstructToKey(final String qrMessage) throws NullPointerException {
+        final String[] messageComponents = qrMessage.split(" ");
+        switch (messageComponents[COMPONENT_KEYTYPE]) {
+            case ConstantKeywords.RSA_KEY :
+                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
                         messageComponents[COMPONENT_RSA_EXPONENT]);
-                break;
-            case    "simple"    :
-                key = new SimpleKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
-                break;
+            case "simple" :
+                return new SimpleKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
             default :
                 LOGGER.error("Key Type Not Found");
-                break;
+                return null;
         }
-        return key;
-
 
     }
 
