@@ -8,10 +8,12 @@ import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -31,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
@@ -59,7 +63,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
         //TODO: Get the user's generated public key from the database
         final IKeyGenerator keyGenerator = serviceLocator.getKeyGenerator();
-        final KeyPair pair = keyGenerator.generateRSAKeyPair("me");
+        final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         publicKey = pair.getPublicKey();
 
 
@@ -94,14 +98,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if(scanResult != null) {
-            String result = scanResult.getContents();
-            try {
-                addNewContact(result);
-            } catch (IOException e) {
-                LOGGER.error("IOException when adding new contact");
-            }
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            final String result = scanResult.getContents();
+            addNewContact(result);
+
         } else {
             LOGGER.error("No scan result in QR Scanner");
         }
@@ -112,29 +113,25 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Adds new contact with the scanned key and opens change
+     *
      * @param QRMessage
      */
-    private void addNewContact(String QRMessage) throws IOException {
+    private void addNewContact(final String QRMessage) {
         //TODO: Add recognizer for contact name to avoid saving the same key twice (add your personal name to QR code)
-        try{
-            IKey key = QRGenerator.deconstructToKey(QRMessage);
-            Contact contact = new Contact("<new contact>", key);
-            final IDatabase database = this.serviceLocator.getDatabase();
-            database.addContact(contact);
+        final IKey key = QRGenerator.deconstructToKey(QRMessage);
+        final EditText editName = new EditText(this);
+        editName.setInputType(InputType.TYPE_CLASS_TEXT);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).
+                setTitle(getString(R.string.contact_set_name)).
+                setView(editName).
+                setPositiveButton(getString(R.string.popup_done), new EditNameClickListener(editName, key));
+        builder.show();
 
-            Intent intent = new Intent(this, ContactActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-            intent.putExtra(ConstantKeywords.CONTACT, contact);
-            this.startActivity(intent);
-        } catch (NullPointerException e) {
-            LOGGER.error("Wrong input for scanner");
-        }
-
-        
     }
 
     /**
      * Shows the QR Code in an alert dialog popup screen
+     *
      * @param QRCode The QR code to be shown.
      */
     private void showQRCode(final Bitmap QRCode) {
@@ -149,7 +146,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         imageView.setImageBitmap(largerCode);
         AlertDialog.Builder builder = new AlertDialog.Builder(this).
                 setView(imageView).
-                setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                setPositiveButton(getString(R.string.popup_done), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -159,6 +156,48 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
     }
 
+
+    private final class EditNameClickListener implements DialogInterface.OnClickListener {
+
+        final EditText editName;
+        final IKey key;
+
+        public EditNameClickListener(EditText editName, IKey key){
+            this.editName = editName;
+            this.key = key;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            try {
+                String name = editName.getText().toString();
+
+                final Contact contact = new Contact(name, key);
+                final IDatabase database = serviceLocator.getDatabase();
+                database.addContact(contact);
+                dialog.dismiss();
+                final Intent intent = new Intent(QRExchangeKeyActivity.this, ContactActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                intent.putExtra(ConstantKeywords.CONTACT, contact);
+                QRExchangeKeyActivity.this.startActivity(intent);
+            }catch (final IOException e) {
+                LOGGER.error(e.getMessage());
+            } catch (final IllegalArgumentException e) {
+                LOGGER.error(e.getMessage());
+                new SweetAlertDialog(QRExchangeKeyActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.contact_exists))
+                        .setContentText(getString(R.string.contact_exists_message))
+                        .setConfirmText(getString(R.string.dialog_ok))
+
+                        .show();
+            } catch (final NullPointerException e) {
+                LOGGER.error("Wrong input for scanner");
+            }
+        }
+    }
 
 
 }

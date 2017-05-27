@@ -83,7 +83,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void addContact(final Contact contact) throws IOException {
+    public void addContact(final Contact contact) throws IOException, IllegalArgumentException {
         // Get the list of contacts and add the new contact
         if (contactExtists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
