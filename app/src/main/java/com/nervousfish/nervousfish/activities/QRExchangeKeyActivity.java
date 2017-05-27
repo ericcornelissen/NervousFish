@@ -141,7 +141,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     private void showQRCode(final Bitmap qrCode) {
 
-
         final ImageView imageView = new ImageView(this);
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)

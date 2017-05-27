@@ -72,43 +72,6 @@ public final class QRGenerator {
         return largerCode;
     }
 
-    /**
-     * Decodes the QRcode to a public key string.
-     *
-     * @param qrCode The QR code as a bitmap
-     * @return The decoded public key.
-     * @throws IOException If the QR code could not be decoded.
-     */
-    // We suppress this warning because an EnumMap is much more efficient than a hashmap for such small maps
-    /*
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
-    public static String decode(final Bitmap qrCode) throws IOException {
-        final Reader qrReader = new MultiFormatReader();
-        final int[] intArray = new int[qrCode.getWidth() * qrCode.getHeight()];
-
-        //copy pixel data from the Bitmap into the 'intArray' array
-        qrCode.getPixels(intArray, 0, qrCode.getWidth(), 0, 0, qrCode.getWidth(), qrCode.getHeight());
-
-        final LuminanceSource source = new RGBLuminanceSource(qrCode.getWidth(), qrCode.getHeight(), intArray);
-        final BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-
-        try {
-            final Map<DecodeHintType, Object> decodeHints = new EnumMap<>(DecodeHintType.class);
-            decodeHints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
-            final Result decoded = qrReader.decode(bitmap, decodeHints);
-            return decoded.getText();
-        } catch (final NotFoundException e) {
-            LOGGER.error("Not Found Exception", e);
-        } catch (final ChecksumException e) {
-            LOGGER.error("Checksum Exception", e);
-        } catch (final FormatException e) {
-            LOGGER.error("Format Exception", e);
-        }
-
-        throw new IOException();
-    }
-    */
-
 
     /**
      * Deconstructs a decrypted qrmessage to a key.
