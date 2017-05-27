@@ -32,6 +32,8 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -68,7 +70,7 @@ public class CreateProfileSteps {
 
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
-        onView(withId(R.id.submitProfile)).perform(click());
+        onView(withId(R.id.submitProfile)).perform(scrollTo()).perform(click());
     }
 
     @When("^I click ok on the popup$")
@@ -78,7 +80,7 @@ public class CreateProfileSteps {
 
     @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
-        onView(withId(R.id.profileEnterName)).perform(typeText(name));
+        onView(withId(R.id.profileEnterName)).perform(replaceText(name));
     }
 
     @When("^I enter a valid (.*?) as password$")
