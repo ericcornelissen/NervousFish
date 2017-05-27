@@ -6,10 +6,4 @@ package com.nervousfish.nervousfish.events;
  * Sent when the a new public key is received
  */
 public final class NewContactsReceivedEvent {
-
-    /**
-     * Constructs a new PublicKeyReceivedEvent
-     */
-    public NewContactsReceivedEvent() {
-    }
 }

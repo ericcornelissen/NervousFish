@@ -51,8 +51,10 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      * @param serviceLocator The service locator that the service can use
      */
     public void setServiceLocator(final IServiceLocator serviceLocator) {
-        this.serviceLocator = serviceLocator;
-        this.serviceLocator.registerToEventBus(this);
+        synchronized (this) {
+            this.serviceLocator = serviceLocator;
+            this.serviceLocator.registerToEventBus(this);
+        }
     }
 
     /**
@@ -219,7 +221,9 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
-        this.state = STATE_NONE;
+        synchronized (this) {
+            this.state = STATE_NONE;
+        }
         this.start();
     }
 
@@ -229,7 +233,9 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
-        this.state = STATE_NONE;
+        synchronized (this) {
+            this.state = STATE_NONE;
+        }
         this.start();
     }
 

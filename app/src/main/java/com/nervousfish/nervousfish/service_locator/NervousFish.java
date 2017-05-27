@@ -14,7 +14,6 @@ import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
  */
 public final class NervousFish extends Application implements INervousFish {
     private static NervousFish instance;
-    private static Context context;
 
     private AndroidBluetoothService bluetoothService;
     private boolean bound;
@@ -36,12 +35,8 @@ public final class NervousFish extends Application implements INervousFish {
         }
     };
 
-    public static synchronized NervousFish getInstance() {
+    public static Context getInstance() {
         return instance;
-    }
-
-    public static Context getContext() {
-        return context;
     }
 
     @Override
@@ -51,7 +46,7 @@ public final class NervousFish extends Application implements INervousFish {
         final Intent serviceIntent = new Intent(this, AndroidBluetoothService.class);
         bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
 
-        context = getApplicationContext();
+        NervousFish.instance = this;
     }
 
     /**

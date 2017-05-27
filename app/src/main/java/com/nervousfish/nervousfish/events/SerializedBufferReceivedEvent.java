@@ -11,13 +11,13 @@ public final class SerializedBufferReceivedEvent {
      * @param buffer The buffer with serialized data
      */
     public SerializedBufferReceivedEvent(final byte[] buffer) {
-        this.buffer = buffer;
+        this.buffer = buffer.clone();
     }
 
     /**
      * @return The buffer with serialized data
      */
     public byte[] getBuffer() {
-        return buffer;
+        return buffer.clone();
     }
 }
