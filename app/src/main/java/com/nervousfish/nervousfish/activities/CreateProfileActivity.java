@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,7 +29,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
-    private static final String FAIL_COLOR = "#dd6b55";
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     private IServiceLocator serviceLocator;
@@ -127,7 +127,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         if (isValidName(nameInputField.getText().toString())) {
             nameInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            nameInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            nameInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
             allValid = false;
         }
 
@@ -136,7 +136,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
             passwordInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
             allValid = false;
         }
 
@@ -144,13 +144,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
         if (isValidName(passwordRepeatInputField.getText().toString())) {
             passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordRepeatInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
             allValid = false;
         }
 
         if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
-            passwordInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
-            passwordRepeatInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
+            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
             allValid = false;
         }
 

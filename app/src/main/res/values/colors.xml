@@ -7,4 +7,7 @@
 
     <color name="transparentWhite">#33FFFFFF</color>
     <color name="red_alert">#9A3334</color>
+
+    <color name="red_fail">#dd6b55</color>
+
 </resources>
