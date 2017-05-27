@@ -38,6 +38,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The activity that exchanges public keys through QR codes.
  */
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
+//  1)  This warning is because the class relies on too many external classes, which can't really be avoided
 public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
@@ -157,7 +159,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     private void showQRCode(final Bitmap qrCode) {
 
-        LayoutInflater li = LayoutInflater.from(this);
+        final LayoutInflater li = LayoutInflater.from(this);
         final View myView = li.inflate(R.layout.qrcode, null);
 
         final ImageView imageView = (ImageView) myView.findViewById(R.id.QRCodeImage);
@@ -174,7 +176,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                     }
                 });
 
-        ((ViewGroup)imageView.getParent()).removeView(imageView);
+        ((ViewGroup) imageView.getParent()).removeView(imageView);
         lastDialog = builder.create();
         lastDialog.show();
     }
@@ -191,7 +193,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      * Sets the publicKey.
      * @param publicKey The key to be set.
      */
-    public void setPublicKey(IKey publicKey) {
+    public void setPublicKey(final IKey publicKey) {
         this.publicKey = publicKey;
     }
 
