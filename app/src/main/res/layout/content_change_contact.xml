@@ -62,17 +62,6 @@
                     android:layout_height="@dimen/contact_picture_height"
                     android:src="@drawable/personplaceholder"
                     android:contentDescription="@string/contact_title" />
-
-                <EditText
-                    android:id="@+id/edit_contact_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:inputType="text"
-                    android:text="@string/contact_title"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/contact_name_size"
-                    android:textStyle="bold" />
-
             </LinearLayout>
 
         </RelativeLayout>

@@ -30,13 +30,23 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
-        <include
-            layout="@layout/content_main"/>
+
+
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/content_main" />
+            <include layout="@layout/content_main_keytypes" />
+
+        </ViewFlipper>
+
 
     </android.support.design.widget.AppBarLayout>
 
+
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/bluetoothButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -45,11 +55,22 @@
         app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/sortButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:clickable="true"
+        android:layout_marginBottom="@dimen/fab_second_button_from_bottom"
+        android:layout_marginRight="@dimen/fab_margin"
+
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@android:color/black" />
-
 </merge>
