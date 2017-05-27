@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -125,6 +126,10 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         
     }
 
+    /**
+     * Shows the QR Code in an alert dialog popup screen
+     * @param QRCode The QR code to be shown.
+     */
     private void showQRCode(final Bitmap QRCode) {
 
         Matrix matrix = new Matrix();
@@ -133,27 +138,18 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         matrix.postScale(4, 4);
         Bitmap largerCode = Bitmap.createBitmap(QRCode, 0, 0, QRCode.getWidth(), QRCode.getHeight(), matrix, true);
 
-        ImageView imageView = (ImageView) findViewById(R.id.imageViewQR);
+        ImageView imageView = new ImageView(this);
         imageView.setImageBitmap(largerCode);
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).
+                setView(imageView).
+                setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
 
-        final AlertDialog dialog = builder.create();
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.qrcode, null);
-        dialog.setView(dialogLayout);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        dialog.show();
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface d) {
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.imageViewQR);
-                imageView.setImageBitmap(QRCode);
-
-            }
-        });*/
     }
 
 
