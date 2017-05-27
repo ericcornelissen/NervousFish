@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -90,6 +91,14 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             }
         });
 
+        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonQRExchange);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
 
@@ -162,6 +171,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final EditText editName;
         final IKey key;
 
+        /**
+         * Constructor for editname click listener.
+         * @param editName The textinput from which we show and get the name from.
+         * @param key The key made from the QR code.
+         */
         public EditNameClickListener(EditText editName, IKey key){
             this.editName = editName;
             this.key = key;
@@ -191,7 +205,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                         .setTitleText(getString(R.string.contact_exists))
                         .setContentText(getString(R.string.contact_exists_message))
                         .setConfirmText(getString(R.string.dialog_ok))
-
                         .show();
             } catch (final NullPointerException e) {
                 LOGGER.error("Wrong input for scanner");
