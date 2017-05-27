@@ -41,6 +41,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private IServiceLocator serviceLocator;
+
+
+
+
+
     private IKey publicKey;
 
     /**
@@ -156,6 +161,22 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                 });
         builder.create().show();
 
+    }
+
+    /**
+     * Gets the public key of the user
+     * @return the public key.
+     */
+    public IKey getPublicKey() {
+        return publicKey;
+    }
+
+    /**
+     * Sets the publicKey.
+     * @param publicKey The key to be set.
+     */
+    public void setPublicKey(IKey publicKey) {
+        this.publicKey = publicKey;
     }
 
 
