@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -37,6 +39,7 @@ import java.io.IOException;
 public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
+
     private IServiceLocator serviceLocator;
     private IKey publicKey;
 
@@ -66,9 +69,9 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LOGGER.info("Started scanning QR code");
-                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
-                startActivityForResult(intent, 0);
+                IntentIntegrator integrator = new IntentIntegrator(QRExchangeKeyActivity.this);
+                integrator.initiateScan();
+
             }
         });
 
@@ -91,20 +94,19 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                // Handle successful scan
-                try {
-                    addNewContact(contents);
-                } catch (IOException e) {
-                    LOGGER.error("IOException when adding new contact");
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                // Handle cancel
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if(scanResult != null) {
+            String result = scanResult.getContents();
+            try {
+                addNewContact(result);
+            } catch (IOException e) {
+                LOGGER.error("IOException when adding new contact");
             }
+        } else {
+            LOGGER.error("No scan result in QR Scanner");
         }
+
+
     }
 
 
@@ -114,15 +116,20 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     private void addNewContact(String QRMessage) throws IOException {
         //TODO: Add recognizer for contact name to avoid saving the same key twice (add your personal name to QR code)
+        try{
+            IKey key = QRGenerator.deconstructToKey(QRMessage);
+            Contact contact = new Contact("<new contact>", key);
+            final IDatabase database = this.serviceLocator.getDatabase();
+            database.addContact(contact);
 
-        Contact contact = new Contact("<new contact>", QRGenerator.deconstructToKey(QRMessage));
-        final IDatabase database = this.serviceLocator.getDatabase();
-        database.addContact(contact);
+            Intent intent = new Intent(this, ContactActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            intent.putExtra(ConstantKeywords.CONTACT, contact);
+            this.startActivity(intent);
+        } catch (NullPointerException e) {
+            LOGGER.error("Wrong input for scanner");
+        }
 
-        Intent intent = new Intent(this, ContactActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.CONTACT, contact);
-        this.startActivity(intent);
         
     }
 

@@ -122,7 +122,7 @@ public final class QRGenerator {
      * @param QRMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */
-    public static IKey deconstructToKey(final String QRMessage) {
+    public static IKey deconstructToKey(final String QRMessage) throws NullPointerException{
         String[] messageComponents = QRMessage.split(" ");
         IKey key = null;
         switch(messageComponents[COMPONENT_KEYTYPE]) {
