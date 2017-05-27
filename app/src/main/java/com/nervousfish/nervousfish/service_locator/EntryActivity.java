@@ -41,7 +41,7 @@ public final class EntryActivity extends Activity {
         try {
             profiles = serviceLocator.getDatabase().getProfiles();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("IOException while getting profiles", e);
         }
         if (profiles.isEmpty()) {
             final Intent intent = new Intent(this, FirstUseActivity.class);

@@ -28,6 +28,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
+    private static final String FAIL_COLOR = "#dd6b55";
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
     private IServiceLocator serviceLocator;
 
@@ -58,7 +60,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @param v - the {@link View} clicked
      */
     public void onSubmitClick(final View v) {
-        if(validateInputFields()) {
+        if (validateInputFields()) {
             final EditText nameInputField = (EditText) this.findViewById(R.id.profileEnterName);
             final String name = nameInputField.getText().toString();
 
@@ -104,7 +106,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link KeyPair} with the key type selected
      */
     private KeyPair generateKeyPair() {
-        final RadioButton rsaKeyButton = (RadioButton)findViewById(R.id.radioRSAKey);
+        final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radioRSAKey);
         if (rsaKeyButton.isSelected()) {
             return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
         }
@@ -122,32 +124,33 @@ public final class CreateProfileActivity extends AppCompatActivity {
         boolean allValid = true;
 
         final EditText nameInputField = (EditText) this.findViewById(R.id.profileEnterName);
-        if(!isValidName(nameInputField.getText().toString())) {
-            nameInputField.setBackgroundColor(Color.parseColor("#dd6b55"));
-            allValid = false;
-        } else {
+        if (isValidName(nameInputField.getText().toString())) {
             nameInputField.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            nameInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            allValid = false;
         }
 
         final EditText passwordInputField = (EditText) this.findViewById(R.id.profileEnterPassword);
-        if(!isValidName(passwordInputField.getText().toString()) || !(passwordInputField.getText().toString().length() >= 6)) {
-            passwordInputField.setBackgroundColor(Color.parseColor("#dd6b55"));
-            allValid = false;
-        } else {
+        if (isValidName(passwordInputField.getText().toString())
+                && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
             passwordInputField.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            passwordInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            allValid = false;
         }
 
         final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profileRepeatPassword);
-        if(!isValidName(passwordRepeatInputField.getText().toString())) {
-            passwordRepeatInputField.setBackgroundColor(Color.parseColor("#dd6b55"));
-            allValid = false;
-        } else {
+        if (isValidName(passwordRepeatInputField.getText().toString())) {
             passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            passwordRepeatInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            allValid = false;
         }
 
-        if(!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
-            passwordInputField.setBackgroundColor(Color.parseColor("#dd6b55"));
-            passwordRepeatInputField.setBackgroundColor(Color.parseColor("#dd6b55"));
+        if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
+            passwordInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
+            passwordRepeatInputField.setBackgroundColor(Color.parseColor(FAIL_COLOR));
             allValid = false;
         }
 
