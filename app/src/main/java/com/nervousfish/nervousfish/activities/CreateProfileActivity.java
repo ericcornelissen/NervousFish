@@ -107,7 +107,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private KeyPair generateKeyPair() {
         final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radioRSAKey);
-        if (rsaKeyButton.isSelected()) {
+        if (rsaKeyButton.isChecked()) {
             return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
         }
         return null;

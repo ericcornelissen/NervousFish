@@ -13,9 +13,9 @@ Feature: Create a profile
   Scenario Outline: Clicking submit with valid input
       Given I am viewing the create profile activity
       And there are no profiles in the database
-      When I enter a valid <name>
-      And I enter a valid <password>
-      And I enter a valid repeat <password>
+      When I enter a valid <name> as name
+      And I enter a valid <password> as password
+      And I enter a valid repeat <password> as repeat password
       And I click on the submit profile button
       Then I should go to the login activity
       And the profile with <name> should be saved in the database

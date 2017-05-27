@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
+import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
@@ -31,11 +32,13 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
@@ -73,14 +76,29 @@ public class CreateProfileSteps {
         onView(withId(R.id.confirm_button)).perform(click());
     }
 
-    @When("^I enter a valid (.*?)$")
+    @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
-        onView(withId(R.id.submitProfile)).perform(click());
+        onView(withId(R.id.profileEnterName)).perform(typeText(name));
+    }
+
+    @When("^I enter a valid (.*?) as password$")
+    public void iEnterValidPassword(final String password) {
+        onView(withId(R.id.profileEnterPassword)).perform(typeText(password));
+    }
+
+    @When("^I enter a valid repeat (.*?) as repeat password$")
+    public void iEnterValidRepeatPassword(final String password) {
+        onView(withId(R.id.profileRepeatPassword)).perform(typeText(password));
     }
 
     @Then("^I should stay on the create profile activity$")
     public void iShouldGoToCreateProfileActivity() {
         intended(hasComponent(CreateProfileActivity.class.getName()));
+    }
+
+    @Then("^I should go to the login activity$")
+    public void iShouldGoToLoginActivity() {
+        intended(hasComponent(LoginActivity.class.getName()));
     }
 
     @Then("^the name input field should become red$")
@@ -99,6 +117,12 @@ public class CreateProfileSteps {
     public void repeatPasswordInputFieldShouldBeRed() {
         onView(withId(R.id.profileRepeatPassword)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
                 mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
+    }
+
+    @Then("^the profile with (.*?) should be saved in the database$")
+    public void profileWithNameShouldBeInDatabase(final String name) throws IOException {
+        final List<Profile> profiles = serviceLocator.getDatabase().getProfiles();
+        assertEquals(name, profiles.get(0).getName());
     }
 
     /**
