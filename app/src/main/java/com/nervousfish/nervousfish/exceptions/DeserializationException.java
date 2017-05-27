@@ -22,6 +22,15 @@ public final class DeserializationException extends RuntimeException {
     }
 
     /**
+     * Constructs a new DeserializationException that's thrown when there is an issue with deserization
+     *
+     * @param exception The exception to be rethrown
+     */
+    public DeserializationException(final Exception exception) {
+        super(exception);
+    }
+
+    /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {

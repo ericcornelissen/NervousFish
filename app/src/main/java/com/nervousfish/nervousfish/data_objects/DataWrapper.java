@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.data_objects.tap;
+package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
@@ -11,28 +11,28 @@ import java.io.Serializable;
  */
 public final class DataWrapper implements Serializable {
     private static final long serialVersionUID = -1704556072876435760L;
-    private final ATapData tapData;
+    private final Serializable data;
     private final Class<?> clazz;
 
     /**
      * Creates a new DataWrapper
      *
-     * @param tapData The {@link ATapData} object the wrapper wraps
+     * @param data The {@link Serializable} object the wrapper wraps
      */
-    public DataWrapper(final ATapData tapData) {
-        this.tapData = tapData;
-        this.clazz = tapData.getClass();
+    public DataWrapper(final Serializable data) {
+        this.data = data;
+        this.clazz = data.getClass();
     }
 
     /**
-     * @return The tapData object it wraps
+     * @return The data object {@link DataWrapper} wraps
      */
-    public ATapData getTapData() {
-        return tapData;
+    public Serializable getData() {
+        return new DataWrapper(this.data).data;
     }
 
     /**
-     * @return The class of the thing the class wraps
+     * @return The class of the thing the {@link DataWrapper} wraps
      */
     public Class getClazz() {
         return clazz;
@@ -60,17 +60,18 @@ public final class DataWrapper implements Serializable {
      * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
      * ordinary serialization - is far more dangerous
      */
+    // A private constructor is safer than a hidden constructor
     @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
-        private final ATapData tapData;
+        private final Serializable data;
 
         /**
          * Constructs a new SerializationProxy
          * @param wrapper The current instance of the proxy
          */
         SerializationProxy(final DataWrapper wrapper) {
-            this.tapData = wrapper.tapData;
+            this.data = wrapper.data;
         }
 
         /**
@@ -78,7 +79,7 @@ public final class DataWrapper implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new DataWrapper(tapData);
+            return new DataWrapper(data);
         }
     }
 }

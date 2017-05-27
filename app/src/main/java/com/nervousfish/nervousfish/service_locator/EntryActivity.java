@@ -28,7 +28,7 @@ public final class EntryActivity extends Activity {
 
         LOGGER.info("EntryActivity created");
 
-        final String androidFileDir = EntryActivity.this.getFilesDir().getPath();
+        final String androidFileDir = getFilesDir().getPath();
         final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
 
         ((INervousFish) getApplicationContext()).setOnBluetoothServiceBound(new Runnable() {

@@ -31,7 +31,9 @@ import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_N
  * Runs on the background and accepts incoming Bluetooth pairing requests
  */
 // Suppressed because we cannot reduce the threads and events that it needs to run
-@SuppressWarnings("checkstyle:classdataabstractioncoupling")
+// NullAssignment suppressed, because assigning null to bluetooth threads is the recommended way
+//  (see https://developer.android.com/samples/BluetoothChat/src/com.example.android.bluetoothchat/BluetoothChatService.html)
+@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "PMD.NullAssignment"})
 public final class AndroidBluetoothService extends Service implements IBluetoothHandlerService {
     // Unique UUID for this application
     static final UUID MY_UUID_SECURE =
@@ -125,6 +127,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
 
     /**
      * Called when device is almost connected over Bluetooth
+     *
      * @param event Contains additional data over the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -207,6 +210,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
 
     /**
      * Return the current connection state.
+     *
      * @return The current state
      */
     public BluetoothState getState() {
@@ -217,6 +221,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
 
     /**
      * Called when the connection with the paired device is lost
+     *
      * @param event Describes the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -229,6 +234,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
 
     /**
      * Called when the connecting procedure failed
+     *
      * @param event Describes the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

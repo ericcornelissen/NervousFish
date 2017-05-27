@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.modules.pairing;
 import android.bluetooth.BluetoothSocket;
 
 import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
-import com.nervousfish.nervousfish.events.SerializedBufferReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -21,10 +20,12 @@ import java.util.Arrays;
 public final class AndroidBluetoothConnectedThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectedThread");
     private static final int BUFFER_SIZE = 4096;
+
     private final BluetoothSocket socket;
     private final InputStream inStream;
     private final OutputStream outStream;
     private final IServiceLocator serviceLocator;
+    private final IDataReceiver dataReceiver;
 
     /**
      * Constructs the thread than runs during the connection with the remote device
@@ -47,9 +48,10 @@ public final class AndroidBluetoothConnectedThread extends Thread {
             LOGGER.error("Failed to create a temp socket", e);
         }
 
-        inStream = tmpIn;
-        outStream = tmpOut;
+        this.inStream = tmpIn;
+        this.outStream = tmpOut;
         this.serviceLocator = serviceLocator;
+        this.dataReceiver = serviceLocator.getBluetoothHandler().getDataReceiver().get();
     }
 
     /**
@@ -66,7 +68,7 @@ public final class AndroidBluetoothConnectedThread extends Thread {
             final int bytes = inStream.read(buffer);
             LOGGER.info(" Read {} bytes", bytes);
 
-            this.serviceLocator.postOnEventBus(new SerializedBufferReceivedEvent(buffer));
+            this.dataReceiver.dataReceived(buffer);
         } catch (final IOException e) {
             LOGGER.warn("Disconnected from the paired device", e);
             this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());

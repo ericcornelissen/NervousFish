@@ -16,7 +16,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.events.NewContactsReceivedEvent;
+import com.nervousfish.nervousfish.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -39,7 +39,7 @@ import java.util.Set;
  * The main activity class that shows a list of all people with their public keys
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement"})
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -47,6 +47,7 @@ import java.util.Set;
 //  3)  Another suppression based on the same problem as the previous 2
 //  4)  The switch statement for switching sorting types does not have enough branches, because it is designed
 //      to be extended when necessairy to more sorting types.
+//  5)  The class is literally the main activity and thus has many methods that cannot be refractored easily to another class
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
@@ -190,13 +191,41 @@ public final class MainActivity extends AppCompatActivity {
      * @param event Contains additional data about the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewContactsReceivedEvent(final NewContactsReceivedEvent event) {
-        try {
-            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
-            sortOnName();
-        } catch (IOException e) {
-            LOGGER.error("Couldn't add contact to database", e);
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Checking if the contact exists...");
+                if (checkExists(contact)) {
+                    LOGGER.warn("Contact already existed...");
+                } else {
+                    LOGGER.info("Adding contact to database...");
+                    this.serviceLocator.getDatabase().addContact(contact);
+                    this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+                    sortOnName();
+                }
+            } catch (IOException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
+            }
         }
+    }
+
+    /**
+     * Checks if a name of a given contact exists in the database.
+     *
+     * @param contact A contact object
+     * @return true when a contact with the same exists in the database
+     * @throws IOException When database fails to respond
+     */
+    private boolean checkExists(final Contact contact) throws IOException {
+        final String name = contact.getName();
+        final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
+        for (final Contact e : list) {
+            if (e.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

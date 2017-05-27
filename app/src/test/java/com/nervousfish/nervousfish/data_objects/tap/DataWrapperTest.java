@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
+import com.nervousfish.nervousfish.data_objects.DataWrapper;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -18,7 +18,7 @@ public final class NervousFish extends Application implements INervousFish {
     private AndroidBluetoothService bluetoothService;
     private boolean bound;
     private Runnable onServiceBoundRunnable;
-    private ServiceConnection connection = new ServiceConnection() {
+    private final ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(final ComponentName componentName, final IBinder service) {
             final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;

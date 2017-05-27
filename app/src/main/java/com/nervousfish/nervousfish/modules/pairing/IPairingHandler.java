@@ -2,17 +2,19 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.modules.IModule;
 
-import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Defines the interface implemented by all pairing handlers
  */
-public interface IPairingHandler extends IModule {
+interface IPairingHandler extends IModule, Serializable {
 
     /**
-     * Luxury method that calls sendContact() for each contact of the database.
+     * Write the buffer to the world
      *
-     * @throws IOException When deserialization doesn't go well.
+     * @param buffer The bytes to send
      */
-    void sendAllContacts() throws IOException;
+    void send(final byte[] buffer);
+
+    ReceiverWrapper getDataReceiver();
 }
