@@ -15,6 +15,9 @@ final class ReceiverWrapper {
         this.dataReceiver = dataReceiver;
     }
 
+    /**
+     * @return The object responsible for processing the data received from other devices
+     */
     IDataReceiver get() {
         return this.dataReceiver;
     }

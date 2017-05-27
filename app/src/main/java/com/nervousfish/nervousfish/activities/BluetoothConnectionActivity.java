@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -86,7 +88,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        
+
         setupBluetoothAdapter();
 
         // Register for broadcasts when a device is discovered.
@@ -224,12 +226,16 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     /**
      * Called when the device is connected over Bluetooth
+     *
      * @param event Describes the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
-            this.serviceLocator.getBluetoothHandler().sendAllContacts();
+            final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
+            for (final Contact e : list) {
+                this.serviceLocator.getBluetoothHandler().send(e);
+            }
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception", e);
         }

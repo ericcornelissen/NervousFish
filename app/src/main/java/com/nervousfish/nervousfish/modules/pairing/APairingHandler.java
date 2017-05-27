@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.DataWrapper;
 import com.nervousfish.nervousfish.events.NewDataReceivedEvent;
-import com.nervousfish.nervousfish.exceptions.DeserializationException;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -35,12 +34,30 @@ abstract class APairingHandler implements IPairingHandler {
     }
 
     /**
-     * Serializes an object and sends it by using the subclass specific method
-     *
-     * @param object The object to serialize
-     * @throws IOException When deserialization goes wrong
+     * {@inheritDoc}
      */
-    void send(final Serializable object) throws IOException {
+    @Override
+    public ReceiverWrapper getDataReceiver() {
+        return new ReceiverWrapper(new IDataReceiver() {
+            @Override
+            public void dataReceived(final byte[] bytes) {
+                final DataWrapper object;
+                try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+                    object = (DataWrapper) ois.readObject();
+                    serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                } catch (final ClassNotFoundException | IOException e) {
+                    LOGGER.error(" Couldn't start deserialization!", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void send(final Serializable object) throws IOException {
         LOGGER.info("Begin writing object");
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -55,32 +72,4 @@ abstract class APairingHandler implements IPairingHandler {
     protected IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ReceiverWrapper getDataReceiver() {
-        return new ReceiverWrapper(new IDataReceiver() {
-            @Override
-            public void dataReceived(final byte[] bytes) {
-                final DataWrapper object;
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                     ObjectInputStream ois = new ObjectInputStream(bis)) {
-
-                    object = (DataWrapper) ois.readObject();
-                } catch (final ClassNotFoundException | IOException e) {
-                    LOGGER.error(" Couldn't start deserialization!", e);
-                    throw new DeserializationException(e);
-                }
-                serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public abstract void send(byte[] buffer);
 }

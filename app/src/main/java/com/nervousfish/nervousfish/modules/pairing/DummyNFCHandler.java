@@ -43,8 +43,8 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      * {@inheritDoc}
      */
     @Override
-    void send(final byte[] buffer) {
-        //dummy
+    public void send(final byte[] buffer) {
+        throw new UnsupportedOperationException("Sending over NFC is not yet possible");
     }
 
     /**

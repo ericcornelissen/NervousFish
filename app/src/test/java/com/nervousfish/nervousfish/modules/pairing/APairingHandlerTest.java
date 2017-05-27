@@ -44,7 +44,7 @@ public class APairingHandlerTest implements Serializable {
         }
 
         @Override
-        void send(byte[] buffer) {
+        public void send(byte[] buffer) {
             myBuffer = buffer;
         }
 
@@ -80,73 +80,4 @@ public class APairingHandlerTest implements Serializable {
         tmp = new PairingHandler(serviceLocator);
         phspy = spy(tmp);
     }
-
-    @Test
-    public void writeCheckContactSimpleKeyTest() throws IOException {
-        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
-        phspy.sendContact(contact);
-        verify(phspy).sendContact(contact);
-        verify(phspy).send(phspy.myBuffer);
-        assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
-    }
-
-    @Test
-    public void writeCheckContactRSAKeyTest() throws IOException {
-        Contact contact = new Contact("Test", new RSAKey("Test","1234", "0"));
-        phspy.sendContact(contact);
-        verify(phspy).sendContact(contact);
-        verify(phspy).send(phspy.myBuffer);
-        assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
-    }
-
-    @Test
-    public void writeAllContactsTest() throws IOException {
-        List<Contact> list = new LinkedList<>();
-        Contact c1 = new Contact("Test", new SimpleKey("Test", ""));
-        Contact c2 = new Contact("Test2", new RSAKey("Test", "1234", "0"));
-        list.add(c1);
-        list.add(c2);
-        when(database.getAllContacts()).thenReturn(list);
-        phspy.sendAllContacts();
-        verify(phspy, times(1)).sendContact(c1);
-        verify(phspy, times(1)).sendContact(c2);
-    }
-
-    @Test
-    public void writeAllContactsEmptyTest() throws IOException {
-        when(database.getAllContacts()).thenReturn(new LinkedList<Contact>());
-        phspy.sendAllContacts();
-        verify(phspy, never()).sendContact((Contact) any());
-    }
-
-    @Test
-    public void saveContactSimpleKeyTest() throws Exception {
-        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
-        tmp.saveContact(serialize(contact));
-        verify(database).addContact(contact);
-    }
-
-    @Test
-    public void saveContactRSAKeyTest() throws Exception {
-        Contact contact = new Contact("Test", new RSAKey("Test", "1234", "0"));
-        tmp.saveContact(serialize(contact));
-        verify(database).addContact(contact);
-    }
-
-    @Test
-    public void checkExistsEmptyTest() throws IOException {
-        when(database.getAllContacts()).thenReturn(new LinkedList<Contact>());
-        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
-        assertFalse(phspy.checkExists(contact));
-    }
-
-    @Test
-    public void checkExistsDuplicateTest() throws IOException {
-        List<Contact> list = new LinkedList<>();
-        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
-        list.add(contact);
-        when(database.getAllContacts()).thenReturn(list);
-        assertTrue(tmp.checkExists(contact));
-    }
-
 }
