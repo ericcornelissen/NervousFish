@@ -92,6 +92,15 @@ public class GsonDatabaseAdapterTest {
                 "{\"name\":\"Webmail\",\"key\":\"key\"}]]}]\n", read(CONTACTS_PATH));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddDuplicateContact() throws Exception {
+        IKey key = new SimpleKey("Webmail", "key");
+        Contact contact = new Contact("Zoidberg", key);
+
+        database.addContact(contact);
+        database.addContact(contact);
+    }
+
     @Test
     public void testAddContactWithMultipleKeysWriteToDatabase() throws Exception {
         Collection<IKey> keys = new ArrayList<>();

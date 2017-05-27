@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.service_locator;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * Manages all modules and provides access to them.
@@ -68,7 +70,7 @@ public final class ServiceLocator implements IServiceLocator {
     // We suppress parameternumber and javadocmethod, because this method isn't meant to be used outside
     // this class and it's needed for the serialization proxy
     @SuppressWarnings({"checkstyle:parameternumber", "checkstyle:javadocmethod"})
-    private ServiceLocator(final String androidFilesDir,
+    ServiceLocator(final String androidFilesDir,
                            final IDatabase database,
                            final IKeyGenerator keyGenerator,
                            final IEncryptor encryptor,
@@ -237,7 +239,7 @@ public final class ServiceLocator implements IServiceLocator {
     /**
      * Thrown when a module was called before it was initialized.
      */
-    private static class ModuleNotFoundException extends RuntimeException {
+    static class ModuleNotFoundException extends RuntimeException {
 
         private static final long serialVersionUID = -2889621076876351934L;
 
@@ -248,6 +250,51 @@ public final class ServiceLocator implements IServiceLocator {
          */
         ModuleNotFoundException(final String message) {
             super(message);
+        }
+
+        /**
+         * Serialize the created proxy instead of this instance.
+         */
+        private Object writeReplace() {
+            return new SerializationProxy(this);
+        }
+
+        /**
+         * Ensure that no instance of this class is created because it was present in the stream. A correct
+         * stream should only contain instances of the proxy.
+         */
+        private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+            throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
+        }
+
+        /**
+         * Represents the logical state of this class and copies the data from that class without
+         * any consistency checking or defensive copying.
+         */
+        private static final class SerializationProxy implements Serializable {
+            private static final long serialVersionUID = -1930759199728515311L;
+
+            private final String message;
+            private final Throwable throwable;
+
+            /**
+             * Constructs a new SerializationProxy
+             *
+             * @param exception The current instance of the proxy
+             */
+            SerializationProxy(final ModuleNotFoundException exception) {
+                message = exception.getMessage();
+                throwable = exception.getCause();
+            }
+
+            /**
+             * Not to be called by the user - resolves a new object of this proxy
+             *
+             * @return The object resolved by this proxy
+             */
+            private Object readResolve() {
+                return new ModuleNotFoundException(message).initCause(throwable);
+            }
         }
     }
 }

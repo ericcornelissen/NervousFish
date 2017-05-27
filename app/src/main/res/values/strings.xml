@@ -18,6 +18,10 @@
     <string name="msg_mismatch">Your password is wrong</string>
     <string name="contact_title">Contact</string>
 
+    <string name="qr">QR</string>
+    <string name="nfc">NFC</string>
+    <string name="bluetooth">Bluetooth</string>
+
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
     <string name="type">Type</string>
