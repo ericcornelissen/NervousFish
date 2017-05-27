@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,8 +44,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private IServiceLocator serviceLocator;
 
-
-
+    private AlertDialog lastDialog;
 
 
     private IKey publicKey;
@@ -135,9 +136,19 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                 .setTitle(getString(R.string.contact_set_name))
                 .setView(editName)
                 .setPositiveButton(getString(R.string.popup_done), new EditNameClickListener(editName, key));
-        builder.show();
-
+        lastDialog = builder.create();
+        lastDialog.show();
     }
+
+    /**
+     * returns last created alert dialog
+     * @return the last AlertDialog.
+     */
+    public AlertDialog getLastDialog() {
+        return lastDialog;
+    }
+
+
 
     /**
      * Shows the QR Code in an alert dialog popup screen
@@ -146,7 +157,10 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     private void showQRCode(final Bitmap qrCode) {
 
-        final ImageView imageView = new ImageView(this);
+        LayoutInflater li = LayoutInflater.from(this);
+        final View myView = li.inflate(R.layout.qrcode, null);
+
+        final ImageView imageView = (ImageView) myView.findViewById(R.id.QRCodeImage);
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(imageView)
@@ -159,8 +173,10 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-        builder.create().show();
 
+        ((ViewGroup)imageView.getParent()).removeView(imageView);
+        lastDialog = builder.create();
+        lastDialog.show();
     }
 
     /**

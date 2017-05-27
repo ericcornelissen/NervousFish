@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.test.rule.ActivityTestRule;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.nervousfish.nervousfish.*;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
-import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
@@ -28,8 +29,10 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertTrue;
 
 
 @CucumberOptions(features = "features")
@@ -50,20 +53,42 @@ public class QRExchangeKeyActivitySteps {
 
     }
 
+    @Given("^I am viewing the QRExchange activity$")
+    public void iAmViewingTheQRExchangeActivity() {
+
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        mActivityRule.launchActivity(intent);
+
+    }
+
+
     @When("^I press the generate button$")
     public void iPressTheGenerateButton(){
         onView(withId(R.id.generateQRbutton)).perform(click());
     }
 
-    @Then("I should see a popup with my qr code")
+    @When("^I press the scan button$")
+    public void iPressTheScanButton(){
+        onView(withId(R.id.scanbutton)).perform(click());
+    }
+
+    @Then("^I should see a popup with my qr code$")
     public void iShouldSeeAPopupWithMyQRCode() {
-        onView(withId(R.id.QRCodeImage)).check(matches(isDisplayed()));
-        EspressoTestsMatchers etmatchers = new EspressoTestsMatchers();
+        AlertDialog dialog = mActivityRule.getActivity().getLastDialog();
+        assertTrue(dialog.isShowing());
+
         QRExchangeKeyActivity QRExchangeActivity = mActivityRule.getActivity();
         Bitmap qrTest = QRGenerator.encode(QRExchangeActivity.getPublicKey().getType() + " "
-                 + QRExchangeActivity.getPublicKey().getName() + " " + QRExchangeActivity.getPublicKey().getKey());
-        onView(withId(R.id.QRCodeImage)).check(matches(etmatchers.withDrawable(qrTest)));
+                + QRExchangeActivity.getPublicKey().getName() + " " + QRExchangeActivity.getPublicKey().getKey());
 
+        EspressoTestsMatchers etMatchers = new EspressoTestsMatchers();
+        onView(withId(R.id.QRCodeImage)).check(matches(etMatchers.withDrawable(qrTest)));
+    }
+
+    @Then("^I should go to the Barcode Scanner app$")
+    public void iShouldGoToTheBarcodeScannerApp() {
+        intending(toPackage("com.google.zxing.client.android.scan"));
     }
 
     private class EspressoTestsMatchers {
