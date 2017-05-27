@@ -30,7 +30,9 @@ import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_N
 /**
  * Runs on the background and accepts incoming Bluetooth pairing requests
  */
-public class AndroidBluetoothService extends Service implements IBluetoothHandlerService {
+// Suppressed because we cannot reduce the threads and events that it needs to run
+@SuppressWarnings("checkstyle:classdataabstractioncoupling")
+public final class AndroidBluetoothService extends Service implements IBluetoothHandlerService {
     // Unique UUID for this application
     static final UUID MY_UUID_SECURE =
             UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
@@ -39,19 +41,25 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
-    AndroidBluetoothConnectThread connectThread;
+    private AndroidBluetoothConnectThread connectThread;
     private BluetoothState state = STATE_NONE;
     private AndroidBluetoothAcceptThread acceptThread;
     private AndroidBluetoothConnectedThread connectedThread;
     private IServiceLocator serviceLocator;
 
+    /**
+     * @param serviceLocator The service locator that the service can use
+     */
     public void setServiceLocator(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
         this.serviceLocator.registerToEventBus(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         return mBinder;
     }
 
@@ -88,6 +96,7 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
     /**
      * {@inheritDoc}
      */
+    @Override
     public void connect(final BluetoothDevice device) {
         LOGGER.info("Connect Bluetooth thread initialized");
 
@@ -112,6 +121,10 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
         }
     }
 
+    /**
+     * Called when device is almost connected over Bluetooth
+     * @param event Contains additional data over the event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothAlmostConnectedEvent(final BluetoothAlmostConnectedEvent event) {
         LOGGER.info("Connected Bluetooth thread started");
@@ -146,6 +159,7 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
     /**
      * {@inheritDoc}
      */
+    @Override
     public void stop() {
         LOGGER.info("Bluetooth service stopped");
 
@@ -191,6 +205,7 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
 
     /**
      * Return the current connection state.
+     * @return The current state
      */
     public BluetoothState getState() {
         synchronized (this) {
@@ -198,12 +213,20 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
         }
     }
 
+    /**
+     * Called when the connection with the paired device is lost
+     * @param event Describes the event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
         this.state = STATE_NONE;
         this.start();
     }
 
+    /**
+     * Called when the connecting procedure failed
+     * @param event Describes the event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
         this.state = STATE_NONE;
@@ -214,7 +237,10 @@ public class AndroidBluetoothService extends Service implements IBluetoothHandle
      * Class used for the client Binder.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
-    public class LocalBinder extends Binder {
+    public final class LocalBinder extends Binder {
+        /**
+         * @return The bluetooth service itself
+         */
         public AndroidBluetoothService getService() {
             // Return this instance of LocalService so clients can call public methods
             return AndroidBluetoothService.this;

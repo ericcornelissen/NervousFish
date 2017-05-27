@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,8 +20,6 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -227,10 +222,14 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when the device is connected over Bluetooth
+     * @param event Describes the event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final BluetoothConnectedEvent event) {
         try {
-            this.serviceLocator.getBluetoothHandler().writeAllContacts();
+            this.serviceLocator.getBluetoothHandler().sendAllContacts();
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception", e);
         }

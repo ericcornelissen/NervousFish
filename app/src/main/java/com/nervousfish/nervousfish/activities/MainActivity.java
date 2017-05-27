@@ -53,9 +53,6 @@ public final class MainActivity extends AppCompatActivity {
     private static final int NUMBER_OF_SORTING_MODES = 2;
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
-
-    private IServiceLocator serviceLocator;
-
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
@@ -63,6 +60,7 @@ public final class MainActivity extends AppCompatActivity {
         }
     };
 
+    private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private Integer currentSorting = 0;
 

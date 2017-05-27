@@ -26,6 +26,11 @@ class AndroidBluetoothConnectThread extends Thread {
     private final BluetoothSocket socket;
     private final IServiceLocator serviceLocator;
 
+    /**
+     * Constructs the thread that initiates a new connection with another user
+     * @param serviceLocator The servicelocator that can be used
+     * @param device The device to connect to
+     */
     AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
         super();
 
@@ -43,9 +48,13 @@ class AndroidBluetoothConnectThread extends Thread {
         serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void run() {
         LOGGER.info("Connect Bluetooth thread started");
-        setName("AndroidBluetoothConnectThread" + "Secure");
+        setName("AndroidBluetoothConnectThread thread");
 
         // Always cancel discovery because it will slow down a connection
         BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
@@ -59,8 +68,8 @@ class AndroidBluetoothConnectThread extends Thread {
             LOGGER.warn("Exception while connecting over Bluetooth", e);
             try {
                 socket.close();
-            } catch (final IOException e2) {
-                LOGGER.error("Connection failed/couldn't close the socket", e2);
+            } catch (final IOException esocketCloseException) {
+                LOGGER.error("Connection failed/couldn't close the socket", esocketCloseException);
             }
             serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
             return;
@@ -69,6 +78,9 @@ class AndroidBluetoothConnectThread extends Thread {
         serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
     }
 
+    /**
+     * Cancels the connect thread and closes the socket
+     */
     void cancel() {
         try {
             socket.close();

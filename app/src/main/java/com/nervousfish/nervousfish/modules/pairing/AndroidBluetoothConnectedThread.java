@@ -18,13 +18,19 @@ import java.util.Arrays;
  * This thread runs during a connection with a remote device.
  * It handles all incoming and outgoing transmissions.
  */
-public class AndroidBluetoothConnectedThread extends Thread {
+public final class AndroidBluetoothConnectedThread extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectedThread");
+    private static final int BUFFER_SIZE = 4096;
     private final BluetoothSocket socket;
     private final InputStream inStream;
     private final OutputStream outStream;
     private final IServiceLocator serviceLocator;
 
+    /**
+     * Constructs the thread than runs during the connection with the remote device
+     * @param serviceLocator The service locator used
+     * @param socket The socket over which is communicated
+     */
     AndroidBluetoothConnectedThread(final IServiceLocator serviceLocator, final BluetoothSocket socket) {
         super();
 
@@ -38,7 +44,7 @@ public class AndroidBluetoothConnectedThread extends Thread {
             tmpIn = socket.getInputStream();
             tmpOut = socket.getOutputStream();
         } catch (final IOException e) {
-            LOGGER.error("Failed to create a temp socket");
+            LOGGER.error("Failed to create a temp socket", e);
         }
 
         inStream = tmpIn;
@@ -46,13 +52,19 @@ public class AndroidBluetoothConnectedThread extends Thread {
         this.serviceLocator = serviceLocator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
-        final byte[] buffer = new byte[4096];
+        setName("AndroidBluetoothConnectedThread thread");
+
+        final byte[] buffer = new byte[BUFFER_SIZE];
         try {
             // Read from the InputStream
             final int bytes = inStream.read(buffer);
-            LOGGER.info(" Read " + bytes + " bytes");
+            LOGGER.info(" Read {} bytes", bytes);
 
             this.serviceLocator.postOnEventBus(new SerializedBufferReceivedEvent(buffer));
         } catch (final IOException e) {
@@ -67,20 +79,22 @@ public class AndroidBluetoothConnectedThread extends Thread {
      * @param buffer The bytes to write
      */
     public void write(final byte[] buffer) {
-        LOGGER.info("Writing the bytes " + Arrays.toString(buffer) + "to the outputstream");
+        LOGGER.info("Writing the bytes {} to the outputstream", Arrays.toString(buffer));
         try {
             outStream.write(buffer);
         } catch (final IOException e) {
-            LOGGER.error("Exception during writing");
+            LOGGER.error("Exception during writing", e);
         }
     }
 
-
+    /**
+     * Cancels the connected thread and closes the socket
+     */
     void cancel() {
         try {
             socket.close();
         } catch (final IOException e) {
-            LOGGER.error("Closing socket");
+            LOGGER.error("Closing socket", e);
         }
     }
 }

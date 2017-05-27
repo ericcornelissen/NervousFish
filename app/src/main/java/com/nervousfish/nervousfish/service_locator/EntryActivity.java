@@ -1,17 +1,11 @@
 package com.nervousfish.nervousfish.service_locator;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.net.LocalServerSocket;
 import android.os.Bundle;
-import android.os.IBinder;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.LoginActivity;
-import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +31,7 @@ public final class EntryActivity extends Activity {
         final String androidFileDir = EntryActivity.this.getFilesDir().getPath();
         final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
 
-        ((INervousFish) getApplicationContext()).setOnServiceBound(new Runnable() {
+        ((INervousFish) getApplicationContext()).setOnBluetoothServiceBound(new Runnable() {
             @Override
             public void run() {
                 ((NervousFish) getApplicationContext()).getBluetoothService().setServiceLocator(serviceLocator);

@@ -27,7 +27,9 @@ import java.util.List;
 /**
  * Helper class for {@link AndroidBluetoothService}
  */
-public class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
+// TODO Very difficult to reduce even more; maybe possible with a shared helper class with the NFCHandler
+@SuppressWarnings("checkstyle:classdataabstractioncoupling")
+public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
     private final IServiceLocator serviceLocator;
@@ -95,7 +97,7 @@ public class AndroidBluetoothHandler extends APairingHandler implements IBluetoo
     }
 
     @Override
-    public void connect(BluetoothDevice device) {
+    public void connect(final BluetoothDevice device) {
         this.getService().connect(device);
     }
 
@@ -107,7 +109,8 @@ public class AndroidBluetoothHandler extends APairingHandler implements IBluetoo
     /**
      * {@inheritDoc}
      */
-    public void writeAllContacts() throws IOException {
+    @Override
+    public void sendAllContacts() throws IOException {
         final List<Contact> list = this.getServiceLocator().getDatabase().getAllContacts();
         for (final Contact e : list) {
             sendContact(e);
@@ -123,34 +126,24 @@ public class AndroidBluetoothHandler extends APairingHandler implements IBluetoo
     @Override
     void sendContact(final Contact contact) throws IOException {
         LOGGER.info("Begin writing contact: " + contact.getName());
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = null;
-        ObjectOutputStream oos = null;
-        try {
-            bos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(bos);
+        final byte[] bytes;
+        try (
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(contact);
             oos.flush();
             bytes = bos.toByteArray();
-        } finally {
-            if (oos != null) {
-                oos.close();
-            }
-            if (bos != null) {
-                bos.close();
-            }
         }
         this.getService().write(bytes);
     }
 
-
     /**
-     * Checks if a name of a given contact exists in the database.
-     *
+     * {@inheritDoc}
      * @param contact A contact object
-     * @return true when a contact with the same exists in the database
-     * @throws IOException When database fails to respond
+     * @return
+     * @throws IOException
      */
+    @Override
     boolean checkExists(final Contact contact) throws IOException {
         final String name = contact.getName();
         final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
@@ -162,6 +155,11 @@ public class AndroidBluetoothHandler extends APairingHandler implements IBluetoo
         return false;
     }
 
+    /**
+     * Called when a buffer of serialized data is received
+     *
+     * @param event Describes the event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSerializedBufferReceivedEvent(final SerializedBufferReceivedEvent event) {
         this.newContact(event.getBuffer());
@@ -173,36 +171,16 @@ public class AndroidBluetoothHandler extends APairingHandler implements IBluetoo
      * @param bytes byte array representing a contact
      * @return Whether or not the process finished successfully
      */
-    Contact newContact(final byte[] bytes) {
-        LOGGER.info("Saving these bytes :" + bytes);
-        Contact contact = null;
-        ByteArrayInputStream bis = null;
-        ObjectInputStream ois = null;
-        try {
-            bis = new ByteArrayInputStream(bytes);
-            ois = new ObjectInputStream(bis);
+    private Contact newContact(final byte[] bytes) {
+        LOGGER.info("Saving these bytes: {}", bytes);
+        final Contact contact;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
+
             contact = (Contact) ois.readObject();
         } catch (final ClassNotFoundException | IOException e) {
-            LOGGER.error(" Couldn't start deserialization!");
-            e.printStackTrace();
+            LOGGER.error(" Couldn't start deserialization!", e);
             throw new DeserializationException(" Couldn't start deserialization! description: " + e.toString());
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    LOGGER.warn("Couldn't close the ByteArrayInputStream");
-                }
-            }
-            if (ois != null) {
-                try {
-                    ois.close();
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    LOGGER.warn("Couldn't close the ObjectInputStream");
-                }
-            }
         }
         try {
             LOGGER.info("Checking if the contact exists...");
@@ -213,8 +191,7 @@ public class AndroidBluetoothHandler extends APairingHandler implements IBluetoo
                 this.serviceLocator.getDatabase().addContact(contact);
             }
         } catch (final IOException e) {
-            LOGGER.warn("DB issued an error while saving contact");
-            e.printStackTrace();
+            LOGGER.warn("DB issued an error while saving contact", e);
             throw new DatabaseException("DB issued an error while saving contact description: " + e.toString());
         }
         serviceLocator.postOnEventBus(new NewContactsReceivedEvent());

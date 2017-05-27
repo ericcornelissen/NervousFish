@@ -1,9 +1,5 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import android.bluetooth.BluetoothDevice;
-
-import com.nervousfish.nervousfish.modules.IModule;
-
 import java.io.IOException;
 
 /**
@@ -11,6 +7,11 @@ import java.io.IOException;
  */
 
 public interface IBluetoothHandler extends IBluetoothCommunicator, IPairingHandler {
-    void writeAllContacts() throws IOException;
+
+    /**
+     * Send all contacts over Bluetooth to the paired device
+     * @throws IOException Thrown when something went wrong while sending the data
+     */
+    void sendAllContacts() throws IOException;
 
 }
