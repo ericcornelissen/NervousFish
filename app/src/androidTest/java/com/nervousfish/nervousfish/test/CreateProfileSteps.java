@@ -93,6 +93,16 @@ public class CreateProfileSteps {
         onView(withId(R.id.profileRepeatPassword)).perform(typeText(password));
     }
 
+    @When("^I enter a (.*?) with a length smaller than 6 characters$")
+    public void enterPasswordSmallerThanSix(final String password) {
+        onView(withId(R.id.profileEnterPassword)).perform(typeText(password));
+    }
+
+    @When("^I enter a different (.*?) than the password field$")
+    public void iEnterDifferentRepeatPassword(final String password) {
+        onView(withId(R.id.profileRepeatPassword)).perform(typeText(password));
+    }
+
     @Then("^I should stay on the create profile activity$")
     public void iShouldGoToCreateProfileActivity() {
         intended(hasComponent(CreateProfileActivity.class.getName()));

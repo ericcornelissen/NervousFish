@@ -27,29 +27,35 @@ Feature: Create a profile
          | Cl3nr0€k| ^&*)(_-34-    |
          | p | apasswordd    |
 
-  Scenario Outline: Password longer than 6 characters
+  Scenario Outline: Password not longer than 6 characters
     Given I am viewing the create profile activity
-    When I enter a valid name
+    When I enter a valid <name> as name
     And I enter a <password> with a length smaller than 6 characters
     And I enter a valid repeat <password> as repeat password
     And I click on the submit profile button
     And I click ok on the popup
     Then I should stay on the create profile activity
-    And the profile should be saved in the database
+    And the password input field should become red
 
     Examples:
-         | password |
-         | a    |
-         | ^&*)(    |
-         | 6782    |
+         | name | password |
+         | Drake | a    |
+         | CJ | ^&*)(    |
+         | Darth Vader | 6782    |
 
-  Scenario: Password and repeat password not the same
-      Given I am viewing the create profile activity
-      When I enter a valid name
-      And I enter a valid password
-      And I enter a different repeat password than the password field
-      And I click on the submit profile button
+  Scenario Outline: Password and repeat password not the same
+    Given I am viewing the create profile activity
+    When I enter a valid <name> as name
+    And I enter a valid <password> as password
+    And I enter a different <repeatpassword> than the password field
+    And I click on the submit profile button
     And I click ok on the popup
     Then I should stay on the create profile activity
     And the password input field should become red
     And the repeat password input field should become red
+
+    Examples:
+     | name | password | repeatpassword |
+     | Drake | a    | b |
+     | CJ | ^&*)(    | NetAnders |
+     | Darth Vader | 6782    | 4578 |
