@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,8 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
-        <activity android:name=".service_locator.EntryActivity"
-            android:noHistory="true" >
+        <activity
+            android:name=".service_locator.EntryActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +37,8 @@
             android:name=".activities.ContactActivity"
             android:label="@string/title_activity_contact"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ChangeContactActivity"
+        <activity
+            android:name=".activities.ChangeContactActivity"
             android:label="@string/change_contact_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -50,6 +52,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.BluetoothConnectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.QRActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
