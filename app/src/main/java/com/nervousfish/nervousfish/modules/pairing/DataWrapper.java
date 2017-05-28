@@ -34,7 +34,7 @@ final class DataWrapper implements Serializable {
     /**
      * @return The class of the thing the {@link DataWrapper} wraps
      */
-    public Class getClazz() {
+    public Class<?> getClazz() {
         return clazz;
     }
 

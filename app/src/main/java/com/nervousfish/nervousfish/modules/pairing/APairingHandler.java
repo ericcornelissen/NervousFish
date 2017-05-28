@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Contains common methods shared by all pairing modules.
@@ -42,7 +44,8 @@ abstract class APairingHandler implements IPairingHandler {
             public void dataReceived(final byte[] bytes) {
                 final DataWrapper object;
                 try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+                     GZIPInputStream zis = new GZIPInputStream(bis);
+                     ObjectInputStream ois = new ObjectInputStream(zis)) {
                     object = (DataWrapper) ois.readObject();
                     serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 } catch (final ClassNotFoundException | IOException e) {
@@ -60,7 +63,8 @@ abstract class APairingHandler implements IPairingHandler {
         LOGGER.info("Begin writing object");
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+             GZIPOutputStream zos = new GZIPOutputStream(bos);
+             ObjectOutputStream oos = new ObjectOutputStream(zos)) {
             oos.writeObject(new DataWrapper(object));
             oos.flush();
             bytes = bos.toByteArray();
