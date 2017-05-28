@@ -105,12 +105,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
      *
      * @return a {@link KeyPair} with the key type selected
      */
-    private KeyPair generateKeyPair() {
+    private KeyPair generateKeyPair() throws IllegalArgumentException {
         final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radioRSAKey);
         if (rsaKeyButton.isChecked()) {
             return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
         }
-        return null;
+
+        throw new IllegalArgumentException("The selected key is not implemented");
     }
 
     /**
