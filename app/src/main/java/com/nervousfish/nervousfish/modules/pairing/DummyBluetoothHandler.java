@@ -66,8 +66,8 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public ReceiverWrapper getDataReceiver() {
-        return new ReceiverWrapper(new IDataReceiver() {
+    public PairingWrapper getDataReceiver() {
+        return new PairingWrapper(new IDataReceiver() {
             @Override
             public void dataReceived(byte[] bytes) {
                 // Do nothing

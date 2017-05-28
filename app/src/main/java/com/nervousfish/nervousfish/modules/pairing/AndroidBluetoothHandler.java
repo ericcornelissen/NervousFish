@@ -100,6 +100,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     private IBluetoothHandlerService getService() {
-        return ((NervousFish) NervousFish.getInstance()).getBluetoothService();
+        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
     }
 }

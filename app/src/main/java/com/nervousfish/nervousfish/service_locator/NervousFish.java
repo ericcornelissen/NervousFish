@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
+import com.nervousfish.nervousfish.modules.pairing.PairingWrapper;
 
 /**
  * The controller of the NervousFish application
@@ -50,10 +51,18 @@ public final class NervousFish extends Application implements INervousFish {
     }
 
     /**
+     * Warning: this method should only be used by {@link EntryActivity} to initialize the Service Locator
      * @return The global bluetooth service used for bluetooth connections
      */
-    public AndroidBluetoothService getBluetoothService() {
+    AndroidBluetoothService _getBluetoothService() {
         return bluetoothService;
+    }
+
+    /**
+     * @return The global bluetooth service used for bluetooth connections
+     */
+    public PairingWrapper<AndroidBluetoothService> getBluetoothService() {
+        return new PairingWrapper<>(bluetoothService);
     }
 
     /**

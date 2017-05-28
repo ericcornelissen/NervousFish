@@ -38,8 +38,8 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public ReceiverWrapper getDataReceiver() {
-        return new ReceiverWrapper(new IDataReceiver() {
+    public PairingWrapper getDataReceiver() {
+        return new PairingWrapper(new IDataReceiver() {
             @Override
             public void dataReceived(final byte[] bytes) {
                 final DataWrapper object;

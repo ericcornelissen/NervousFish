@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.service_locator;
 
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
+import com.nervousfish.nervousfish.modules.pairing.PairingWrapper;
 
 /**
  * Defines the Nervous Fish {@link android.app.Application}
@@ -9,7 +10,7 @@ interface INervousFish {
     /**
      * @return The Bluetooth Service
      */
-    AndroidBluetoothService getBluetoothService();
+    PairingWrapper<AndroidBluetoothService> getBluetoothService();
 
     /**
      * Sets a runnable that's called when the Bluetooth Service is bound to the application

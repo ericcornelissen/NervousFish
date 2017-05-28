@@ -28,5 +28,5 @@ interface IPairingHandler extends IModule, Serializable {
     /**
      * @return The object responsible for newly received data
      */
-    ReceiverWrapper getDataReceiver();
+    PairingWrapper getDataReceiver();
 }
