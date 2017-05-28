@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,27 +45,63 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bluetoothButton"
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/pairing_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:onClick="onClickFab"
-        app:backgroundTint="@android:color/holo_blue_dark"
-        app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        fab:menu_labels_style="@style/MenuLabelsStyle"
+        fab:menu_labels_showAnimation="@anim/jump_from_down"
+        fab:menu_labels_hideAnimation="@anim/jump_to_down"
+        fab:menu_animationDelayPerItem="0"
+        fab:menu_shadowColor="#444"
+        fab:menu_colorNormal="@color/colorPrimary"
+        fab:menu_colorPressed="@color/colorPrimaryDark"
+        fab:menu_colorRipple="@color/colorPrimaryDark">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/pairing_menu_bluetooth"
+            style="@style/MenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/stat_sys_data_bluetooth"
+            android:onClick="onBluetoothButtonClick"
+            fab:fab_label="@string/bluetooth" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/pairing_menu_nfc"
+            style="@style/MenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/nfc_variant"
+            android:onClick="onNFCButtonClick"
+            fab:fab_label="@string/nfc" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/pairing_menu_qr"
+            style="@style/MenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onQRButtonClicked"
+            android:src="@drawable/qr_code"
+            fab:fab_label="@string/qr" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/sortButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:clickable="true"
-        android:onClick="onSortButtonClick"
-        android:layout_marginBottom="@dimen/fab_second_button_from_bottom"
-        android:layout_marginEnd="@dimen/fab_margin"
-
+        android:layout_marginBottom="@dimen/sorting_fab_margin"
+        android:layout_marginStart="@dimen/sorting_fab_margin"
+        android:onClick="onSortButtonClicked"
+        app:borderWidth="0dp"
         app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
 </merge>

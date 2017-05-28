@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.util;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class CircularListTest {
@@ -40,5 +42,23 @@ public class CircularListTest {
         assertTrue(list.get(0) == 5);
         assertTrue(list.get(1) == 10);
         assertTrue(list.get(2) == 15);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetNegative() throws Exception {
+        CircularList<Integer> list = new CircularList<>(1);
+        list.get(-1);
+    }
+
+    @Test
+    public void testGetElements() throws Exception {
+        CircularList<Integer> list = new CircularList<>(3);
+        list.add(5);
+        list.add(10);
+        list.add(15);
+        final List<Integer> elements = list.getElements();
+        assertEquals(elements.get(0).intValue(), 5);
+        assertEquals(elements.get(1).intValue(), 10);
+        assertEquals(elements.get(2).intValue(), 15);
     }
 }

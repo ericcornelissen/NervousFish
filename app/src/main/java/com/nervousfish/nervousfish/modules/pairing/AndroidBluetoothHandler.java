@@ -50,7 +50,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        serviceLocator.registerToEventBus(this);
     }
 
     /**
@@ -70,6 +69,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     @Override
     public void start() {
         LOGGER.info("Bluetooth Service started");
+
+        getServiceLocator().registerToEventBus(this);
 
         synchronized (this.lock) {
             // Cancel any thread attempting to make a connection
@@ -129,6 +130,9 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void stop() {
+
+        getServiceLocator().unregisterFromEventBus(this);
+
         /*LOGGER.info("Bluetooth service stopped");
             mBluetoothState = BluetoothState.STATE_NONE;
             getServiceLocator().postOnEventBus(new BluetoothConnectionLostEvent());

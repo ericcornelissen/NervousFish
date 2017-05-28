@@ -62,7 +62,7 @@ public final class DeserializationException extends RuntimeException {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return (DeserializationException) new DeserializationException(message).initCause(throwable);
+            return new DeserializationException(message).initCause(throwable);
         }
     }
 }

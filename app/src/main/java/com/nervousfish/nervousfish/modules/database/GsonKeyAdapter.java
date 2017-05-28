@@ -68,7 +68,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
             case ConstantKeywords.RSA_KEY:
                 key = new RSAKey(map);
                 break;
-            case "simple":
+            case ConstantKeywords.SIMPLE_KEY:
                 key = new SimpleKey(map);
                 break;
             default:

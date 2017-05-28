@@ -9,6 +9,10 @@
     <string name="msg_mismatch">Your password is wrong</string>
     <string name="contact_title">Contact</string>
 
+    <string name="qr">QR</string>
+    <string name="nfc">NFC</string>
+    <string name="bluetooth">Bluetooth</string>
+
     <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
     <string name="type">Type</string>
@@ -48,9 +52,9 @@
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="something_went_wrong_try_again">There went something wrong deleting this contact, please try again.</string>
-    <string name="no_devices_found">No devices found...</string>
     <string name="warning">Warning</string>
     <string name="you_sure_log_out">Are you sure you want to log out?</string>
     <string name="no">NO</string>
     <string name="yes">YES</string>
+    <string name="no_devices_found">No devices found…</string>
 </resources>
