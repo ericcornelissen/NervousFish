@@ -41,11 +41,8 @@ abstract class APairingHandler implements IPairingHandler {
             @Override
             public void dataReceived(final byte[] bytes) {
                 final DataWrapper object;
-                final ByteArrayInputStream bis;
-                final ObjectInputStream ois;
-                try {
-                    bis = new ByteArrayInputStream(bytes);
-                    ois = new ObjectInputStream(bis);
+                try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                     ObjectInputStream ois = new ObjectInputStream(bis)) {
                     object = (DataWrapper) ois.readObject();
                     serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 } catch (final ClassNotFoundException | IOException e) {
