@@ -21,7 +21,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Used as an in-between screen to the BluetoothConnectionActivity to activate the
  * Bluetooth before we go to that activity.
  */
-@SuppressWarnings("checkstyle:MultipleStringLiterals")
 //We want to use a string multiple times
 public final class ActivateBluetoothActivity extends Activity {
     //Request and result codes
