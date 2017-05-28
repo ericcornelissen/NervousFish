@@ -31,7 +31,7 @@ import java.io.Serializable;
 /**
  * Manages all modules and provides access to them.
  */
-public final class ServiceLocator implements IServiceLocator {
+public class ServiceLocator implements IServiceLocator {
     private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocator");
     private static final long serialVersionUID = 1408616442873653749L;
 
@@ -52,14 +52,14 @@ public final class ServiceLocator implements IServiceLocator {
      */
     ServiceLocator(final String androidFilesDir) {
         this.androidFilesDir = androidFilesDir;
-        this.constants = Constants.newInstance(this).getModule();
-        this.fileSystem = AndroidFileSystemAdapter.newInstance(this).getModule();
-        this.database = GsonDatabaseAdapter.newInstance(this).getModule();
-        this.keyGenerator = KeyGeneratorAdapter.newInstance(this).getModule();
-        this.encryptor = EncryptorAdapter.newInstance(this).getModule();
-        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).getModule();
-        this.nfcHandler = DummyNFCHandler.newInstance(this).getModule();
-        this.qrHandler = DummyQRHandler.newInstance(this).getModule();
+        this.constants = initConstants();
+        this.fileSystem = initFileSystem();
+        this.database = initDatabase();
+        this.keyGenerator = initKeyGenerator();
+        this.encryptor = initEncryptor();
+        this.bluetoothHandler = initBluetoothHandler();
+        this.nfcHandler = initNfcHandler();
+        this.qrHandler = initQrHandler();
     }
 
     /**
@@ -90,11 +90,43 @@ public final class ServiceLocator implements IServiceLocator {
         this.qrHandler = qrHandler;
     }
 
+    IConstants initConstants() {
+        return Constants.newInstance(this).getModule();
+    }
+
+    IFileSystem initFileSystem() {
+        return AndroidFileSystemAdapter.newInstance(this).getModule();
+    }
+
+    IDatabase initDatabase() {
+        return GsonDatabaseAdapter.newInstance(this).getModule();
+    }
+
+    IKeyGenerator initKeyGenerator() {
+        return KeyGeneratorAdapter.newInstance(this).getModule();
+    }
+
+    IEncryptor initEncryptor() {
+        return EncryptorAdapter.newInstance(this).getModule();
+    }
+
+    IBluetoothHandler initBluetoothHandler() {
+        return AndroidBluetoothHandler.newInstance(this).getModule();
+    }
+
+    INfcHandler initNfcHandler() {
+        return DummyNFCHandler.newInstance(this).getModule();
+    }
+
+    IQRHandler initQrHandler() {
+        return DummyQRHandler.newInstance(this).getModule();
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getAndroidFilesDir() {
+    public final String getAndroidFilesDir() {
         this.assertExists(this.androidFilesDir, "androidFilesDir");
         return this.androidFilesDir;
     }
@@ -103,7 +135,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IDatabase getDatabase() {
+    public final IDatabase getDatabase() {
         this.assertExists(this.database, "database");
         return this.database;
     }
@@ -112,7 +144,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IKeyGenerator getKeyGenerator() {
+    public final IKeyGenerator getKeyGenerator() {
         this.assertExists(this.keyGenerator, "keyGenerator");
         return this.keyGenerator;
     }
@@ -121,7 +153,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IEncryptor getEncryptor() {
+    public final IEncryptor getEncryptor() {
         this.assertExists(this.encryptor, "encryptor");
         return this.encryptor;
     }
@@ -130,7 +162,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IFileSystem getFileSystem() {
+    public final IFileSystem getFileSystem() {
         this.assertExists(this.fileSystem, "fileSystem");
         return this.fileSystem;
     }
@@ -139,7 +171,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IConstants getConstants() {
+    public final IConstants getConstants() {
         this.assertExists(this.constants, "constants");
         return this.constants;
     }
@@ -148,7 +180,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IBluetoothHandler getBluetoothHandler() {
+    public final IBluetoothHandler getBluetoothHandler() {
         this.assertExists(this.bluetoothHandler, "bluetoothHandler");
         return this.bluetoothHandler;
     }
@@ -157,7 +189,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public INfcHandler getNFCHandler() {
+    public final INfcHandler getNFCHandler() {
         this.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }
@@ -166,7 +198,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IQRHandler getQRHandler() {
+    public final IQRHandler getQRHandler() {
         this.assertExists(this.qrHandler, "qrHandler");
         return this.qrHandler;
     }
@@ -232,7 +264,7 @@ public final class ServiceLocator implements IServiceLocator {
      *
      * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
+    void ensureClassInvariant() throws InvalidObjectException {
         // No checks to perform
     }
 

@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import android.bluetooth.BluetoothDevice;
+
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -10,20 +12,20 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
- * An NFC handler without implementation, needed because NFC is unavailable on the emulator
+ * A Bluetooth handler without implementation, needed because Bluetooth is unavailable on the emulator
  */
-public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
-    private static final long serialVersionUID = -6465987636766819498L;
-    private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
+public final class DummyBluetoothHandler extends APairingHandler implements IBluetoothHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger("DummyBluetoothHandler");
 
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    private DummyNFCHandler(final IServiceLocator serviceLocator) {
+    private DummyBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         LOGGER.info("Initialized");
     }
@@ -32,19 +34,45 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
      * {@link IServiceLocator}
      *
-     * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<DummyNFCHandler> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new DummyNFCHandler(serviceLocator));
+    public static ModuleWrapper<DummyBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new DummyBluetoothHandler(serviceLocator));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void send(final byte[] buffer) {
+    public void start() {
         // Do nothing
+    }
+
+    @Override
+    public void connect(BluetoothDevice device) {
+        // Do nothing
+    }
+
+    @Override
+    public void stop() {
+        // Do nothing
+    }
+
+    @Override
+    public void send(Serializable object) throws IOException {
+        // Do nothing
+    }
+
+    @Override
+    public void send(byte[] buffer) {
+        // Do nothing
+    }
+
+    @Override
+    public ReceiverWrapper getDataReceiver() {
+        return new ReceiverWrapper(new IDataReceiver() {
+            @Override
+            public void dataReceived(byte[] bytes) {
+                // Do nothing
+            }
+        });
     }
 
     /**
