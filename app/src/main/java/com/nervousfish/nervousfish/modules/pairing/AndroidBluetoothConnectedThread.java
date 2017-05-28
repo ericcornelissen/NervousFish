@@ -26,6 +26,7 @@ public final class AndroidBluetoothConnectedThread extends Thread {
     private final OutputStream outStream;
     private final IServiceLocator serviceLocator;
     private final IDataReceiver dataReceiver;
+    private byte[] buffertje;
 
     /**
      * Constructs the thread than runs during the connection with the remote device
@@ -66,8 +67,9 @@ public final class AndroidBluetoothConnectedThread extends Thread {
         try {
             // Read from the InputStream
             final int bytes = inStream.read(buffer);
-            LOGGER.info(" Read {} bytes", bytes);
+            LOGGER.info("Read {} bytes", bytes);
 
+            this.buffertje = buffer;
             this.dataReceiver.dataReceived(buffer);
         } catch (final IOException e) {
             LOGGER.warn("Disconnected from the paired device", e);

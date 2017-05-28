@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.data_objects;
+package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * This class is used to let the other party know what kind of class it contains.
  */
-public final class DataWrapper implements Serializable {
+final class DataWrapper implements Serializable {
     private static final long serialVersionUID = -1704556072876435760L;
     private final Serializable data;
     private final Class<?> clazz;
@@ -19,7 +19,7 @@ public final class DataWrapper implements Serializable {
      *
      * @param data The {@link Serializable} object the wrapper wraps
      */
-    public DataWrapper(final Serializable data) {
+    DataWrapper(final Serializable data) {
         this.data = data;
         this.clazz = data.getClass();
     }

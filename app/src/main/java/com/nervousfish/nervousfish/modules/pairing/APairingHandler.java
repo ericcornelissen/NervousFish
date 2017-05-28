@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.data_objects.DataWrapper;
 import com.nervousfish.nervousfish.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -42,8 +41,11 @@ abstract class APairingHandler implements IPairingHandler {
             @Override
             public void dataReceived(final byte[] bytes) {
                 final DataWrapper object;
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+                final ByteArrayInputStream bis;
+                final ObjectInputStream ois;
+                try {
+                    bis = new ByteArrayInputStream(bytes);
+                    ois = new ObjectInputStream(bis);
                     object = (DataWrapper) ois.readObject();
                     serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 } catch (final ClassNotFoundException | IOException e) {
@@ -62,7 +64,7 @@ abstract class APairingHandler implements IPairingHandler {
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(object);
+            oos.writeObject(new DataWrapper(object));
             oos.flush();
             bytes = bos.toByteArray();
         }
