@@ -15,7 +15,6 @@ import java.util.Map;
 public final class SimpleKey implements IKey {
     private static final long serialVersionUID = -3865050366412869804L;
 
-    private static final String TYPE = "simple";
     private static final String KEYWORD_NAME = "name";
     private static final String KEYWORD_KEY = "key";
 
@@ -68,7 +67,7 @@ public final class SimpleKey implements IKey {
      */
     @Override
     public String getType() {
-        return SimpleKey.TYPE;
+        return ConstantKeywords.SIMPLE_KEY;
     }
 
     /**
