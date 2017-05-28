@@ -44,7 +44,7 @@ public final class FirstUseActivity extends AppCompatActivity {
     /**
      * Gets triggered when the GetStarted button is clicked.
      *
-     * @param v - the {@link View} clicked
+     * @param v The {@link View} clicked
      */
     public void onGetStartedClick(final View v) {
         final Intent intent = new Intent(this, CreateProfileActivity.class);

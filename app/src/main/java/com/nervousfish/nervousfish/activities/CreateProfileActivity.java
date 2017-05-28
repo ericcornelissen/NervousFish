@@ -57,7 +57,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     /**
      * Gets triggered when the Submit button is clicked.
      *
-     * @param v - the {@link View} clicked
+     * @param v The {@link View} clicked
      */
     public void onSubmitClick(final View v) {
         if (validateInputFields()) {
@@ -162,7 +162,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * Will return true if the name is valid. This means
      * that it has at least 1 ASCII character.
      *
-     * @param name - the name that has been entered
+     * @param name The name that has been entered
      * @return a {@link boolean} telling if the name is valid or not
      */
     private boolean isValidName(final String name) {
