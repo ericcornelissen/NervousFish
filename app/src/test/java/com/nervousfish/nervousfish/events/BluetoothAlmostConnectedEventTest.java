@@ -2,8 +2,6 @@ package com.nervousfish.nervousfish.events;
 
 import android.bluetooth.BluetoothSocket;
 
-import com.nervousfish.nervousfish.modules.pairing.AndroidConnectedThread;
-
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
