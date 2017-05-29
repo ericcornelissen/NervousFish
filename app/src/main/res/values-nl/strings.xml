@@ -57,4 +57,5 @@
     <string name="repeat_password">Herhaal wachtwoord</string>
     <string name="rsa_key">RSA key</string>
     <string name="dsa_key">DSA key</string>
+    <string name="warning">Waarschuwing</string>
 </resources>
