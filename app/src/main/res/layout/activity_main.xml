@@ -15,7 +15,7 @@
         tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/holo_blue_dark"
@@ -31,17 +31,14 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
-
-
         <ViewFlipper
-            android:id="@+id/viewFlipper"
+            android:id="@+id/view_flipper_sorter_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <include layout="@layout/content_main" />
             <include layout="@layout/content_main_keytypes" />
 
         </ViewFlipper>
-
 
     </android.support.design.widget.AppBarLayout>
 
@@ -95,7 +92,7 @@
     </com.github.clans.fab.FloatingActionMenu>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/sortButton"
+        android:id="@+id/sort_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"

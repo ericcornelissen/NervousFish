@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_main">
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/list_view_main"
         android:divider="@color/colorAccent"
         android:dividerHeight="0.5dp"
         android:layout_width="match_parent"

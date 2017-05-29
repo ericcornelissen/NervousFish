@@ -56,7 +56,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.setName(this.contact.getName());
         this.setKeys(this.contact.getKeys());
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
+        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
     }
 
@@ -81,7 +81,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
             keyNames.add(key.getName());
         }
 
-        final ListView lv = (ListView) this.findViewById(R.id.listView);
+        final ListView lv = (ListView) this.findViewById(R.id.list_view_change_contact);
         lv.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, keyNames));
     }
@@ -90,7 +90,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * When the save button is clicked this method is called.
      * It saves the new contact name.
      *
-     * @param v - the view clicked on
+     * @param v The view clicked on
      */
     public void saveContact(final View v) {
         //Dont show keyboard anymore
@@ -127,7 +127,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * Will return true if the name is valid. This means
      * that it has at least 1 ASCII character.
      *
-     * @param name - the name that has been entered
+     * @param name The name that has been entered
      * @return a {@link boolean} telling if the name is valid or not
      */
     private boolean isValidName(final String name) {
