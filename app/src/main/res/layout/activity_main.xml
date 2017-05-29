@@ -60,7 +60,10 @@
         fab:menu_shadowColor="#444"
         fab:menu_colorNormal="@color/colorPrimary"
         fab:menu_colorPressed="@color/colorPrimaryDark"
-        fab:menu_colorRipple="@color/colorPrimaryDark">
+        fab:menu_colorRipple="@color/colorPrimaryDark"
+        app:menu_colorNormal="@color/color_primary"
+        app:menu_colorPressed="@color/color_primary_dark"
+        app:menu_colorRipple="@color/color_primary_dark">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/pairing_menu_bluetooth"

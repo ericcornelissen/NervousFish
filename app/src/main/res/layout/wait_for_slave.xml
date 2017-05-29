@@ -15,7 +15,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:visibility="visible"
-        app:indicatorColor="@color/colorPrimary"
+        app:indicatorColor="@color/color_primary"
         app:indicatorName="BallGridPulseIndicator" />
 
     <TextView

@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/color_primary"
                 android:contentDescription="@string/contact_title"
                 app:srcCompat="?attr/actionModeCloseDrawable"
                 tools:targetApi="lollipop" />
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/color_primary"
                 android:onClick="saveContact"
                 app:srcCompat="@android:drawable/ic_menu_save" />
 
