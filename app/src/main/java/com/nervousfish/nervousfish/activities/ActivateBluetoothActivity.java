@@ -104,7 +104,7 @@ public final class ActivateBluetoothActivity extends Activity {
      *
      * @param v The view initiating the call.
      */
-    public void cancelActivateBluetoothActivity(final View v) {
+    public void onCancelActivateBluetoothActivityClick(final View v) {
         this.finish();
     }
 

@@ -27,7 +27,7 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:src="?attr/actionModeCloseDrawable"
                 android:contentDescription="@string/contact_title"
-                android:onClick="cancelBluetoothConnectionActivity"/>
+                android:onClick="onCancelBluetoothConnectionActivityClick"/>
 
             <TextView
                 android:id="@+id/toolbar_title"

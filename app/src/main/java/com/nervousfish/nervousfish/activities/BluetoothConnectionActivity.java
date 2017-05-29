@@ -172,7 +172,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      *
      * @param v the {@link View} clicked
      */
-    public void cancelBluetoothConnectionActivity(final View v) {
+    public void onCancelBluetoothConnectionActivityClick(final View v) {
         this.setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
         this.finish();
     }
