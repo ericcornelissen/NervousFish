@@ -18,7 +18,7 @@ import java.util.List;
  * used in the ContactActivity and the ChangeContactActivity.
  */
 
-class ContactActivityHelper {
+final class ContactActivityHelper {
 
     /**
      * Methods are static so this is not called.
