@@ -84,7 +84,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * Set message when no devices
      */
     private void setNoDevicesFound() {
-        this.setTitle("Select device");
+        this.setTitle(R.string.select_device);
         if (this.newDevicesArrayAdapter.getCount() == 0) {
             this.newDevicesArrayAdapter.add(getString(R.string.no_devices_found));
         }
@@ -207,7 +207,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * Starts Discovering bluetooth devices
      */
     public void discoverDevices() {
-        this.setTitle("scanning");
+        this.setTitle(R.string.scanning);
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
