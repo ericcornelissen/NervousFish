@@ -78,7 +78,7 @@ public final class QRGenerator {
      * @param qrMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */
-    public static IKey deconstructToKey(final String qrMessage) throws NullPointerException {
+    public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
         final String[] messageComponents = qrMessage.split(" ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY :
@@ -87,8 +87,7 @@ public final class QRGenerator {
             case "simple" :
                 return new SimpleKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
             default :
-                LOGGER.error("Key Type Not Found");
-                return null;
+                throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }
 
     }

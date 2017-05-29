@@ -1,5 +1,5 @@
 Feature: QR exchange key activity
-    Generate QR of the user's public key and scans other public keys
+    Generates QR of the user's public key and scans other public keys
 
     Scenario: Generate QR Code
         Given I am viewing QRExchange activity

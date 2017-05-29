@@ -45,11 +45,11 @@
         android:id="@+id/scanbutton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scan QR code" />
+        android:text="@string/QRScan" />
 
     <Button
         android:id="@+id/generateQRbutton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show QR code" />
+        android:text="@string/QRShow" />
 </LinearLayout>
