@@ -65,7 +65,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
+        final EditText editText = (EditText) findViewById(R.id.contact_name);
         if (isValidName(editText.getText().toString())) {
             //Update contact
             try {
@@ -108,7 +108,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final View v) {
-            final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
+            final EditText editText = (EditText) findViewById(R.id.contact_name);
             if (editText.getText().toString().equals(contact.getName())) {
                 finish();
             } else {
