@@ -20,6 +20,9 @@ public final class NervousFish extends Application implements INervousFish {
     private boolean bound;
     private Runnable onServiceBoundRunnable;
     private final ServiceConnection connection = new ServiceConnection() {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onServiceConnected(final ComponentName componentName, final IBinder service) {
             final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
@@ -30,16 +33,25 @@ public final class NervousFish extends Application implements INervousFish {
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onServiceDisconnected(final ComponentName componentName) {
             bound = false;
         }
     };
 
+    /**
+     * @return The NervousFish {@link Application} instance
+     */
     public static Context getInstance() {
         return instance;
     }
 
+    /**
+     * {@inheritDoc     }
+     */
     @Override
     public void onCreate() {
         super.onCreate();

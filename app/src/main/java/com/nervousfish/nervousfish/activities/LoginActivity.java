@@ -31,9 +31,10 @@ public final class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.login);
+
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        this.setContentView(R.layout.login);
 
         final IDatabase database = this.serviceLocator.getDatabase();
         try {

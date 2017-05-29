@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 /**
  * Helper class for {@link AndroidBluetoothService}
  */
+// A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = -6465987636766819498L;

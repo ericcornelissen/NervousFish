@@ -33,7 +33,7 @@ import static junit.framework.Assert.assertFalse;
 @CucumberOptions(features = "features")
 public class LoginSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule =
