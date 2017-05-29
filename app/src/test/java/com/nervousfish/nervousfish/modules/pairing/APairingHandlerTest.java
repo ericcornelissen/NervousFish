@@ -3,23 +3,34 @@ package com.nervousfish.nervousfish.modules.pairing;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.communication.FileWrapper;
+import com.nervousfish.nervousfish.data_objects.tap.DataWrapper;
+import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
+import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -50,7 +61,7 @@ public class APairingHandlerTest implements Serializable {
 
     }
 
-    private byte[] serialize(Contact contact) throws IOException {
+    private byte[] serialize(Serializable contact) throws IOException {
         ByteArrayOutputStream bos = null;
         ObjectOutputStream oos = null;
         try {
@@ -69,16 +80,48 @@ public class APairingHandlerTest implements Serializable {
         }
     }
 
+    private byte[] serializeFile() throws IOException {
+        final RandomAccessFile f = new RandomAccessFile(constants.getDatabaseContactsPath(), "rw");
+        final byte[] fileData = new byte[(int) f.length()];
+        final byte[] bytes;
+        f.readFully(fileData);
+        final FileWrapper fWrapper = new FileWrapper(fileData);
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(fWrapper);
+            oos.flush();
+            bytes = bos.toByteArray();
+        }
+        return bytes;
+    }
+
     private PairingHandler tmp, phspy;
     private IDatabase database;
+    private IConstants constants;
+    private IServiceLocator serviceLocator;
 
     @Before
     public void setup() throws Exception {
-        IServiceLocator serviceLocator = mock(IServiceLocator.class);
+        serviceLocator = mock(IServiceLocator.class);
         database = mock(IDatabase.class);
         when(serviceLocator.getDatabase()).thenReturn(database);
+        constants = mock(IConstants.class);
+        when(serviceLocator.getConstants()).thenReturn(constants);
+        when(constants.getDatabaseContactsPath()).thenReturn(new File("E:\\docs\\NervousFish\\app\\src\\main\\AndroidManifest.xml").getAbsolutePath());
         tmp = new PairingHandler(serviceLocator);
         phspy = spy(tmp);
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        for(Contact c : database.getAllContacts()) {
+            database.deleteContact(c.getName());
+        }
+    }
+
+    @Test
+    public void getServiceLocatorTest() {
+        assertEquals(tmp.getServiceLocator(), serviceLocator);
     }
 
     @Test
@@ -87,7 +130,6 @@ public class APairingHandlerTest implements Serializable {
         phspy.sendContact(contact);
         verify(phspy).sendContact(contact);
         verify(phspy).send(phspy.myBuffer);
-        assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
     }
 
     @Test
@@ -96,7 +138,6 @@ public class APairingHandlerTest implements Serializable {
         phspy.sendContact(contact);
         verify(phspy).sendContact(contact);
         verify(phspy).send(phspy.myBuffer);
-        assertTrue(Arrays.equals(serialize(contact), phspy.myBuffer));
     }
 
     @Test
@@ -106,31 +147,39 @@ public class APairingHandlerTest implements Serializable {
         Contact c2 = new Contact("Test2", new RSAKey("Test", "1234", "0"));
         list.add(c1);
         list.add(c2);
-        when(database.getAllContacts()).thenReturn(list);
-        phspy.sendAllContacts();
-        verify(phspy, times(1)).sendContact(c1);
-        verify(phspy, times(1)).sendContact(c2);
+        phspy.sendAllContacts(list);
+        verify(phspy, times(1)).send(any(byte[].class));
+        verify(phspy, times(1)).send(any(byte[].class));
     }
 
     @Test
     public void writeAllContactsEmptyTest() throws IOException {
-        when(database.getAllContacts()).thenReturn(new LinkedList<Contact>());
-        phspy.sendAllContacts();
+        phspy.sendAllContacts(new LinkedList<Contact>());
         verify(phspy, never()).sendContact((Contact) any());
     }
 
     @Test
     public void saveContactSimpleKeyTest() throws Exception {
         Contact contact = new Contact("Test", new SimpleKey("Test", ""));
-        tmp.saveContact(serialize(contact));
+        assertEquals(tmp.saveContact(contact), contact);
         verify(database).addContact(contact);
     }
 
     @Test
     public void saveContactRSAKeyTest() throws Exception {
         Contact contact = new Contact("Test", new RSAKey("Test", "1234", "0"));
-        tmp.saveContact(serialize(contact));
+        assertEquals(tmp.saveContact(contact), contact);
         verify(database).addContact(contact);
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void saveContactDoubleTest() throws IOException {
+        doThrow(new DatabaseException("Contact already existed in the database"))
+                .doNothing()
+                .when(database).addContact(any(Contact.class));
+        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
+        phspy.saveContact(contact);
+        assertEquals(phspy.saveContact(contact), contact);
     }
 
     @Test
@@ -147,6 +196,54 @@ public class APairingHandlerTest implements Serializable {
         list.add(contact);
         when(database.getAllContacts()).thenReturn(list);
         assertTrue(tmp.checkExists(contact));
+    }
+    @Test
+    public void sendContactFileTest() throws IOException {
+        assertTrue(Arrays.equals(tmp.sendContactFile(), serializeFile()));
+    }
+
+    @Test
+    public void parseInputSingleContactTest() throws IOException {
+        Contact contact = new Contact("Test", new SimpleKey("Test", ""));
+        DataWrapper dataWrapper = new DataWrapper(contact);
+        phspy.parseInput(serialize(dataWrapper));
+        verify(phspy).saveContact(any(Contact.class));
+    }
+
+    @Test
+    public void parseInputMultipleContactTest() throws IOException {
+        List<Contact> list = new ArrayList<>();
+        Contact c1 = new Contact("Test", new SimpleKey("Test", ""));
+        Contact c2 = new Contact("Test2", new RSAKey("Test", "1234", "0"));
+        list.add(c1);
+        list.add(c2);
+        DataWrapper dataWrapper = new DataWrapper((ArrayList)list);
+        phspy.parseInput(serialize(dataWrapper));
+        verify(phspy, times(2)).saveContact(any(Contact.class));
+    }
+
+    @Test
+    public void parseInputSingleTapTest() throws IOException {
+        SingleTap stap = new SingleTap();
+        DataWrapper dataWrapper = new DataWrapper(new ArrayList<>().add(stap));
+        tmp.parseInput(serialize(dataWrapper));
+        //TODO: finish this with an assert when implementation is ready
+    }
+
+    @Test
+    public void parseInputStringRhythmTest() throws IOException {
+        String s = "Rhythm";
+        DataWrapper dataWrapper = new DataWrapper(s);
+        tmp.parseInput(serialize(dataWrapper));
+        //TODO: finish this with an assert when implementation is ready
+    }
+
+    @Test
+    public void parseInputStringVisualTest() throws IOException {
+        String s = "Visual";
+        DataWrapper dataWrapper = new DataWrapper(s);
+        tmp.parseInput(serialize(dataWrapper));
+        //TODO: finish this with an assert when implementation is ready
     }
 
 }

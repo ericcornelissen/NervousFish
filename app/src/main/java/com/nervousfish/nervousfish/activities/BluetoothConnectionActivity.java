@@ -27,7 +27,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -234,11 +233,11 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Subscribe
     public void onEvent(final BluetoothConnectedEvent event) {
-        try {
+        /*try {
             bluetoothHandler.sendAllContacts();
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception", e);
-        }
+        }*/
     }
 
     /**
