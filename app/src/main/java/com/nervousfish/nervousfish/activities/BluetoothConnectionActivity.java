@@ -129,10 +129,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         unregisterReceiver(this.broadcastReceiver);
         this.bluetoothAdapter = null;
+
+        super.onDestroy();
     }
 
     /**
