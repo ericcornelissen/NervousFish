@@ -57,7 +57,7 @@
             android:hint="@string/password"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
-            android:drawableStart="@drawable/key"
+            android:drawableStart="@drawable/lock"
             android:drawablePadding="@dimen/normal_drawable_padding" />
 
         <EditText
@@ -70,7 +70,7 @@
             android:hint="@string/repeat_password"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
-            android:drawableStart="@drawable/key"
+            android:drawableStart="@drawable/lock"
             android:drawablePadding="@dimen/normal_drawable_padding"/>
 
         <TextView

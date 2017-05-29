@@ -24,7 +24,7 @@ final class ContactActivityHelper {
      * Methods are static so this is not called.
      */
     private ContactActivityHelper() {
-        //Not called
+        // Prevent instantiation
     }
 
     /**

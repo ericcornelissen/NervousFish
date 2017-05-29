@@ -73,7 +73,7 @@ public class CreateProfileSteps {
         onView(withId(R.id.submitProfile)).perform(scrollTo()).perform(click());
     }
 
-    @When("^I click ok on the popup$")
+    @When("^I click ok on the popup with a warning about creating an profile$")
     public void iClickOkOnPopup() {
         onView(withId(R.id.confirm_button)).perform(click());
     }
