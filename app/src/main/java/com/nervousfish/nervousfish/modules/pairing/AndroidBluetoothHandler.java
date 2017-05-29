@@ -70,30 +70,28 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     public void start() {
         LOGGER.info("Bluetooth Service started");
 
-        getServiceLocator().registerToEventBus(this);
+        final IServiceLocator serviceLocator = this.getServiceLocator();
+        serviceLocator.registerToEventBus(this);
 
         synchronized (this.lock) {
-            // Cancel any thread attempting to make a connection
-            if (this.connectThread != null) {
-                this.connectThread.cancel();
-                this.connectThread = null;
-            }
-
-            // Cancel any thread currently running a connection
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
-            }
+            this.cancelConnectThreads();
 
             // Start the thread to listen on a BluetoothServerSocket
-            if (this.acceptThread == null) {
-                this.acceptThread = new AndroidAcceptThread(this, this.getServiceLocator());
-                this.acceptThread.start();
-            }
+            this.acceptThread = new AndroidAcceptThread(this, this.getServiceLocator());
+            this.acceptThread.start();
 
             this.mBluetoothState = BluetoothState.STATE_LISTEN;
-            this.getServiceLocator().postOnEventBus(new BluetoothListeningEvent());
+            serviceLocator.postOnEventBus(new BluetoothListeningEvent());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stop() {
+        this.getServiceLocator().unregisterFromEventBus(this);
+        this.cancelConnectThreads();
     }
 
     /**
@@ -104,17 +102,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         LOGGER.info("Connect Bluetooth thread initialized");
 
         synchronized (this.lock) {
-            // Cancel any thread attempting to make a connection
-            if (this.mBluetoothState == BluetoothState.STATE_CONNECTING && this.connectThread != null) {
-                this.connectThread.cancel();
-                this.connectThread = null;
-            }
-
-            // Cancel any thread currently running a connection
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
-            }
+            this.cancelConnectThreads();
 
             // Start the thread to connect with the given device
             this.connectThread = new AndroidConnectThread(this, device);
@@ -126,45 +114,27 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void stop() {
-
-        getServiceLocator().unregisterFromEventBus(this);
-
-        /*LOGGER.info("Bluetooth service stopped");
-            mBluetoothState = BluetoothState.STATE_NONE;
-            getServiceLocator().postOnEventBus(new BluetoothConnectionLostEvent());
-        }*/
-    }
-
-    /**
-     * Write to the AndroidConnectedThread in an unsynchronized manner
+     * Write to the AndroidConnectedThread in an asynchronous manner.
      *
      * @param buffer The bytes to send
      * @see AndroidConnectedThread#write(byte[])
      */
     @Override
-    @SuppressWarnings("checkstyle:returncount")
     public void send(final byte[] buffer) {
         // Synchronize a copy of the AndroidConnectedThread
         synchronized (this.lock) {
-            if (this.mBluetoothState != BluetoothState.STATE_CONNECTED) {
-                return;
-            }
             if (this.connectedThread == null) {
                 LOGGER.error("Trying to send data before connectedThread is initialized");
-                return;
+            } else if (this.mBluetoothState == BluetoothState.STATE_CONNECTED) {
+                LOGGER.info("Writing bytes: {}", Arrays.toString(buffer));
+                this.connectedThread.write(buffer);
             }
-            LOGGER.info("Writing bytes: {}", Arrays.toString(buffer));
-            this.connectedThread.write(buffer);
         }
     }
 
 
     /**
-     * Notify the bluetooth handler that the device as a server got a client
+     * Notify the bluetooth handler that the device as a server got a client.
      *
      * @param socket The socket over which the communication should happen
      */
@@ -172,23 +142,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         LOGGER.info("Almost Connected Bluetooth thread started");
 
         synchronized (this.lock) {
-            // Cancel the thread that completed the connection
-            if (this.connectThread != null) {
-                this.connectThread.cancel();
-                this.connectThread = null;
-            }
-
-            // Cancel any thread currently running a connection
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
-            }
-
-            // Cancel the accept thread because we only want to connect to one device
-            if (this.acceptThread != null) {
-                this.acceptThread.cancel();
-                this.acceptThread = null;
-            }
+            this.cancelConnectThreads();
 
             // Start the thread to manage the connection and perform transmissions
             this.connectedThread = new AndroidConnectedThread(this, socket);
@@ -200,7 +154,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
-     * Called by the eventbus when Bluetooth connection with another device failed.
+     * Called by the eventBus when Bluetooth connection with another device failed.
      *
      * @param event Data about the event
      */
@@ -217,9 +171,9 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
-     * Called by the eventbus when the connection with another Bluetooth device is lost.
+     * Called by the eventBus when the connection with another Bluetooth device is lost.
      *
-     * @param event Datab about the event
+     * @param event Data about the event
      */
     @Subscribe
     public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
@@ -234,6 +188,29 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
+     * Cancel any accept, connect and connected threads.
+     */
+    private void cancelConnectThreads() {
+        // Cancel any accept thread
+        if (this.acceptThread != null) {
+            this.acceptThread.cancel();
+            this.acceptThread = null;
+        }
+
+        // Cancel any thread attempting to make a connection
+        if (this.connectThread != null) {
+            this.connectThread.cancel();
+            this.connectThread = null;
+        }
+
+        // Cancel any thread currently running a connection
+        if (this.connectedThread != null) {
+            this.connectedThread.cancel();
+            this.connectedThread = null;
+        }
+    }
+
+    /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
      * @param stream The serialized object to be deserialized
@@ -244,7 +221,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     }
 
     /**
-     * Used to improve performance / efficiency
+     * Used to improve performance & efficiency.
      *
      * @param stream The stream to which this object should be serialized to
      */
@@ -258,4 +235,5 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     private void ensureClassInvariant() {
         // No checks to perform
     }
+
 }
