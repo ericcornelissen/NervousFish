@@ -110,11 +110,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onBluetoothButtonClick(final View view) {
+    public void onBluetoothButtonMainActivityClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
         final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
 
@@ -123,11 +123,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onNFCButtonClick(final View view) {
+    public void onNFCButtonMainActivityClick(final View view) {
         LOGGER.info("NFC button clicked");
         final Intent intent = new Intent(this, NFCActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
@@ -135,11 +135,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onQRButtonClicked(final View view) {
+    public void onQRButtonMainActivityClick(final View view) {
         LOGGER.info("QR button clicked");
         final Intent intent = new Intent(this, QRActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
