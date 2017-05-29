@@ -106,7 +106,7 @@ public final class Constants implements IConstants {
     /**
      * Ensure that the instance meets its class invariant
      *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
         assertNotNull(this.androidFilesDir);

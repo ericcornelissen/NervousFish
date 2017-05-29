@@ -93,7 +93,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * @param v The view clicked on
      */
     public void saveContact(final View v) {
-        //Dont show keyboard anymore
+        // Don't show keyboard anymore
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -135,6 +135,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
     }
 
     private final class BackButtonListener implements View.OnClickListener {
+
         /**
          * {@inheritDoc}
          */
@@ -149,16 +150,24 @@ public final class ChangeContactActivity extends AppCompatActivity {
                         .setContentText(getString(R.string.go_back_changes_lost))
                         .setCancelText(getString(R.string.cancel))
                         .setConfirmText(getString(R.string.yes_go_back))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(final SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                                finish();
-                            }
-                        })
+                        .setConfirmClickListener(new DiscardChangesClickListener())
                         .show();
             }
         }
+
+    }
+
+    private final class DiscardChangesClickListener implements SweetAlertDialog.OnSweetClickListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+            sweetAlertDialog.dismiss();
+            finish();
+        }
+
     }
 
 }
