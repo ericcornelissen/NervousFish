@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
-import com.nervousfish.nervousfish.events.BluetoothListeningEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothAlmostConnectedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectingEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionFailedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionLostEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;

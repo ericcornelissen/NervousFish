@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.events;
+package com.nervousfish.nervousfish.modules.pairing.events;
 
 /**
  * Greenrobot's EventBus message event

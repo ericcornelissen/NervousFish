@@ -1,6 +1,6 @@
-package com.nervousfish.nervousfish.data_objects.tap;
+package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.data_objects.DataWrapper;
+import com.nervousfish.nervousfish.data_objects.tap.ATapData;
 
 import org.junit.Test;
 

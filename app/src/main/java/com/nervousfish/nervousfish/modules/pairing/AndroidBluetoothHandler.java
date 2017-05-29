@@ -14,7 +14,6 @@ import java.io.ObjectOutputStream;
 /**
  * Helper class for {@link AndroidBluetoothService}
  */
-// TODO Very difficult to reduce even more; maybe possible with a shared helper class with the NFCHandler
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final long serialVersionUID = -6465987636766819498L;

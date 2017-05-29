@@ -2,7 +2,7 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothSocket;
 
-import com.nervousfish.nervousfish.events.BluetoothConnectionLostEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionLostEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -51,7 +51,7 @@ public final class AndroidBluetoothConnectedThread extends Thread {
         this.inStream = tmpIn;
         this.outStream = tmpOut;
         this.serviceLocator = serviceLocator;
-        this.dataReceiver = serviceLocator.getBluetoothHandler().getDataReceiver().get();
+        this.dataReceiver = (IDataReceiver) serviceLocator.getBluetoothHandler().getDataReceiver().get();
     }
 
     /**

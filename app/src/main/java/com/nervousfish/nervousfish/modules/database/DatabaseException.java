@@ -62,7 +62,7 @@ public final class DatabaseException extends RuntimeException {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return (DatabaseException) new DatabaseException(message).initCause(throwable);
+            return new DatabaseException(message).initCause(throwable);
         }
     }
 }

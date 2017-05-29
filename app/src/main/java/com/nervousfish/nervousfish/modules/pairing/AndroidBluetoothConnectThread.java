@@ -4,9 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.nervousfish.nervousfish.events.BluetoothAlmostConnectedEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectingEvent;
-import com.nervousfish.nervousfish.events.BluetoothConnectionFailedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothAlmostConnectedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectingEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;

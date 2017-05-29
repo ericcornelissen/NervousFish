@@ -34,7 +34,6 @@ import java.io.Serializable;
  * It disables Bluetooth and NFC because that cannot be used on an emulator
  */
 public class ServiceLocatorNoNetwork extends ServiceLocator implements IServiceLocator {
-    private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocatorNoNetwork");
 
     /**
      * Package-private constructor of the service locator
