@@ -22,6 +22,8 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
@@ -37,10 +39,9 @@ import java.util.Set;
 
 /**
  * The main activity class that shows a list of all people with their public keys
- *
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement"})
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods" })
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -48,6 +49,8 @@ import java.util.Set;
 //  3)  Another suppression based on the same problem as the previous 2
 //  4)  The switch statement for switching sorting types does not have enough branches, because it is designed
 //      to be extended when necessairy to more sorting types.
+//  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
+//      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
@@ -64,10 +67,8 @@ public final class MainActivity extends AppCompatActivity {
 
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
-    private Integer currentSorting = 0;
+    private int currentSorting;
 
-
-   
 
     /**
      * Creates the new activity, should only be called by Android
@@ -84,34 +85,6 @@ public final class MainActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.bluetoothButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                LOGGER.info("Bluetooth button clicked");
-                startBluetoothPairing();
-            }
-
-        });
-
-        final FloatingActionButton qrbutton = (FloatingActionButton) findViewById(R.id.fab2);
-        qrbutton.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                LOGGER.info("QR button clicked");
-                startQRExchangeActivity();
-            }
-
-        });
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
@@ -125,20 +98,68 @@ public final class MainActivity extends AppCompatActivity {
 
         sortOnName();
 
-        final FloatingActionButton sortbutton = (FloatingActionButton) findViewById(R.id.sortButton);
-        sortbutton.setOnClickListener(new View.OnClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View view) {
-                switchSorting();
-            }
-
-        });
-
         LOGGER.info("MainActivity created");
+    }
+
+
+
+    /**
+     * Gets triggered when the Bluetooth button is clicked.
+     *
+     * @param view - the ImageButton
+     */
+    public void onBluetoothButtonClick(final View view) {
+        LOGGER.info("Bluetooth button clicked");
+        startQRExchangeActivity();
+    }
+
+
+    /**
+     * Gets triggered when the NFC button is clicked.
+     *
+     * @param view - the ImageButton
+     */
+    public void onNFCButtonClick(final View view) {
+        LOGGER.info("NFC button clicked");
+        final Intent intent = new Intent(this, NFCActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
+     * Gets triggered when the QR button is clicked.
+     *
+     * @param view - the ImageButton
+     */
+    public void onQRButtonClicked(final View view) {
+        LOGGER.info("QR button clicked");
+        final Intent intent = new Intent(this, QRExchangeKeyActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
+    }
+
+    /**
+     * Switches the sorting mode.
+     *
+     * @param view The sort floating action button that was clicked
+     */
+    public void onSortButtonClicked(final View view) {
+        currentSorting++;
+        if (currentSorting >= NUMBER_OF_SORTING_MODES) {
+            currentSorting = 0;
+        }
+        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        flipper.showNext();
+        switch (currentSorting) {
+            case SORT_BY_NAME:
+                sortOnName();
+                break;
+            case SORT_BY_KEY_TYPE:
+                sortOnKeyType();
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -160,12 +181,6 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, QRExchangeKeyActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
-    }
-
-    private void startBluetoothPairing() {
-        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        startActivity(intent);
     }
 
     /**
@@ -206,18 +221,6 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Called when a new contact is received
-     * @param event Contains additional data about the event
-     */
-    @Subscribe
-    public void onEvent(final ContactReceivedEvent event) {
-        try {
-            serviceLocator.getDatabase().addContact(event.getContact());
-        } catch (IOException e) {
-            LOGGER.error("Couldn't add contact to database", e);
-        }
-    }
 
     /**
      * Gets all types of keys in the database
@@ -232,28 +235,6 @@ public final class MainActivity extends AppCompatActivity {
             }
         }
         return new ArrayList<>(typeSet);
-    }
-
-    /**
-     * Switches the sorting mode.
-     */
-    private void switchSorting() {
-        currentSorting++;
-        if (currentSorting >= NUMBER_OF_SORTING_MODES) {
-            currentSorting = 0;
-        }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
-        flipper.showNext();
-        switch (currentSorting) {
-            case SORT_BY_NAME:
-                sortOnName();
-                break;
-            case SORT_BY_KEY_TYPE:
-                sortOnKeyType();
-                break;
-            default:
-                break;
-        }
     }
 
     /**
@@ -296,7 +277,5 @@ public final class MainActivity extends AppCompatActivity {
             }
 
         });
-
     }
-
 }
