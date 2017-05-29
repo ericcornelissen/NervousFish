@@ -25,7 +25,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:src="?attr/actionModeCloseDrawable"
-                android:onClick="cancelActivateBluetooth"
+                android:onClick="cancelActivateBluetoothActivity"
                 android:contentDescription="@string/contact_title" />
 
             <TextView
