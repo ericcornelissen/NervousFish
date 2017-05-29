@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
  * An handler doing nothing.
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
+
     private static final long serialVersionUID = -1164062335787406761L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
 
@@ -44,7 +45,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      */
     @Override
     void send(final byte[] buffer) {
-        //dummy
+        // Nothing to send via QR yet.
     }
 
     /**
@@ -58,7 +59,7 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     }
 
     /**
-     * Used to improve performance / efficiency
+     * Used to improve the performance & efficiency of the {@link DummyQRHandler}.
      *
      * @param stream The stream to which this object should be serialized to
      */
@@ -67,11 +68,12 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     }
 
     /**
-     * Ensure that the instance meets its class invariant
+     * Ensure that the {@link DummyQRHandler} meets its class invariant.
      *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
+        // No checks to perform for DummyQRHandler
     }
+
 }

@@ -213,7 +213,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
-     * @param stream The serialized object to be dematerialized
+     * @param stream The serialized object to be deserialized
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();

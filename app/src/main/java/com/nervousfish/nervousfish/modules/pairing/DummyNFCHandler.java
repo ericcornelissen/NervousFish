@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
  * An handler doing nothing.
  */
 public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
+
     private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
 
@@ -44,7 +45,7 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      */
     @Override
     void send(final byte[] buffer) {
-        //dummy
+        // Nothing to send over NFC yet.
     }
 
     /**
@@ -58,7 +59,7 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
     }
 
     /**
-     * Used to improve performance / efficiency
+     * Used to improve the performance & efficiency of the {@link DummyNFCHandler}.
      *
      * @param stream The stream to which this object should be serialized to
      */
@@ -67,11 +68,12 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
     }
 
     /**
-     * Ensure that the instance meets its class invariant
+     * Ensure that the {@link DummyNFCHandler} meets its class invariant.
      *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
+        // No checks to perform for DummyNFCHandler
     }
+
 }
