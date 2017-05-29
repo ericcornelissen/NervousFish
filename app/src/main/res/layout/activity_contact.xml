@@ -50,7 +50,9 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
                 android:onClick="showPopupMenu"
-                app:srcCompat="@android:drawable/ic_menu_more" />
+                app:srcCompat="@android:drawable/ic_menu_more"
+                tools:targetApi="lollipop"
+                android:contentDescription="@string/more" />
 
         </LinearLayout>
 
