@@ -9,13 +9,13 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_login"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/holo_blue_dark">
 
             <TextView
-                android:id="@+id/toolbar_title"
+                android:id="@+id/toolbar_title_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -29,11 +29,11 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="@dimen/enter_password_padding_top"
-            android:text="@string/loginMessage"
+            android:text="@string/login_message"
             android:textSize="@dimen/enter_password_text_size" />
 
         <TextView
-            android:id="@+id/error"
+            android:id="@+id/error_message_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/error_password_margin_top"
@@ -60,7 +60,7 @@
             android:layout_height="@dimen/submit_password_height"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/submit_password_margin_top"
-            android:background="@color/colorPrimary"
+            android:background="@color/color_primary"
             android:gravity="center"
             android:onClick="validateLoginAttempt"
             android:text="@string/submit"

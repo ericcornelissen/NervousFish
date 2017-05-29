@@ -77,7 +77,7 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -156,7 +156,7 @@ public final class MainActivity extends AppCompatActivity {
         if (currentSorting >= NUMBER_OF_SORTING_MODES) {
             currentSorting = 0;
         }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.view_flipper_sorter_main);
         flipper.showNext();
         switch (currentSorting) {
             case SORT_BY_NAME:
@@ -231,6 +231,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             try {
@@ -286,7 +287,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by name
      */
     private void sortOnName() {
-        final ListView lv = (ListView) findViewById(R.id.listView);
+        final ListView lv = (ListView) findViewById(R.id.list_view_main);
         final ContactsByNameListAdapter contactsByNameListAdapter = new ContactsByNameListAdapter(this, this.contacts);
         contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
@@ -308,7 +309,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandableContactListByKeytype);
+        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter = new ContactsByKeyTypeListAdapter(this, getKeyTypes(), contacts);
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {

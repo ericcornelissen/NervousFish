@@ -13,8 +13,11 @@ import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Manages all modules and provides access to them.
@@ -115,5 +118,14 @@ public class ServiceLocatorNoNetwork extends ServiceLocator {
      */
     private void writeObject(final ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     *
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
+     */
+    private void ensureClassInvariant() throws InvalidObjectException {
+        assertNotNull(getAndroidFilesDir());
     }
 }

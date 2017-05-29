@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -52,7 +51,7 @@ public final class ActivateBluetoothActivity extends Activity {
             startActivityForResult(intentConnection, REQUEST_CODE_BLUETOOTH_ACTIVITY);
         }
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
+        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 finish();
@@ -110,16 +109,24 @@ public final class ActivateBluetoothActivity extends Activity {
                     .setTitleText(getString(R.string.activating_bluetooth_went_wrong))
                     .setContentText(getString(R.string.activating_bluetooth_went_wrong_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(final SweetAlertDialog sDialog) {
-                            sDialog.dismiss();
-                            finish();
-                        }
-                    })
+                    .setConfirmClickListener(new FailedOnClickListener())
                     .show();
         } else if (resultCode == RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY && requestCode == REQUEST_CODE_BLUETOOTH_ACTIVITY) {
             finish();
         }
     }
+
+    private final class FailedOnClickListener implements SweetAlertDialog.OnSweetClickListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+            sweetAlertDialog.dismiss();
+            finish();
+        }
+
+    }
+
 }

@@ -67,7 +67,7 @@ public class ContactSteps {
 
     @When("^I press the contact activity back button")
     public void iPressTheContactActivityBackButton() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.back_button_change)).perform(click());
     }
 
     @When("^I select delete contact$")
@@ -98,7 +98,7 @@ public class ContactSteps {
     @Then("^the contact should be deleted$")
     public void theContactShouldBeDeleted() throws IOException {
         IDatabase database = this.serviceLocator.getDatabase();
-        assertFalse(database.contactExtists(contact.getName()));
+        assertFalse(database.contactExists(contact.getName()));
     }
 
     /**

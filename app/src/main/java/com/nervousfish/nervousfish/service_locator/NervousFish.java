@@ -19,28 +19,7 @@ public final class NervousFish extends Application implements INervousFish {
     private AndroidBluetoothService bluetoothService;
     private boolean bound;
     private Runnable onServiceBoundRunnable;
-    private final ServiceConnection connection = new ServiceConnection() {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onServiceConnected(final ComponentName componentName, final IBinder service) {
-            final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
-            bluetoothService = binder.getService();
-            bound = true;
-            if (onServiceBoundRunnable != null) {
-                onServiceBoundRunnable.run();
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onServiceDisconnected(final ComponentName componentName) {
-            bound = false;
-        }
-    };
+    private final ServiceConnection connection = new ServiceConnectionImpl();
 
     /**
      * @return The NervousFish {@link Application} instance
@@ -86,6 +65,29 @@ public final class NervousFish extends Application implements INervousFish {
             runnable.run();
         } else {
             this.onServiceBoundRunnable = runnable;
+        }
+    }
+
+    private class ServiceConnectionImpl implements ServiceConnection {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onServiceConnected(final ComponentName componentName, final IBinder service) {
+            final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
+            bluetoothService = binder.getService();
+            bound = true;
+            if (onServiceBoundRunnable != null) {
+                onServiceBoundRunnable.run();
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onServiceDisconnected(final ComponentName componentName) {
+            bound = false;
         }
     }
 }

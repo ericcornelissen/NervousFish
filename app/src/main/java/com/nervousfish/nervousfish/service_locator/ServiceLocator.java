@@ -23,10 +23,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -277,34 +275,6 @@ public class ServiceLocator implements IServiceLocator {
     }
 
     /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
-     */
-    void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
-    }
-
-    /**
      * Thrown when a module was called before it was initialized.
      */
     static class ModuleNotFoundException extends RuntimeException {
@@ -321,26 +291,26 @@ public class ServiceLocator implements IServiceLocator {
         }
 
         /**
-         * Serialize the created proxy instead of this instance.
+         * Serialize the created proxy instead of the {@link ModuleNotFoundException} instance.
          */
         private Object writeReplace() {
             return new SerializationProxy(this);
         }
 
         /**
-         * Ensure that no instance of this class is created because it was present in the stream. A correct
-         * stream should only contain instances of the proxy.
+         * Ensure no instance of {@link ModuleNotFoundException} is created when present in the stream.
          */
         private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
             throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
         }
 
         /**
-         * Represents the logical state of this class and copies the data from that class without
-         * any consistency checking or defensive copying.
+         * A proxy representing the logical state of {@link ModuleNotFoundException}. Copies the data
+         * from that class without any consistency checking or defensive copying.
          */
         private static final class SerializationProxy implements Serializable {
-            private static final long serialVersionUID = -1930759199728515311L;
+
+            private static final long serialVersionUID = -1930759144828515311L;
 
             private final String message;
             private final Throwable throwable;
@@ -351,8 +321,8 @@ public class ServiceLocator implements IServiceLocator {
              * @param exception The current instance of the proxy
              */
             SerializationProxy(final ModuleNotFoundException exception) {
-                message = exception.getMessage();
-                throwable = exception.getCause();
+                this.message = exception.getMessage();
+                this.throwable = exception.getCause();
             }
 
             /**
@@ -361,8 +331,10 @@ public class ServiceLocator implements IServiceLocator {
              * @return The object resolved by this proxy
              */
             private Object readResolve() {
-                return new ModuleNotFoundException(message).initCause(throwable);
+                return new ModuleNotFoundException(this.message).initCause(this.throwable);
             }
         }
+
     }
+
 }

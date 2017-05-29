@@ -59,12 +59,12 @@ public class ChangeContactSteps {
 
     @When("^I press the change contact back button$")
     public void iPressTheChangeContactBackButton() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.back_button_change)).perform(click());
     }
 
     @When("^I press the save contact changes button$")
     public void iPressTheSaveContactButton() {
-        onView(withId(R.id.saveContactButton)).perform(click());
+        onView(withId(R.id.save_contact_button)).perform(click());
     }
 
     @When("^I press OK on the change contact error popup$")

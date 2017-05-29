@@ -233,6 +233,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final BluetoothConnectedEvent event) {
+        LOGGER.info("onBluetoothConnectedEvent called");
         try {
             final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
             for (final Contact e : list) {

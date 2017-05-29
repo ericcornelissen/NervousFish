@@ -132,7 +132,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothAlmostConnectedEvent(final BluetoothAlmostConnectedEvent event) {
-        LOGGER.info("Connected Bluetooth thread started");
+        LOGGER.info("onBluetoothAlmostConnectedEvent called");
 
         synchronized (this) {
             // Cancel the thread that completed the connection
@@ -157,6 +157,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
             // Start the thread to manage the connection and perform transmissions
             connectedThread = new AndroidBluetoothConnectedThread(this.serviceLocator, event.getSocket());
             connectedThread.start();
+            LOGGER.info("Connected Bluetooth thread started");
             this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(connectedThread));
         }
     }
@@ -226,6 +227,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
+        LOGGER.info("onBluetoothConnectionLostEvent called");
         synchronized (this) {
             this.state = STATE_NONE;
         }
@@ -239,6 +241,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
+        LOGGER.info("onBluetoothConnectionFailedEvent called");
         synchronized (this) {
             this.state = STATE_NONE;
         }

@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -93,17 +92,15 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
 
     /**
      * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
+    private void ensureClassInvariant() {
         // No checks to perform
     }
 
     private static class DataReceiver implements IDataReceiver {
         @Override
         public void dataReceived(final byte[] bytes) {
-            // Do nothing
+            throw new UnsupportedOperationException("Sending data with Bluetooth is not implemented yet");
         }
     }
 }

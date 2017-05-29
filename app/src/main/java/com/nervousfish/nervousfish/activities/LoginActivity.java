@@ -54,7 +54,7 @@ public final class LoginActivity extends AppCompatActivity {
     public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
 
-        final View mError = findViewById(R.id.error);
+        final View mError = findViewById(R.id.error_message_login);
         final EditText passwordInput = (EditText) findViewById(R.id.login_password_input);
 
         final boolean skipPassword = passwordInput.getText().toString().isEmpty();
