@@ -22,12 +22,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class ActivateBluetoothActivity extends Activity {
 
     static final int RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY = 6;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger("ActivateBluetoothActivity");
-
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int REQUEST_CODE_BLUETOOTH_ACTIVITY = 111;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("ActivateBluetoothActivity");
     private IServiceLocator serviceLocator;
     private BluetoothAdapter bluetoothAdapter;
 
