@@ -36,7 +36,7 @@
             android:textSize="@dimen/create_profile_message_size" />
 
         <EditText
-            android:id="@+id/profileEnterName"
+            android:id="@+id/profile_enter_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/field_margin_right"
@@ -48,7 +48,7 @@
             android:drawablePadding="@dimen/normal_drawable_padding"/>
 
         <EditText
-            android:id="@+id/profileEnterPassword"
+            android:id="@+id/profile_enter_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/field_margin_right"
@@ -61,7 +61,7 @@
             android:drawablePadding="@dimen/normal_drawable_padding" />
 
         <EditText
-            android:id="@+id/profileRepeatPassword"
+            android:id="@+id/profile_repeat_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/field_margin_right"
@@ -82,14 +82,14 @@
             android:text="@string/key_to_generate" />
 
         <RadioGroup
-            android:id="@+id/radioKeyType"
+            android:id="@+id/radio_key_type"
             android:layout_marginEnd="@dimen/field_margin_right"
             android:layout_marginStart="@dimen/field_margin_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
             <RadioButton
-                android:id="@+id/radioRSAKey"
+                android:id="@+id/radio_rsa_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rsa_key"

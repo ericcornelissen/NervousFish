@@ -41,13 +41,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.activity_create_profile);
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        this.setContentView(R.layout.activity_create_profile);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -61,7 +57,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     public void onSubmitClick(final View v) {
         if (validateInputFields()) {
-            final EditText nameInputField = (EditText) this.findViewById(R.id.profileEnterName);
+            final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
             final String name = nameInputField.getText().toString();
 
             final KeyPair keyPair = this.generateKeyPair();
@@ -87,7 +83,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
                         .setTitleText(getString(R.string.could_not_create_profile))
                         .setContentText(getString(R.string.could_not_create_profile_explanation))
                         .setConfirmText(getString(R.string.dialog_ok))
-                        .setConfirmClickListener(null)
                         .show();
             }
         } else {
@@ -95,7 +90,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
                     .setTitleText(getString(R.string.could_not_create_profile))
                     .setContentText(getString(R.string.could_not_create_profile_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
-                    .setConfirmClickListener(null)
                     .show();
         }
     }
@@ -106,7 +100,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link KeyPair} with the key type selected
      */
     private KeyPair generateKeyPair() throws IllegalArgumentException {
-        final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radioRSAKey);
+        final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radio_rsa_key);
         if (rsaKeyButton.isChecked()) {
             return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
         }
@@ -124,7 +118,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private boolean validateInputFields() {
         boolean allValid = true;
 
-        final EditText nameInputField = (EditText) this.findViewById(R.id.profileEnterName);
+        final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
         if (isValidName(nameInputField.getText().toString())) {
             nameInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
@@ -132,7 +126,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
             allValid = false;
         }
 
-        final EditText passwordInputField = (EditText) this.findViewById(R.id.profileEnterPassword);
+        final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
         if (isValidName(passwordInputField.getText().toString())
                 && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
             passwordInputField.setBackgroundColor(Color.TRANSPARENT);
@@ -141,7 +135,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
             allValid = false;
         }
 
-        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profileRepeatPassword);
+        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
         if (isValidName(passwordRepeatInputField.getText().toString())) {
             passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {

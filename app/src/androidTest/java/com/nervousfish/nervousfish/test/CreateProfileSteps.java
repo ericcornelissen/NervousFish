@@ -80,27 +80,27 @@ public class CreateProfileSteps {
 
     @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
-        onView(withId(R.id.profileEnterName)).perform(replaceText(name));
+        onView(withId(R.id.profile_enter_name)).perform(replaceText(name));
     }
 
     @When("^I enter a valid (.*?) as password$")
     public void iEnterValidPassword(final String password) {
-        onView(withId(R.id.profileEnterPassword)).perform(typeText(password));
+        onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a valid repeat (.*?) as repeat password$")
     public void iEnterValidRepeatPassword(final String password) {
-        onView(withId(R.id.profileRepeatPassword)).perform(typeText(password));
+        onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
     }
 
     @When("^I enter a (.*?) with a length smaller than 6 characters$")
     public void enterPasswordSmallerThanSix(final String password) {
-        onView(withId(R.id.profileEnterPassword)).perform(typeText(password));
+        onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a different (.*?) than the password field$")
     public void iEnterDifferentRepeatPassword(final String password) {
-        onView(withId(R.id.profileRepeatPassword)).perform(typeText(password));
+        onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
     }
 
     @Then("^I should stay on the create profile activity$")
@@ -115,19 +115,19 @@ public class CreateProfileSteps {
 
     @Then("^the name input field should become red$")
     public void nameInputFieldShouldBeRed() {
-        onView(withId(R.id.profileEnterName)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
+        onView(withId(R.id.profile_enter_name)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
                 mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
     }
 
     @Then("^the password input field should become red$")
     public void passwordInputFieldShouldBeRed() {
-        onView(withId(R.id.profileEnterPassword)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
+        onView(withId(R.id.profile_enter_password)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
                 mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
     }
 
     @Then("^the repeat password input field should become red$")
     public void repeatPasswordInputFieldShouldBeRed() {
-        onView(withId(R.id.profileRepeatPassword)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
+        onView(withId(R.id.profile_repeat_password)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
                 mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
     }
 
