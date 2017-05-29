@@ -62,7 +62,7 @@ public class LoginSteps {
 
     @Then("^I should see an authentication error$")
     public void iShouldSeeAnAuthenticationError() {
-        onView(withId(R.id.error)).check(matches(isDisplayed()));
+        onView(withId(R.id.error_message_login)).check(matches(isDisplayed()));
     }
 
 }

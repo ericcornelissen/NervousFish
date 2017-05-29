@@ -47,7 +47,7 @@ public final class ContactActivity extends AppCompatActivity {
         ContactActivityHelper.setName(this, contact.getName());
         ContactActivityHelper.setKeys(this, contact.getKeys());
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
+        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 finish();
