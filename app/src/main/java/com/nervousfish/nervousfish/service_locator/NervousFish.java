@@ -54,7 +54,7 @@ public final class NervousFish extends Application implements INervousFish {
      * Warning: this method should only be used by {@link EntryActivity} to initialize the Service Locator
      * @return The global bluetooth service used for bluetooth connections
      */
-    AndroidBluetoothService _getBluetoothService() {
+    AndroidBluetoothService getBluetoothServiceWithinPackage() {
         return bluetoothService;
     }
 

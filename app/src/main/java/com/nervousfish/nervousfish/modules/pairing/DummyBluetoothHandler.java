@@ -19,6 +19,7 @@ import java.io.Serializable;
  */
 public final class DummyBluetoothHandler extends APairingHandler implements IBluetoothHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyBluetoothHandler");
+    private static final long serialVersionUID = -7407120881815764334L;
 
     /**
      * Prevents construction from outside the class.
@@ -34,6 +35,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
      * {@link IServiceLocator}
      *
+     * @param serviceLocator The servicelocator that gives access to the other modules
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<DummyBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
@@ -46,7 +48,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public void connect(BluetoothDevice device) {
+    public void connect(final BluetoothDevice device) {
         // Do nothing
     }
 
@@ -56,23 +58,18 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public void send(Serializable object) throws IOException {
+    public void send(final Serializable object) throws IOException {
         // Do nothing
     }
 
     @Override
-    public void send(byte[] buffer) {
+    public void send(final byte[] buffer) {
         // Do nothing
     }
 
     @Override
     public PairingWrapper getDataReceiver() {
-        return new PairingWrapper(new IDataReceiver() {
-            @Override
-            public void dataReceived(byte[] bytes) {
-                // Do nothing
-            }
-        });
+        return new PairingWrapper<>(new DataReceiver());
     }
 
     /**
@@ -101,5 +98,12 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     private void ensureClassInvariant() throws InvalidObjectException {
         // No checks to perform
+    }
+
+    private static class DataReceiver implements IDataReceiver {
+        @Override
+        public void dataReceived(final byte[] bytes) {
+            // Do nothing
+        }
     }
 }

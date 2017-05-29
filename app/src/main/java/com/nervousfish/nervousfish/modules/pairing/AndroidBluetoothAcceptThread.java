@@ -76,6 +76,7 @@ class AndroidBluetoothAcceptThread extends Thread {
      * Cancels the current accepting of the pairing request of other Bluetooth devices
      */
     void cancel() {
+        LOGGER.warn("Cancelled!");
         LOGGER.info("Cancel accept thread");
         try {
             serverSocket.close();

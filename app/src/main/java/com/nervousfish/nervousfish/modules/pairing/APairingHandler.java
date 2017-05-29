@@ -16,6 +16,7 @@ import java.io.Serializable;
 /**
  * Contains common methods shared by all pairing modules.
  */
+@SuppressWarnings("checkstyle:classdataabstractioncoupling")
 abstract class APairingHandler implements IPairingHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
@@ -36,8 +37,8 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public PairingWrapper getDataReceiver() {
-        return new PairingWrapper(new IDataReceiver() {
+    public PairingWrapper<IDataReceiver> getDataReceiver() {
+        return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
             @Override
             public void dataReceived(final byte[] bytes) {
                 final DataWrapper object;

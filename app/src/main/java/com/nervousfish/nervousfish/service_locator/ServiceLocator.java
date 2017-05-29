@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.service_locator;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
@@ -31,6 +32,9 @@ import java.io.Serializable;
 /**
  * Manages all modules and provides access to them.
  */
+// TooManyMethods Suppressed because we cannot reduce the number of services or refactor the servicelocator without reducing readability
+// ConstructorCallsOverridableMethod suppressed because we actually do want the subclasses to change the behaviour of the constructor!
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.ConstructorCallsOverridableMethod"})
 public class ServiceLocator implements IServiceLocator {
     private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocator");
     private static final long serialVersionUID = 1408616442873653749L;
@@ -71,14 +75,14 @@ public class ServiceLocator implements IServiceLocator {
     // this class and it's needed for the serialization proxy
     @SuppressWarnings({"checkstyle:parameternumber", "checkstyle:javadocmethod"})
     ServiceLocator(final String androidFilesDir,
-                           final IDatabase database,
-                           final IKeyGenerator keyGenerator,
-                           final IEncryptor encryptor,
-                           final IFileSystem fileSystem,
-                           final IConstants constants,
-                           final IBluetoothHandler bluetoothHandler,
-                           final INfcHandler nfcHandler,
-                           final IQRHandler qrHandler) {
+                   final IDatabase database,
+                   final IKeyGenerator keyGenerator,
+                   final IEncryptor encryptor,
+                   final IFileSystem fileSystem,
+                   final IConstants constants,
+                   final IBluetoothHandler bluetoothHandler,
+                   final INfcHandler nfcHandler,
+                   final IQRHandler qrHandler) {
         this.androidFilesDir = androidFilesDir;
         this.database = database;
         this.keyGenerator = keyGenerator;
@@ -90,34 +94,66 @@ public class ServiceLocator implements IServiceLocator {
         this.qrHandler = qrHandler;
     }
 
+    /**
+     * @return The constants module used for this servicelocator
+     */
+    @DesignedForExtension
     IConstants initConstants() {
         return Constants.newInstance(this).getModule();
     }
 
+    /**
+     * @return The filesystem module used for this servicelocator
+     */
+    @DesignedForExtension
     IFileSystem initFileSystem() {
         return AndroidFileSystemAdapter.newInstance(this).getModule();
     }
 
+    /**
+     * @return The database module used for this servicelocator
+     */
+    @DesignedForExtension
     IDatabase initDatabase() {
         return GsonDatabaseAdapter.newInstance(this).getModule();
     }
 
+    /**
+     * @return The keygenerator module used for this servicelocator
+     */
+    @DesignedForExtension
     IKeyGenerator initKeyGenerator() {
         return KeyGeneratorAdapter.newInstance(this).getModule();
     }
 
+    /**
+     * @return The encryptor module used for this servicelocator
+     */
+    @DesignedForExtension
     IEncryptor initEncryptor() {
         return EncryptorAdapter.newInstance(this).getModule();
     }
 
+    /**
+     * @return The Bluetooth module used for this servicelocator
+     */
+    @DesignedForExtension
     IBluetoothHandler initBluetoothHandler() {
         return AndroidBluetoothHandler.newInstance(this).getModule();
     }
 
+    /**
+     * @return The NFC module used for this servicelocator
+     */
+    @DesignedForExtension
     INfcHandler initNfcHandler() {
         return DummyNFCHandler.newInstance(this).getModule();
     }
 
+    /**
+     * @return The QR module used for this servicelocator
+     */
+    @DesignedForExtension
     IQRHandler initQrHandler() {
         return DummyQRHandler.newInstance(this).getModule();
     }

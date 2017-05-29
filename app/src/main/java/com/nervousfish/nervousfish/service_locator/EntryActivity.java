@@ -34,7 +34,7 @@ public final class EntryActivity extends Activity {
         ((INervousFish) getApplicationContext()).setOnBluetoothServiceBound(new Runnable() {
             @Override
             public void run() {
-                ((NervousFish) getApplicationContext())._getBluetoothService().setServiceLocator(serviceLocator);
+                ((NervousFish) getApplicationContext()).getBluetoothServiceWithinPackage().setServiceLocator(serviceLocator);
 
                 final Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);

@@ -177,7 +177,7 @@ public final class MainActivity extends AppCompatActivity {
         try {
             this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException", e);
+            LOGGER.error("onStart in MainActivity threw an IOException", e);
         }
     }
 

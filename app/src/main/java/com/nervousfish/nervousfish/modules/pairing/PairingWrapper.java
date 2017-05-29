@@ -18,6 +18,9 @@ public final class PairingWrapper<T> {
         this.module = module;
     }
 
+    /**
+     * @return The module it wraps
+     */
     T get() {
         return this.module;
     }

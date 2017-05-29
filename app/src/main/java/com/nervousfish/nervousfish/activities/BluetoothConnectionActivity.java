@@ -164,6 +164,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
+        LOGGER.info("Back button was pressed -> ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY");
         setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
         finish();
     }
