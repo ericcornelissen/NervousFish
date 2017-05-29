@@ -166,15 +166,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(imageView)
-                .setPositiveButton(getString(R.string.popup_done), new DialogInterface.OnClickListener() {
-                    /**
-                     * {@inheritDoc}
-                     */
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setPositiveButton(getString(R.string.popup_done), new QRCloser());
 
         ((ViewGroup) imageView.getParent()).removeView(imageView);
         lastDialog = builder.create();
@@ -197,6 +189,15 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         this.publicKey = publicKey;
     }
 
+    private static final class QRCloser implements DialogInterface.OnClickListener {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(final DialogInterface dialog, final int which) {
+            dialog.dismiss();
+        }
+    }
 
     private final class EditNameClickListener implements DialogInterface.OnClickListener {
 
