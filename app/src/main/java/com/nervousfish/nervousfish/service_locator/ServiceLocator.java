@@ -253,21 +253,21 @@ public final class ServiceLocator implements IServiceLocator {
         }
 
         /**
-         * Serialize the created proxy instead of this instance.
+         * Serialize the created proxy instead of the {@link ModuleNotFoundException} instance.
          */
         private Object writeReplace() {
             return new SerializationProxy(this);
         }
 
         /**
-         * Ensure no instance of {@link ServiceLocator} is created when present in the stream.
+         * Ensure no instance of {@link ModuleNotFoundException} is created when present in the stream.
          */
         private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
             throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
         }
 
         /**
-         * A proxy representing the logical state of {@link ServiceLocator}. Copies the data
+         * A proxy representing the logical state of {@link ModuleNotFoundException}. Copies the data
          * from that class without any consistency checking or defensive copying.
          */
         private static final class SerializationProxy implements Serializable {
