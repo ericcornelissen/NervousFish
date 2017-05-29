@@ -23,6 +23,7 @@ import java.security.spec.RSAPublicKeySpec;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
+
     private static final long serialVersionUID = -5933759426888012276L;
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
     private static final String RSA_KEY_ALGORITHM = "RSA";
@@ -78,31 +79,4 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         }
     }
 
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
-     */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
-    }
 }

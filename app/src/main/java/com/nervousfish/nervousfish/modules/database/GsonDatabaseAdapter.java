@@ -331,16 +331,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
-     * Used to improve performance / efficiency
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
      * Ensure that the instance meets its class invariant
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
         assertNotNull(this.contactsPath);
