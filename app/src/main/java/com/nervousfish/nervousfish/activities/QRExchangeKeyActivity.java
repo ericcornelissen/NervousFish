@@ -38,8 +38,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The activity that exchanges public keys through QR codes.
  */
-@SuppressWarnings("checkstyle:ClassFanOutComplexity")
+@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.AccessorClassGeneration"})
 //  1)  This warning is because the class relies on too many external classes, which can't really be avoided
+//  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
+//      need the qr message to create the editnameclicklistener in the addnewcontact method
 public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
@@ -112,12 +114,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
         final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
+        if (scanResult == null) {
+            LOGGER.error("No scan result in QR Scanner");
+        } else {
             final String result = scanResult.getContents();
             addNewContact(result);
-
-        } else {
-            LOGGER.error("No scan result in QR Scanner");
         }
 
 
@@ -134,10 +135,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final IKey key = QRGenerator.deconstructToKey(qrMessage);
         final EditText editName = new EditText(this);
         editName.setInputType(InputType.TYPE_CLASS_TEXT);
+        final EditNameClickListener enClickListener = new EditNameClickListener(editName, key);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.contact_set_name))
                 .setView(editName)
-                .setPositiveButton(getString(R.string.popup_done), new EditNameClickListener(editName, key));
+                .setPositiveButton(getString(R.string.popup_done), enClickListener);
         lastDialog = builder.create();
         lastDialog.show();
     }
@@ -239,8 +241,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                         .setContentText(getString(R.string.contact_exists_message))
                         .setConfirmText(getString(R.string.dialog_ok))
                         .show();
-            } catch (final NullPointerException e) {
-                LOGGER.error("Wrong input for scanner");
             }
         }
 

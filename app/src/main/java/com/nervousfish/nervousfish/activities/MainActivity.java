@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,15 +16,11 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
-import com.nervousfish.nervousfish.events.ContactReceivedEvent;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import org.greenrobot.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
