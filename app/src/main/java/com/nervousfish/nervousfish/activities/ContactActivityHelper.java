@@ -21,8 +21,16 @@ import java.util.List;
 class ContactActivityHelper {
 
     /**
+     * Methods are static so this is not called.
+     */
+    private ContactActivityHelper() {
+        //Not called
+    }
+
+    /**
      * Set the name of the {@link Contact} to the {@link ContactActivity}.
      *
+     * @param activity The where the name has to be set.
      * @param name The name.
      */
     static void setName(final Activity activity, final String name) {
@@ -33,6 +41,7 @@ class ContactActivityHelper {
     /**
      * Set the keys of the {@link Contact} to the {@link ContactActivity}.
      *
+     * @param activity The where the name has to be set.
      * @param keys A {@link Collection} of {@link IKey}s.
      */
     static void setKeys(final Activity activity, final Collection<IKey> keys) {
