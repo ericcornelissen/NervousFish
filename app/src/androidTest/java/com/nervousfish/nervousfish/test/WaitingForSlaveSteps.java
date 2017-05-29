@@ -42,7 +42,7 @@ public class WaitingForSlaveSteps {
 
     @When("^I press the cancel waiting for slave button$")
     public void iPressTheCancelWaitingForSlaveButton() {
-        onView(withId(R.id.cancelWaitForSlave)).perform(click());
+        onView(withId(R.id.cancel_wait_for_slave)).perform(click());
     }
 
     @Then("^I should go to the main activity$")
