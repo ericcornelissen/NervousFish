@@ -103,7 +103,7 @@
             android:layout_height="@dimen/submit_password_height"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/submit_password_margin_top"
-            android:background="@color/colorPrimary"
+            android:background="@color/color_primary"
             android:gravity="center"
             android:onClick="onSubmitClick"
             android:text="@string/submit"

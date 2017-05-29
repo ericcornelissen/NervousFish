@@ -50,7 +50,7 @@ final class ContactActivityHelper {
             keyNames.add(key.getName());
         }
 
-        final ListView lv = (ListView) activity.findViewById(R.id.listView);
+        final ListView lv = (ListView) activity.findViewById(R.id.list_view);
         lv.setAdapter(new ArrayAdapter<>(activity,
                 android.R.layout.simple_list_item_1, keyNames));
     }

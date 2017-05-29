@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/list_view_contact"
+                android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/contact_keys_list_height"
                 android:layout_marginTop="@dimen/contact_keys_list_margin_top" />

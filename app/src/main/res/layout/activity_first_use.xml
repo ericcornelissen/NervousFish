@@ -34,7 +34,7 @@
             android:layout_height="@dimen/first_use_divider_height"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/first_use_divider_margin_top"
-            android:background="@color/colorAccent"/>
+            android:background="@color/color_accent"/>
 
         <TextView
             android:layout_width="@dimen/welcome_message_subpart_width"
@@ -51,7 +51,7 @@
             android:layout_height="@dimen/submit_password_height"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/submit_password_margin_top"
-            android:background="@color/colorPrimary"
+            android:background="@color/color_primary"
             android:gravity="center"
             android:onClick="onGetStartedClick"
             android:text="@string/get_started"
