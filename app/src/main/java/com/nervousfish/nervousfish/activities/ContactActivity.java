@@ -54,7 +54,7 @@ public final class ContactActivity extends AppCompatActivity {
         this.setName(contact.getName());
         this.setKeys(contact.getKeys());
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
+        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 finish();
@@ -83,7 +83,7 @@ public final class ContactActivity extends AppCompatActivity {
             keyNames.add(key.getName());
         }
 
-        final ListView lv = (ListView) this.findViewById(R.id.listView);
+        final ListView lv = (ListView) this.findViewById(R.id.list_view_contact);
         lv.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, keyNames));
     }

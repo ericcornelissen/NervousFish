@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/listView"
+                android:id="@+id/list_view_contact"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/contact_keys_list_height"
                 android:layout_marginTop="@dimen/contact_keys_list_margin_top" />
@@ -35,7 +35,7 @@
             app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/image_view_visual_verification"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/contact_title"

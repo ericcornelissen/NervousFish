@@ -66,7 +66,7 @@ public class ContactSteps {
 
     @When("^I press the contact activity back button")
     public void iPressTheContactActivityBackButton() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.back_button_change)).perform(click());
     }
 
     @When("^I select delete contact$")

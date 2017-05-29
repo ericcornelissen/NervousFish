@@ -17,7 +17,7 @@
     <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
     <string name="invalid_name">Ongeldige naam ingevoerd</string>
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
-    <string name="loginMessage">Vul je wachtwoord hieronder in</string>
+    <string name="login_message">Vul je wachtwoord hieronder in</string>
     <string name="msg_mismatch">Je wachtwoord is incorrect</string>
     <string name="name">Naam</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
