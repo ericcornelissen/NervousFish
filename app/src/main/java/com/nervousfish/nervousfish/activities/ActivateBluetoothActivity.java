@@ -129,7 +129,7 @@ public final class ActivateBluetoothActivity extends Activity {
                 .show();
     }
 
-    private class FailedOnClickListener implements SweetAlertDialog.OnSweetClickListener {
+    private final class FailedOnClickListener implements SweetAlertDialog.OnSweetClickListener {
 
         /**
          * {@inheritDoc}
