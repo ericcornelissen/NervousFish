@@ -20,7 +20,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * before going to that activity.
  */
 public final class ActivateBluetoothActivity extends Activity {
-    
+
     static final int RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY = 6;
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ActivateBluetoothActivity");
@@ -30,8 +30,6 @@ public final class ActivateBluetoothActivity extends Activity {
 
     private IServiceLocator serviceLocator;
     private BluetoothAdapter bluetoothAdapter;
-
-
 
     /**
      * {@inheritDoc}
@@ -71,7 +69,7 @@ public final class ActivateBluetoothActivity extends Activity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
-            this.activationSuccessful();
+            this.activateBluetooth();
         } else if (requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
             this.activationFailed();
         } else if (resultCode == RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY && requestCode == REQUEST_CODE_BLUETOOTH_ACTIVITY) {
@@ -115,7 +113,7 @@ public final class ActivateBluetoothActivity extends Activity {
     /**
      * Continue to next activity when Bluetooth has been enabled.
      */
-    private void activationSuccessful() {
+    private void activateBluetooth() {
         final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivityForResult(intent, ActivateBluetoothActivity.REQUEST_CODE_BLUETOOTH_ACTIVITY);
@@ -129,14 +127,21 @@ public final class ActivateBluetoothActivity extends Activity {
                 .setTitleText(getString(R.string.activating_bluetooth_went_wrong))
                 .setContentText(getString(R.string.activating_bluetooth_went_wrong_explanation))
                 .setConfirmText(getString(R.string.dialog_ok))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog sDialog) {
-                        sDialog.dismiss();
-                        finish();
-                    }
-                })
+                .setConfirmClickListener(new FailedOnClickListener())
                 .show();
+    }
+
+    private class FailedOnClickListener implements SweetAlertDialog.OnSweetClickListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+            sweetAlertDialog.dismiss();
+            finish();
+        }
+
     }
 
 }
