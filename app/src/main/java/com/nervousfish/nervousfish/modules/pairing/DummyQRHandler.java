@@ -6,11 +6,6 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 /**
  * An handler doing nothing.
  */
@@ -46,34 +41,6 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
     @Override
     void send(final byte[] buffer) {
         // Nothing to send via QR yet.
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve the performance & efficiency of the {@link DummyQRHandler}.
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the {@link DummyQRHandler} meets its class invariant.
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
-     */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform for DummyQRHandler
     }
 
 }
