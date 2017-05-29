@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.communication.FileWrapper;
 import com.nervousfish.nervousfish.data_objects.tap.DataWrapper;
 import com.nervousfish.nervousfish.exceptions.DeserializationException;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
@@ -17,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +24,7 @@ import java.util.List;
 /**
  * Contains common methods shared by all pairing modules.
  */
-// default value is now 7, I have 9 with one probably gone soon
+// default value is now 7, here we have 8
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")
 abstract class APairingHandler implements Serializable {
 
@@ -110,6 +108,7 @@ abstract class APairingHandler implements Serializable {
      * @param bytes Data represented as bytes (usually received from the socket)
      */
     @SuppressWarnings({"checkstyle:cyclomaticcomplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity"})
+    // 1+2+3) Parse input needs a handful of checks to know with which serializable dat we're dealing
     void parseInput(final byte[] bytes) {
         LOGGER.info("Reading these bytes: %s", bytes);
         final DataWrapper dataWrapper;
@@ -180,28 +179,6 @@ abstract class APairingHandler implements Serializable {
     }
     */
 
-    /**
-     * * A method to send a contact file
-     *
-     * @return content of the file to be sent in byte
-     * @throws IOException Can be because of serialization or if there is a read error
-     */
-    byte[] sendContactFile() throws IOException {
-        //to ensure that the file is not modified during read
-        final RandomAccessFile f = new RandomAccessFile(constants.getDatabaseContactsPath(), "rw");
-        final byte[] fileData = new byte[(int) f.length()];
-        final byte[] bytes;
-        f.readFully(fileData);
-        final FileWrapper fWrapper = new FileWrapper(fileData);
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(fWrapper);
-            oos.flush();
-            bytes = bos.toByteArray();
-        }
-        send(bytes);
-        return bytes;
-    }
 
     protected IServiceLocator getServiceLocator() {
         return this.serviceLocator;
