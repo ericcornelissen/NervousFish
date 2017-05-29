@@ -23,7 +23,7 @@ public final class DeserializationException extends RuntimeException {
     }
 
     /**
-     * Serialize the created proxy instead of this instance.
+     * Serialize the created proxy instead of the {@link DeserializationException} instance.
      */
     private Object writeReplace() {
         return new SerializationProxy(this);

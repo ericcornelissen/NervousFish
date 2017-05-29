@@ -10,6 +10,7 @@ import java.io.Serializable;
  * Thrown when there is an issue with the database
  */
 public final class DatabaseException extends RuntimeException {
+
     private static final long serialVersionUID = -5464890114687852303L;
 
     /**
@@ -22,25 +23,25 @@ public final class DatabaseException extends RuntimeException {
     }
 
     /**
-     * Serialize the created proxy instead of this instance.
+     * Serialize the created proxy instead of the {@link DatabaseException} instance.
      */
     private Object writeReplace() {
         return new SerializationProxy(this);
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Ensure no instance of {@link DatabaseException} is created when present in the stream.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
         throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
     }
 
     /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
+     * A proxy representing the logical state of {@link DatabaseException}. Copies the data
+     * from that class without any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
+
         private static final long serialVersionUID = -5464890114687852303L;
 
         private final String message;
@@ -52,8 +53,8 @@ public final class DatabaseException extends RuntimeException {
          * @param exception The current instance of the proxy
          */
         SerializationProxy(final DatabaseException exception) {
-            message = exception.getMessage();
-            throwable = exception.getCause();
+            this.message = exception.getMessage();
+            this.throwable = exception.getCause();
         }
 
         /**
@@ -62,7 +63,9 @@ public final class DatabaseException extends RuntimeException {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return (DatabaseException) new DatabaseException(message).initCause(throwable);
+            return new DatabaseException(this.message).initCause(this.throwable);
         }
+
     }
+
 }
