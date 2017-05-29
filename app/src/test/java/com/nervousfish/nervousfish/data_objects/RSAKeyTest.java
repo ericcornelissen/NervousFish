@@ -37,6 +37,27 @@ public class RSAKeyTest {
         new RSAKey(map);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNameNull() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("name", "foo");
+        new RSAKey(map);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testModulusNull() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("modulus", "foo");
+        new RSAKey(map);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExponentNull() {
+        Map<String, String> map = new ConcurrentHashMap<>();
+        map.put("exponent", "foo");
+        new RSAKey(map);
+    }
+
     @Test
     public void testGetNameReturnsNotNull() {
         IKey key = new RSAKey("FTP", "foo", "bar");
@@ -87,6 +108,20 @@ public class RSAKeyTest {
     }
 
     @Test
+    public void testEqualsModulusNotEquals() {
+        IKey keyA = new RSAKey("foo", "bar", "baz");
+        IKey keyB = new RSAKey("foo", "baz", "baz");
+        assertFalse(keyA.equals(keyB));
+    }
+
+    @Test
+    public void testEqualsExponentNotEquals() {
+        IKey keyA = new RSAKey("foo", "bar", "baz");
+        IKey keyB = new RSAKey("foo", "bar", "bar");
+        assertFalse(keyA.equals(keyB));
+    }
+
+    @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
         IKey keyA = new RSAKey("Personal", "foo", "bar");
         IKey keyB = new RSAKey("Email", "hello", "world");
@@ -104,30 +139,6 @@ public class RSAKeyTest {
     public void testHashCodeNotNull() {
         IKey key = new RSAKey("Webmail", "foo", "bar");
         assertNotNull(key.hashCode());
-    }
-
-    @Test
-    public void testStaticGetModules() {
-        IKey key = new RSAKey("Webmail", "foo", "bar");
-        assertEquals("foo", RSAKey.getModulus(key));
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testStaticGetModulesFailsOnNonRSAKey() {
-        IKey key = new SimpleKey("FTP", "foo");
-        RSAKey.getModulus(key);
-    }
-
-    @Test
-    public void testStaticGetExponent() {
-        IKey key = new RSAKey("Webmail", "foo", "bar");
-        assertEquals("bar", RSAKey.getExponent(key));
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testStaticGetExponentFailsOnNonRSAKey() {
-        IKey key = new SimpleKey("Webmail", "bar");
-        RSAKey.getExponent(key);
     }
 
 }

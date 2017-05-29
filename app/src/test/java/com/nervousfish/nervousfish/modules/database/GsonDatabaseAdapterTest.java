@@ -1,13 +1,14 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.google.gson.JsonSyntaxException;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -27,9 +28,9 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,10 +48,11 @@ public class GsonDatabaseAdapterTest {
     @Before
     public void setup() {
         when(serviceLocator.getConstants()).thenReturn(constants);
+        when(serviceLocator.getFileSystem()).thenReturn((AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator));
         when(constants.getDatabaseContactsPath()).thenReturn(CONTACTS_PATH);
         when(constants.getDatabaseUserdataPath()).thenReturn(USERDATA_PATH);
 
-        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
+        database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
     }
 
     @After
@@ -70,6 +72,7 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testConstructorNotFailsWhenFileInitializationFails() {
         IServiceLocator serviceLocator = mock(IServiceLocator.class);
+        when(serviceLocator.getFileSystem()).thenReturn((AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator));
         IConstants constants = mock(IConstants.class);
 
         when(serviceLocator.getConstants()).thenReturn(constants);
@@ -87,6 +90,15 @@ public class GsonDatabaseAdapterTest {
         database.addContact(contact);
         assertEquals("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\"," +
                 "{\"name\":\"Webmail\",\"key\":\"key\"}]]}]\n", read(CONTACTS_PATH));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddDuplicateContact() throws Exception {
+        IKey key = new SimpleKey("Webmail", "key");
+        Contact contact = new Contact("Zoidberg", key);
+
+        database.addContact(contact);
+        database.addContact(contact);
     }
 
     @Test
@@ -109,7 +121,7 @@ public class GsonDatabaseAdapterTest {
         // Add the contact to remove from the database
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"FTP\",\"key\":\"key\"}]]}]", CONTACTS_PATH);
 
-        database.deleteContact(contact);
+        database.deleteContact(contact.getName());
         assertEquals("[]\n", read(CONTACTS_PATH));
     }
 
@@ -124,15 +136,15 @@ public class GsonDatabaseAdapterTest {
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"Webserver\",\"key\":\"keyA\"}]," +
                 "[\"simple\",{\"name\":\"Webmail\",\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
 
-        database.deleteContact(contact);
+        database.deleteContact(contact.getName());
         assertEquals("[]\n", read(CONTACTS_PATH));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDeleteContactThrowsWhenContactNotInDatabase() throws IOException {
         IKey key = new SimpleKey("Webserver", "key");
         Contact contact = new Contact("Zoidberg", key);
-        database.deleteContact(contact);
+        database.deleteContact(contact.getName());
     }
 
     @Test
@@ -188,7 +200,17 @@ public class GsonDatabaseAdapterTest {
         assertEquals(expected, actual);
     }
 
-    @Test(expected=JsonSyntaxException.class)
+    @Test
+    public void testGetContactWithName() throws IOException {
+        IKey zoidbergsKey = new RSAKey("FTP", "A", "B");
+        Contact zoidberg = new Contact("Zoidberg", zoidbergsKey);
+        database.addContact(zoidberg);
+
+        Contact actual = database.getContactWithName(zoidberg.getName());
+        assertEquals(zoidberg, actual);
+    }
+
+    @Test(expected = JsonSyntaxException.class)
     public void testGetAllContactsFailsForInvalidKeyType() throws IOException {
         write("[{\"name\":\"Zoidberg\",\"keys\":[[\"not a valid key\",{\"key\":\"key\"}]]}]", CONTACTS_PATH);
         database.getAllContacts();
@@ -211,7 +233,7 @@ public class GsonDatabaseAdapterTest {
                 "\"key\":\"keyB\"}]]}]\n", read(CONTACTS_PATH));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdateContactThrowsWhenOldContactNotInDatabase() throws IOException {
         IKey keyA = new SimpleKey("Webmail", "keyA");
         Contact oldContact = new Contact("Zoidberg", keyA);
@@ -256,7 +278,7 @@ public class GsonDatabaseAdapterTest {
         assertEquals(1, actual.size());
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdateProfileThrowsWhenOldProfileNotInDatabase() throws IOException {
         IKey publicKey = new SimpleKey("FTP", "key");
         IKey privateKey = new SimpleKey("FTP", "yek");
@@ -283,7 +305,7 @@ public class GsonDatabaseAdapterTest {
         assertEquals(0, actual.size());
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDeleteProfileThrowsWhenProfileNotInDatabase() throws IOException {
         IKey publicKey = new SimpleKey("FTP", "key");
         IKey privateKey = new SimpleKey("FTP", "yek");

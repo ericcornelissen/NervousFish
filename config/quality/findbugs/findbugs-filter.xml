@@ -8,13 +8,11 @@
     <Match>
         <Class name="~.*\.Manifest\$.*"/>
     </Match>
-    <!-- All bugs in test classes, except for JUnit-specific bugs -->
     <Match>
         <Class name="~.*\.*Test" />
-        <Not>
-            <Bug code="IJU" />
-        </Not>
     </Match>
-
-
+    <!-- TODO Should be removed after #137 is merged -->
+    <Match>
+        <Class name="~.*\.*DatabaseAdapter" />
+    </Match>
 </FindBugsFilter>

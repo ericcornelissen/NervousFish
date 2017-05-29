@@ -37,7 +37,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
         // Then write the rest of the key
         writer.beginObject();
-        key.toJSON(writer);
+        key.toJson(writer);
         writer.endObject();
 
         writer.endArray();
@@ -47,7 +47,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidFinalLocalVariable") // final IKey key is actually useful here
+    @SuppressWarnings("PMD.AvoidFinalLocalVariable")  // final IKey key is actually useful here
     public IKey read(final JsonReader reader) throws IOException {
         reader.beginArray();
         final String type = reader.nextString();
@@ -68,7 +68,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
             case ConstantKeywords.RSA_KEY:
                 key = new RSAKey(map);
                 break;
-            case "simple":
+            case ConstantKeywords.SIMPLE_KEY:
                 key = new SimpleKey(map);
                 break;
             default:

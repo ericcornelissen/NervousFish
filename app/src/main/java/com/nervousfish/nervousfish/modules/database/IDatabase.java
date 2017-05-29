@@ -18,15 +18,14 @@ public interface IDatabase extends IModule {
      *
      * @param contact The {@link Contact} to add to the database.
      */
-    void addContact(final Contact contact) throws IOException;
+    void addContact(Contact contact) throws IOException;
 
     /**
      * Delete a contact from the database.
      *
-     * @param contact The {@link Contact} to remove from the database.
-     * @throws IllegalArgumentException When {@code contact} is not in the database.
+     * @param contactName The {@link String} with the name of the contact to remove from the database.
      */
-    void deleteContact(final Contact contact) throws IllegalArgumentException, IOException;
+    void deleteContact(String contactName) throws IllegalArgumentException, IOException;
 
     /**
      * Update an existing contact in the database.
@@ -35,7 +34,7 @@ public interface IDatabase extends IModule {
      * @param newContact The new {@link Contact} details.
      * @throws IllegalArgumentException When {@code oldContact} is not in the database.
      */
-    void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException;
+    void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException;
 
     /**
      * Get a list of all contacts in the database.
@@ -43,6 +42,22 @@ public interface IDatabase extends IModule {
      * @return A {@link List} of {@link Contact Contacts}.
      */
     List<Contact> getAllContacts() throws IOException;
+
+    /**
+     * Get one Contact from the database given the contact's name as input.
+     *
+     * @param contactName - The name of the Contact as a {@link String}.
+     * @return A {@link Contact}.
+     */
+    Contact getContactWithName(String contactName) throws IOException;
+
+    /**
+     * Returns true if the contact exists and fals otherwise.
+     *
+     * @param name - the name of the contact to check
+     * @return A {@link boolean} which is true if the contact exists in the database
+     */
+    boolean contactExtists(String name) throws IOException;
 
     /**
      * Get the Profile list with user information.
@@ -56,7 +71,7 @@ public interface IDatabase extends IModule {
      *
      * @param profile The {@link Profile} to add to the database.
      */
-    void addProfile(final Profile profile) throws IOException;
+    void addProfile(Profile profile) throws IOException;
 
     /**
      * Delete an profile from the database.
@@ -64,7 +79,7 @@ public interface IDatabase extends IModule {
      * @param profile The {@link Profile} to remove from the database.
      * @throws IllegalArgumentException When {@code profile} is not in the database.
      */
-    void deleteProfile(final Profile profile) throws IllegalArgumentException, IOException;
+    void deleteProfile(Profile profile) throws IllegalArgumentException, IOException;
 
     /**
      * Update an existing profile in the database.
@@ -73,5 +88,13 @@ public interface IDatabase extends IModule {
      * @param newProfile The new {@link Profile} details.
      * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
-    void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException;
+    void updateProfile(Profile oldProfile, Profile newProfile) throws IllegalArgumentException, IOException;
+
+    /**
+     * Get the password of the user.
+     *
+     * @return The password of the user
+     * @throws IllegalArgumentException When user account is not in the database.
+     */
+    String getUserPassword() throws IOException;
 }
