@@ -15,14 +15,14 @@
         tools:targetApi="lollipop">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/holo_blue_dark"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
-                android:id="@+id/toolbar_title"
+                android:id="@+id/toolbar_title_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -31,17 +31,14 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
-
-
         <ViewFlipper
-            android:id="@+id/viewFlipper"
+            android:id="@+id/view_flipper_sorter_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <include layout="@layout/content_main" />
             <include layout="@layout/content_main_keytypes" />
 
         </ViewFlipper>
-
 
     </android.support.design.widget.AppBarLayout>
 
@@ -52,18 +49,16 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin"
         fab:menu_labels_style="@style/MenuLabelsStyle"
         fab:menu_labels_showAnimation="@anim/jump_from_down"
         fab:menu_labels_hideAnimation="@anim/jump_to_down"
         fab:menu_animationDelayPerItem="0"
         fab:menu_shadowColor="#444"
-        fab:menu_colorNormal="@color/colorPrimary"
-        fab:menu_colorPressed="@color/colorPrimaryDark"
-        fab:menu_colorRipple="@color/colorPrimaryDark">
+        fab:menu_colorNormal="@color/color_primary"
+        fab:menu_colorPressed="@color/color_primary_dark"
+        fab:menu_colorRipple="@color/color_primary_dark">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/pairing_menu_bluetooth"
@@ -71,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/stat_sys_data_bluetooth"
-            android:onClick="onBluetoothButtonClick"
+            android:onClick="onBluetoothButtonMainActivityClick"
             fab:fab_label="@string/bluetooth" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -80,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/nfc_variant"
-            android:onClick="onNFCButtonClick"
+            android:onClick="onNFCButtonMainActivityClick"
             fab:fab_label="@string/nfc" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -88,20 +83,20 @@
             style="@style/MenuButtonsStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onQRButtonClicked"
+            android:onClick="onQRButtonMainActivityClick"
             android:src="@drawable/qr_code"
             fab:fab_label="@string/qr" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/sortButton"
+        android:id="@+id/sort_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:clickable="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginBottom="@dimen/sorting_fab_margin"
+        android:layout_marginStart="@dimen/sorting_fab_margin"
         android:onClick="onSortButtonClicked"
         app:borderWidth="0dp"
         app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
