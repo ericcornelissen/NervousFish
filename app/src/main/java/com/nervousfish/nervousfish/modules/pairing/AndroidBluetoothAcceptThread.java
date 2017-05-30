@@ -35,8 +35,11 @@ class AndroidBluetoothAcceptThread extends Thread {
         super();
         this.serviceLocator = serviceLocator;
 
-        // Create a new listening server socket
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            throw new IOException();
+        }
+
         this.serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, MY_UUID_SECURE);
     }
 
