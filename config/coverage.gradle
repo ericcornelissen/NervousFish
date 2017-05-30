@@ -19,6 +19,10 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             , 'com/nervousfish/nervousfish/activities/BluetoothConnectionActivity$**'
             , 'com/nervousfish/nervousfish/activities/ActivateBluetoothActivity**'
             , 'com/nervousfish/nervousfish/activities/ActivateBluetoothActivity$**'
+            , 'com/nervousfish/nervousfish/activities/NFCActivity**'
+            , 'com/nervousfish/nervousfish/activities/NFCActivity$**'
+            , 'com/nervousfish/nervousfish/activities/QRActivity**'
+            , 'com/nervousfish/nervousfish/activities/QRActivity$**'
     ]
     def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"

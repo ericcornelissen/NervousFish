@@ -1,9 +1,15 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,6 +18,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RSAKeyTest {
 
@@ -141,4 +151,39 @@ public class RSAKeyTest {
         assertNotNull(key.hashCode());
     }
 
+    @Test
+    public void testToJson() throws IOException {
+        IKey key = new RSAKey("foo", "bar", "baz");
+        JsonWriter writer = mock(JsonWriter.class);
+        when(writer.name(anyString())).thenReturn(writer);
+        key.toJson(writer);
+        verify(writer).name("name");
+        verify(writer).name("modulus");
+        verify(writer).name("exponent");
+        verify(writer).value("foo");
+        verify(writer).value("bar");
+        verify(writer).value("baz");
+    }
+
+    @Test
+    public void testSerialization() {
+        IKey key = new RSAKey("foo", "bar", "baz");
+        try (
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)
+        ) {
+            oos.writeObject(key);
+            byte[] bytes = bos.toByteArray();
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
+                IKey key1 = (IKey) ois.readObject();
+                assertTrue(key1.getName().equals("foo"));
+                assertTrue(key1.getKey().equals("bar baz"));
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
