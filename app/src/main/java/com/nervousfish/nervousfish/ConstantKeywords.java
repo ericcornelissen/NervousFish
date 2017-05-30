@@ -11,6 +11,8 @@ public final class ConstantKeywords {
     public static final String CONTACT = "contact";
     public static final String PROXY_REQUIRED = "Proxy required.";
     public static final String WAIT_MESSAGE = "Wait message";
+    public static final String DATA_RECEIVED = "Data received";
+    public static final String TAP_DATA = "Tap data";
 
     public static final int DONE_RESULT_CODE = 55;
 

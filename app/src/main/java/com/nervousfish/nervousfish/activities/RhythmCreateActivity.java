@@ -28,6 +28,8 @@ public class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private List<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
+    //TODO: change contact into an encrypted string of bytes
+    private Contact dataReceived = null;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
         this.startActivity(intent);
     }
 

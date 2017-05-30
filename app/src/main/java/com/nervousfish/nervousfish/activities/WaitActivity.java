@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -27,6 +29,8 @@ import java.io.IOException;
 public final class WaitActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
+    private Contact dataReceived;
+    private List<SingleTap> tapCombination;
 
     /**
      * {@inheritDoc}
@@ -39,11 +43,24 @@ public final class WaitActivity extends Activity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
+        this.dataReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
+        this.tapCombination = (List<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+
+        if(dataReceived != null && tapCombination != null) {
+            evaluateData();
+        }
+
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) findViewById(R.id.waiting_message);
         waitingMessage.setText(message);
 
         LOGGER.info("WaitActivity created");
+    }
+
+    private void evaluateData() {
+        //TODO: check if when we decrypt the dataReceived with the tapCombination that we get a normal contact
+        setResult(ConstantKeywords.DONE_RESULT_CODE);
+        finish();
     }
 
     /**
@@ -105,6 +122,7 @@ public final class WaitActivity extends Activity {
             try {
                 LOGGER.info("Adding contact to database...");
                 this.serviceLocator.getDatabase().addContact(contact);
+                evaluateData();
             } catch (IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }

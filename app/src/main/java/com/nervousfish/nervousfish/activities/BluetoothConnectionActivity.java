@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,6 +54,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
 
     private ArrayAdapter<String> newDevicesArrayAdapter;
+    private boolean master = false;
 
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -231,16 +231,32 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * @param event Describes the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(final BluetoothConnectedEvent event) {
+    public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onBluetoothConnectedEvent called");
-        try {
-            final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
-            for (final Contact e : list) {
-                this.serviceLocator.getBluetoothHandler().send(e);
+        if (master) {
+            master = false;
+            try {
+                this.serviceLocator.getBluetoothHandler().send("rhythm");
+                final Intent intent = new Intent(this, RhythmCreateActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+                this.startActivity(intent);
+            } catch (final IOException e) {
+                LOGGER.warn("Sending the string \"rhythm\" issued an IOexception", e);
             }
-        } catch (final IOException e) {
-            LOGGER.warn("Writing all contacts issued an IOexception", e);
+        } else {
+            final Intent intent = new Intent(this, WaitActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+            this.startActivity(intent);
         }
+//        try {
+//            final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
+//            for (final Contact e : list) {
+//                this.serviceLocator.getBluetoothHandler().send(e);
+//            }
+//        } catch (final IOException e) {
+//            LOGGER.warn("Writing all contacts issued an IOexception", e);
+//        }
     }
 
     /**
@@ -257,6 +273,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
             if (!info.equals(getString(R.string.no_devices_found))) {
+                master = true;
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
                 BluetoothConnectionActivity.this.serviceLocator.getBluetoothHandler().connect(device);
