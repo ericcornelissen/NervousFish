@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -16,6 +17,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -51,6 +54,18 @@ public final class WaitActivity extends Activity {
         finish();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
     /**
      * Called when a new data is received.
      *
@@ -64,7 +79,7 @@ public final class WaitActivity extends Activity {
 
             if (verificationMessage.equals("rhythm")) {
                 //Go to RhythmActivity
-                final Intent intent = new Intent(this, MainActivity.class);
+                final Intent intent = new Intent(this, RhythmCreateActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 startActivity(intent);
             } else if (verificationMessage.equals("visual")) {
@@ -72,6 +87,14 @@ public final class WaitActivity extends Activity {
                 final Intent intent = new Intent(this, VisualVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 startActivity(intent);
+            }
+        } else if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Adding contact to database...");
+                this.serviceLocator.getDatabase().addContact(contact);
+            } catch (IOException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
             }
         }
     }

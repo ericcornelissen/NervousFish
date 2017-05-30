@@ -9,12 +9,17 @@ import android.widget.Button;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +51,8 @@ public class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
-        if (tapCombination != null) {
+        final Button startButton = (Button) this.findViewById(R.id.start_recording_button);
+        if (tapCombination != null && startButton.getVisibility() == View.GONE) {
             tapCombination.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
         }
     }
@@ -98,5 +104,36 @@ public class RhythmCreateActivity extends AppCompatActivity {
 
         final Button doneButton = (Button) this.findViewById(R.id.done_tapping_button);
         doneButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
+    /**
+     * Called when a new data is received.
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Adding contact to database...");
+                this.serviceLocator.getDatabase().addContact(contact);
+            } catch (IOException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
+            }
+        }
     }
 }
