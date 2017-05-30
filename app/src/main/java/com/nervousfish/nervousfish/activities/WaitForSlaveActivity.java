@@ -27,9 +27,10 @@ public final class WaitForSlaveActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.wait_for_slave);
+
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        setContentView(R.layout.wait_for_slave);
         LOGGER.info("WaitForSlaveActivity created");
     }
 

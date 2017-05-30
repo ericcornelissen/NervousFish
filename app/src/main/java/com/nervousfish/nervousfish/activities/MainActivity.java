@@ -18,8 +18,11 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +40,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * The main activity class that shows a list of all people with their public keys
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods" })
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -82,13 +85,14 @@ public final class MainActivity extends AppCompatActivity {
         }
         try {
             fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
         sortOnName();
 
+        this.serviceLocator.getBluetoothHandler().start();
         LOGGER.info("MainActivity created");
     }
 
@@ -116,7 +120,6 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
-
 
     /**
      * Gets triggered when the NFC button is clicked.
@@ -166,6 +169,23 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+        try {
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            LOGGER.error("onStart in MainActivity threw an IOException", e);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
     /**
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
@@ -204,8 +224,52 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Exit the application when the user taps the back button twice
+     * Called when a new contact is received
+     *
+     * @param event Contains additional data about the event
      */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Checking if the contact exists...");
+                if (checkExists(contact)) {
+                    LOGGER.warn("Contact already existed...");
+                } else {
+                    LOGGER.info("Adding contact to database...");
+                    this.serviceLocator.getDatabase().addContact(contact);
+                    this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+                    sortOnName();
+                }
+            } catch (IOException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
+            }
+        }
+    }
+
+    /**
+     * Checks if a name of a given contact exists in the database.
+     *
+     * @param contact A contact object
+     * @return true when a contact with the same exists in the database
+     * @throws IOException When database fails to respond
+     */
+    private boolean checkExists(final Contact contact) throws IOException {
+        final String name = contact.getName();
+        final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
+        for (final Contact e : list) {
+            if (e.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+ * Exit the application when the user taps the back button twice
+ */
     @Override
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
