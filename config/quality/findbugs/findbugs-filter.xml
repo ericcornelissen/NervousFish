@@ -11,4 +11,10 @@
     <Match>
         <Class name="~.*\.*Test" />
     </Match>
+    <!-- Suppressed because Android enforces that the onCreate method is only called once -->
+    <Match>
+        <Class name="com.nervousfish.nervousfish.service_locator.NervousFish" />
+        <Method name="onCreate" />
+        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+    </Match>
 </FindBugsFilter>

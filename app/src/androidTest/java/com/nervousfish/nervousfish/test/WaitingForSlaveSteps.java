@@ -10,6 +10,7 @@ import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.WaitForSlaveActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -27,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class WaitingForSlaveSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
 
     @Rule
     public ActivityTestRule<WaitForSlaveActivity> mActivityRule =
