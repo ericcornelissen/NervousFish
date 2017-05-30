@@ -6,4 +6,7 @@
 
     <color name="transparent_white">#33FFFFFF</color>
     <color name="red_alert">#9A3334</color>
+    <color name="ok_green">#009900</color>
+
+    <color name="white">#fff</color>
 </resources>

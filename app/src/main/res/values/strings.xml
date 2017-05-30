@@ -60,5 +60,12 @@
     <string name="save">Save</string>
     <string name="more">More</string>
 
+    <string name="title_activity_rhythm_create">RhythmCreateActivity</string>
+    <string name="tap_me">Tap me!</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="done">Done</string>
+    <string name="start_recording">Start recording</string>
+
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method...</string>
+    <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping...</string>
 </resources>
