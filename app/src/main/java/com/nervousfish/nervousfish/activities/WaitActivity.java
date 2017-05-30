@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public final class WaitActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
     private Contact dataReceived;
-    private List<SingleTap> tapCombination;
+    private ArrayList<SingleTap> tapCombination;
 
     /**
      * {@inheritDoc}
@@ -44,7 +45,7 @@ public final class WaitActivity extends Activity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         this.dataReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        this.tapCombination = (List<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+        this.tapCombination = (ArrayList<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
         if(dataReceived != null && tapCombination != null) {
             evaluateData();
@@ -102,7 +103,7 @@ public final class WaitActivity extends Activity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called");
+        LOGGER.info("onNewDataReceivedEvent called, type is " + event.getClazz());
         if (event.getClazz().equals(String.class)) {
             final String verificationMessage = (String) event.getData();
 

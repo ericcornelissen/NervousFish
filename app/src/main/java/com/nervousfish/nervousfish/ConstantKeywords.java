@@ -15,6 +15,7 @@ public final class ConstantKeywords {
     public static final String TAP_DATA = "Tap data";
 
     public static final int DONE_RESULT_CODE = 55;
+    public static final int START_RHYTHM_REQUEST_CODE = 66;
 
     /**
      * Prevent instantiation

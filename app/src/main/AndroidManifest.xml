@@ -45,7 +45,10 @@
             android:name=".activities.VisualVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.WaitForSlaveActivity"
+            android:name=".activities.WaitActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.RhythmCreateActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ActivateBluetoothActivity"

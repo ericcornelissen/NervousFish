@@ -36,7 +36,7 @@
         android:background="@color/red_alert"
         android:text="@string/cancel_pairing"
         android:textColor="@android:color/white"
-        android:onClick="cancelWaitingForSlave"/>
+        android:onClick="cancelWaiting"/>
 
 
 </RelativeLayout>

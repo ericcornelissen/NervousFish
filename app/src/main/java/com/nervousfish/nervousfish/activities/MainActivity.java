@@ -85,7 +85,9 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         try {
-            fillDatabaseWithDemoData();
+            if(this.serviceLocator.getDatabase().getAllContacts().isEmpty()) {
+                fillDatabaseWithDemoData();
+            }
             this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);

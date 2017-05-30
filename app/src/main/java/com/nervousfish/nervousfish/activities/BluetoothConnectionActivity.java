@@ -122,6 +122,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.registerReceiver(broadcastReceiver, filter);
 
         this.newDevices = new HashSet<>();
+
+        this.serviceLocator.registerToEventBus(this);
     }
 
     /**
@@ -129,6 +131,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
+        this.serviceLocator.unregisterFromEventBus(this);
         unregisterReceiver(this.broadcastReceiver);
         this.bluetoothAdapter = null;
 
@@ -141,22 +144,21 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        this.serviceLocator.registerToEventBus(this);
         // Get the Paired Devices list
         queryPairedDevices();
         discoverDevices();
         LOGGER.info("Started the service and started discovering");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onStop() {
-        LOGGER.info("Stopping from activity");
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
-    }
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public void onStop() {
+//        LOGGER.info("Stopping from activity");
+//        this.serviceLocator.unregisterFromEventBus(this);
+//        super.onStop();
+//    }
 
     /**
      * Gets triggered when the back button is clicked.
@@ -239,7 +241,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
                 this.serviceLocator.getBluetoothHandler().send("rhythm");
                 final Intent intent = new Intent(this, RhythmCreateActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-                this.startActivity(intent);
+                this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
             } catch (final IOException e) {
                 LOGGER.warn("Sending the string \"rhythm\" issued an IOexception", e);
             }
@@ -247,7 +249,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             final Intent intent = new Intent(this, WaitActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
-            this.startActivity(intent);
+            this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         }
 //        try {
 //            final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();

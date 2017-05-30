@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
-    private List<SingleTap> tapCombination;
+    private ArrayList<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
     //TODO: change contact into an encrypted string of bytes
     private Contact dataReceived = null;
@@ -66,11 +67,17 @@ public class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onDoneClick(final View v) {
         LOGGER.info("Done tapping button clicked");
+        try {
+            this.serviceLocator.getBluetoothHandler().send(new Contact("CornelDeMan", new SimpleKey("testkey", "456um4h692406u2p")));
+        } catch (IOException e) {
+            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+        }
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
-        this.startActivity(intent);
+        intent.putExtra(ConstantKeywords.TAP_DATA, tapCombination);
+        this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
     /**
@@ -146,6 +153,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
             try {
                 LOGGER.info("Adding contact to database...");
                 this.serviceLocator.getDatabase().addContact(contact);
+                dataReceived = contact;
             } catch (IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
