@@ -51,7 +51,19 @@ public final class WaitActivity extends Activity {
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
+        setResult(ConstantKeywords.DONE_RESULT_CODE);
         finish();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_RESULT_CODE) {
+            finish();
+        }
     }
 
     @Override

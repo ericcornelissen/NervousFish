@@ -106,6 +106,18 @@ public class RhythmCreateActivity extends AppCompatActivity {
         doneButton.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_RESULT_CODE) {
+            setResult(ConstantKeywords.DONE_RESULT_CODE);
+            finish();
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
