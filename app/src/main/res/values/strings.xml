@@ -59,4 +59,6 @@
     <string name="no_devices_found">No devices found…</string>
     <string name="save">Save</string>
     <string name="more">More</string>
+
+    <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method...</string>
 </resources>

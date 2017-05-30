@@ -18,6 +18,7 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -221,6 +222,21 @@ public final class MainActivity extends AppCompatActivity {
 
         database.addContact(a);
         database.addContact(b);
+    }
+
+    /**
+     * Called when a Bluetooth connection is established.
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
+        LOGGER.info("onNewBluetoothConnectedEvent called");
+
+        final Intent intent = new Intent(this, WaitActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+        this.startActivity(intent);
     }
 
     /**

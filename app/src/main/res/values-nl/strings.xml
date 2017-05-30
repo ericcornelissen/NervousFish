@@ -47,4 +47,5 @@
     <string name="warning">Waarschuwing</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
+    <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen...</string>
 </resources>
