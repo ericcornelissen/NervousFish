@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -94,6 +95,10 @@ public final class MainActivity extends AppCompatActivity {
 
         try {
             this.serviceLocator.getBluetoothHandler().start();
+        } catch (NoBluetoothException e) {
+            LOGGER.info("Bluetooth not available on device, hiding button");
+            final View v = this.findViewById(R.id.pairing_menu_bluetooth);
+            v.setVisibility(View.GONE);
         } catch (IOException e) {
             LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
         }

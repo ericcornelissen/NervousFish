@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -31,13 +32,13 @@ class AndroidBluetoothAcceptThread extends Thread {
      * like a server-side client. It runs until a connection is accepted
      * @param serviceLocator The service locator used
      */
-    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException {
+    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException, NoBluetoothException {
         super();
         this.serviceLocator = serviceLocator;
 
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            throw new IOException();
+            throw new NoBluetoothException();
         }
 
         this.serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, MY_UUID_SECURE);
