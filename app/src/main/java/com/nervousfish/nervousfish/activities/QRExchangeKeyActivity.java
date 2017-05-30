@@ -141,13 +141,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * returns last created alert dialog
-     * @return the last AlertDialog.
-     */
-    public AlertDialog getLastDialog() {
-        return lastDialog;
-    }
 
 
 
@@ -170,14 +163,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         ((ViewGroup) imageView.getParent()).removeView(imageView);
         lastDialog = builder.create();
         lastDialog.show();
-    }
-
-    /**
-     * Gets the public key of the user
-     * @return the public key.
-     */
-    public IKey getPublicKey() {
-        return publicKey;
     }
 
 

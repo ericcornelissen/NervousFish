@@ -67,9 +67,7 @@ public final class QRGenerator {
 
         // resize the bit map
         matrix.postScale(RESIZE_QR_CODE, RESIZE_QR_CODE);
-        final Bitmap largerCode = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
-        return largerCode;
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
 

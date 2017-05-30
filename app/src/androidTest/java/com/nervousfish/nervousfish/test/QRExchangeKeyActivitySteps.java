@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.nervousfish.nervousfish.*;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
+import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
@@ -74,12 +75,13 @@ public class QRExchangeKeyActivitySteps {
 
     @Then("^I should see a popup with my qr code$")
     public void iShouldSeeAPopupWithMyQRCode() {
-        AlertDialog dialog = mActivityRule.getActivity().getLastDialog();
+        AlertDialog dialog = (AlertDialog) BaseTest.getField(mActivityRule.getActivity(), "lastDialog");
         assertTrue(dialog.isShowing());
 
         QRExchangeKeyActivity QRExchangeActivity = mActivityRule.getActivity();
-        Bitmap qrTest = QRGenerator.encode(QRExchangeActivity.getPublicKey().getType() + " "
-                + QRExchangeActivity.getPublicKey().getName() + " " + QRExchangeActivity.getPublicKey().getKey());
+        IKey publicKey = (IKey) BaseTest.getField(QRExchangeActivity, "publicKey");
+        Bitmap qrTest = QRGenerator.encode(publicKey.getType() + " "
+                + publicKey.getName() + " " + publicKey.getKey());
 
         EspressoTestsMatchers etMatchers = new EspressoTestsMatchers();
         onView(withId(R.id.QR_code_image)).check(matches(etMatchers.withDrawable(qrTest)));
