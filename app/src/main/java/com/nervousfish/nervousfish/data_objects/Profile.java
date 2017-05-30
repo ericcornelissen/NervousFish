@@ -21,7 +21,7 @@ public class Profile {
     public Profile(final String name, final String password, final KeyPair keyPair) {
         this.name = name;
         this.salt = EncryptedSaver.generateSalt();
-        this.encryptedPassword = password;
+        this.encryptedPassword = EncryptedSaver.hashUsingSalt(salt, password);
         this.keyPair = keyPair;
     }
 
