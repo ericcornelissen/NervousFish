@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -23,7 +24,8 @@ public final class LoginActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private IServiceLocator serviceLocator;
-    private String actualPassword;
+    private Profile currentUser;
+
 
     /**
      * {@inheritDoc}
@@ -36,12 +38,6 @@ public final class LoginActivity extends Activity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        final IDatabase database = this.serviceLocator.getDatabase();
-        try {
-            this.actualPassword = database.getUserPassword();
-        } catch (final IOException e) {
-            LOGGER.error("Failed to retrieve password from database", e);
-        }
         LOGGER.info("LoginActivity created");
     }
 
@@ -62,8 +58,16 @@ public final class LoginActivity extends Activity {
             mError.setVisibility(View.GONE);
             this.nextActivity();
         } else {
+            final IDatabase database = this.serviceLocator.getDatabase();
             final String providedPassword = passwordInput.getText().toString();
-            final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
+
+            try {
+                currentUser = database.checkPasswordForUsers(providedPassword);
+            } catch (IOException e) {
+                LOGGER.error("Failed to find profile in database", e);
+            }
+
+            final boolean wrongPassword = (currentUser == null);
             if (wrongPassword) {
                 LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);
