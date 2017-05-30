@@ -77,7 +77,6 @@ class AndroidBluetoothAcceptThread extends Thread {
      */
     void cancel() {
         LOGGER.warn("Cancelled!");
-        LOGGER.info("Cancel accept thread");
         try {
             serverSocket.close();
         } catch (final IOException e) {

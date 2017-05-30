@@ -56,7 +56,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> newDevicesArrayAdapter;
 
-    @SuppressWarnings("PMD.SingularField")
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(final Context context, final Intent intent) {
