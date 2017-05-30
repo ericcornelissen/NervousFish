@@ -53,16 +53,13 @@ public final class LoginActivity extends Activity {
     public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
 
-        final View mError = findViewById(R.id.error);
+        final View mError = findViewById(R.id.error_message_login);
         final EditText passwordInput = (EditText) findViewById(R.id.login_password_input);
 
         final boolean skipPassword = passwordInput.getText().toString().isEmpty();
         if (skipPassword) {
             LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
-            final Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-            startActivity(intent);
             this.nextActivity();
         } else {
             final String providedPassword = passwordInput.getText().toString();
@@ -73,11 +70,17 @@ public final class LoginActivity extends Activity {
             } else {
                 LOGGER.info("Password correct");
                 mError.setVisibility(View.GONE);
-                final Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-                startActivity(intent);
+                this.nextActivity();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     /**

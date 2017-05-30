@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -47,6 +48,13 @@ public final class ActivateBluetoothActivity extends Activity {
             intentConnection.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivityForResult(intentConnection, ActivateBluetoothActivity.REQUEST_CODE_BLUETOOTH_ACTIVITY);
         }
+
+        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                finish();
+            }
+        });
 
         LOGGER.info("ActivateBluetoothActivity created");
     }
@@ -91,7 +99,7 @@ public final class ActivateBluetoothActivity extends Activity {
      * Enable Bluetooth.
      */
     public void enableBluetooth() {
-        if (!bluetoothAdapter.isEnabled()) {
+        if (!this.bluetoothAdapter.isEnabled()) {
             LOGGER.info("Requesting to enable Bluetooth");
             final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             this.startActivityForResult(intent, ActivateBluetoothActivity.REQUEST_CODE_ENABLE_BLUETOOTH);

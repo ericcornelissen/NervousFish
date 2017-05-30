@@ -31,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * The main activity class that shows a list of all people with their public keys
  */
@@ -46,23 +48,19 @@ import java.util.Set;
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
     private static final int NUMBER_OF_SORTING_MODES = 2;
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
-
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
             return o1.getName().compareTo(o2.getName());
         }
     };
-
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private int currentSorting;
-
 
     /**
      * Creates the new activity, should only be called by Android
@@ -76,13 +74,12 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
         try {
             fillDatabaseWithDemoData();
             this.contacts = serviceLocator.getDatabase().getAllContacts();
@@ -113,11 +110,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onBluetoothButtonClick(final View view) {
+    public void onBluetoothButtonMainActivityClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
         final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
 
@@ -126,11 +123,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onNFCButtonClick(final View view) {
+    public void onNFCButtonMainActivityClick(final View view) {
         LOGGER.info("NFC button clicked");
         final Intent intent = new Intent(this, NFCActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
@@ -138,11 +135,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onQRButtonClicked(final View view) {
+    public void onQRButtonMainActivityClick(final View view) {
         LOGGER.info("QR button clicked");
         final Intent intent = new Intent(this, QRActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
@@ -155,7 +152,7 @@ public final class MainActivity extends AppCompatActivity {
         if (currentSorting >= NUMBER_OF_SORTING_MODES) {
             currentSorting = 0;
         }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.view_flipper_sorter_main);
         flipper.showNext();
         switch (currentSorting) {
             case SORT_BY_NAME:
@@ -207,6 +204,25 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Exit the application when the user taps the back button twice
+     */
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.warning))
+                .setContentText(getString(R.string.you_sure_log_out))
+                .setCancelText(getString(R.string.no))
+                .setConfirmText(getString(R.string.yes))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sDialog) {
+                        finish();
+                    }
+                })
+                .show();
+    }
+
+    /**
      * Gets all types of keys in the database
      *
      * @return a List with the types of keys.
@@ -225,7 +241,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by name
      */
     private void sortOnName() {
-        final ListView lv = (ListView) findViewById(R.id.listView);
+        final ListView lv = (ListView) findViewById(R.id.list_view_main);
         final ContactsByNameListAdapter contactsByNameListAdapter = new ContactsByNameListAdapter(this, this.contacts);
         contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
@@ -247,7 +263,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandableContactListByKeytype);
+        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter = new ContactsByKeyTypeListAdapter(this, getKeyTypes(), contacts);
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {

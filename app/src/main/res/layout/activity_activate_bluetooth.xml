@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:background="@color/color_primary"
                 android:src="?attr/actionModeCloseDrawable"
                 android:onClick="onCancelActivateBluetoothActivityClick"
                 android:contentDescription="@string/contact_title" />
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
-                android:backgroundTint="@color/colorPrimary"/>
+                android:backgroundTint="@color/color_primary"/>
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -58,7 +58,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:visibility="visible"
-        app:indicatorColor="@color/colorPrimary"
+        app:indicatorColor="@color/color_primary"
         app:indicatorName="BallGridPulseIndicator" />
 
     <TextView
