@@ -60,6 +60,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
             final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
             final String name = nameInputField.getText().toString();
 
+            final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
+            final String password = passwordInputField.getText().toString();
+
             final KeyPair keyPair = this.generateKeyPair();
 
             try {
