@@ -96,7 +96,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onScanButtonClick(final View view) {
         LOGGER.info("Started scanning QR code");
-        final IntentIntegrator integrator = new IntentIntegrator(QRExchangeKeyActivity.this);
+        final IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
     }
 
