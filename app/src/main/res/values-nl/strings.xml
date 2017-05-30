@@ -59,7 +59,6 @@
     <string name="dsa_key">DSA key</string>
     <string name="warning">Waarschuwing</string>
     <string name="no">NEE</string>
-    <string name="warning">Waarschuwing</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
 </resources>

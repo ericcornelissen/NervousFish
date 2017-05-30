@@ -76,5 +76,4 @@
 
     <string name="profile_created">Profile created</string>
     <string name="profile_created_explanation">Your profile is successfully created. Please log in now.</string>
-    <string name="warning">Warning</string>
 </resources>
