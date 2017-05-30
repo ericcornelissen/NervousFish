@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.nervousfish.nervousfish.*;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -65,12 +64,12 @@ public class QRExchangeKeyActivitySteps {
 
     @When("^I press the generate button$")
     public void iPressTheGenerateButton(){
-        onView(withId(R.id.generateQRbutton)).perform(click());
+        onView(withId(R.id.generate_QR_button)).perform(click());
     }
 
     @When("^I press the scan button$")
     public void iPressTheScanButton(){
-        onView(withId(R.id.scanbutton)).perform(click());
+        onView(withId(R.id.scan_button)).perform(click());
     }
 
     @Then("^I should see a popup with my qr code$")
@@ -83,7 +82,7 @@ public class QRExchangeKeyActivitySteps {
                 + QRExchangeActivity.getPublicKey().getName() + " " + QRExchangeActivity.getPublicKey().getKey());
 
         EspressoTestsMatchers etMatchers = new EspressoTestsMatchers();
-        onView(withId(R.id.QRCodeImage)).check(matches(etMatchers.withDrawable(qrTest)));
+        onView(withId(R.id.QR_code_image)).check(matches(etMatchers.withDrawable(qrTest)));
     }
 
     @Then("^I should go to the Barcode Scanner app$")

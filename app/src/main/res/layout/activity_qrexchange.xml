@@ -2,8 +2,11 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nervousfish.nervousfish.activities.QRExchangeKeyActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -28,10 +31,11 @@
                 android:textSize="@dimen/toolbar_title_size"
                 android:textStyle="bold" />
             <ImageButton
-                android:id="@+id/backButtonQRExchange"
+                android:id="@+id/back_button_QR_exchange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorPrimary"
+                android:onClick="onBackButtonClick"
                 android:src="?attr/actionModeCloseDrawable"/>
 
 
@@ -42,14 +46,16 @@
 
 
     <Button
-        android:id="@+id/scanbutton"
+        android:id="@+id/scan_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onScanButtonClick"
         android:text="@string/QRScan" />
 
     <Button
-        android:id="@+id/generateQRbutton"
+        android:id="@+id/generate_QR_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onShowQRButtonClick"
         android:text="@string/QRShow" />
 </LinearLayout>

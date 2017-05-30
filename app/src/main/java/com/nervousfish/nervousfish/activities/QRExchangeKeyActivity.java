@@ -10,9 +10,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -47,10 +45,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private IServiceLocator serviceLocator;
-
     private AlertDialog lastDialog;
-
-
     private IKey publicKey;
 
     /**
@@ -72,45 +67,38 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         publicKey = pair.getPublicKey();
 
-
-        final Button scanButton = (Button) findViewById(R.id.scanbutton);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-                LOGGER.info("Started scanning QR code");
-                final IntentIntegrator integrator = new IntentIntegrator(QRExchangeKeyActivity.this);
-                integrator.initiateScan();
-
-            }
-        });
-
-        final Button generateButton = (Button) findViewById(R.id.generateQRbutton);
-        generateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                LOGGER.info("Started generating QR code");
-                final String space = " ";
-                final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
-                        + space + publicKey.getKey());
-                showQRCode(qrCode);
-            }
-        });
-
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonQRExchange);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onClick(final View v) {
-                LOGGER.info("Return to previous screen");
-                finish();
-            }
-        });
-
     }
 
+    /**
+     * Returns to the previous activity.
+     * @param view - the imagebutton
+     */
+    public void onBackButtonClick(final View view) {
+        LOGGER.info("Return to previous screen");
+        finish();
+    }
+
+    /**
+     * Shows the QR code of the person's public key on screen.
+     * @param view - the imagebutton
+     */
+    public void onShowQRButtonClick(final View view) {
+        LOGGER.info("Started generating QR code");
+        final String space = " ";
+        final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
+                + space + publicKey.getKey());
+        showQRCode(qrCode);
+    }
+
+    /**
+     * Starts the scan qr feature.
+     * @param view - the imagebutton
+     */
+    public void onScanButtonClick(final View view) {
+        LOGGER.info("Started scanning QR code");
+        final IntentIntegrator integrator = new IntentIntegrator(QRExchangeKeyActivity.this);
+        integrator.initiateScan();
+    }
 
     /**
      * {@inheritDoc}
@@ -173,7 +161,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final LayoutInflater li = LayoutInflater.from(this);
         final View myView = li.inflate(R.layout.qrcode, null);
 
-        final ImageView imageView = (ImageView) myView.findViewById(R.id.QRCodeImage);
+        final ImageView imageView = (ImageView) myView.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(imageView)

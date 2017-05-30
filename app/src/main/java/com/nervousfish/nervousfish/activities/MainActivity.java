@@ -105,7 +105,9 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onBluetoothButtonClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
-        startQRExchangeActivity();
+        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        startActivity(intent);
     }
 
 
@@ -169,14 +171,7 @@ public final class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    /**
-     * Starts the QR Exchange Activity.
-     */
-    private void startQRExchangeActivity() {
-        final Intent intent = new Intent(this, QRExchangeKeyActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
-    }
+
 
     /**
      * Temporarily fill the database with demo data for development.

@@ -81,12 +81,12 @@ public final class QRGenerator {
     public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
         final String[] messageComponents = qrMessage.split(" ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
-            case ConstantKeywords.RSA_KEY :
+            case ConstantKeywords.RSA_KEY:
                 return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
                         messageComponents[COMPONENT_RSA_EXPONENT]);
-            case "simple" :
+            case ConstantKeywords.SIMPLE_KEY:
                 return new SimpleKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
-            default :
+            default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }
 
