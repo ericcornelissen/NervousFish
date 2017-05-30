@@ -97,4 +97,11 @@ public interface IDatabase extends IModule {
      * @throws IllegalArgumentException When user account is not in the database.
      */
     String getUserPassword() throws IOException;
+
+    /**
+     * Checks if the given password checks out with any of the profiles.
+     * @param password  the password to check
+     * @return  The profile that has this password.
+     */
+    Profile checkPasswordForUsers(String password) throws IOException;
 }

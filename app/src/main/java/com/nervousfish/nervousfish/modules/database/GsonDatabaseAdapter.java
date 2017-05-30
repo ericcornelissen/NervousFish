@@ -275,6 +275,21 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Profile checkPasswordForUsers(String password) throws IOException {
+        List<Profile> profiles = getProfiles();
+        for (Profile profile : profiles) {
+            if (profile.checkPassword(password)) {
+                return profile;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * Update the contact contents of the database.
      *
      * @param contacts The list of contacts to write.
