@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.SelectVerificationMethodActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public final class EntryActivity extends Activity {
             public void run() {
                 ((NervousFish) getApplicationContext()).getBluetoothServiceWithinPackage().setServiceLocator(serviceLocator);
 
-                final Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
+                final Intent intent = new Intent(EntryActivity.this, SelectVerificationMethodActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 startActivity(intent);
             }

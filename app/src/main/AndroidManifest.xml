@@ -59,6 +59,9 @@
         <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SelectVerificationMethodActivity" />
+
         <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
 </manifest>
