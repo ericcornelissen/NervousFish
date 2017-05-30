@@ -33,11 +33,6 @@ public final class FirstUseActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-
         LOGGER.info("FirstUseActivity created");
     }
 

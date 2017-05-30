@@ -22,12 +22,8 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -50,7 +46,7 @@ public class FirstTimeUseSteps {
 
     @When("^I click on the get started button$")
     public void iClickGetStarted() {
-        onView(withId(R.id.getStarted)).perform(click());
+        onView(withId(R.id.get_started)).perform(click());
     }
 
     @Then("^I should go to the CreateProfileActivity$")
