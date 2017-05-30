@@ -12,6 +12,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
 public final class EncryptedSaver {
 
     private static final int SALT_LENGTH = 30;
@@ -58,7 +62,7 @@ public final class EncryptedSaver {
     }
 
     /**
-     * Hashes a pass to an encrypted string that can be decrypted with the salt.
+     * Hashes a pass to an encrypted string with a salt bytestring.
      * @param salt The salt bytestring to encrypt the pass with.
      * @param pass  The string to encrypt
      * @return The encrypted string.
@@ -77,6 +81,58 @@ public final class EncryptedSaver {
             LOGGER.error("UTF-8 is not a valid encoding method", e);
         }
         return null;
+    }
+
+    /**
+     * Encrypts or decrypts a string with a password to
+     * @param toEncrypt The string to be encrypted/decrypted
+     * @param password  The password to encrypt/decrypt with
+     * @param ivSpec    The initialization vector specifications bytestring
+     * @param encrypt   whether we're encrypting or decrypting.
+     * @return  The encrypted/decrypted string.
+     */
+    public static String encryptOrDecryptWithPassword(final String toEncrypt, final String password, final byte[] ivSpec, final boolean encrypt) {
+
+        try {
+            final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
+            final byte[] psw = password.getBytes();
+            final byte[] input = toEncrypt.getBytes();
+            final Cipher cipher = getCipher(psw, ivSpec, mode);
+            final byte[] converted = new byte[cipher.getOutputSize(input.length)];
+            int conv_len = cipher.update(input, 0, input.length, converted, 0);
+            conv_len += cipher.doFinal(converted, conv_len);
+
+            final byte[] result = new byte[conv_len];
+            for (int i = 0; i < result.length; i++)
+                result[i] = converted[i];
+            return new String(result, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Method that return a configured {@link Cipher}.<br>
+     * It set the ivSpec and the encryption to
+     * DES
+     *
+     * @param psw   The password in bytestring used to encrypt
+     * @param ivSpec    The initializations vector for the encryption
+     * @param mode  Whether we're encrypting or decrypting
+     * @return  the configured Cipher.
+     */
+    private static final Cipher getCipher(final byte[] psw, final byte[] ivSpec, final int mode) {
+        try {
+            final IvParameterSpec spec = new IvParameterSpec(ivSpec);
+            final Cipher chiper = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            final SecretKeySpec key = new SecretKeySpec(psw, "DES");
+            chiper.init(mode, key, spec);
+            return chiper;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
