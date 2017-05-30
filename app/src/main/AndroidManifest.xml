@@ -12,6 +12,7 @@
         android:fullBackupContent="true"
         android:icon="@mipmap/app_logo_round"
         android:label="@string/app_name"
+        android:name=".service_locator.NervousFish"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -58,6 +59,7 @@
         <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <service android:name=".modules.pairing.AndroidBluetoothService" />
         <activity
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />

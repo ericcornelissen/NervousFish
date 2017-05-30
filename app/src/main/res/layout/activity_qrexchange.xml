@@ -34,7 +34,6 @@
                 android:id="@+id/back_button_QR_exchange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
                 android:onClick="onBackButtonClick"
                 android:src="?attr/actionModeCloseDrawable"/>
 

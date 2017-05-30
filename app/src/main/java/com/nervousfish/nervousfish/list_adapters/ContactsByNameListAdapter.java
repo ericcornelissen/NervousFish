@@ -47,7 +47,7 @@ public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
         final Contact contact = getItem(position);
 
         if (contact != null) {
-            final TextView name = (TextView) v.findViewById(R.id.name);
+            final TextView name = (TextView) v.findViewById(R.id.contact_name_list_entry);
 
             if (name != null) {
                 name.setText(contact.getName());

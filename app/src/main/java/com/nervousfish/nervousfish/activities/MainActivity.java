@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
@@ -17,10 +16,13 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,11 +34,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * The main activity class that shows a list of all people with their public keys
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods" })
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -47,23 +51,19 @@ import java.util.Set;
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
     private static final int NUMBER_OF_SORTING_MODES = 2;
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
-
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
             return o1.getName().compareTo(o2.getName());
         }
     };
-
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private int currentSorting;
-
 
     /**
      * Creates the new activity, should only be called by Android
@@ -77,50 +77,61 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
         try {
             fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
         sortOnName();
 
+        this.serviceLocator.getBluetoothHandler().start();
         LOGGER.info("MainActivity created");
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            this.contacts = serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
+        }
+    }
 
     /**
      * Gets triggered when the Bluetooth button is clicked.
      *
      * @param view - the ImageButton
      */
-    public void onBluetoothButtonClick(final View view) {
+    public void onBluetoothButtonMainActivityClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
         final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
-
 
     /**
      * Gets triggered when the NFC button is clicked.
      *
      * @param view - the ImageButton
      */
-    public void onNFCButtonClick(final View view) {
+    public void onNFCButtonMainActivityClick(final View view) {
         LOGGER.info("NFC button clicked");
         final Intent intent = new Intent(this, NFCActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
@@ -128,11 +139,11 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view - the ImageButton
      */
-    public void onQRButtonClicked(final View view) {
+    public void onQRButtonMainActivityClick(final View view) {
         LOGGER.info("QR button clicked");
         final Intent intent = new Intent(this, QRExchangeKeyActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
@@ -145,7 +156,7 @@ public final class MainActivity extends AppCompatActivity {
         if (currentSorting >= NUMBER_OF_SORTING_MODES) {
             currentSorting = 0;
         }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.view_flipper_sorter_main);
         flipper.showNext();
         switch (currentSorting) {
             case SORT_BY_NAME:
@@ -157,6 +168,23 @@ public final class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+        try {
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            LOGGER.error("onStart in MainActivity threw an IOException", e);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
     }
 
     /**
@@ -199,18 +227,67 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * {@inheritDoc}
+     * Called when a new contact is received
+     *
+     * @param event Contains additional data about the event
      */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException", e);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Checking if the contact exists...");
+                if (checkExists(contact)) {
+                    LOGGER.warn("Contact already existed...");
+                } else {
+                    LOGGER.info("Adding contact to database...");
+                    this.serviceLocator.getDatabase().addContact(contact);
+                    this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+                    sortOnName();
+                }
+            } catch (IOException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
+            }
         }
     }
 
+    /**
+     * Checks if a name of a given contact exists in the database.
+     *
+     * @param contact A contact object
+     * @return true when a contact with the same exists in the database
+     * @throws IOException When database fails to respond
+     */
+    private boolean checkExists(final Contact contact) throws IOException {
+        final String name = contact.getName();
+        final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
+        for (final Contact e : list) {
+            if (e.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+ * Exit the application when the user taps the back button twice
+ */
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.warning))
+                .setContentText(getString(R.string.you_sure_log_out))
+                .setCancelText(getString(R.string.no))
+                .setConfirmText(getString(R.string.yes))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sDialog) {
+                        finish();
+                    }
+                })
+                .show();
+    }
 
     /**
      * Gets all types of keys in the database
@@ -231,7 +308,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by name
      */
     private void sortOnName() {
-        final ListView lv = (ListView) findViewById(R.id.listView);
+        final ListView lv = (ListView) findViewById(R.id.list_view_main);
         final ContactsByNameListAdapter contactsByNameListAdapter = new ContactsByNameListAdapter(this, this.contacts);
         contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
@@ -253,7 +330,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandableContactListByKeytype);
+        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter = new ContactsByKeyTypeListAdapter(this, getKeyTypes(), contacts);
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {

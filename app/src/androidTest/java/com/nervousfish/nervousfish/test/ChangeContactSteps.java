@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -36,7 +37,7 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ChangeContactSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
     private final IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
 
@@ -58,12 +59,12 @@ public class ChangeContactSteps {
 
     @When("^I press the change contact back button$")
     public void iPressTheChangeContactBackButton() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.back_button_change)).perform(click());
     }
 
     @When("^I press the save contact changes button$")
     public void iPressTheSaveContactButton() {
-        onView(withId(R.id.saveContactButton)).perform(click());
+        onView(withId(R.id.save_contact_button)).perform(click());
     }
 
     @When("^I press OK on the change contact error popup$")
