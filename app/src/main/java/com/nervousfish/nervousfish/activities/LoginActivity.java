@@ -1,8 +1,8 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
@@ -19,11 +19,11 @@ import java.io.IOException;
 /**
  * Simple login activity class.
  */
-public final class LoginActivity extends Activity {
+public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
-    private IServiceLocator serviceLocator;
     private String actualPassword;
+    private IServiceLocator serviceLocator;
 
     /**
      * {@inheritDoc}
@@ -33,7 +33,7 @@ public final class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final Intent intent = this.getIntent();
+        final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         final IDatabase database = this.serviceLocator.getDatabase();
@@ -42,6 +42,7 @@ public final class LoginActivity extends Activity {
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve password from database", e);
         }
+
         LOGGER.info("LoginActivity created");
     }
 
@@ -60,7 +61,7 @@ public final class LoginActivity extends Activity {
         if (skipPassword) {
             LOGGER.warn("Password skipped!");
             mError.setVisibility(View.GONE);
-            this.nextActivity();
+            this.toMainActivity();
         } else {
             final String providedPassword = passwordInput.getText().toString();
             final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
@@ -70,7 +71,7 @@ public final class LoginActivity extends Activity {
             } else {
                 LOGGER.info("Password correct");
                 mError.setVisibility(View.GONE);
-                this.nextActivity();
+                this.toMainActivity();
             }
         }
     }
@@ -86,10 +87,9 @@ public final class LoginActivity extends Activity {
     /**
      * Go to the next activity from the {@link LoginActivity}.
      */
-    private void nextActivity() {
+    private void toMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         startActivity(intent);
     }
-
 }

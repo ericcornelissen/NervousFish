@@ -1,4 +1,6 @@
-package com.nervousfish.nervousfish.data_objects.tap;
+package com.nervousfish.nervousfish.modules.pairing;
+
+import com.nervousfish.nervousfish.data_objects.tap.ATapData;
 
 import org.junit.Test;
 
@@ -7,14 +9,14 @@ import static org.mockito.Mockito.mock;
 
 public class DataWrapperTest {
     @Test
-    public void getTapData() throws Exception {
+    public void testGetData() throws Exception {
         ATapData mock = mock(ATapData.class);
         DataWrapper wrapper = new DataWrapper(mock);
-        assertEquals(wrapper.getTapData(), mock);
+        assertEquals(wrapper.getData(), mock);
     }
 
     @Test
-    public void getClazz() throws Exception {
+    public void testGetClazz() throws Exception {
         ATapData mock = mock(ATapData.class);
         DataWrapper wrapper = new DataWrapper(mock);
         assertEquals(wrapper.getClazz(), mock.getClass());

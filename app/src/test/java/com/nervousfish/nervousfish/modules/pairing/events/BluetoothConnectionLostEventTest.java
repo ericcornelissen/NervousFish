@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.events;
+package com.nervousfish.nervousfish.modules.pairing.events;
 
 import org.junit.Test;
 
