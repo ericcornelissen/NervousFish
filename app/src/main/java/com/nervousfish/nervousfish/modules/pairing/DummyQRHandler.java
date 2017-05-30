@@ -39,8 +39,8 @@ public final class DummyQRHandler extends APairingHandler implements IQRHandler 
      * {@inheritDoc}
      */
     @Override
-    void send(final byte[] buffer) {
-        // Nothing to send via QR yet.
+    public void send(final byte[] buffer) {
+        throw new UnsupportedOperationException("Sending data over QR is not implemented yet");
     }
 
 }

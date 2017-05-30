@@ -45,6 +45,8 @@
     <string name="edit_menu_item">Edit</string>
     <string name="delete_menu_item">Delete</string>
 
+    <string name="select_device">Select device</string>
+    <string name="scanning">Scanning...</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth could not be activated</string>
     <string name="activating_bluetooth_went_wrong_explanation">Please enable Bluetooth if you want to exchange keys over Bluetooth.</string>
     <string name="activating_bluetooth">Activating Bluetooth…</string>

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An handler doing nothing.
+ * An NFC handler without implementation, needed because NFC is unavailable on the emulator
  */
 public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
 
@@ -39,8 +39,8 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      * {@inheritDoc}
      */
     @Override
-    void send(final byte[] buffer) {
-        // Nothing to send over NFC yet.
+    public void send(final byte[] buffer) {
+        throw new UnsupportedOperationException("Sending data with NFC is not implemented yet");
     }
 
 }

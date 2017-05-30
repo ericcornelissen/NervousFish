@@ -32,25 +32,30 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final String androidFileDir = this.getFilesDir().getPath();
-        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
-
         LOGGER.info("EntryActivity created");
 
-        List<Profile> profiles = new ArrayList<>();
-        try {
-            profiles = serviceLocator.getDatabase().getProfiles();
-        } catch (IOException e) {
-            LOGGER.error("IOException while getting profiles", e);
-        }
-        if (profiles.isEmpty()) {
-            final Intent intent = new Intent(this, FirstUseActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-            this.startActivity(intent);
-        } else {
-            final Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-            this.startActivity(intent);
-        }
+        final String androidFileDir = getFilesDir().getPath();
+        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
+
+        ((INervousFish) getApplicationContext()).setOnBluetoothServiceBound(new Runnable() {
+            @Override
+            public void run() {
+                ((NervousFish) getApplicationContext()).getBluetoothServiceWithinPackage().setServiceLocator(serviceLocator);
+            List<Profile> profiles = new ArrayList<>();
+            try {
+                profiles = serviceLocator.getDatabase().getProfiles();
+            } catch (IOException e) {
+                LOGGER.error("IOException while getting profiles", e);
+            }
+            if (profiles.isEmpty()) {
+                final Intent intent = new Intent(this, FirstUseActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                this.startActivity(intent);
+            } else {
+                final Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                this.startActivity(intent);
+            }
+        });
     }
 }

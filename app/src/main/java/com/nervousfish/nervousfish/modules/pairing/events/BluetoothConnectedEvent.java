@@ -1,6 +1,6 @@
-package com.nervousfish.nervousfish.events;
+package com.nervousfish.nervousfish.modules.pairing.events;
 
-import com.nervousfish.nervousfish.modules.pairing.AndroidConnectedThread;
+import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothConnectedThread;
 
 /**
  * Greenrobot's EventBus message event
@@ -8,18 +8,18 @@ import com.nervousfish.nervousfish.modules.pairing.AndroidConnectedThread;
  * Sent when the device successfully paired with a Bluetooth device
  */
 public final class BluetoothConnectedEvent {
-    private final AndroidConnectedThread thread;
+    private final AndroidBluetoothConnectedThread thread;
 
     /**
      * Constructs a new BluetoothConnectedEvent
      *
      * @param thread The thread handling the Bluetooth connection
      */
-    public BluetoothConnectedEvent(final AndroidConnectedThread thread) {
+    public BluetoothConnectedEvent(final AndroidBluetoothConnectedThread thread) {
         this.thread = thread;
     }
 
-    public AndroidConnectedThread getThread() {
+    public AndroidBluetoothConnectedThread getThread() {
         return thread;
     }
 }
