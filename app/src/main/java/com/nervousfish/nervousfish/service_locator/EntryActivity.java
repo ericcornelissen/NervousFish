@@ -41,21 +41,21 @@ public final class EntryActivity extends Activity {
             @Override
             public void run() {
                 ((NervousFish) getApplicationContext()).getBluetoothServiceWithinPackage().setServiceLocator(serviceLocator);
-            List<Profile> profiles = new ArrayList<>();
-            try {
-                profiles = serviceLocator.getDatabase().getProfiles();
-            } catch (IOException e) {
-                LOGGER.error("IOException while getting profiles", e);
-            }
-            if (profiles.isEmpty()) {
-                final Intent intent = new Intent(this, FirstUseActivity.class);
+                List<Profile> profiles = new ArrayList<>();
+                try {
+                    profiles = serviceLocator.getDatabase().getProfiles();
+                } catch (IOException e) {
+                    LOGGER.error("IOException while getting profiles", e);
+                }
+                Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
+                if (profiles.isEmpty()) {
+                    intent = new Intent(EntryActivity.this, FirstUseActivity.class);
+                }
+
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                this.startActivity(intent);
-            } else {
-                final Intent intent = new Intent(this, LoginActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                this.startActivity(intent);
+                EntryActivity.this.startActivity(intent);
             }
         });
     }
 }
+
