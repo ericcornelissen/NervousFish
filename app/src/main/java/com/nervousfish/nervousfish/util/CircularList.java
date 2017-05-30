@@ -16,10 +16,13 @@ import java.util.List;
  * @param <E> The type of the elements of the circular list
  */
 public final class CircularList<E extends Serializable> extends AbstractList<E> implements Serializable {
+
     private static final long serialVersionUID = -4861606797222560124L;
     private static final int HASH_SEED = 31;
+
     private final int maxSize;
     private final Serializable[] data;
+
     private int head;
     private int lastElementLocation;
     private int currentSize;
@@ -32,7 +35,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     public CircularList(final int maxSize) {
         super();
         if (maxSize <= 0) {
-            throw new IllegalArgumentException("Illegal Capacity: " + maxSize);
+            throw new IllegalArgumentException("Illegal capacity: " + maxSize);
         }
         this.data = new Serializable[maxSize];
         this.maxSize = maxSize;
@@ -53,28 +56,27 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
         this.currentSize = currentSize;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
 
         final CircularList<?> that = (CircularList<?>) o;
-        return maxSize == that.maxSize && Arrays.equals(data, that.data);
-
+        return this.maxSize == that.maxSize && Arrays.equals(this.data, that.data);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = HASH_SEED * result + maxSize;
-        result = HASH_SEED * result + Arrays.hashCode(data);
+        result = CircularList.HASH_SEED * result + this.maxSize;
+        result = CircularList.HASH_SEED * result + Arrays.hashCode(this.data);
         return result;
     }
 
@@ -107,14 +109,16 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
         if (this.lastElementLocation == maxSize) {
             this.lastElementLocation = 0;
         }
-        if (currentSize == maxSize) {
-            head++;
+        if (this.currentSize == this.maxSize) {
+            this.head++;
         }
-        currentSize = Math.min(maxSize, currentSize + 1);
+        this.currentSize = Math.min(this.maxSize, this.currentSize + 1);
         return true;
     }
 
     /**
+     * Get all elements of the {@link CircularList} in a {@link List}.
+     *
      * @return All elements in order
      */
     public List<E> getElements() {
@@ -144,8 +148,8 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Ensure that no instance of this class is created because it was present in the stream. A
+     * correct stream should only contain instances of the proxy.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
         throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
@@ -154,9 +158,11 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     /**
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
+     *
      * Used for the Serialization Proxy Pattern.
-     * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
-     * ordinary serialization - is far more dangerous
+     *
+     * We suppress the AccessorClassGeneration warning because the only alternative to this pattern
+     * - ordinary serialization - is far more dangerous.
      */
     @SuppressWarnings("PMD.AccessorClassGeneration")
     private static final class SerializationProxy implements Serializable {
@@ -187,4 +193,5 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
             return new CircularList(this.maxSize, this.data, this.head, this.lastElementLocation, this.currentSize);
         }
     }
+
 }
