@@ -61,10 +61,28 @@ public class Profile {
 
     /**
      * Get the password of the {@link Profile}
-     * @return
+     * @return The encrypted password.
      */
     public String getEncryptedPassword() {
         return encryptedPassword;
+    }
+
+    /**
+     * Get the salt bytestring of the {@link Profile}
+     * @return The salt bytestring.
+     */
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    /**
+     * Checks if a given string equals the password of the user.
+     * @param password The string to check.
+     * @return Whether or not the string is the user's password.
+     */
+    public boolean checkPassword(String password){
+        String checkingPassword = EncryptedSaver.hashUsingSalt(salt, password);
+        return checkingPassword.equals(encryptedPassword);
     }
 
     /**

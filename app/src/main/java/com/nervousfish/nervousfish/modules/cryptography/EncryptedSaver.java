@@ -34,6 +34,12 @@ public final class EncryptedSaver {
         return bytes;
     }
 
+    /**
+     * Hashes a given salt and a password to an encrypted password
+     * @param salt The salt bytestring to encrypt the pass with.
+     * @param pass  The string to encrypt
+     * @return The encrypted string.
+     */
     public static String hashUsingSalt(byte[] salt, String pass){
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
