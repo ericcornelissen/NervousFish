@@ -66,7 +66,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
             final KeyPair keyPair = this.generateKeyPair();
 
             try {
-                serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
+                serviceLocator.getDatabase().addProfile(new Profile(name, password, keyPair));
                 new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText(getString(R.string.profile_created))
                         .setContentText(getString(R.string.profile_created_explanation))

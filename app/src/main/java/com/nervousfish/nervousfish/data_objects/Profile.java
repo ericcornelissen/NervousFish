@@ -1,11 +1,15 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
+
 /**
  * An Profile POJO to store a name, public key and private key.
  */
 public class Profile {
 
     private final String name;
+    private final String encryptedPassword;
+    private final byte[] salt;
     private final KeyPair keyPair;
 
     /**
@@ -14,8 +18,10 @@ public class Profile {
      * @param name the name belonging to the Profile
      * @param keyPair the public/private key-pair
      */
-    public Profile(final String name, final KeyPair keyPair) {
+    public Profile(final String name, final String password, final KeyPair keyPair) {
         this.name = name;
+        this.salt = EncryptedSaver.generateSalt();
+        this.encryptedPassword = password;
         this.keyPair = keyPair;
     }
 
@@ -51,6 +57,14 @@ public class Profile {
      */
     public IKey getPrivateKey() {
         return this.keyPair.getPrivateKey();
+    }
+
+    /**
+     * Get the password of the {@link Profile}
+     * @return
+     */
+    public String getEncryptedPassword() {
+        return encryptedPassword;
     }
 
     /**
