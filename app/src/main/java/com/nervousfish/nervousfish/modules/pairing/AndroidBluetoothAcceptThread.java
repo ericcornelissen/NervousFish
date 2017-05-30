@@ -31,21 +31,13 @@ class AndroidBluetoothAcceptThread extends Thread {
      * like a server-side client. It runs until a connection is accepted
      * @param serviceLocator The service locator used
      */
-    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) {
+    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException {
         super();
-        BluetoothServerSocket tmp = null;
         this.serviceLocator = serviceLocator;
 
         // Create a new listening server socket
-        try {
-            tmp = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(NAME_SECURE,
-                    MY_UUID_SECURE);
-
-        } catch (final IOException e) {
-            LOGGER.error("Couldn't setup an rfcomm channel", e);
-
-        }
-        serverSocket = tmp;
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, MY_UUID_SECURE);
     }
 
     /**

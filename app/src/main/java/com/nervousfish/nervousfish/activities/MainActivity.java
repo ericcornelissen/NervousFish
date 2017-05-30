@@ -92,7 +92,12 @@ public final class MainActivity extends AppCompatActivity {
 
         sortOnName();
 
-        this.serviceLocator.getBluetoothHandler().start();
+        try {
+            this.serviceLocator.getBluetoothHandler().start();
+        } catch (IOException e) {
+            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
+        }
+
         LOGGER.info("MainActivity created");
     }
 
