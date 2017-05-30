@@ -98,6 +98,8 @@ public final class ActivateBluetoothActivity extends Activity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LOGGER.debug(Integer.toString(resultCode));
+        LOGGER.debug(Integer.toString(requestCode));
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_ENABLE_BLUETOOTH) {
             final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);

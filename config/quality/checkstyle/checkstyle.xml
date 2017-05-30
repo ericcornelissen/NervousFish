@@ -25,7 +25,9 @@
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sourceforge.net/config_design.html -->
-        <module name="DesignForExtension" />
+        <module name="DesignForExtension">
+            <property name="ignoredAnnotations" value="com.nervousfish.nervousfish.annotations.DesignedForExtension"/>
+        </module>
         <module name="FinalClass" />
         <module name="HideUtilityClassConstructor" />
         <module name="InnerTypeLast" />

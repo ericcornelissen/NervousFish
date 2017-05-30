@@ -1,8 +1,6 @@
-package com.nervousfish.nervousfish.events;
+package com.nervousfish.nervousfish.modules.pairing.events;
 
 import android.bluetooth.BluetoothSocket;
-
-import com.nervousfish.nervousfish.modules.pairing.AndroidConnectedThread;
 
 import org.junit.Test;
 

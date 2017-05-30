@@ -16,5 +16,4 @@ public final class DeserializationException extends RuntimeException {
     public DeserializationException(final String msg) {
         super(msg);
     }
-
 }
