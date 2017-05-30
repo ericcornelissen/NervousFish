@@ -1,5 +1,8 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +30,7 @@ public final class EncryptedSaver {
      * @return The salt bytestring.
      */
     public static byte[] generateSalt() {
-        SecureRandom random = new SecureRandom();
+        final SecureRandom random = new SecureRandom();
         byte bytes[] = new byte[SALT_LENGTH];
         random.nextBytes(bytes);
         LOGGER.info("Generated salt bytestring");
@@ -35,17 +38,37 @@ public final class EncryptedSaver {
     }
 
     /**
-     * Hashes a given salt and a password to an encrypted password
+     * Hashes a given pass to an encrypted string that can't be decrypted.
+     * @param pass  THe string to encrypt
+     * @return  The encrypted string.
+     */
+    public static String hashWithoutSalt(String pass) {
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.reset();
+            final byte[] hash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+            LOGGER.info("Hashed the pass with SHA-256, no salt");
+            return new String(hash, "UTF-8");
+        } catch (NoSuchAlgorithmException e){
+            LOGGER.error("SHA-256 is not a valid encryptionalgorithm", e);
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error("UTF-8 is not a valid encoding method", e);
+        }
+        return null;
+    }
+
+    /**
+     * Hashes a pass to an encrypted string that can be decrypted with the salt.
      * @param salt The salt bytestring to encrypt the pass with.
      * @param pass  The string to encrypt
      * @return The encrypted string.
      */
     public static String hashUsingSalt(byte[] salt, String pass){
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.reset();
             digest.update(salt);
-            byte[] hash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+            final byte[] hash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
             LOGGER.info("Hashed the pass using the salt");
             return new String(hash, "UTF-8");
         } catch (NoSuchAlgorithmException e){
@@ -55,5 +78,7 @@ public final class EncryptedSaver {
         }
         return null;
     }
+
+
 
 }
