@@ -5,6 +5,8 @@ package com.nervousfish.nervousfish.exceptions;
  */
 public class NoBluetoothException extends RuntimeException {
 
+    private static final long serialVersionUID = -7030163248191198652L;
+
     /**
      * Constructor for a new NoBluetoothException.
      */
