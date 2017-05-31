@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -71,8 +72,8 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      * {@inheritDoc}
      */
     @Override
-    public void start() {
-        LOGGER.info("Bluetooth Service started");
+    public void start() throws IOException {
+        LOGGER.info("Bluetooth service starting...");
 
         synchronized (this) {
             // Cancel any thread attempting to make a connection
@@ -95,6 +96,8 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
                 this.serviceLocator.postOnEventBus(new BluetoothListeningEvent());
             }
         }
+
+        LOGGER.info("Bluetooth service started");
     }
 
     /**
@@ -137,7 +140,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         synchronized (this) {
             // Cancel the thread that completed the connection
             if (connectThread != null) {
-                //connectThread.cancel();
+                connectThread.cancel();
                 connectThread = null;
             }
 
@@ -231,7 +234,12 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         synchronized (this) {
             this.state = STATE_NONE;
         }
-        this.start();
+
+        try {
+            this.start();
+        } catch (IOException e) {
+            LOGGER.error("Cold not restart connection after connection was lost", e);
+        }
     }
 
     /**
@@ -245,7 +253,12 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         synchronized (this) {
             this.state = STATE_NONE;
         }
-        this.start();
+
+        try {
+            this.start();
+        } catch (IOException e) {
+            LOGGER.error("Cold not restart connection after failed event", e);
+        }
     }
 
     /**
