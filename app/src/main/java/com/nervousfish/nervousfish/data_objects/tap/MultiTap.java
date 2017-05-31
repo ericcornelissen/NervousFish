@@ -13,14 +13,16 @@ import java.util.List;
 /**
  * This class contains the bare minimum functionality of a tap event.
  */
-public final class MultiTap {
+public final class MultiTap implements Serializable {
     private static final long serialVersionUID = -3647892636477583511L;
     private final List<SingleTap> taps = new ArrayList<>();
+
     /**
      * Constructs a new tap data object that denotes a single tap event.
      * The time on which the tap event happened is assumed to be the moment that this
      * constructor is called.
      *
+
      * @param taps A {@link Collection} of SingleTap objects
      */
     public MultiTap(final Collection<SingleTap> taps) {
@@ -30,6 +32,28 @@ public final class MultiTap {
 
     public List<SingleTap> getTaps() {
         return taps;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+
+        final MultiTap multiTap = (MultiTap) o;
+
+        return this.taps != null ? this.taps.equals(multiTap.taps) : multiTap.taps == null;
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return taps != null ? taps.hashCode() : 0;
     }
 
     /**

@@ -118,7 +118,7 @@ public class MultiContactTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 MultiContact multiContact1 = (MultiContact) ois.readObject();
-                assertTrue(multiContact1.getContacts().equals(contactsA));
+                assertTrue(multiContact1.getContacts().get(0).equals(multiContact.getContacts().get(0)));
             }
         }
     }
