@@ -11,10 +11,6 @@
     <Match>
         <Class name="~.*\.*Test" />
     </Match>
-    <!-- TODO Should be removed after #137 is merged -->
-    <Match>
-        <Class name="~.*\.*DatabaseAdapter" />
-    </Match>
     <!-- Suppressed because Android enforces that the onCreate method is only called once -->
     <Match>
         <Class name="com.nervousfish.nervousfish.service_locator.NervousFish" />
