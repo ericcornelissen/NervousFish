@@ -2,25 +2,40 @@ package com.nervousfish.nervousfish.data_objects.tap;
 
 import org.junit.Test;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class MultiTapTest {
 
     @Test
     public void testInstantiate() {
         SingleTap tap = new SingleTap();
-        assertNotNull(tap);
+        List<SingleTap> list = new ArrayList<>();
+        list.add(tap);
+        MultiTap mTap = new MultiTap(list);
+        assertNotNull(mTap);
+        assertNotNull(mTap.getTaps());
     }
 
     @Test
-    public void testTimestamp() {
+    public void testInstantiateList() {
         SingleTap tap = new SingleTap();
-        Timestamp stamp = tap.getTimestamp();
-        assertTrue(System.currentTimeMillis() >= stamp.getTime());
-        assertTrue(System.currentTimeMillis() < stamp.getTime() + 100);
+        List<SingleTap> list = new ArrayList<>();
+        list.add(tap);
+        MultiTap mTap = new MultiTap(list);
+        assertNotNull(mTap.getTaps());
+    }
+
+    @Test
+    public void testCheckList() {
+        SingleTap tap = new SingleTap();
+        List<SingleTap> list = new ArrayList<>();
+        list.add(tap);
+        MultiTap mTap = new MultiTap(list);
+        assertEquals(mTap.getTaps(), list);
     }
 
 }

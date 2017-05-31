@@ -25,6 +25,11 @@ public final class MultiTap {
         this.taps.addAll(taps);
     }
 
+
+    public List<SingleTap> getTaps() {
+        return taps;
+    }
+
     /**
      * Serialize the created proxy instead of this instance.
      */
