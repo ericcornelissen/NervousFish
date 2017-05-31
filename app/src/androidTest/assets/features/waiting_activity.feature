@@ -1,4 +1,4 @@
-Feature: WaitingForSlave
+Feature: WaitingActivity
   Cancel the pairing with the slave as a master
 
   Scenario: Click on the cancel button
