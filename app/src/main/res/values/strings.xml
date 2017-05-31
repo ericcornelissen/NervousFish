@@ -53,6 +53,9 @@
     <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
         note that we won\'t do anything with your location.</string>
 
+    <string name="enable_bluetooth_questionmark">Enable Bluetooth?</string>
+    <string name="enable_bluetooth_explanation">Do you want to enable Bluetooth so others can find your device?</string>
+
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>
     <string name="contact_deleted_title">Deleted!</string>

@@ -1,7 +1,9 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import com.github.clans.fab.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -51,8 +54,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
     private static final int NUMBER_OF_SORTING_MODES = 2;
+    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
@@ -61,6 +66,7 @@ public final class MainActivity extends AppCompatActivity {
             return o1.getName().compareTo(o2.getName());
         }
     };
+
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private int currentSorting;
@@ -92,7 +98,34 @@ public final class MainActivity extends AppCompatActivity {
 
         sortOnName();
 
-        this.serviceLocator.getBluetoothHandler().start();
+        try {
+            this.serviceLocator.getBluetoothHandler().start();
+        } catch (NoBluetoothException e) {
+            LOGGER.info("Bluetooth not available on device, disabling button");
+            final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
+            button.setEnabled(false);
+        } catch (IOException e) {
+            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.enable_bluetooth_questionmark))
+                    .setContentText(getString(R.string.enable_bluetooth_explanation))
+                    .setCancelText(getString(R.string.cancel))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+
+                        /**
+                         * {@inheritDoc}
+                         */
+                        @Override
+                        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+                            enableBluetooth();
+                            sweetAlertDialog.dismiss();
+                        }
+
+                    })
+                    .show();
+        }
+
         LOGGER.info("MainActivity created");
     }
 
@@ -267,9 +300,9 @@ public final class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    /*
- * Exit the application when the user taps the back button twice
- */
+    /**
+     * Exit the application when the user taps the back button twice
+     */
     @Override
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -284,6 +317,19 @@ public final class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    /**
+     * Prompt user to enable Bluetooth if it is disabled.
+     */
+    private void enableBluetooth() {
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            LOGGER.info("Requesting to enable Bluetooth");
+            final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            this.startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH);
+            LOGGER.info("Request to enable Bluetooth sent");
+        }
     }
 
     /**
@@ -342,4 +388,5 @@ public final class MainActivity extends AppCompatActivity {
 
         });
     }
+
 }

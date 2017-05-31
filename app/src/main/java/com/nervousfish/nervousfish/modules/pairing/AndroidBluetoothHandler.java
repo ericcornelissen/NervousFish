@@ -71,7 +71,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * {@inheritDoc}
      */
     @Override
-    public void start() {
+    public void start() throws IOException {
         this.getService().start();
     }
 
