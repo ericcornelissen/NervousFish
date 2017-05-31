@@ -236,10 +236,10 @@ public final class MainActivity extends AppCompatActivity {
     public void onNewBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onNewBluetoothConnectedEvent called");
 
-        final Intent intent = new Intent(this, WaitActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
-        this.startActivity(intent);
+//        final Intent intent = new Intent(this, WaitActivity.class);
+//        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+//        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+//        this.startActivity(intent);
     }
 
     /**
@@ -250,7 +250,21 @@ public final class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
-        if (event.getClazz().equals(Contact.class)) {
+        if (event.getClazz().equals(String.class)) {
+            final String verificationMessage = (String) event.getData();
+
+            if (verificationMessage.equals("rhythm")) {
+                //Go to RhythmActivity
+                final Intent intent = new Intent(this, RhythmCreateActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                startActivity(intent);
+            } else if (verificationMessage.equals("visual")) {
+                //Go to VisualVerificationActivity
+                final Intent intent = new Intent(this, VisualVerificationActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                startActivity(intent);
+            }
+        } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             try {
                 LOGGER.info("Checking if the contact exists...");

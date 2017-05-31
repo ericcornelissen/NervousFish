@@ -39,10 +39,12 @@ public final class WaitActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wait);
+        this.setContentView(R.layout.activity_wait);
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+        this.serviceLocator.registerToEventBus(this);
 
         this.dataReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.tapCombination = (ArrayList<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
@@ -82,12 +84,6 @@ public final class WaitActivity extends Activity {
         if (resultCode == ConstantKeywords.DONE_RESULT_CODE) {
             finish();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.serviceLocator.registerToEventBus(this);
     }
 
     @Override

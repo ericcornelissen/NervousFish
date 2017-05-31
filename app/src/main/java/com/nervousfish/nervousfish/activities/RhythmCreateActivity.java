@@ -68,7 +68,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            this.serviceLocator.getBluetoothHandler().send(new Contact("CornelDeMan", new SimpleKey("testkey", "456um4h692406u2p")));
+            this.serviceLocator.getBluetoothHandler().send(new Contact("EricDeMaster", new SimpleKey("testkey", "456um4h692406u2p")));
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
