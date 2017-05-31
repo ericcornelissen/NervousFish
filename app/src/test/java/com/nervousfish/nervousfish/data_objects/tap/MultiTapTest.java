@@ -1,10 +1,5 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.MultiContact;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
-
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +12,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class MultiTapTest {
 

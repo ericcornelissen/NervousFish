@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -45,7 +44,7 @@ public final class MultiTap implements Serializable {
 
         final MultiTap multiTap = (MultiTap) o;
 
-        return this.taps != null ? this.taps.equals(multiTap.taps) : multiTap.taps == null;
+        return this.taps == null ? multiTap.taps == null : this.taps.equals(multiTap.taps);
 
     }
 
@@ -54,7 +53,7 @@ public final class MultiTap implements Serializable {
      */
     @Override
     public int hashCode() {
-        return taps != null ? taps.hashCode() : 0;
+        return taps == null ? 0 : taps.hashCode();
     }
 
     /**

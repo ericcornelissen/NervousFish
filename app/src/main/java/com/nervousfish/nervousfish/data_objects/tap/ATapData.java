@@ -48,6 +48,14 @@ public abstract class ATapData implements Serializable {
         
         final ATapData ts = (ATapData) o;
 
-        return this.timestamp != null ?  this.timestamp.equals(ts.timestamp) : ts.timestamp == null;
+        return this.timestamp == null ? ts.timestamp == null : this.timestamp.equals(ts.timestamp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return timestamp == null ? 0 : timestamp.hashCode();
     }
 }
