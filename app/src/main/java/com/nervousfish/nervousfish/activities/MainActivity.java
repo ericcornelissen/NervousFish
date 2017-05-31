@@ -149,10 +149,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onBluetoothButtonMainActivityClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
-        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
-        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
+        pairingButtonClicked(ActivateBluetoothActivity.class);
     }
 
     /**
@@ -162,10 +159,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onNFCButtonMainActivityClick(final View view) {
         LOGGER.info("NFC button clicked");
-        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
-        final Intent intent = new Intent(this, NFCActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
+        pairingButtonClicked(NFCActivity.class);
     }
 
     /**
@@ -175,10 +169,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onQRButtonMainActivityClick(final View view) {
         LOGGER.info("QR button clicked");
-        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
-        final Intent intent = new Intent(this, QRActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
+        pairingButtonClicked(QRActivity.class);
     }
 
     /**
@@ -220,6 +211,18 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
         super.onStop();
+    }
+
+    /**
+     * Goes to the activity specified after clicking a pairing button
+     *
+     * @param activity The activity to go to
+     */
+    private void pairingButtonClicked(final Class<?> activity) {
+        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
+        final Intent intent = new Intent(this, activity);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        this.startActivity(intent);
     }
 
     /**
