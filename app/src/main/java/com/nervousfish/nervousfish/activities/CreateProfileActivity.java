@@ -119,12 +119,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link boolean} which is true if all fields are valid
      */
     private boolean validateInputFields() {
-        boolean allValid;
-        allValid = validateInputFieldName();
-        allValid = allValid && validateInputFieldPassword();
-        allValid = allValid && validateInputFieldPasswordRepeat();
-        allValid = allValid && validateInputPasswordsSame();
-        return allValid;
+        return validateInputFieldName() && validateInputFieldPassword()
+                && validateInputFieldPasswordRepeat() && validateInputPasswordsSame();
     }
 
     /**
@@ -132,6 +128,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private boolean validateInputFieldName() {
         final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
+
         if (isValidName(nameInputField.getText().toString())) {
             nameInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
@@ -146,6 +143,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private boolean validateInputFieldPassword() {
         final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
+
         if (isValidName(passwordInputField.getText().toString())
                 && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
             passwordInputField.setBackgroundColor(Color.TRANSPARENT);
@@ -161,6 +159,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private boolean validateInputFieldPasswordRepeat() {
         final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
+
         if (isValidName(passwordRepeatInputField.getText().toString())) {
             passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
@@ -176,6 +175,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private boolean validateInputPasswordsSame() {
         final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
         final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
+
         if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
             passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
             passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
