@@ -11,8 +11,10 @@
     <Match>
         <Class name="~.*\.*Test" />
     </Match>
-    <!-- TODO Should be removed after #137 is merged -->
+    <!-- Suppressed because Android enforces that the onCreate method is only called once -->
     <Match>
-        <Class name="~.*\.*DatabaseAdapter" />
+        <Class name="com.nervousfish.nervousfish.service_locator.NervousFish" />
+        <Method name="onCreate" />
+        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
     </Match>
 </FindBugsFilter>

@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -29,11 +28,12 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
- * DatabaseHandler has a lot of methods by nature and refractoring it to multiple classes or single
+ * DatabaseHandler has a lot of methods by nature and refactoring it to multiple classes or single
  * methods with more logic would make the class only less understandable.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public final class GsonDatabaseAdapter implements IDatabase {
+
     private static final long serialVersionUID = -4101015873770268925L;
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
@@ -84,23 +84,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
-        // Get the list of contacts and add the new contact
-        if (contactExtists(contact.getName())) {
+        if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
         }
 
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
-        // Update the database
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Writer writer = this.fileSystem.getWriter(this.contactsPath);
-
-        gsonParser.toJson(contacts, writer);
-        writer.close();
+        this.updateContacts(contacts);
     }
 
     /**
@@ -108,7 +99,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void deleteContact(final String contactName) throws IllegalArgumentException, IOException {
-        // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         for (final Contact contact : contacts) {
@@ -123,15 +113,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
-        // Update the database
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Writer writer = this.fileSystem.getWriter(this.contactsPath);
-
-        gsonParser.toJson(contacts, writer);
-        writer.close();
+        this.updateContacts(contacts);
     }
 
     /**
@@ -196,7 +178,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public boolean contactExtists(final String name) throws IOException {
+    public boolean contactExists(final String name) throws IOException {
         return getContactWithName(name) != null;
     }
 
@@ -293,6 +275,22 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
+     * Update the contact contents of the database.
+     *
+     * @param contacts The list of contacts to write.
+     */
+    private void updateContacts(final List<Contact> contacts) throws IOException {
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
+        final Writer writer = this.fileSystem.getWriter(this.contactsPath);
+
+        gsonParser.toJson(contacts, writer);
+        writer.close();
+    }
+
+    /**
      * Initialize the contacts in the database. This does nothing
      * if the contacts section of the database already exists.
      */
@@ -332,20 +330,13 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
-     * Used to improve performance / efficiency
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
      * Ensure that the instance meets its class invariant
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
         assertNotNull(this.contactsPath);
         assertNotNull(this.profilesPath);
         assertNotNull(this.fileSystem);
     }
+
 }

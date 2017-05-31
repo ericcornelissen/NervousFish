@@ -43,7 +43,6 @@ public class VisualVerificationActivity extends Activity {
      * Go to the next activity and provide it with the generated pattern.
      */
     private void nextActivity() {
-        // TODO: Progress to the correct activity
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SECURITY_CODE, this.securityCode);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);

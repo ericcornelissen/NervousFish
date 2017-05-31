@@ -18,13 +18,14 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/backButtonChange"
+                android:id="@+id/back_button_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:background="@color/color_primary"
                 android:src="?attr/actionModeCloseDrawable"
+                android:onClick="onCancelActivateBluetoothActivityClick"
                 android:contentDescription="@string/contact_title" />
 
             <TextView
@@ -44,10 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
-                android:backgroundTint="@color/colorPrimary"/>
-
+                android:backgroundTint="@color/color_primary"/>
         </LinearLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <com.wang.avi.AVLoadingIndicatorView
@@ -59,7 +58,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:visibility="visible"
-        app:indicatorColor="@color/colorPrimary"
+        app:indicatorColor="@color/color_primary"
         app:indicatorName="BallGridPulseIndicator" />
 
     <TextView
@@ -79,6 +78,4 @@
         android:textAlignment="center"
         android:layout_marginTop="@dimen/activating_bluetooth_location_message_offset"
         android:text="@string/activating_bluetooth_location_text" />
-
-
 </RelativeLayout>

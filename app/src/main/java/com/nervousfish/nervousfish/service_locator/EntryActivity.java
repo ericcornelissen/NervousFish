@@ -26,13 +26,20 @@ public final class EntryActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final String androidFileDir = this.getFilesDir().getPath();
-        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
-
         LOGGER.info("EntryActivity created");
 
-        final Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        this.startActivity(intent);
+        final String androidFileDir = getFilesDir().getPath();
+        final IServiceLocator serviceLocator = new ServiceLocator(androidFileDir);
+
+        ((INervousFish) getApplicationContext()).setOnBluetoothServiceBound(new Runnable() {
+            @Override
+            public void run() {
+                ((NervousFish) getApplicationContext()).getBluetoothServiceWithinPackage().setServiceLocator(serviceLocator);
+
+                final Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                startActivity(intent);
+            }
+        });
     }
 }
