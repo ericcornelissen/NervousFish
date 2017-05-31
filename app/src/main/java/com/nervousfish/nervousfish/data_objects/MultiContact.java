@@ -15,7 +15,7 @@ import java.util.List;
  */
 public final class MultiContact implements Serializable {
 
-    private static final long serialVersionUID = -4715364587956219157L;
+    private static final long serialVersionUID = -7116033346966872603L;
     private final List<Contact> contacts = new ArrayList<>();
 
     /**
@@ -72,7 +72,8 @@ public final class MultiContact implements Serializable {
      * any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -4715364587956219157L;
+
+        private static final long serialVersionUID = -7116033346966872603L;
         private final Contact[] contacts;
 
         /**
