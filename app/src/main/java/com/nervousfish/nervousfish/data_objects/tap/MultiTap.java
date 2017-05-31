@@ -20,6 +20,8 @@ public final class MultiTap {
      * Constructs a new tap data object that denotes a single tap event.
      * The time on which the tap event happened is assumed to be the moment that this
      * constructor is called.
+     *
+     * @param taps A {@link Collection} of SingleTap objects
      */
     public MultiTap(final Collection<SingleTap> taps) {
         this.taps.addAll(taps);
