@@ -29,6 +29,7 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -53,14 +54,6 @@ public class QRExchangeKeyActivitySteps {
 
     }
 
-    @Given("^I am viewing the QRExchange activity$")
-    public void iAmViewingTheQRExchangeActivity() {
-
-        final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        mActivityRule.launchActivity(intent);
-
-    }
 
 
     @When("^I press the generate button$")
@@ -68,10 +61,12 @@ public class QRExchangeKeyActivitySteps {
         onView(withId(R.id.generate_QR_button)).perform(click());
     }
 
-    @When("^I press the scan button$")
-    public void iPressTheScanButton(){
-        onView(withId(R.id.scan_button)).perform(click());
+    @When("^I press the back button$")
+    public void iPressTheBackButton(){
+        onView(withId(R.id.back_button_QR_exchange)).perform(click());
     }
+
+
 
     @Then("^I should see a popup with my qr code$")
     public void iShouldSeeAPopupWithMyQRCode() {
@@ -87,10 +82,11 @@ public class QRExchangeKeyActivitySteps {
         onView(withId(R.id.QR_code_image)).check(matches(etMatchers.withDrawable(qrTest)));
     }
 
-    @Then("^I should go to the Barcode Scanner app$")
-    public void iShouldGoToTheBarcodeScannerApp() {
-        intending(toPackage("com.google.zxing.client.android.scan"));
+    @Then("^I should return from the QRExchangeKeyActivity$")
+    public void iShouldReturnFromTheQRExchangeKeyActivity() {
+        assertTrue(mActivityRule.getActivity().isDestroyed());
     }
+
 
     private class EspressoTestsMatchers {
 

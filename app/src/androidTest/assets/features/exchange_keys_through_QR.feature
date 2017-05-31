@@ -6,7 +6,7 @@ Feature: QR exchange key activity
         When I press the generate button
         Then I should see a popup with my qr code
 
-    Scenario: Deconstruct QR code
-        Given I am viewing the QRExchange activity
-        When I press the scan button
-        Then I should go to the Barcode Scanner app
+    Scenario: Press back button
+        Given I am viewing QRExchange activity
+        When I press the back button
+        Then I should return from the QRExchangeKeyActivity

@@ -105,6 +105,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+        LOGGER.info("Activity resulted");
         final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult == null) {
             LOGGER.error("No scan result in QR Scanner");
