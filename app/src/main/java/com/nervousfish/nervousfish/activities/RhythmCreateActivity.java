@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
@@ -68,7 +69,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            this.serviceLocator.getBluetoothHandler().send(new Contact("EricDeMaster", new SimpleKey("testkey", "456um4h692406u2p")));
+            this.serviceLocator.getBluetoothHandler().send(new Contact("Max", new SimpleKey("testkey", "456um4h692406u2p")));
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }

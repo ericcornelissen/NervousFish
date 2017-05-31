@@ -32,7 +32,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_contact" />
+            android:label="@string/title_activity_contact"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ContactActivity"
             android:label="@string/title_activity_contact"
