@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -31,21 +32,16 @@ class AndroidBluetoothAcceptThread extends Thread {
      * like a server-side client. It runs until a connection is accepted
      * @param serviceLocator The service locator used
      */
-    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) {
+    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException, NoBluetoothException {
         super();
-        BluetoothServerSocket tmp = null;
         this.serviceLocator = serviceLocator;
 
-        // Create a new listening server socket
-        try {
-            tmp = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord(NAME_SECURE,
-                    MY_UUID_SECURE);
-
-        } catch (final IOException e) {
-            LOGGER.error("Couldn't setup an rfcomm channel", e);
-
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            throw new NoBluetoothException();
         }
-        serverSocket = tmp;
+
+        this.serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, MY_UUID_SECURE);
     }
 
     /**
