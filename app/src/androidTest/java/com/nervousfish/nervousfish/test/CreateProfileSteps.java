@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.test;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.test.espresso.intent.Checks;
@@ -7,6 +8,7 @@ import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.BaseTest;
@@ -70,6 +72,8 @@ public class CreateProfileSteps {
 
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
+        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.submitProfile)).perform(scrollTo()).perform(click());
     }
 
@@ -80,26 +84,36 @@ public class CreateProfileSteps {
 
     @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
-        onView(withId(R.id.profile_enter_name)).perform(replaceText(name));
+        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.profile_enter_name)).perform(scrollTo()).perform(replaceText(name));
     }
 
     @When("^I enter a valid (.*?) as password$")
     public void iEnterValidPassword(final String password) {
-        onView(withId(R.id.profile_enter_password)).perform(typeText(password));
+        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.profile_enter_password)).perform(scrollTo()).perform(typeText(password));
     }
 
     @When("^I enter a valid repeat (.*?) as repeat password$")
     public void iEnterValidRepeatPassword(final String password) {
-        onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
+        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.profile_repeat_password)).perform(scrollTo()).perform(typeText(password));
     }
 
     @When("^I enter a (.*?) with a length smaller than 6 characters$")
     public void enterPasswordSmallerThanSix(final String password) {
+        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a different (.*?) than the password field$")
     public void iEnterDifferentRepeatPassword(final String password) {
+        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
     }
 
