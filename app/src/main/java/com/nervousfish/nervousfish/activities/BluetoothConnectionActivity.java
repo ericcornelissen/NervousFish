@@ -77,8 +77,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        this.setupBluetoothAdapter();
-
         // Register for broadcasts when a device is discovered.
         final IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(this.broadcastReceiver, foundFilter);
@@ -141,18 +139,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         LOGGER.info("Back button was pressed -> ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY");
         this.setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
         this.finish();
-    }
-
-    /**
-     * Sets up a bluetoothAdapter if it's supported and handles the problem when it's not.
-     */
-    public void setupBluetoothAdapter() {
-        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (this.bluetoothAdapter == null) {
-            // Cancel activity if Bluetooth could not be disabled.
-            this.setResult(Activity.RESULT_CANCELED);
-            this.finish();
-        }
     }
 
     /**
