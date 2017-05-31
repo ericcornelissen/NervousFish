@@ -3,6 +3,11 @@ package com.nervousfish.nervousfish.data_objects;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +31,7 @@ public class MultiContactTest {
     public void testInstantiateWithSingleContact() {
         Collection<Contact> contacts = new ArrayList<>();
         contacts.add(new Contact("name", this.key));
-        MultiContact multiContact= new MultiContact(contacts);
+        MultiContact multiContact = new MultiContact(contacts);
         assertNotNull(multiContact);
         assertFalse(multiContact.getContacts().isEmpty());
     }
@@ -36,7 +41,7 @@ public class MultiContactTest {
         Collection<Contact> contacts = new ArrayList<>();
         contacts.add(new Contact("name", this.key));
         contacts.add(new Contact("test", this.key));
-        MultiContact multiContact= new MultiContact(contacts);
+        MultiContact multiContact = new MultiContact(contacts);
         assertNotNull(multiContact);
         assertFalse(multiContact.getContacts().isEmpty());
     }
@@ -45,12 +50,12 @@ public class MultiContactTest {
     public void testGetContactsReturnsTheContacts() {
         List<Contact> contactsA = new ArrayList<>();
         contactsA.add(new Contact("name", this.key));
-        MultiContact multiContact= new MultiContact(contactsA);
+        MultiContact multiContact = new MultiContact(contactsA);
         assertEquals(contactsA, multiContact.getContacts());
 
         List<Contact> contactsB = contactsA;
         contactsB.add(new Contact("test", this.key));
-        MultiContact multiContact2= new MultiContact(contactsB);
+        MultiContact multiContact2 = new MultiContact(contactsB);
         assertEquals(contactsB, multiContact2.getContacts());
     }
 
@@ -65,7 +70,7 @@ public class MultiContactTest {
     public void testEqualsWorksWithArbitraryObject() {
         List<Contact> contactsA = new ArrayList<>();
         contactsA.add(new Contact("name", this.key));
-        MultiContact multiContact= new MultiContact(new ArrayList<Contact>());
+        MultiContact multiContact = new MultiContact(new ArrayList<Contact>());
         assertFalse(multiContact.equals("foobar"));
     }
 
@@ -73,11 +78,11 @@ public class MultiContactTest {
     public void testEqualsReturnsFalseForUnequalLists() {
         List<Contact> contactsA = new ArrayList<>();
         contactsA.add(new Contact("name", this.key));
-        MultiContact multiContact= new MultiContact(contactsA);
+        MultiContact multiContact = new MultiContact(contactsA);
 
         List<Contact> contactsB = contactsA;
         contactsB.add(new Contact("test", this.key));
-        MultiContact multiContact2= new MultiContact(contactsB);
+        MultiContact multiContact2 = new MultiContact(contactsB);
         assertFalse(multiContact.equals(multiContact2));
     }
 
@@ -85,9 +90,9 @@ public class MultiContactTest {
     public void testEqualsReturnsTrueForEqualLists() {
         List<Contact> contactsA = new ArrayList<>();
         contactsA.add(new Contact("name", this.key));
-        MultiContact multiContact= new MultiContact(contactsA);
+        MultiContact multiContact = new MultiContact(contactsA);
 
-        MultiContact multiContact2= new MultiContact(contactsA);
+        MultiContact multiContact2 = new MultiContact(contactsA);
         assertTrue(multiContact.equals(multiContact2));
     }
 
@@ -95,8 +100,27 @@ public class MultiContactTest {
     public void testHashCodeNotNull() {
         List<Contact> contactsA = new ArrayList<>();
         contactsA.add(new Contact("name", this.key));
-        MultiContact multiContact= new MultiContact(contactsA);
+        MultiContact multiContact = new MultiContact(contactsA);
         assertNotNull(multiContact.hashCode());
+    }
+
+    @Test
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        List<Contact> contactsA = new ArrayList<>();
+        contactsA.add(new Contact("name", this.key));
+        final MultiContact multiContact = new MultiContact(contactsA);
+        try (
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)
+        ) {
+            oos.writeObject(multiContact);
+            byte[] bytes = bos.toByteArray();
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
+                MultiContact multiContact1 = (MultiContact) ois.readObject();
+                assertTrue(multiContact1.getContacts().equals(contactsA));
+            }
+        }
     }
 
 }
