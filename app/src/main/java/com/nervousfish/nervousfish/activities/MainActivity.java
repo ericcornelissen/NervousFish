@@ -143,36 +143,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets triggered when the Bluetooth button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onBluetoothButtonMainActivityClick(final View view) {
-        LOGGER.info("Bluetooth button clicked");
-        pairingButtonClicked(view);
-    }
-
-    /**
-     * Gets triggered when the NFC button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onNFCButtonMainActivityClick(final View view) {
-        LOGGER.info("NFC button clicked");
-        pairingButtonClicked(view);
-    }
-
-    /**
-     * Gets triggered when the QR button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onQRButtonMainActivityClick(final View view) {
-        LOGGER.info("QR button clicked");
-        pairingButtonClicked(view);
-    }
-
-    /**
      * Switches the sorting mode.
      *
      * @param view The sort floating action button that was clicked
@@ -218,7 +188,7 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param view The view that was clicked
      */
-    private void pairingButtonClicked(final View view) {
+    public void onPairingButtonClicked(final View view) {
         ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
         final Intent intent;
         switch (view.getId()) {
