@@ -1,6 +1,6 @@
 # NervousFish
 [![Build Status](https://travis-ci.org/ericcornelissen/NervousFish.svg?branch=develop)](https://travis-ci.org/ericcornelissen/NervousFish)
-[![Coverage Status](https://coveralls.io/repos/github/ericcornelissen/NervousFish/badge.svg?branch=master)](https://coveralls.io/github/ericcornelissen/NervousFish?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ericcornelissen/NervousFish/badge.svg?branch=develop)](https://coveralls.io/github/ericcornelissen/NervousFish?branch=develop)
 [![BCH compliance](https://bettercodehub.com/edge/badge/ericcornelissen/NervousFish?branch=develop)](https://bettercodehub.com/)
 
 An app for your :iphone: to exchange public-keys in a secure manner.
