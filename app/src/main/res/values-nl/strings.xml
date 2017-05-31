@@ -35,10 +35,14 @@
     <string name="yes_go_back">Ja, ga terug!</string>
     <string name="save">Opslaan</string>
     <string name="more">Meer</string>
+    <string name="select_device">Selecteer een apparaat</string>
+    <string name="scanning">Scannen...</string>
     <string name="activating_bluetooth">Bluetooth activeren</string>
     <string name="activating_bluetooth_location_text">Je moet toestemming geven om je locatie te delen om Bluetooth the kunnen gebruiken. We zullen helemaal niets met je locatie doen.</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth kon niet worden geactiveerd</string>
     <string name="activating_bluetooth_went_wrong_explanation">Zet Bluetooth aan als je keys wilt versturen over Bluetooth</string>
+    <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
+    <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="type">Type</string>
     <string name="qr">QR</string>
