@@ -149,7 +149,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onBluetoothButtonMainActivityClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
-        pairingButtonClicked(ActivateBluetoothActivity.class);
+        pairingButtonClicked(view);
     }
 
     /**
@@ -159,7 +159,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onNFCButtonMainActivityClick(final View view) {
         LOGGER.info("NFC button clicked");
-        pairingButtonClicked(NFCActivity.class);
+        pairingButtonClicked(view);
     }
 
     /**
@@ -169,7 +169,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onQRButtonMainActivityClick(final View view) {
         LOGGER.info("QR button clicked");
-        pairingButtonClicked(QRActivity.class);
+        pairingButtonClicked(view);
     }
 
     /**
@@ -214,13 +214,27 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Goes to the activity specified after clicking a pairing button
+     * Goes to the activity associated with the view after clicking a pairing button
      *
-     * @param activity The activity to go to
+     * @param view The view that was clicked
      */
-    private void pairingButtonClicked(final Class<?> activity) {
+    private void pairingButtonClicked(final View view) {
         ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
-        final Intent intent = new Intent(this, activity);
+        final Intent intent;
+        switch (view.getId()) {
+            case R.id.pairing_menu_bluetooth:
+                intent = new Intent(this, ActivateBluetoothActivity.class);
+                break;
+            case R.id.pairing_menu_nfc:
+                intent = new Intent(this, NFCActivity.class);
+                break;
+            case R.id.pairing_menu_qr:
+                intent = new Intent(this, QRActivity.class);
+                break;
+            default:
+                LOGGER.error("Unknown pairing button clicked");
+                throw new IllegalArgumentException("Only existing buttons can be clicked");
+        }
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
