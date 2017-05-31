@@ -106,9 +106,14 @@ public class MultiContactTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        List<Contact> contactsA = new ArrayList<>();
-        contactsA.add(new Contact("name", this.key));
-        final MultiContact multiContact = new MultiContact(contactsA);
+        final List<Contact> contacts = new ArrayList<>();
+        final IKey key1 = new SimpleKey("bar", "baz");
+        final Contact contact1 = new Contact("foo", key1);
+        final IKey key2 = new SimpleKey("bar2", "baz2");
+        final Contact contact2 = new Contact("foo2", key2);
+        contacts.add(contact1);
+        contacts.add(contact2);
+        final MultiContact multiContact = new MultiContact(contacts);
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -117,10 +122,16 @@ public class MultiContactTest {
             byte[] bytes = bos.toByteArray();
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
-                MultiContact multiContact1 = (MultiContact) ois.readObject();
-                assertTrue(multiContact1.getContacts().get(0).equals(multiContact.getContacts().get(0)));
+                final MultiContact multiContact1 = (MultiContact) ois.readObject();
+                final List<Contact> contacts1 = multiContact1.getContacts();
+                assertEquals(contacts1.size(), 2);
+                assertEquals(contacts1.get(0).getName(), "foo");
+                assertEquals(contacts1.get(1).getName(), "foo2");
+                assertEquals(contacts1.get(0).getKeys().size(), 1);
+                assertEquals(contacts1.get(1).getKeys().size(), 1);
+                assertEquals(contacts1.get(0).getKeys().get(0), key1);
+                assertEquals(contacts1.get(1).getKeys().get(0), key2);
             }
         }
     }
-
 }

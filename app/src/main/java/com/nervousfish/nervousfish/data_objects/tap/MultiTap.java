@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
