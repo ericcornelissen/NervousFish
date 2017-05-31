@@ -47,8 +47,10 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Add possible verification methods
-        final Pair<String, String> visual = new Pair<>("Visual pattern", "visual");
-        final Pair<String, String> rhythm = new Pair<>("Tab a rhythm", "rhythm");
+        final Pair<String, String> visual = new Pair<>(
+                this.getString(R.string.select_visual_verification), ConstantKeywords.VISUAL_VERIFICATION_METHOD);
+        final Pair<String, String> rhythm = new Pair<>(
+                this.getString(R.string.select_rhythm_verification), ConstantKeywords.RHYTHM_VERIFICATION_METHOD);
         this.methods.add(visual);
         this.methods.add(rhythm);
 
@@ -70,12 +72,12 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
 
         final String method = view.getContentDescription().toString();
         switch (method) {
-            case "visual":
+            case ConstantKeywords.VISUAL_VERIFICATION_METHOD:
                 LOGGER.error("Selected visual verification method, opening activity");
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 this.startActivity(intent);
                 break;
-            case "rhythm":
+            case ConstantKeywords.RHYTHM_VERIFICATION_METHOD:
                 // TODO: open correct (Rhythm) activity
                 LOGGER.error("Selected rhythm verification method, opening activity");
                 intent.setComponent(new ComponentName(this, WaitForSlaveActivity.class));
@@ -121,7 +123,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
          */
         @Override
         public Object getItem(final int position) {
-            return null;
+            return this.values.get(position);
         }
 
         /**
