@@ -12,6 +12,7 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -143,42 +144,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets triggered when the Bluetooth button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onBluetoothButtonMainActivityClick(final View view) {
-        LOGGER.info("Bluetooth button clicked");
-        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
-    }
-
-    /**
-     * Gets triggered when the NFC button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onNFCButtonMainActivityClick(final View view) {
-        LOGGER.info("NFC button clicked");
-        final Intent intent = new Intent(this, NFCActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
-    }
-
-    /**
-     * Gets triggered when the QR button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onQRButtonMainActivityClick(final View view) {
-        LOGGER.info("QR button clicked");
-        final Intent intent = new Intent(this, QRActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
-    }
-
-    /**
      * Switches the sorting mode.
      *
      * @param view The sort floating action button that was clicked
@@ -217,6 +182,32 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
         super.onStop();
+    }
+
+    /**
+     * Goes to the activity associated with the view after clicking a pairing button
+     *
+     * @param view The view that was clicked
+     */
+    public void onPairingButtonClicked(final View view) {
+        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
+        final Intent intent;
+        switch (view.getId()) {
+            case R.id.pairing_menu_bluetooth:
+                intent = new Intent(this, ActivateBluetoothActivity.class);
+                break;
+            case R.id.pairing_menu_nfc:
+                intent = new Intent(this, NFCActivity.class);
+                break;
+            case R.id.pairing_menu_qr:
+                intent = new Intent(this, QRActivity.class);
+                break;
+            default:
+                LOGGER.error("Unknown pairing button clicked");
+                throw new IllegalArgumentException("Only existing buttons can be clicked");
+        }
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        this.startActivity(intent);
     }
 
     /**
