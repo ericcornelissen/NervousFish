@@ -27,7 +27,7 @@ public class KeyGenerationExceptionTest {
     }
 
     @Test
-    public void testSerialization() {
+    public void testSerialization() throws IOException, ClassNotFoundException {
         final KeyGenerationException exception = new KeyGenerationException(new Exception());
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -39,11 +39,7 @@ public class KeyGenerationExceptionTest {
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
                 assertTrue(exception1.getClass().equals(KeyGenerationException.class));
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

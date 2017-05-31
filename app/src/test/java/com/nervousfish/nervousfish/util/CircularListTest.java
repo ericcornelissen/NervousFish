@@ -87,7 +87,7 @@ public class CircularListTest {
     }
 
     @Test
-    public void testSerialization() {
+    public void testSerialization() throws IOException, ClassNotFoundException {
         final CircularList<Integer> circularList = new CircularList<>(5);
         circularList.add(1);
         circularList.add(42);
@@ -102,11 +102,7 @@ public class CircularListTest {
                 CircularList<Integer> circularList1 = (CircularList<Integer>) ois.readObject();
                 assertTrue(circularList1.get(0) == 1);
                 assertTrue(circularList1.get(1) == 42);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

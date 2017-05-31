@@ -129,7 +129,7 @@ public class SimpleKeyTest {
     }
 
     @Test
-    public void testSerialization() {
+    public void testSerialization() throws IOException, ClassNotFoundException {
         final IKey key = new SimpleKey("foo", "bar");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -142,11 +142,7 @@ public class SimpleKeyTest {
                 IKey key1 = (IKey) ois.readObject();
                 assertTrue(key1.getName().equals("foo"));
                 assertTrue(key1.getKey().equals("bar"));
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

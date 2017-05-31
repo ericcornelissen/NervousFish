@@ -116,7 +116,7 @@ public final class ServiceLocatorTest {
     }
 
     @Test
-    public void testSerialization() {
+    public void testSerialization() throws IOException, ClassNotFoundException {
         byte[] buf;
         try (
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -130,17 +130,12 @@ public final class ServiceLocatorTest {
                     ObjectInputStream oos2 = new ObjectInputStream(baos2)
             ) {
                 ServiceLocator object = (ServiceLocator) oos2.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     @Test
-    public void testSerializationModuleNotFoundException() {
+    public void testSerializationModuleNotFoundException() throws IOException, ClassNotFoundException {
         byte[] buf;
         try (
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -154,12 +149,7 @@ public final class ServiceLocatorTest {
                     ObjectInputStream oos2 = new ObjectInputStream(baos2)
             ) {
                 ServiceLocator.ModuleNotFoundException object = (ServiceLocator.ModuleNotFoundException) oos2.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
