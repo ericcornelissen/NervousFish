@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import com.github.clans.fab.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -100,9 +101,9 @@ public final class MainActivity extends AppCompatActivity {
         try {
             this.serviceLocator.getBluetoothHandler().start();
         } catch (NoBluetoothException e) {
-            LOGGER.info("Bluetooth not available on device, hiding button");
-            final View v = this.findViewById(R.id.pairing_menu_bluetooth);
-            v.setVisibility(View.GONE);
+            LOGGER.info("Bluetooth not available on device, disabling button");
+            final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
+            button.setEnabled(false);
         } catch (IOException e) {
             LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
