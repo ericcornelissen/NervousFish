@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * This class contains the bare minimum functionality of a tap event.
  */
-public final class MultiTap {
+public final class MultiTap implements Serializable {
     private static final long serialVersionUID = -3647892636477583511L;
     private final List<SingleTap> taps = new ArrayList<>();
     /**
