@@ -107,6 +107,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onResume();
         try {
             this.contacts = serviceLocator.getDatabase().getAllContacts();
+            sortOnName();
         } catch (final IOException e) {
             LOGGER.error("onResume in MainActivity threw an IOException", e);
         }
