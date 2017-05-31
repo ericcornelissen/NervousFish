@@ -3,9 +3,20 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/verification_method_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/select_visual_verification"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="16sp"
+        android:onClick="openVerificationMethod"
+        android:text="@string/select_visual_verification" />
+    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/select_rhythm_verification"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="16sp"
+        android:onClick="openVerificationMethod"
+        android:text="@string/select_rhythm_verification" />
 </LinearLayout>

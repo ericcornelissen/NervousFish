@@ -29,8 +29,6 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SelectVerificationMethodActivity");
 
-    private final List<Pair<String, String>> methods = new ArrayList<>();
-
     private IServiceLocator serviceLocator;
 
     /**
@@ -46,18 +44,6 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        // Add possible verification methods
-        final Pair<String, String> visual = new Pair<>(
-                this.getString(R.string.select_visual_verification), ConstantKeywords.VISUAL_VERIFICATION_METHOD);
-        final Pair<String, String> rhythm = new Pair<>(
-                this.getString(R.string.select_rhythm_verification), ConstantKeywords.RHYTHM_VERIFICATION_METHOD);
-        this.methods.add(visual);
-        this.methods.add(rhythm);
-
-        // Set verification methods in the ListView
-        final ListView listView = (ListView) this.findViewById(R.id.verification_method_list);
-        listView.setAdapter(new PairAdapter(R.layout.verification_list_entry, this.methods));
-
         LOGGER.info("Activity created");
     }
 
@@ -70,14 +56,14 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
 
-        final String method = view.getContentDescription().toString();
+        final int method = view.getId();
         switch (method) {
-            case ConstantKeywords.VISUAL_VERIFICATION_METHOD:
+            case R.id.select_visual_verification:
                 LOGGER.error("Selected visual verification method, opening activity");
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 this.startActivity(intent);
                 break;
-            case ConstantKeywords.RHYTHM_VERIFICATION_METHOD:
+            case R.id.select_rhythm_verification:
                 // TODO: open correct (Rhythm) activity
                 LOGGER.error("Selected rhythm verification method, opening activity");
                 intent.setComponent(new ComponentName(this, WaitForSlaveActivity.class));
@@ -89,66 +75,6 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
                 this.startActivity(intent);
                 break;
         }
-    }
-
-    private static class PairAdapter extends BaseAdapter {
-
-        private final int layout;
-        private final List<Pair<String, String>> values;
-
-        /**
-         * Create a new adapter for a pair of values. The first value is the textual value of a
-         * {@link TextView} and the second value is the description of that {@link TextView}.
-         *
-         * @param layout The layout to use for the adapter.
-         * @param values The {@link List} of values.
-         */
-        PairAdapter(final int layout, final List<Pair<String, String>> values) {
-            super();
-
-            this.layout = layout;
-            this.values = values;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int getCount() {
-            return this.values.size();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object getItem(final int position) {
-            return this.values.get(position);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public long getItemId(final int position) {
-            return 0;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public View getView(final int position, final View view, final ViewGroup parent) {
-            final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            final TextView textView = (TextView) layoutInflater.inflate(this.layout, parent, false);
-
-            final Pair<String, String> value = this.values.get(position);
-            textView.setText(value.first);
-            textView.setContentDescription(value.second);
-
-            return textView;
-        }
-
     }
 
 }
