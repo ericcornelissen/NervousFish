@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -148,6 +149,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onBluetoothButtonMainActivityClick(final View view) {
         LOGGER.info("Bluetooth button clicked");
+        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
         final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
@@ -160,6 +162,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onNFCButtonMainActivityClick(final View view) {
         LOGGER.info("NFC button clicked");
+        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
         final Intent intent = new Intent(this, NFCActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
@@ -172,6 +175,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onQRButtonMainActivityClick(final View view) {
         LOGGER.info("QR button clicked");
+        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
         final Intent intent = new Intent(this, QRActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
