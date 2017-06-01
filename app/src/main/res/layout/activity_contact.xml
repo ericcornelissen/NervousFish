@@ -28,7 +28,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
                 app:srcCompat="?attr/actionModeCloseDrawable"
-                tools:targetApi="lollipop" />
+                tools:targetApi="lollipop"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -52,11 +53,8 @@
                 app:srcCompat="@android:drawable/ic_menu_more"
                 tools:targetApi="lollipop"
                 android:contentDescription="@string/more" />
-
         </LinearLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_contact" />
-
 </LinearLayout>

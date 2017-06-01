@@ -5,7 +5,6 @@
     <!-- Words -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Cancel</string>
-    <string name="contact">Contact</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="key_type" formatted="false">Key type: %s</string>
@@ -20,7 +19,6 @@
     <string name="save">Save</string>
     <string name="scanning">Scanning…</string>
     <string name="select_device">Select device</string>
-    <string name="settings">Settings</string>
     <string name="submit">Submit</string>
     <string name="type">Type</string>
     <string name="warning">Warning</string>
@@ -35,6 +33,9 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
+
+    <!-- Image descriptions -->
+    <string name="image_description_logo">Logo</string>
 
     <!-- First time use -->
     <string name="welcome_message">Welcome to Nervous Fish</string>
@@ -54,9 +55,9 @@
     <!-- Create profile -->
     <string name="could_not_create_profile">Can\'t create profile</string>
     <string name="could_not_create_profile_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
-    <string name="key_to_generate">Key to generate:</string>
     <string name="profile_created">Profile created</string>
     <string name="profile_created_explanation">Your profile is successfully created. Please log in now.</string>
+    <string name="key_to_generate">Key to generate:</string>
 
     <!-- Contacts -->
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>

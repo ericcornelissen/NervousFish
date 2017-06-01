@@ -5,7 +5,6 @@
     <!-- Woorden -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
-    <string name="contact">Contact</string>
     <string name="delete">Verwijderen</string>
     <string name="edit">Bewerken</string>
     <string name="key_type" formatted="false">Type sleutel: %s</string>
@@ -20,7 +19,6 @@
     <string name="save">Opslaan</string>
     <string name="scanning">Scannen…</string>
     <string name="select_device">Selecteer apparaat</string>
-    <string name="settings">Instellingen</string>
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
     <string name="warning">Waarschuwing</string>
@@ -29,11 +27,15 @@
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
     <string name="discovered_devices">Gevonden apparaten</string>
+    <string name="get_started">Laten we beginnen!</string>
     <string name="invalid_name">Ongeldige naam</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
+
+    <!-- Image descriptions -->
+    <string name="image_description_logo">Logo</string>
 
     <!-- Eerste gebruik -->
     <string name="welcome_message">Welkom bij Nervous Fish</string>
@@ -55,6 +57,7 @@
     <string name="profile_created_explanation">Je profiel is succesvol aangemaakt, je kunt nu inloggen.</string>
     <string name="could_not_create_profile">Kon geen profiel maken</string>
     <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
+    <string name="key_to_generate">Sleutel om te maken:</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>

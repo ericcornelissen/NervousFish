@@ -28,7 +28,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
                 app:srcCompat="?attr/actionModeCloseDrawable"
-                tools:targetApi="lollipop" />
+                tools:targetApi="lollipop"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -52,9 +53,7 @@
                 app:srcCompat="@android:drawable/ic_menu_save"
                 tools:targetApi="lollipop"
                 android:contentDescription="@string/save" />
-
         </LinearLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -76,7 +75,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +88,8 @@
                         android:id="@+id/iv_change_contact"
                         android:layout_width="@dimen/contact_picture_width"
                         android:layout_height="@dimen/contact_picture_height"
-                        android:src="@drawable/personplaceholder" />
+                        android:src="@drawable/personplaceholder"
+                        android:contentDescription="@string/contact_image" />
 
                     <EditText
                         android:labelFor="@id/iv_change_contact"
@@ -100,10 +99,9 @@
                         android:inputType="text"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/contact_name_size"
-                        android:textStyle="bold" />
-
+                        android:textStyle="bold"
+                        tools:ignore="LabelFor" /> <!-- has no label -->
                 </LinearLayout>
-
             </RelativeLayout>
 
         </android.support.design.widget.AppBarLayout>
@@ -123,11 +121,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_keys_list_height"
                     android:layout_marginTop="@dimen/contact_keys_list_margin_top" />
-
             </LinearLayout>
-
         </android.support.v4.widget.NestedScrollView>
-
     </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

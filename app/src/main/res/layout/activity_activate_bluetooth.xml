@@ -26,7 +26,8 @@
                 android:layout_weight="1"
                 android:background="@color/color_primary"
                 android:src="?attr/actionModeCloseDrawable"
-                android:onClick="onCancelActivateBluetoothActivityClick" />
+                android:onClick="onCancelActivateBluetoothActivityClick"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/toolbar_title"
