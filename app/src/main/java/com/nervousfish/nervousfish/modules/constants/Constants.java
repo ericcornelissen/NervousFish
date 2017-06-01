@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Class containing global constants for the application. These constants are definied in this file, because
- * they're used by multiple files and don't logically belong to one of them.
+ * they're used by multiple files and don't logically belong to any one of them.
  */
 public final class Constants implements IConstants {
 

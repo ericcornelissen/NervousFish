@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A QR handler without implementation, needed because NFC is unavailable on the emulator
+ * A handler for QR related functionality without implementation, needed because NFC is unavailable on the emulator
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
 

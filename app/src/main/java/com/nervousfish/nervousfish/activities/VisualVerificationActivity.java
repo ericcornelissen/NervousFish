@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image
+ * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
  */
 public class VisualVerificationActivity extends Activity {
 

@@ -42,7 +42,8 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The main {@link Activity} that shows a list of all contacts and a button to add new people
+ * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
+ * public keys from other people
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
         "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
