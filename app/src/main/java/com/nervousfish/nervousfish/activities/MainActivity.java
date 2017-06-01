@@ -24,8 +24,6 @@ import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
-import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
