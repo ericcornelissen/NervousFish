@@ -49,8 +49,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
 
-        final int id = view.getId();
-        switch (id) {
+        switch (view.getId()) {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
