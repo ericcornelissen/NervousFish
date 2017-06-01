@@ -33,8 +33,8 @@ final class ContactActivityHelper {
      * @param activity The where the name has to be set.
      * @param name The name.
      */
-    static void setName(final Activity activity, final String name) {
-        final TextView tv = (TextView) activity.findViewById(R.id.contact_name);
+    static void setName(final Activity activity, final String name, final int id) {
+        final TextView tv = (TextView) activity.findViewById(id);
         tv.setText(name);
     }
 
@@ -44,14 +44,14 @@ final class ContactActivityHelper {
      * @param activity The where the name has to be set.
      * @param keys A {@link Collection} of {@link IKey}s.
      */
-    static void setKeys(final Activity activity, final Collection<IKey> keys) {
+    static void setKeys(final Activity activity, final Collection<IKey> keys, final int id) {
         final List<String> keyNames = new ArrayList<>();
         for (final IKey key : keys) {
             keyNames.add(key.getName());
         }
 
-        final ListView lv = (ListView) activity.findViewById(R.id.list_view);
-        lv.setAdapter(new ArrayAdapter<>(activity,
-                android.R.layout.simple_list_item_1, keyNames));
+        final ListView lv = (ListView) activity.findViewById(id);
+        lv.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, keyNames));
     }
+
 }

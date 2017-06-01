@@ -47,8 +47,8 @@ public final class ChangeContactActivity extends AppCompatActivity {
         }
 
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        ContactActivityHelper.setName(this, this.contact.getName());
-        ContactActivityHelper.setKeys(this, this.contact.getKeys());
+        ContactActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
+        ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
@@ -65,7 +65,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editText = (EditText) findViewById(R.id.contact_name);
+        final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
         if (isValidName(editText.getText().toString())) {
             //Update contact
             try {
@@ -109,7 +109,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final View v) {
-            final EditText editText = (EditText) findViewById(R.id.contact_name);
+            final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
             if (editText.getText().toString().equals(contact.getName())) {
                 finish();
             } else {

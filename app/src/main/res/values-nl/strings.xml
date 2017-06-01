@@ -10,10 +10,9 @@
     <string name="contact_doesnt_exist">Het contact bestaat niet</string>
     <string name="contact_title">Contact</string>
     <string name="delete">Verwijder</string>
-    <string name="delete_menu_item">Verwijder</string>
     <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
     <string name="discovered_devices">Ontdekte apparaten</string>
-    <string name="edit_menu_item">Wijzig</string>
+    <string name="edit">Wijzig</string>
     <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
     <string name="invalid_name">Ongeldige naam ingevoerd</string>
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
@@ -35,7 +34,7 @@
     <string name="save">Opslaan</string>
     <string name="more">Meer</string>
     <string name="select_device">Selecteer een apparaat</string>
-    <string name="scanning">Scannen...</string>
+    <string name="scanning">Scannen…</string>
     <string name="activating_bluetooth">Bluetooth activeren</string>
     <string name="activating_bluetooth_location_text">Je moet toestemming geven om je locatie te delen om Bluetooth the kunnen gebruiken. We zullen helemaal niets met je locatie doen.</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth kon niet worden geactiveerd</string>
