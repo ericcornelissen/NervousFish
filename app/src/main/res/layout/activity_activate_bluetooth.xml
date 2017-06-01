@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -45,7 +46,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
-                android:backgroundTint="@color/color_primary"/>
+                android:backgroundTint="@color/color_primary"
+                android:contentDescription="@string/empty"
+                tools:targetApi="lollipop" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 

@@ -88,12 +88,14 @@
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
+                        android:id="@+id/iv_change_contact"
                         android:layout_width="@dimen/contact_picture_width"
                         android:layout_height="@dimen/contact_picture_height"
                         android:contentDescription="@string/contact_title"
                         android:src="@drawable/personplaceholder" />
 
                     <EditText
+                        android:labelFor="@id/iv_change_contact"
                         android:id="@+id/edit_contact_name_input"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"

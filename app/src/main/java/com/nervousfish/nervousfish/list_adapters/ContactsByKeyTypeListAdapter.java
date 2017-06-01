@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,7 +149,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
 
         final TextView item = (TextView) view.findViewById(R.id.key_type);
         item.setTypeface(null, Typeface.BOLD);
-        item.setText("Keytype: " + type);
+        item.setText(String.format(NervousFish.getInstance().getResources().getString(R.string.keytype), type));
         return view;
     }
 

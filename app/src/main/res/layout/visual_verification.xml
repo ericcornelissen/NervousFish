@@ -20,7 +20,8 @@
             android:src="@drawable/example_overlay"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:contentDescription="@string/image_overlay" />
     </RelativeLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,25 +35,29 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="A"
+            android:contentDescription="@string/A"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
+
         <Button
             android:id="@+id/visual_verification_button01"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="B"
+            android:contentDescription="@string/B"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button02"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="C"
+            android:contentDescription="@string/C"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,25 +72,28 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="D"
+            android:contentDescription="@string/D"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button11"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="E"
+            android:contentDescription="@string/E"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button12"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="F"
+            android:contentDescription="@string/F"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -100,25 +108,28 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="G"
+            android:contentDescription="@string/G"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button21"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="H"
+            android:contentDescription="@string/H"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button22"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="I"
+            android:contentDescription="@string/I"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -132,24 +143,27 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="J"
+            android:contentDescription="@string/J"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button31"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="K"
+            android:contentDescription="@string/K"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button32"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="L"
+            android:contentDescription="@string/L"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 </android.support.percent.PercentRelativeLayout>

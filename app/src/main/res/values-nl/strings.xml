@@ -9,7 +9,6 @@
     <string name="contact_deleted_title">Verwijderd!</string>
     <string name="contact_doesnt_exist">Het contact bestaat niet</string>
     <string name="contact_title">Contact</string>
-    <string name="delete">Verwijder</string>
     <string name="delete_menu_item">Verwijder</string>
     <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
     <string name="discovered_devices">Ontdekte apparaten</string>
@@ -24,19 +23,17 @@
     <string name="paired_devices">Verbonden apparaten</string>
     <string name="password">Wachtwoord</string>
     <string name="popup_you_sure">Weet je het zeker?</string>
-    <string name="public_key_snippet">Gedeeltelijke Public Key</string>
     <string name="something_went_wrong">Er is iets fout gegaan</string>
     <string name="something_went_wrong_try_again">Er is iets fout gegaan met het verwijderen van het contact, probeer het later nog eens.</string>
     <string name="submit">Inloggen</string>
     <string name="title_activity_contact">Contact</string>
-    <string name="title_activity_settings">Instellingen</string>
     <string name="waiting_for_slave">Wachten op partner…</string>
     <string name="yes_delete">Ja, verwijder het!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
     <string name="save">Opslaan</string>
     <string name="more">Meer</string>
     <string name="select_device">Selecteer een apparaat</string>
-    <string name="scanning">Scannen...</string>
+    <string name="scanning">Scannen…</string>
     <string name="activating_bluetooth">Bluetooth activeren</string>
     <string name="activating_bluetooth_location_text">Je moet toestemming geven om je locatie te delen om Bluetooth the kunnen gebruiken. We zullen helemaal niets met je locatie doen.</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth kon niet worden geactiveerd</string>
@@ -51,4 +48,7 @@
     <string name="warning">Waarschuwing</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
+    <string name="image_overlay">Mooi plaatje</string>
+    <string name="keytype" formatted="false">Type key: %s</string>
+    <string name="contact_picture">Contact foto</string>
 </resources>

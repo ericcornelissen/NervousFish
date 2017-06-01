@@ -12,7 +12,8 @@
         android:layout_width="@dimen/contacts_list_entry_icon_width"
         android:layout_height="@dimen/contacts_list_entry_icon_height"
         android:layout_weight="1"
-        android:src="@drawable/personplaceholder" />
+        android:src="@drawable/personplaceholder"
+        android:contentDescription="@string/contact_picture" />
 
     <LinearLayout
         android:layout_width="@dimen/contacts_list_entry_text_layout_width"

@@ -67,8 +67,9 @@
     <issue id="InOrMmUsage" severity="ignore" />
     <issue id="InconsistentArrays" severity="ignore" />
     <issue id="InconsistentLayout" severity="ignore" />
-    <issue id="InefficientWeight" severity="ignore" />
-    <issue id="InlinedApi" severity="ignore" />
+    <issue id="InefficientWeight" severity="ignore" />-->
+    <issue id="InflateParams" severity="ignore" />
+    <!--<issue id="InlinedApi" severity="ignore" />
     <issue id="InnerclassSeparator" severity="ignore" />
     <issue id="Instantiatable" severity="ignore" />
     <issue id="InvalidId" severity="ignore" />
