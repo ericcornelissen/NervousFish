@@ -142,8 +142,11 @@ public class GsonDatabaseAdapterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testDeleteContactThrowsWhenContactNotInDatabase() throws IOException {
-        IKey key = new SimpleKey("Webserver", "key");
-        Contact contact = new Contact("Zoidberg", key);
+        write("[{\"name\":\"Zoidberg\",\"keys\":[[\"simple\",{\"name\":\"Webserver\",\"key\":\"keyA\"}]," +
+                "[\"simple\",{\"name\":\"Webmail\",\"key\":\"keyB\"}]]}]", CONTACTS_PATH);
+
+        IKey key = new SimpleKey(     "Burpie", "key");
+        Contact contact = new Contact("Flurpie", key);
         database.deleteContact(contact.getName());
     }
 
