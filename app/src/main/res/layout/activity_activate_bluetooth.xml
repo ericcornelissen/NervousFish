@@ -26,8 +26,7 @@
                 android:layout_weight="1"
                 android:background="@color/color_primary"
                 android:src="?attr/actionModeCloseDrawable"
-                android:onClick="onCancelActivateBluetoothActivityClick"
-                android:contentDescription="@string/contact_title" />
+                android:onClick="onCancelActivateBluetoothActivityClick" />
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -47,7 +46,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
                 android:backgroundTint="@color/color_primary"
-                android:contentDescription="@string/empty"
+                android:contentDescription="@string/empty_string"
                 tools:targetApi="lollipop" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>

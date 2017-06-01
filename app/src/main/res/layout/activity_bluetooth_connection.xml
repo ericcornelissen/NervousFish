@@ -38,7 +38,7 @@
                 android:layout_weight="1.5"
                 android:backgroundTint="@color/color_primary"
                 tools:targetApi="lollipop"
-                android:contentDescription="@string/empty" />
+                android:contentDescription="@string/empty_string" />
 
         </LinearLayout>
 

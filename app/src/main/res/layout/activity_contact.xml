@@ -28,7 +28,6 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
                 app:srcCompat="?attr/actionModeCloseDrawable"
-                android:contentDescription="@string/contact_title"
                 tools:targetApi="lollipop" />
 
             <TextView

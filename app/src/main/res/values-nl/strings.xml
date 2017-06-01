@@ -1,67 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">NervousFish</string>
+
+    <!-- Woorden -->
+    <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
-    <string name="cancel_pairing">Annuleren</string>
-    <string name="change_contact_title">Wijzig Contact</string>
+    <string name="contact">Contact</string>
+    <string name="delete">Verwijderen</string>
+    <string name="edit">Bewerken</string>
+    <string name="key_type" formatted="false">Type sleutel: %s</string>
+    <string name="more">Meer</string>
+    <string name="name">Naam</string>
+    <string name="nfc">NFC</string>
+    <string name="no">Nee</string>
+    <string name="paired_devices">Gepaarde apparaten</string>
+    <string name="password">Wachtwoord</string>
+    <string name="qr">QR</string>
+    <string name="rsa_key">RSA sleutel</string>
+    <string name="save">Opslaan</string>
+    <string name="scanning">Scannen…</string>
+    <string name="select_device">Selecteer apparaat</string>
+    <string name="settings">Instellingen</string>
+    <string name="submit">Verzend</string>
+    <string name="type">Type</string>
+    <string name="warning">Waarschuwing</string>
+    <string name="yes">Ja</string>
+
+    <!-- Gebruikelijk zinnen -->
+    <string name="are_you_sure">Weet je het zeker?</string>
+    <string name="discovered_devices">Gevonden apparaten</string>
+    <string name="invalid_name">Ongeldige naam</string>
+    <string name="no_devices_found">Geen apparaten gevonden…</string>
+    <string name="something_went_wrong">Er ging iets fout</string>
+    <string name="try_again">Probeer opnieuw alstublieft.</string>
+    <string name="waiting_for_partner">Wachten op partner…</string>
+
+    <!-- Eerste gebruik -->
+    <string name="welcome_message">Welkom bij Nervous Fish</string>
+    <string name="welcome_message_subpart">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+    <string name="create_profile_message">Een profiel aanmaken</string>
+    <string name="repeat_password">Herhaal wachtwoord</string>
+
+    <!-- Hoofdscherm -->
+    <string name="you_sure_log_out">Weet je zeker dat je uit wilt loggen?</string>
+    <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
+    <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
+
+    <!-- Login -->
+    <string name="login_message">Vul hier je wachtwoord in</string>
+    <string name="login_password_mismatch">Het wachtwoord is verkeerd</string>
+
+    <!-- Maak profiel -->
+    <string name="profile_created">Profiel gemaakt</string>
+    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt, je kunt nu inloggen.</string>
+    <string name="could_not_create_profile">Kon geen profiel maken</string>
+    <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
+
+    <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
     <string name="contact_deleted_description">Het contact is al verwijderd!</string>
     <string name="contact_deleted_title">Verwijderd!</string>
     <string name="contact_doesnt_exist">Het contact bestaat niet</string>
-    <string name="contact_title">Contact</string>
-    <string name="delete">Verwijder</string>
+    <string name="contact_image">Contact foto</string>
     <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
-    <string name="discovered_devices">Ontdekte apparaten</string>
-    <string name="edit">Wijzig</string>
     <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
-    <string name="invalid_name">Ongeldige naam ingevoerd</string>
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
-    <string name="login_message">Vul je wachtwoord hieronder in</string>
-    <string name="msg_mismatch">Je wachtwoord is incorrect</string>
-    <string name="name">Naam</string>
-    <string name="no_devices_found">Geen apparaten gevonden…</string>
-    <string name="paired_devices">Verbonden apparaten</string>
-    <string name="popup_you_sure">Weet je het zeker?</string>
-    <string name="something_went_wrong">Er is iets fout gegaan</string>
-    <string name="something_went_wrong_try_again">Er is iets fout gegaan met het verwijderen van het contact, probeer het later nog eens.</string>
-    <string name="submit">Inloggen</string>
-    <string name="title_activity_contact">Contact</string>
-    <string name="waiting_for_slave">Wachten op partner…</string>
     <string name="yes_delete">Ja, verwijder het!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
-    <string name="save">Opslaan</string>
-    <string name="more">Meer</string>
-    <string name="select_device">Selecteer een apparaat</string>
-    <string name="scanning">Scannen…</string>
-    <string name="activating_bluetooth">Bluetooth activeren</string>
+
+    <!-- Bluetooth -->
+    <string name="activating_bluetooth">Bluetooth activeren…</string>
     <string name="activating_bluetooth_location_text">Je moet toestemming geven om je locatie te delen om Bluetooth the kunnen gebruiken. We zullen helemaal niets met je locatie doen.</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth kon niet worden geactiveerd</string>
     <string name="activating_bluetooth_went_wrong_explanation">Zet Bluetooth aan als je keys wilt versturen over Bluetooth</string>
-    <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
-    <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
-    <string name="bluetooth">Bluetooth</string>
-    <string name="type">Type</string>
-    <string name="qr">QR</string>
-    <string name="nfc">NFC</string>
-    <string name="welcome_message">Welkom bij Nervous Fish</string>
-    <string name="welcome_message_subpart">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
-    <string name="create_profile_message">Een profiel aanmaken</string>
-    <string name="get_started">Begin!</string>
-    <string name="key_to_generate">Key om te genereren:</string>
-    <string name="could_not_create_profile">Kon geen profiel maken</string>
-    <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
-    <string name="profile_created">Profiel gemaakt</string>
-    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt, je kunt nu inloggen.</string>
-    <string name="enter_profile_name">Naam</string>
-    <string name="password">Wachtwoord</string>
-    <string name="repeat_password">Herhaal wachtwoord</string>
-    <string name="rsa_key">RSA key</string>
-    <string name="dsa_key">DSA key</string>
-    <string name="warning">Waarschuwing</string>
-    <string name="no">NEE</string>
-    <string name="yes">JA</string>
-    <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
-    <string name="image_overlay">Mooi plaatje</string>
-    <string name="keytype" formatted="false">Type key: %s</string>
-    <string name="contact_picture">Contact foto</string>
 </resources>

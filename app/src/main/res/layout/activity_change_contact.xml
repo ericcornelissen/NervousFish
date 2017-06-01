@@ -27,7 +27,6 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
-                android:contentDescription="@string/contact_title"
                 app:srcCompat="?attr/actionModeCloseDrawable"
                 tools:targetApi="lollipop" />
 
@@ -91,7 +90,6 @@
                         android:id="@+id/iv_change_contact"
                         android:layout_width="@dimen/contact_picture_width"
                         android:layout_height="@dimen/contact_picture_height"
-                        android:contentDescription="@string/contact_title"
                         android:src="@drawable/personplaceholder" />
 
                     <EditText
@@ -100,7 +98,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:inputType="text"
-                        android:text="@string/contact_title"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/contact_name_size"
                         android:textStyle="bold" />

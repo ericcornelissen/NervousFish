@@ -149,7 +149,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
 
         final TextView item = (TextView) view.findViewById(R.id.key_type);
         item.setTypeface(null, Typeface.BOLD);
-        item.setText(String.format(NervousFish.getInstance().getResources().getString(R.string.keytype), type));
+        item.setText(String.format(NervousFish.getInstance().getResources().getString(R.string.key_type), type));
         return view;
     }
 
