@@ -49,7 +49,9 @@ public final class WaitActivity extends Activity {
         this.dataReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.tapCombination = (ArrayList<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
-        if(dataReceived != null && tapCombination != null) {
+        LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
+                + " tapCombination is not null: " + (this.tapCombination != null));
+        if (this.dataReceived != null && this.tapCombination != null) {
             evaluateData();
         }
 

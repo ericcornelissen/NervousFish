@@ -103,6 +103,11 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.registerReceiver(broadcastReceiver, filter);
 
         this.serviceLocator.registerToEventBus(this);
+
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // Get the AndroidBluetoothHandler.
+        this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
     }
 
     /**
@@ -114,9 +119,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.serviceLocator.unregisterFromEventBus(this);
         unregisterReceiver(this.broadcastReceiver);
         this.bluetoothAdapter = null;
-
-        // Get the AndroidBluetoothHandler.
-        this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
     }
 
     /**
@@ -203,14 +205,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         LOGGER.info("onBluetoothConnectedEvent called");
         if (master) {
             master = false;
-            try {
-                this.serviceLocator.getBluetoothHandler().send("rhythm");
-                final Intent intent = new Intent(this, RhythmCreateActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-                this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
-            } catch (final IOException e) {
-                LOGGER.warn("Sending the string \"rhythm\" issued an IOexception", e);
-            }
+            final Intent intent = new Intent(this, RhythmCreateActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         } else {
             final Intent intent = new Intent(this, WaitActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
@@ -227,10 +224,12 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private void addNewDevice(final Intent intent) {
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-        // Skip paired devices and devices without a name.
-        if (device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
-            this.newDevices.add(device);
-            this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+        if(device != null && device.getName() != null) {
+            // Skip paired devices and devices without a name.
+            if (device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
+                this.newDevices.add(device);
+                this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
         }
     }
 

@@ -46,6 +46,8 @@ public class RhythmCreateActivity extends AppCompatActivity {
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+        LOGGER.info("RhythmActivity started");
     }
 
     /**
@@ -69,7 +71,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            this.serviceLocator.getBluetoothHandler().send(new Contact("Max", new SimpleKey("testkey", "456um4h692406u2p")));
+            this.serviceLocator.getBluetoothHandler().send(new Contact("Baas", new SimpleKey("testkey", "456um4h692406u2p")));
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
@@ -133,6 +135,12 @@ public class RhythmCreateActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
+
+        try {
+            this.serviceLocator.getBluetoothHandler().send("rhythm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
