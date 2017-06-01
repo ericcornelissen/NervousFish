@@ -5,7 +5,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 
@@ -32,6 +31,7 @@ final class ContactActivityHelper {
      *
      * @param activity The where the name has to be set.
      * @param name The name.
+     * @param id the {@code R.id} of the target {@link TextView}.
      */
     static void setName(final Activity activity, final String name, final int id) {
         final TextView tv = (TextView) activity.findViewById(id);
@@ -43,6 +43,7 @@ final class ContactActivityHelper {
      *
      * @param activity The where the name has to be set.
      * @param keys A {@link Collection} of {@link IKey}s.
+     * @param id the {@code R.id} of the target {@link ListView}.
      */
     static void setKeys(final Activity activity, final Collection<IKey> keys, final int id) {
         final List<String> keyNames = new ArrayList<>();

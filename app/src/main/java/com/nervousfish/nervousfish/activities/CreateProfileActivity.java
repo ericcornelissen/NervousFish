@@ -103,9 +103,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link KeyPair} with the key type selected
      */
     private KeyPair generateKeyPair() {
-        final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radio_rsa_key);
+        final RadioButton rsaKeyButton = (RadioButton) this.findViewById(R.id.radio_rsa_key);
         if (rsaKeyButton.isChecked()) {
-            return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
+            return this.serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
         }
 
         throw new IllegalArgumentException("The selected key is not implemented");
@@ -119,8 +119,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link boolean} which is true if all fields are valid
      */
     private boolean validateInputFields() {
-        return validateInputFieldName() && validateInputFieldPassword()
-                && validateInputFieldPasswordRepeat() && validateInputPasswordsSame();
+        return this.validateInputFieldName() & this.validateInputFieldPassword()
+                & this.validateInputFieldPasswordRepeat() & this.validateInputPasswordsSame();
     }
 
     /**
@@ -129,10 +129,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private boolean validateInputFieldName() {
         final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
 
-        if (isValidName(nameInputField.getText().toString())) {
+        if (this.isValidName(nameInputField.getText().toString())) {
             nameInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            nameInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
+            nameInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
             return false;
         }
         return true;
@@ -144,11 +144,11 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private boolean validateInputFieldPassword() {
         final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
 
-        if (isValidName(passwordInputField.getText().toString())
+        if (this.isValidName(passwordInputField.getText().toString())
                 && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
             passwordInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
+            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
             return false;
         }
         return true;
@@ -160,10 +160,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private boolean validateInputFieldPasswordRepeat() {
         final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
 
-        if (isValidName(passwordRepeatInputField.getText().toString())) {
+        if (this.isValidName(passwordRepeatInputField.getText().toString())) {
             passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
+            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
             return false;
         }
         return true;
@@ -177,8 +177,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
 
         if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
+            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
             return false;
         }
         return true;

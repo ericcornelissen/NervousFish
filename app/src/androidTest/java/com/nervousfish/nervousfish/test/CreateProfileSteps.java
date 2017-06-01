@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.test;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.support.test.espresso.intent.Checks;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
@@ -162,6 +163,7 @@ public class CreateProfileSteps {
         return new BoundedMatcher<View, EditText>(EditText.class) {
             @Override
             public boolean matchesSafely(EditText warning) {
+
                 return color == ((ColorDrawable) warning.getBackground()).getColor();
             }
             @Override
