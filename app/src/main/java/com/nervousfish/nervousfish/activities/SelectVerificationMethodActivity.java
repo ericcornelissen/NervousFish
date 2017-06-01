@@ -55,7 +55,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
                 this.startActivity(intent);
                 break;
             case R.id.select_rhythm_verification:
-                // TODO: open correct (Rhythm) activity
+                // TODO: open correct (Rhythm) activity (also update test!)
                 LOGGER.error("Selected rhythm verification method, opening activity");
                 intent.setComponent(new ComponentName(this, WaitForSlaveActivity.class));
                 this.startActivity(intent);
