@@ -22,8 +22,8 @@
     <dimen name="enter_password_padding_top">40dp</dimen>
     <dimen name="error_password_margin_top">10dp</dimen>
     <dimen name="enter_password_field_margin_top">30dp</dimen>
-    <dimen name="enter_password_field_margin_left">20dp</dimen>
-    <dimen name="enter_password_field_margin_right">20dp</dimen>
+    <dimen name="field_margin_left">20dp</dimen>
+    <dimen name="field_margin_right">20dp</dimen>
 
     <dimen name="submit_password_width">200dp</dimen>
     <dimen name="submit_password_height">40dp</dimen>
@@ -36,6 +36,31 @@
 
     <dimen name="waiting_for_slave_text_offset">40dp</dimen>
     <dimen name="activating_bluetooth_location_message_offset">90dp</dimen>
+
+    <dimen name="get_started_text_size">18sp</dimen>
+    <dimen name="welcome_message_subpart_size">15sp</dimen>
+    <dimen name="welcome_message_size">42sp</dimen>
+
+    <dimen name="first_use_divider_width">200dp</dimen>
+    <dimen name="first_use_divider_height">1dp</dimen>
+    <dimen name="first_use_divider_margin_top">20dp</dimen>
+
+    <dimen name="welcome_message_subpart_width">300dp</dimen>
+    <dimen name="welcome_message_subpart_margin_top">20dp</dimen>
+    <dimen name="welcome_message_padding_top">20dp</dimen>
+    <dimen name="first_use_logo_padding_top">50dp</dimen>
+    <dimen name="first_use_logo_height">170dp</dimen>
+
+    <dimen name="ten_padding_start">10dp</dimen>
+    <dimen name="ten_padding_end">10dp</dimen>
+    <dimen name="submit_text_size">18sp</dimen>
+
+    <dimen name="field_margin_top">20dp</dimen>
+    <dimen name="normal_drawable_padding">10dp</dimen>
+
+    <dimen name="create_profile_message_width">300dp</dimen>
+    <dimen name="create_profile_message_margin_top">20dp</dimen>
+    <dimen name="create_profile_message_size">19sp</dimen>
 
     <dimen name="select_verification_method_title_padding">20dp</dimen>
     <dimen name="select_verification_method_title_text_size">22sp</dimen>
