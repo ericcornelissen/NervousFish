@@ -64,6 +64,7 @@ public final class WaitActivity extends Activity {
 
     private void evaluateData() {
         //TODO: check if when we decrypt the dataReceived with the tapCombination that we get a normal contact
+        LOGGER.info("Evaluating data");
         setResult(ConstantKeywords.DONE_RESULT_CODE);
         finish();
     }
@@ -121,10 +122,13 @@ public final class WaitActivity extends Activity {
             try {
                 LOGGER.info("Adding contact to database...");
                 this.serviceLocator.getDatabase().addContact(contact);
-                evaluateData();
-            } catch (IOException e) {
+            } catch (IOException | IllegalArgumentException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
+
+            //This needs to be outside of the try catch block
+            this.dataReceived = contact;
+            evaluateData();
         }
     }
 }

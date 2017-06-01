@@ -162,10 +162,12 @@ public class RhythmCreateActivity extends AppCompatActivity {
             try {
                 LOGGER.info("Adding contact to database...");
                 this.serviceLocator.getDatabase().addContact(contact);
-                dataReceived = contact;
             } catch (IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
+            
+            //This needs to be outside of the try catch block
+            dataReceived = contact;
         }
     }
 }
