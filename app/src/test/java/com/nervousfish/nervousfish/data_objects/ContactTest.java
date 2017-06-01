@@ -3,6 +3,11 @@ package com.nervousfish.nervousfish.data_objects;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -91,4 +96,22 @@ public class ContactTest {
         assertNotNull(contact.hashCode());
     }
 
+    @Test
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        final IKey key = new SimpleKey("bar", "baz");
+        Contact contact = new Contact("foo", key);
+        try (
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)
+        ) {
+            oos.writeObject(contact);
+            byte[] bytes = bos.toByteArray();
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
+                Contact contact1 = (Contact) ois.readObject();
+                assertTrue(contact1.getName().equals("foo"));
+                assertTrue(contact1.getKeys().get(0).equals(key));
+            }
+        }
+    }
 }
