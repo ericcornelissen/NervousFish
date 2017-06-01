@@ -58,6 +58,15 @@
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.FirstUseActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
+        <activity
+            android:name=".activities.CreateProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:noHistory="true"/>
+        <activity
             android:name=".activities.QRActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -65,4 +74,5 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
+
 </manifest>

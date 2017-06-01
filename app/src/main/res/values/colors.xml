@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#0099cc</color>
+    <color name="color_primary_70_percent">#b3a6e2ff</color>
     <color name="color_primary_dark">#0673aa</color>
     <color name="color_accent">#808183</color>
 
@@ -9,4 +10,6 @@
     <color name="ok_green">#009900</color>
 
     <color name="white">#fff</color>
+
+    <color name="red_fail">#dd6b55</color>
 </resources>

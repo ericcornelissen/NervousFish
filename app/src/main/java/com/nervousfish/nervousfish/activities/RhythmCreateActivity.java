@@ -165,7 +165,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
             } catch (IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
-            
+
             //This needs to be outside of the try catch block
             dataReceived = contact;
         }

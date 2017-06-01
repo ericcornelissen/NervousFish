@@ -1,25 +1,34 @@
 <resources>
     <string name="app_name">NervousFish</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="edit">Edit</string>
+    <string name="submit">Submit</string>
+    <string name="name">Name</string>
+    <string name="type">Type</string>
+
+    <string name="rsa_key">RSA key</string>
+    <string name="dsa_key">DSA key</string>
+    <string name="qr">QR</string>
+    <string name="nfc">NFC</string>
+    <string name="bluetooth">Bluetooth</string>
+
+    <string name="welcome_message">Welcome to Nervous Fish</string>
+    <string name="welcome_message_subpart">Nervous Fish is an app to securely manage and exchange your public keys</string>
+    <string name="create_profile_message">Let\'s create your profile</string>
     <string name="login_message">Enter your password below</string>
     <string name="password">Password</string>
-    <string name="submit">Submit</string>
+    <string name="enter_profile_name">Name</string>
+    <string name="repeat_password">Repeat password</string>
 
     <string name="title_activity_contact">Contact</string>
     <string name="msg_mismatch">Your password is wrong</string>
     <string name="contact_title">Contact</string>
 
-    <string name="qr">QR</string>
-    <string name="nfc">NFC</string>
-    <string name="bluetooth">Bluetooth</string>
-
-    <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
-    <string name="type">Type</string>
 
     <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
-    <string name="cancel">Cancel</string>
 
     <string name="yes_delete">Yes, delete it!</string>
     <string name="waiting_for_slave">Waiting for partner…</string>
@@ -34,9 +43,6 @@
 
     <string name="invalid_name">Invalid name entered</string>
     <string name="invalid_name_explanation">The new name you entered is invalid, it can\'t be all whitespaces or empty.</string>
-
-    <string name="edit_menu_item">Edit</string>
-    <string name="delete_menu_item">Delete</string>
 
     <string name="select_device">Select device</string>
     <string name="scanning">Scanning...</string>
@@ -73,4 +79,14 @@
 
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method...</string>
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping...</string>
+
+    <string name="get_started">Get started!</string>
+    <string name="key_to_generate">Key to generate:</string>
+
+    <string name="could_not_create_profile">Can\'t create profile</string>
+    <string name="could_not_create_profile_explanation">Please make sure that all the fields are filled in correctly, and
+    that the passwords you entered are the same.</string>
+
+    <string name="profile_created">Profile created</string>
+    <string name="profile_created_explanation">Your profile is successfully created. Please log in now.</string>
 </resources>
