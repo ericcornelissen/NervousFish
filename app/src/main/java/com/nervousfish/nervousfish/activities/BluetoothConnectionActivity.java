@@ -28,14 +28,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * This Bluetooth activity class establishes and manages a bluetooth connection.
  */
-@SuppressWarnings("PMD.ExcessiveImports") // Uses many Android and utility classes
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.TooManyMethods"})
+// 1. Uses many Android and utility classes
+// 2. The amount of methods is not too much at this moment
 public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
@@ -118,7 +119,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onDestroy();
         this.serviceLocator.unregisterFromEventBus(this);
         unregisterReceiver(this.broadcastReceiver);
-        this.bluetoothAdapter = null;
     }
 
     /**
@@ -153,6 +153,18 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         LOGGER.info("Back button was pressed -> ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY");
         this.setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
         this.finish();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            finish();
+        }
     }
 
     /**
@@ -224,12 +236,11 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private void addNewDevice(final Intent intent) {
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-        if(device != null && device.getName() != null) {
-            // Skip paired devices and devices without a name.
-            if (device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
-                this.newDevices.add(device);
-                this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-            }
+        // Skip paired devices and devices without a name.
+        if (device != null && device.getName() != null
+            && device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
+            this.newDevices.add(device);
+            this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
     }
 

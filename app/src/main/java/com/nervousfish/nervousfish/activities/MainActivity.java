@@ -92,7 +92,7 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         try {
-            if(this.serviceLocator.getDatabase().getAllContacts().isEmpty()) {
+            if (this.serviceLocator.getDatabase().getAllContacts().isEmpty()) {
                 fillDatabaseWithDemoData();
             }
             this.contacts = this.serviceLocator.getDatabase().getAllContacts();
@@ -260,10 +260,10 @@ public final class MainActivity extends AppCompatActivity {
     public void onNewBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onNewBluetoothConnectedEvent called");
 
-//        final Intent intent = new Intent(this, WaitActivity.class);
-//        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-//        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
-//        this.startActivity(intent);
+        final Intent intent = new Intent(this, WaitActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+        this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
     /**
@@ -277,12 +277,12 @@ public final class MainActivity extends AppCompatActivity {
         if (event.getClazz().equals(String.class)) {
             final String verificationMessage = (String) event.getData();
 
-            if (verificationMessage.equals("rhythm")) {
+            if ("rhythm".equals(verificationMessage)) {
                 //Go to RhythmActivity
                 final Intent intent = new Intent(this, RhythmCreateActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 startActivity(intent);
-            } else if (verificationMessage.equals("visual")) {
+            } else if ("visual".equals(verificationMessage)) {
                 //Go to VisualVerificationActivity
                 final Intent intent = new Intent(this, VisualVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
@@ -341,6 +341,21 @@ public final class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText(getString(R.string.warning))
+                    .setContentText(getString(R.string.you_sure_log_out))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .show();
+        }
     }
 
     /**

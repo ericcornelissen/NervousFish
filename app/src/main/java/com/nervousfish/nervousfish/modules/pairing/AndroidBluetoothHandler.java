@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 /**
  * Helper class for {@link AndroidBluetoothService}
@@ -102,7 +103,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     public void send(final byte[] bytes) {
         this.getService().write(bytes);
 
-        LOGGER.info("Bytes written: " + bytes);
+        LOGGER.info("Bytes written: " + Arrays.toString(bytes));
     }
 
     private IBluetoothHandlerService getService() {

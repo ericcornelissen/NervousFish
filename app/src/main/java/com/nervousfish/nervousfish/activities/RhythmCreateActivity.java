@@ -24,14 +24,20 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class RhythmCreateActivity extends AppCompatActivity {
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+/**
+ * The RhythmCreateActivity is an Activity where you can tap a sequence.
+ */
+//List is cast to an ArrayList, but that is needed to put in an intent
+@SuppressFBWarnings(value = "BC_BAD_CAST_TO_CONCRETE_COLLECTION")
+public final class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
-    private ArrayList<SingleTap> tapCombination;
+    private List<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
     //TODO: change contact into an encrypted string of bytes
-    private Contact dataReceived = null;
+    private Contact dataReceived;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -79,7 +85,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
-        intent.putExtra(ConstantKeywords.TAP_DATA, tapCombination);
+        intent.putExtra(ConstantKeywords.TAP_DATA, (ArrayList) tapCombination);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
@@ -125,8 +131,8 @@ public class RhythmCreateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ConstantKeywords.DONE_RESULT_CODE) {
-            setResult(ConstantKeywords.DONE_RESULT_CODE);
+        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
             finish();
         }
     }
@@ -139,7 +145,7 @@ public class RhythmCreateActivity extends AppCompatActivity {
         try {
             this.serviceLocator.getBluetoothHandler().send("rhythm");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Sending the \"rhythm\" string went wrong: ", e);
         }
     }
 

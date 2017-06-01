@@ -70,4 +70,7 @@
     <string name="stop_recording">Stop met opnemen</string>
     <string name="done">Klaar</string>
     <string name="start_recording">Start met opnemen</string>
+    <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen...</string>
+    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
+    <string name="contact_added_popup_explanation">Het uitwisselen van het contact via Bluetooth was succesvol, het nieuwe contact is toegevoegd aan de lijst.</string>
 </resources>
