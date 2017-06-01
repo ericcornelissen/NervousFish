@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Example activity to verify identity in Bluetooth connections.
+ * Used to let the user verify his identity by tapping on certain places in an image
  */
 public class VisualVerificationActivity extends Activity {
 

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Simple login activity class.
+ * Draws the screen is used to login by entering a password
  */
 public final class LoginActivity extends AppCompatActivity {
 

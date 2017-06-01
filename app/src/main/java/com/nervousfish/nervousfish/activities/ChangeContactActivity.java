@@ -27,7 +27,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The ContactActivity shows the contacts information and his public keys.
+ * This activity allows the user to change attributes of contacts
  */
 public final class ChangeContactActivity extends AppCompatActivity {
 
