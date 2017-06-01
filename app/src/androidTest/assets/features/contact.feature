@@ -3,7 +3,7 @@ Feature: Contact activity
 
   Scenario: Click on the back button
     Given I am viewing the contact activity
-    When I press the contact activity back button
+    When I press the back button in the contact activity
     Then I should go to the activity I visited before the contact activity
 
   Scenario: Click on the delete menu button delete contact
