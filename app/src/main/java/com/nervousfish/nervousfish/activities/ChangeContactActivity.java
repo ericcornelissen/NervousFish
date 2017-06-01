@@ -146,7 +146,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
                 finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.popup_you_sure))
+                        .setTitleText(getString(R.string.are_you_sure))
                         .setContentText(getString(R.string.go_back_changes_lost))
                         .setCancelText(getString(R.string.cancel))
                         .setConfirmText(getString(R.string.yes_go_back))

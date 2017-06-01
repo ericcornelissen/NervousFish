@@ -33,7 +33,6 @@
                 <ImageView
                     android:layout_width="@dimen/contact_picture_width"
                     android:layout_height="@dimen/contact_picture_height"
-                    android:contentDescription="@string/contact_title"
                     android:src="@drawable/personplaceholder" />
 
                 <TextView
@@ -41,7 +40,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/contact_name_margin"
-                    android:text="@string/contact_title"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/contact_name_size"
                     android:textStyle="bold" />

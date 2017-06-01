@@ -122,7 +122,7 @@ public final class ContactActivity extends AppCompatActivity {
         public boolean onMenuItemClick(final MenuItem menuItem) {
             if (menuItem.getItemId() == R.id.delete_contact_menu_item) {
                 new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.popup_you_sure))
+                        .setTitleText(getString(R.string.are_you_sure))
                         .setContentText(getString(R.string.delete_popup_no_recovery))
                         .setCancelText(getString(R.string.cancel))
                         .setConfirmText(getString(R.string.yes_delete))
@@ -168,7 +168,7 @@ public final class ContactActivity extends AppCompatActivity {
             } catch (final IOException e) {
                 LOGGER.error("IOException while deleting contact in ContactActivity", e);
                 sweetAlertDialog.setTitleText(getString(R.string.something_went_wrong))
-                        .setContentText(getString(R.string.something_went_wrong_try_again))
+                        .setContentText(getString(R.string.try_again))
                         .setConfirmText(getString(R.string.dialog_ok))
                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
             }
