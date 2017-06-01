@@ -11,8 +11,6 @@ public final class ConstantKeywords {
     public static final String RSA_KEY = "RSA";
     public static final String CONTACT = "contact";
     public static final String PROXY_REQUIRED = "Proxy required.";
-    public static final String RHYTHM_VERIFICATION_METHOD = "Rhythm";
-    public static final String VISUAL_VERIFICATION_METHOD = "Visual";
 
     /**
      * Prevent instantiation
