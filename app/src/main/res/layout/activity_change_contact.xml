@@ -69,14 +69,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/contact_title"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/seabackflipped" />
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:background="@drawable/seabackflipped">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar_change_contact"
