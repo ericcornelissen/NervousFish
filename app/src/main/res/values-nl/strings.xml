@@ -52,7 +52,7 @@
     <string name="warning">Waarschuwing</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
-    <string name="select_verification_method">Selecteer een verificatie methode…</string>
+    <string name="select_verification_method">Selecteer een verificatie methode</string>
     <string name="select_visual_verification">Viseel patroon</string>
     <string name="select_rhythm_verification">Tab een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
