@@ -13,6 +13,8 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Activity used to select a verification method.
  */
@@ -47,25 +49,35 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
 
-        final int method = view.getId();
-        switch (method) {
+        final int id = view.getId();
+        switch (id) {
             case R.id.select_visual_verification:
-                LOGGER.error("Selected visual verification method, opening activity");
+                LOGGER.info("Selected visual verification method, opening activity");
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
-                this.startActivity(intent);
                 break;
             case R.id.select_rhythm_verification:
                 // TODO: open correct (Rhythm) activity (also update test!)
-                LOGGER.error("Selected rhythm verification method, opening activity");
+                LOGGER.info("Selected rhythm verification method, opening activity");
                 intent.setComponent(new ComponentName(this, WaitForSlaveActivity.class));
-                this.startActivity(intent);
                 break;
             default:
-                LOGGER.error("unknown verification method selected: " + method);
-                intent.setComponent(new ComponentName(this, MainActivity.class));
-                this.startActivity(intent);
-                break;
+                LOGGER.warn("unknown verification method selected, view: " + view);
+                this.showUnknownVerificationMethodPopup();
+                return;
         }
+
+        this.startActivity(intent);
+    }
+
+    /**
+     * Show a popup when (somehow) an unknown verification method was selected.
+     */
+    private void showUnknownVerificationMethodPopup() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(this.getString(R.string.unknown_verification_method_title))
+                .setContentText(this.getString(R.string.unknown_verification_method_description))
+                .setConfirmText(this.getString(R.string.dialog_ok))
+                .show();
     }
 
 }

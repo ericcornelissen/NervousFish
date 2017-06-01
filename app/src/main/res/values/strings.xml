@@ -67,4 +67,6 @@
 
     <string name="select_visual_verification">Visual pattern</string>
     <string name="select_rhythm_verification">Tab a rhythm</string>
+    <string name="unknown_verification_method_title">Oops…</string>
+    <string name="unknown_verification_method_description">Something went wrong, please try again</string>
 </resources>
