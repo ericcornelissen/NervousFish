@@ -42,13 +42,12 @@ public abstract class ATapData implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
-        
-        final ATapData ts = (ATapData) o;
 
-        return this.timestamp == null ? ts.timestamp == null : this.timestamp.equals(ts.timestamp);
+        final ATapData that = (ATapData) o;
+        return this.timestamp == null ? that.timestamp == null : this.timestamp.equals(that.timestamp);
     }
 
     /**
