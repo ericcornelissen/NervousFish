@@ -6,24 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -54,37 +48,11 @@ public final class ChangeContactActivity extends AppCompatActivity {
         }
 
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        this.setName(this.contact.getName());
-        this.setKeys(this.contact.getKeys());
+        ContactActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
+        ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
-    }
-
-    /**
-     * Set the name of the {@link Contact} to the {@link ContactActivity}.
-     *
-     * @param name The name.
-     */
-    private void setName(final String name) {
-        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name_input);
-        tv.setText(name);
-    }
-
-    /**
-     * Set the keys of the {@link Contact} to the {@link ContactActivity}.
-     *
-     * @param keys A {@link Collection} of {@link IKey}s.
-     */
-    private void setKeys(final Collection<IKey> keys) {
-        final List<String> keyNames = new ArrayList<>();
-        for (final IKey key : keys) {
-            keyNames.add(key.getName());
-        }
-
-        final ListView lv = (ListView) this.findViewById(R.id.list_view_change_contact);
-        lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, keyNames));
     }
 
     /**

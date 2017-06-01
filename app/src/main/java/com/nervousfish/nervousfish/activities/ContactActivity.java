@@ -8,24 +8,17 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -52,8 +45,8 @@ public final class ContactActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
-        this.setName(contact.getName());
-        this.setKeys(contact.getKeys());
+        ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
+        ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_contact);
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -61,32 +54,6 @@ public final class ContactActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    /**
-     * Set the name of the {@link Contact} to the {@link ContactActivity}.
-     *
-     * @param name The name.
-     */
-    private void setName(final String name) {
-        final TextView tv = (TextView) this.findViewById(R.id.contact_name);
-        tv.setText(name);
-    }
-
-    /**
-     * Set the keys of the {@link Contact} to the {@link ContactActivity}.
-     *
-     * @param keys A {@link Collection} of {@link IKey}s.
-     */
-    private void setKeys(final Collection<IKey> keys) {
-        final List<String> keyNames = new ArrayList<>();
-        for (final IKey key : keys) {
-            keyNames.add(key.getName());
-        }
-
-        final ListView lv = (ListView) this.findViewById(R.id.list_view_contact);
-        lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, keyNames));
     }
 
     /**
@@ -109,8 +76,8 @@ public final class ContactActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_FIRST_USER) {
-            contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
-            setName(contact.getName());
+            this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
+            ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
         }
     }
 

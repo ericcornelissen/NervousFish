@@ -10,10 +10,9 @@
     <string name="contact_doesnt_exist">Het contact bestaat niet</string>
     <string name="contact_title">Contact</string>
     <string name="delete">Verwijder</string>
-    <string name="delete_menu_item">Verwijder</string>
     <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
     <string name="discovered_devices">Ontdekte apparaten</string>
-    <string name="edit_menu_item">Wijzig</string>
+    <string name="edit">Wijzig</string>
     <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
     <string name="invalid_name">Ongeldige naam ingevoerd</string>
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
@@ -22,7 +21,6 @@
     <string name="name">Naam</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="paired_devices">Verbonden apparaten</string>
-    <string name="password">Wachtwoord</string>
     <string name="popup_you_sure">Weet je het zeker?</string>
     <string name="public_key_snippet">Gedeeltelijke Public Key</string>
     <string name="something_went_wrong">Er is iets fout gegaan</string>
@@ -36,7 +34,7 @@
     <string name="save">Opslaan</string>
     <string name="more">Meer</string>
     <string name="select_device">Selecteer een apparaat</string>
-    <string name="scanning">Scannen...</string>
+    <string name="scanning">Scannen…</string>
     <string name="activating_bluetooth">Bluetooth activeren</string>
     <string name="activating_bluetooth_location_text">Je moet toestemming geven om je locatie te delen om Bluetooth the kunnen gebruiken. We zullen helemaal niets met je locatie doen.</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth kon niet worden geactiveerd</string>
@@ -47,8 +45,23 @@
     <string name="type">Type</string>
     <string name="qr">QR</string>
     <string name="nfc">NFC</string>
-    <string name="no">NEE</string>
+    <string name="welcome_message">Welkom bij Nervous Fish</string>
+    <string name="welcome_message_subpart">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+    <string name="create_profile_message">Een profiel aanmaken</string>
+    <string name="get_started">Begin!</string>
+    <string name="key_to_generate">Key om te genereren:</string>
+    <string name="could_not_create_profile">Kon geen profiel maken</string>
+    <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat
+    beide wachtwoorden hetzelfde zijn.</string>
+    <string name="profile_created">Profiel gemaakt</string>
+    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt, je kunt nu inloggen.</string>
+    <string name="enter_profile_name">Naam</string>
+    <string name="password">Wachtwoord</string>
+    <string name="repeat_password">Herhaal wachtwoord</string>
+    <string name="rsa_key">RSA key</string>
+    <string name="dsa_key">DSA key</string>
     <string name="warning">Waarschuwing</string>
+    <string name="no">NEE</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
 </resources>
