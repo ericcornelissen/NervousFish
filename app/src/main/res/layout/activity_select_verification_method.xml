@@ -1,22 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="@string/select_verification_method"
+        android:textSize="22sp" />
 
     <Button xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/select_visual_verification"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textSize="16sp"
         android:onClick="openVerificationMethod"
-        android:text="@string/select_visual_verification" />
+        android:padding="15dp"
+        android:text="@string/select_visual_verification"
+        android:textSize="16sp" />
+
     <Button xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/select_rhythm_verification"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textSize="16sp"
         android:onClick="openVerificationMethod"
-        android:text="@string/select_rhythm_verification" />
+        android:padding="15dp"
+        android:text="@string/select_rhythm_verification"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:gravity="center|bottom"
+        android:orientation="vertical" >
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:padding="2dp"
+            android:text="@string/remember_my_choice" />
+    </LinearLayout>
 </LinearLayout>
