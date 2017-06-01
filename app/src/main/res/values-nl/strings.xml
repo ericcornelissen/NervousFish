@@ -28,6 +28,7 @@
     <string name="are_you_sure">Weet je het zeker?</string>
     <string name="discovered_devices">Gevonden apparaten</string>
     <string name="get_started">Laten we beginnen!</string>
+    <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="something_went_wrong">Er ging iets fout</string>

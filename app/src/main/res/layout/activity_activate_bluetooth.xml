@@ -27,7 +27,7 @@
                 android:background="@color/color_primary"
                 android:src="?attr/actionModeCloseDrawable"
                 android:onClick="onCancelActivateBluetoothActivityClick"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="@string/go_back" />
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -47,8 +47,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
                 android:backgroundTint="@color/color_primary"
-                android:contentDescription="@string/empty_string"
-                tools:targetApi="lollipop" />
+                tools:targetApi="lollipop"
+                tools:ignore="ContentDescription" /> <!-- Empty button doesn't need a description -->
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 

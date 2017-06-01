@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">NervousFish</string>
-    <string name="empty_string" translatable="false"> </string>
 
     <!-- Words -->
     <string name="bluetooth">Bluetooth</string>
@@ -28,6 +27,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="discovered_devices">Discovered devices</string>
     <string name="get_started">Get started!</string>
+    <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="something_went_wrong">Something went wrong</string>

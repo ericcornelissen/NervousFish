@@ -27,9 +27,9 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
+                android:contentDescription="@string/go_back"
                 app:srcCompat="?attr/actionModeCloseDrawable"
-                tools:targetApi="lollipop"
-                tools:ignore="ContentDescription" />
+                tools:targetApi="lollipop" />
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -100,7 +100,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/contact_name_size"
                         android:textStyle="bold"
-                        tools:ignore="LabelFor" /> <!-- has no label -->
+                        tools:ignore="LabelFor" /> <!-- Needs no label -->
                 </LinearLayout>
             </RelativeLayout>
 
