@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.R;
 
 /**
- * Used for pairing using QR codes
+ * An {@link Activity} that is used for pairing using QR codes
  */
 public class QRActivity extends Activity {
     /**

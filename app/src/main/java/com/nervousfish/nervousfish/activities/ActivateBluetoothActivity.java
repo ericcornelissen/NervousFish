@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * Used as an in-between activity to the BluetoothConnectionActivity to activate the Bluetooth
+ * An {@link Activity} that is used as an in-between activity to the BluetoothConnectionActivity to activate the Bluetooth
  * before going to that activity.
  */
 public final class ActivateBluetoothActivity extends Activity {

@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * This activity allows the user to change attributes of contacts
+ * An {@link Activity} that allows the user to change attributes of contacts
  */
 public final class ChangeContactActivity extends AppCompatActivity {
 

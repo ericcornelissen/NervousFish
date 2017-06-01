@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The main activity class that shows a list of all contacts and a button to add new people
+ * The main {@link Activity} that shows a list of all contacts and a button to add new people
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
         "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})

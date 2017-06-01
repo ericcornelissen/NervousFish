@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This Bluetooth activity class establishes and manages a bluetooth connection.
+ * An {@link Activity} that establishes and manages a bluetooth connection.
  * It shows a screen with the Bluetooth devices with which the user is paired and other Bluetooth devices
  * that are detected near the device of the user.
  */

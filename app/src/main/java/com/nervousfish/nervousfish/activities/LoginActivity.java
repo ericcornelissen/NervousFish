@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Draws the screen is used to login by entering a password
+ * An {@link Activity} that draws the screen that is used to login by entering a password
  */
 public final class LoginActivity extends AppCompatActivity {
 
