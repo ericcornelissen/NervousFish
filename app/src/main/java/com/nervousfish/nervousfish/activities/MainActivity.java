@@ -290,14 +290,22 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void enableBluetooth(final boolean buttonClicked) {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
+            final String description;
+            if (buttonClicked) {
+                description = this.getString(R.string.popup_enable_bluetooth_exchange);
+            } else {
+                description = this.getString(R.string.popup_enable_bluetooth_findable);
+            }
+
             new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
                     .setTitleText(this.getString(R.string.popup_enable_bluetooth_title))
-                    .setContentText(this.getString(R.string.popup_enable_bluetooth_description))
+                    .setContentText(description)
                     .setCancelText(this.getString(R.string.no))
                     .setConfirmText(this.getString(R.string.yes))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
