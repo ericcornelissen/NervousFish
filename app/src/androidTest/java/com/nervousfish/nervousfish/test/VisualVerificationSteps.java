@@ -9,7 +9,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -27,20 +27,20 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class VisualVerificationSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-    private final int[] buttons = new int[] {
-        R.id.visual_verification_button00,
-        R.id.visual_verification_button01,
-        R.id.visual_verification_button02,
-        R.id.visual_verification_button10,
-        R.id.visual_verification_button11,
-        R.id.visual_verification_button12,
-        R.id.visual_verification_button10,
-        R.id.visual_verification_button21,
-        R.id.visual_verification_button22,
-        R.id.visual_verification_button30,
-        R.id.visual_verification_button31,
-        R.id.visual_verification_button32,
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
+    private final int[] buttons = new int[]{
+            R.id.visual_verification_button00,
+            R.id.visual_verification_button01,
+            R.id.visual_verification_button02,
+            R.id.visual_verification_button10,
+            R.id.visual_verification_button11,
+            R.id.visual_verification_button12,
+            R.id.visual_verification_button10,
+            R.id.visual_verification_button21,
+            R.id.visual_verification_button22,
+            R.id.visual_verification_button30,
+            R.id.visual_verification_button31,
+            R.id.visual_verification_button32,
     };
 
     @Rule

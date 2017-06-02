@@ -67,34 +67,38 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
             try {
                 serviceLocator.getDatabase().addProfile(new Profile(name, password, keyPair));
-                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(getString(R.string.profile_created))
-                        .setContentText(getString(R.string.profile_created_explanation))
-                        .setConfirmText(getString(R.string.dialog_ok))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(final SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                                final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
-                                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                                CreateProfileActivity.this.startActivity(intent);
-                            }
-                        })
-                        .show();
+                showProfileCreatedDialog();
             } catch (IOException e) {
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.could_not_create_profile))
-                        .setContentText(getString(R.string.could_not_create_profile_explanation))
-                        .setConfirmText(getString(R.string.dialog_ok))
-                        .show();
+                showProfileNotCreatedDialog();
             }
         } else {
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.could_not_create_profile))
-                    .setContentText(getString(R.string.could_not_create_profile_explanation))
-                    .setConfirmText(getString(R.string.dialog_ok))
-                    .show();
+            showProfileNotCreatedDialog();
         }
+    }
+
+    private void showProfileCreatedDialog() {
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(getString(R.string.profile_created))
+                .setContentText(getString(R.string.profile_created_explanation))
+                .setConfirmText(getString(R.string.dialog_ok))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sDialog) {
+                        sDialog.dismiss();
+                        final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
+                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                        CreateProfileActivity.this.startActivity(intent);
+                    }
+                })
+                .show();
+    }
+
+    private void showProfileNotCreatedDialog() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.could_not_create_profile))
+                .setContentText(getString(R.string.could_not_create_profile_explanation))
+                .setConfirmText(getString(R.string.dialog_ok))
+                .show();
     }
 
     /**
@@ -102,10 +106,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
      *
      * @return a {@link KeyPair} with the key type selected
      */
-    private KeyPair generateKeyPair() throws IllegalArgumentException {
-        final RadioButton rsaKeyButton = (RadioButton) findViewById(R.id.radio_rsa_key);
+    private KeyPair generateKeyPair() {
+        final RadioButton rsaKeyButton = (RadioButton) this.findViewById(R.id.radio_rsa_key);
         if (rsaKeyButton.isChecked()) {
-            return serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
+            return this.serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
         }
 
         throw new IllegalArgumentException("The selected key is not implemented");
@@ -119,40 +123,69 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link boolean} which is true if all fields are valid
      */
     private boolean validateInputFields() {
-        boolean allValid = true;
+        return this.validateInputFieldName() & this.validateInputFieldPassword()
+                & this.validateInputFieldPasswordRepeat() & this.validateInputPasswordsSame();
+    }
 
+    /**
+     * @return True when the name is valid
+     */
+    private boolean validateInputFieldName() {
         final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
-        if (isValidName(nameInputField.getText().toString())) {
+
+        if (this.isValidName(nameInputField.getText().toString())) {
             nameInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            nameInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
-            allValid = false;
+            nameInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            return false;
         }
+        return true;
+    }
 
+    /**
+     * @return True when the password is valid
+     */
+    private boolean validateInputFieldPassword() {
         final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
-        if (isValidName(passwordInputField.getText().toString())
+
+        if (this.isValidName(passwordInputField.getText().toString())
                 && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
             passwordInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
-            allValid = false;
+            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            return false;
         }
+        return true;
+    }
 
+    /**
+     * @return True when the repeated password is valid
+     */
+    private boolean validateInputFieldPasswordRepeat() {
         final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
-        if (isValidName(passwordRepeatInputField.getText().toString())) {
+
+        if (this.isValidName(passwordRepeatInputField.getText().toString())) {
             passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
-            allValid = false;
+            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            return false;
         }
+        return true;
+    }
+
+    /**
+     * @return True when the password matches the repeated password
+     */
+    private boolean validateInputPasswordsSame() {
+        final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
+        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
 
         if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.red_fail, null));
-            allValid = false;
+            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            return false;
         }
-
-        return allValid;
+        return true;
     }
 
     /**

@@ -44,8 +44,8 @@ public final class ContactActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
-        ContactActivityHelper.setName(this, contact.getName());
-        ContactActivityHelper.setKeys(this, contact.getKeys());
+        ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
+        ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_contact);
 
         final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +75,8 @@ public final class ContactActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_FIRST_USER) {
-            contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
-            ContactActivityHelper.setName(this, contact.getName());
+            this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
+            ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
         }
     }
 

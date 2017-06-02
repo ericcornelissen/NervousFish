@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -26,6 +27,7 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -36,7 +38,7 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ChangeContactSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
     private final IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
 
@@ -53,7 +55,7 @@ public class ChangeContactSteps {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contact);
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I press the change contact back button$")
@@ -68,23 +70,23 @@ public class ChangeContactSteps {
 
     @When("^I press OK on the change contact error popup$")
     public void iPressOKOnTheChangeContactErrorPopup() {
-        onView(withText(R.string.dialog_ok)).perform(click());
+        onView(withText(R.string.dialog_ok)).perform(scrollTo()).perform(click());
     }
 
     @When("^I remove all text from the name$")
     public void iRemoveAllTextFromTheName() {
-        onView(withId(R.id.contact_name)).perform(replaceText(""));
+        onView(withId(R.id.edit_contact_name_input)).perform(replaceText(""));
     }
 
     @When("^I select the contact name$")
     public void iSelectTheContactName() {
-        onView(withId(R.id.contact_name)).perform(click());
+        onView(withId(R.id.edit_contact_name_input)).perform(click());
     }
 
     @When("^I type (.*?) as new name$")
     public void iTypeNewNameAsNewName(final String newName) {
         this.newName = newName;
-        onView(withId(R.id.contact_name)).perform(replaceText(newName));
+        onView(withId(R.id.edit_contact_name_input)).perform(replaceText(newName));
     }
 
     @When("^I verify that I want to dismiss the contact changes$")

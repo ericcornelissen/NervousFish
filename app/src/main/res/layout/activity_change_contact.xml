@@ -69,14 +69,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/contact_title"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/seabackflipped" />
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:background="@drawable/seabackflipped">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar_change_contact"
@@ -100,7 +94,7 @@
                         android:src="@drawable/personplaceholder" />
 
                     <EditText
-                        android:id="@+id/contact_name"
+                        android:id="@+id/edit_contact_name_input"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:inputType="text"
@@ -126,7 +120,7 @@
                 android:orientation="vertical">
 
                 <ListView
-                    android:id="@+id/list_view"
+                    android:id="@+id/list_view_edit_contact"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_keys_list_height"
                     android:layout_marginTop="@dimen/contact_keys_list_margin_top" />
