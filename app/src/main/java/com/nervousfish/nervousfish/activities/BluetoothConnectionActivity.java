@@ -164,6 +164,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
             this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
             finish();
+        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+            finish();
         }
     }
 

@@ -129,6 +129,18 @@ public final class MainActivity extends AppCompatActivity {
                     })
                     .show();
         }
+        if (intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH) != null) {
+
+            final boolean successfulBluetooth = (boolean) intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
+
+            if (successfulBluetooth) {
+                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(getString(R.string.contact_added_popup_title))
+                        .setContentText(getString(R.string.contact_added_popup_explanation))
+                        .setConfirmText(getString(R.string.dialog_ok))
+                        .show();
+            }
+        }
 
         LOGGER.info("MainActivity created");
     }
@@ -285,12 +297,12 @@ public final class MainActivity extends AppCompatActivity {
                 //Go to RhythmActivity
                 final Intent intent = new Intent(this, RhythmCreateActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                startActivity(intent);
+                this.startActivityForResult(intent, 0);
             } else if ("visual".equals(verificationMessage)) {
                 //Go to VisualVerificationActivity
                 final Intent intent = new Intent(this, VisualVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                startActivity(intent);
+                this.startActivityForResult(intent, 0);
             }
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
@@ -345,21 +357,6 @@ public final class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText(getString(R.string.warning))
-                    .setContentText(getString(R.string.you_sure_log_out))
-                    .setConfirmText(getString(R.string.dialog_ok))
-                    .show();
-        }
     }
 
     /**

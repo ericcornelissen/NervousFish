@@ -31,6 +31,7 @@ public final class WaitActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
     private Contact dataReceived;
+    private List<SingleTap> tapCombination;
 
     /**
      * {@inheritDoc}
@@ -46,13 +47,10 @@ public final class WaitActivity extends Activity {
         this.serviceLocator.registerToEventBus(this);
 
         this.dataReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        final List<SingleTap> tapCombination = (ArrayList<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+        tapCombination = (ArrayList<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
         LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
                 + " tapCombination is not null: " + (tapCombination != null));
-        if (this.dataReceived != null && tapCombination != null) {
-            evaluateData();
-        }
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) findViewById(R.id.waiting_message);
@@ -64,8 +62,13 @@ public final class WaitActivity extends Activity {
     private void evaluateData() {
         //TODO: check if when we decrypt the dataReceived with the tapCombination that we get a normal contact
         LOGGER.info("Evaluating data");
-        setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-        finish();
+        final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        this.startActivity(intent);
+        //setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+        //finish();
+
     }
 
     /**
@@ -73,7 +76,7 @@ public final class WaitActivity extends Activity {
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
-        setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+        setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
         finish();
     }
 
@@ -84,7 +87,19 @@ public final class WaitActivity extends Activity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
             finish();
+        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+            finish();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (this.dataReceived != null && tapCombination != null) {
+            evaluateData();
         }
     }
 
@@ -109,12 +124,12 @@ public final class WaitActivity extends Activity {
                 //Go to RhythmActivity
                 final Intent intent = new Intent(this, RhythmCreateActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                startActivity(intent);
+                this.startActivityForResult(intent, 0);
             } else if ("visual".equals(verificationMessage)) {
                 //Go to VisualVerificationActivity
                 final Intent intent = new Intent(this, VisualVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                startActivity(intent);
+                this.startActivityForResult(intent, 0);
             }
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();

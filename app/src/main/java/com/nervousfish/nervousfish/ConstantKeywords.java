@@ -14,6 +14,9 @@ public final class ConstantKeywords {
     public static final String DATA_RECEIVED = "Data received";
     public static final String TAP_DATA = "Tap data";
 
+    public static final String SUCCESSFUL_BLUETOOTH = "Successful Bluetooth pairing";
+
+    public static final int CANCEL_PAIRING_RESULT_CODE = 44;
     public static final int DONE_PAIRING_RESULT_CODE = 55;
     public static final int START_RHYTHM_REQUEST_CODE = 66;
 

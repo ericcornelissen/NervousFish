@@ -85,8 +85,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("Done tapping button clicked");
         try {
             final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
-            final Contact myProfileAsPassword = new Contact(myProfile.getName(), myProfile.getPublicKey());
-            this.serviceLocator.getBluetoothHandler().send(myProfileAsPassword);
+
+            LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
+                    + myProfile.getPublicKey().toString());
+            final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
+            this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
@@ -136,7 +139,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
-            setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            finish();
+        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
             finish();
         }
     }
