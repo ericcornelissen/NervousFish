@@ -58,7 +58,8 @@ public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
     private static final int NUMBER_OF_SORTING_MODES = 2;
-    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
+    private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_START = 100;
+    private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
@@ -71,7 +72,6 @@ public final class MainActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private int currentSorting;
-    private boolean bluetoothButtonPressed = false;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -108,7 +108,7 @@ public final class MainActivity extends AppCompatActivity {
             button.setEnabled(false);
         } catch (IOException e) {
             LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
-            this.enableBluetooth();
+            this.enableBluetooth(false);
         }
 
         LOGGER.info("MainActivity created");
@@ -178,8 +178,7 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent;
         switch (view.getId()) {
             case R.id.pairing_menu_bluetooth:
-                this.bluetoothButtonPressed = true;
-                this.enableBluetooth();
+                this.enableBluetooth(true);
                 break;
             case R.id.pairing_menu_nfc:
                 intent = new Intent(this, NFCActivity.class);
@@ -300,9 +299,13 @@ public final class MainActivity extends AppCompatActivity {
     /**
      * Prompt user to enable Bluetooth if it is disabled.
      */
-    private void enableBluetooth() {
+    private void enableBluetooth(final boolean buttonClicked) {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
+        if (buttonClicked && bluetoothAdapter.isEnabled()) {
+            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            this.startActivity(intent);
+        } else if (!bluetoothAdapter.isEnabled()) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.enable_bluetooth_questionmark))
                     .setContentText(getString(R.string.enable_bluetooth_explanation))
@@ -318,7 +321,11 @@ public final class MainActivity extends AppCompatActivity {
                             sweetAlertDialog.dismiss();
                             LOGGER.info("Requesting to enable Bluetooth");
                             final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH);
+                            if (buttonClicked) {
+                                startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK);
+                            } else {
+                                startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_START);
+                            }
                             LOGGER.info("Request to enable Bluetooth sent");
                         }
 
@@ -333,7 +340,7 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH && bluetoothButtonPressed) {
+        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
