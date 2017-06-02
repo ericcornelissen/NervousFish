@@ -1,25 +1,35 @@
 <resources>
     <string name="app_name">NervousFish</string>
+    <string name="remember_my_choice">Remember my choice</string>
 
-    <string name="loginMessage">Enter your password below</string>
-    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit">Edit</string>
     <string name="submit">Submit</string>
+    <string name="name">Name</string>
+    <string name="type">Type</string>
+
+    <string name="rsa_key">RSA key</string>
+    <string name="dsa_key">DSA key</string>
+    <string name="qr">QR</string>
+    <string name="nfc">NFC</string>
+    <string name="bluetooth">Bluetooth</string>
+
+    <string name="welcome_message">Welcome to Nervous Fish</string>
+    <string name="welcome_message_subpart">Nervous Fish is an app to securely manage and exchange your public keys</string>
+    <string name="create_profile_message">Let\'s create your profile</string>
+    <string name="login_message">Enter your password below</string>
+    <string name="password">Password</string>
+    <string name="enter_profile_name">Name</string>
+    <string name="repeat_password">Repeat password</string>
 
     <string name="title_activity_contact">Contact</string>
     <string name="msg_mismatch">Your password is wrong</string>
     <string name="contact_title">Contact</string>
 
-    <string name="qr">QR</string>
-    <string name="nfc">NFC</string>
-    <string name="bluetooth">Bluetooth</string>
-
-    <string name="name">Name</string>
     <string name="public_key_snippet">Public Key Snippet</string>
-    <string name="type">Type</string>
 
     <string name="popup_you_sure">Are you sure?</string>
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
-    <string name="cancel">Cancel</string>
 
     <string name="yes_delete">Yes, delete it!</string>
     <string name="waiting_for_slave">Waiting for partner…</string>
@@ -35,14 +45,16 @@
     <string name="invalid_name">Invalid name entered</string>
     <string name="invalid_name_explanation">The new name you entered is invalid, it can\'t be all whitespaces or empty.</string>
 
-    <string name="edit_menu_item">Edit</string>
-    <string name="delete_menu_item">Delete</string>
-
+    <string name="select_device">Select device</string>
+    <string name="scanning">Scanning...</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth could not be activated</string>
     <string name="activating_bluetooth_went_wrong_explanation">Please enable Bluetooth if you want to exchange keys over Bluetooth.</string>
     <string name="activating_bluetooth">Activating Bluetooth…</string>
     <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth,
         note that we won\'t do anything with your location.</string>
+
+    <string name="enable_bluetooth_questionmark">Enable Bluetooth?</string>
+    <string name="enable_bluetooth_explanation">Do you want to enable Bluetooth so others can find your device?</string>
 
     <string name="paired_devices">Paired devices</string>
     <string name="discovered_devices">Discovered devices</string>
@@ -52,7 +64,35 @@
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="something_went_wrong_try_again">There went something wrong deleting this contact, please try again.</string>
+    <string name="warning">Warning</string>
+    <string name="you_sure_log_out">Are you sure you want to log out?</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="save">Save</string>
     <string name="more">More</string>
+
+    <string name="get_started">Get started!</string>
+    <string name="key_to_generate">Key to generate:</string>
+
+    <string name="could_not_create_profile">Can\'t create profile</string>
+    <string name="could_not_create_profile_explanation">Please make sure that all the fields are filled in correctly, and
+    that the passwords you entered are the same.</string>
+
+    <string name="profile_created">Profile created</string>
+    <string name="profile_created_explanation">Your profile is successfully created. Please log in now.</string>
+
+    <string name="select_verification_method">Select a verification method</string>
+    <string name="select_visual_verification">Visual pattern</string>
+    <string name="select_rhythm_verification">Tab a rhythm</string>
+    <string name="unknown_verification_method_title">Oops…</string>
+    <string name="unknown_verification_method_description">Something went wrong, please try again</string>
+
+    <string name="popup_done">Done</string>
+    <string name="contact_exists">Contact already exists</string>
+    <string name="contact_exists_message">Contact already exists, please give a unique value</string>
+    <string name="contact_set_name">\"Give contact a name\"</string>
+    <string name="contact_standard_new">New contact</string>
+    <string name="QRScan">Scan QR code</string>
+    <string name="QRShow">Show QR code</string>
 </resources>

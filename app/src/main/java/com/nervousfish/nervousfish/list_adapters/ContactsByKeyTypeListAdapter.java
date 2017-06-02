@@ -89,7 +89,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
 
 
         if (contact != null) {
-            final TextView name = (TextView) v.findViewById(R.id.name);
+            final TextView name = (TextView) v.findViewById(R.id.contact_name_list_entry);
 
             if (name != null) {
                 name.setText(contact.getName());
@@ -146,7 +146,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
             view = convertView;
         }
 
-        final TextView item = (TextView) view.findViewById(R.id.keytype);
+        final TextView item = (TextView) view.findViewById(R.id.key_type);
         item.setTypeface(null, Typeface.BOLD);
         item.setText("Keytype: " + type);
         return view;

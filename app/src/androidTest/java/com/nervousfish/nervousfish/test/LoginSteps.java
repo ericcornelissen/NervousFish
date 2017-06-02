@@ -9,6 +9,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -32,7 +33,7 @@ import static junit.framework.Assert.assertFalse;
 @CucumberOptions(features = "features")
 public class LoginSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule =
@@ -62,7 +63,7 @@ public class LoginSteps {
 
     @Then("^I should see an authentication error$")
     public void iShouldSeeAnAuthenticationError() {
-        onView(withId(R.id.error)).check(matches(isDisplayed()));
+        onView(withId(R.id.error_message_login)).check(matches(isDisplayed()));
     }
 
 }

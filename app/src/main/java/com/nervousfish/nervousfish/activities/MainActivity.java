@@ -1,7 +1,9 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import com.github.clans.fab.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,16 +12,21 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +38,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * The main activity class that shows a list of all people with their public keys
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods" })
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -49,9 +58,9 @@ public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
     private static final int NUMBER_OF_SORTING_MODES = 2;
+    private static final int REQUEST_CODE_ENABLE_BLUETOOTH = 100;
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
-
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
@@ -62,7 +71,6 @@ public final class MainActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private List<Contact> contacts;
     private int currentSorting;
-
 
     /**
      * Creates the new activity, should only be called by Android
@@ -76,24 +84,52 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
         try {
             fillDatabaseWithDemoData();
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
         sortOnName();
 
+        try {
+            this.serviceLocator.getBluetoothHandler().start();
+        } catch (NoBluetoothException e) {
+            LOGGER.info("Bluetooth not available on device, disabling button");
+            final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
+            button.setEnabled(false);
+        } catch (IOException e) {
+            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.enable_bluetooth_questionmark))
+                    .setContentText(getString(R.string.enable_bluetooth_explanation))
+                    .setCancelText(getString(R.string.cancel))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+
+                        /**
+                         * {@inheritDoc}
+                         */
+                        @Override
+                        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+                            enableBluetooth();
+                            sweetAlertDialog.dismiss();
+                        }
+
+                    })
+                    .show();
+        }
+
         LOGGER.info("MainActivity created");
     }
+
 
     /**
      * {@inheritDoc}
@@ -109,43 +145,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets triggered when the Bluetooth button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onBluetoothButtonClick(final View view) {
-        LOGGER.info("Bluetooth button clicked");
-        final Intent intent = new Intent(this, ActivateBluetoothActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
-    }
-
-
-    /**
-     * Gets triggered when the NFC button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onNFCButtonClick(final View view) {
-        LOGGER.info("NFC button clicked");
-        final Intent intent = new Intent(this, NFCActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
-    }
-
-    /**
-     * Gets triggered when the QR button is clicked.
-     *
-     * @param view - the ImageButton
-     */
-    public void onQRButtonClicked(final View view) {
-        LOGGER.info("QR button clicked");
-        final Intent intent = new Intent(this, QRActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
-    }
-
-    /**
      * Switches the sorting mode.
      *
      * @param view The sort floating action button that was clicked
@@ -155,7 +154,7 @@ public final class MainActivity extends AppCompatActivity {
         if (currentSorting >= NUMBER_OF_SORTING_MODES) {
             currentSorting = 0;
         }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.view_flipper_sorter_main);
         flipper.showNext();
         switch (currentSorting) {
             case SORT_BY_NAME:
@@ -169,6 +168,49 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+        try {
+            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+        } catch (final IOException e) {
+            LOGGER.error("onStart in MainActivity threw an IOException", e);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
+    /**
+     * Goes to the activity associated with the view after clicking a pairing button
+     *
+     * @param view The view that was clicked
+     */
+    public void onPairingButtonClicked(final View view) {
+        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
+        final Intent intent;
+        switch (view.getId()) {
+            case R.id.pairing_menu_bluetooth:
+                intent = new Intent(this, ActivateBluetoothActivity.class);
+                break;
+            case R.id.pairing_menu_nfc:
+                intent = new Intent(this, NFCActivity.class);
+                break;
+            case R.id.pairing_menu_qr:
+                intent = new Intent(this, QRExchangeKeyActivity.class);
+                break;
+            default:
+                LOGGER.error("Unknown pairing button clicked");
+                throw new IllegalArgumentException("Only existing buttons can be clicked");
+        }
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        this.startActivity(intent);
+    }
+
     /**
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
@@ -180,6 +222,8 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
+
+
 
     /**
      * Temporarily fill the database with demo data for development.
@@ -207,6 +251,82 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Called when a new contact is received
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Checking if the contact exists...");
+                if (checkExists(contact)) {
+                    LOGGER.warn("Contact already existed...");
+                } else {
+                    LOGGER.info("Adding contact to database...");
+                    this.serviceLocator.getDatabase().addContact(contact);
+                    this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+                    sortOnName();
+                }
+            } catch (IOException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
+            }
+        }
+    }
+
+    /**
+     * Checks if a name of a given contact exists in the database.
+     *
+     * @param contact A contact object
+     * @return true when a contact with the same exists in the database
+     * @throws IOException When database fails to respond
+     */
+    private boolean checkExists(final Contact contact) throws IOException {
+        final String name = contact.getName();
+        final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
+        for (final Contact e : list) {
+            if (e.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Exit the application when the user taps the back button twice
+     */
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.warning))
+                .setContentText(getString(R.string.you_sure_log_out))
+                .setCancelText(getString(R.string.no))
+                .setConfirmText(getString(R.string.yes))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sDialog) {
+                        finish();
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Prompt user to enable Bluetooth if it is disabled.
+     */
+    private void enableBluetooth() {
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            LOGGER.info("Requesting to enable Bluetooth");
+            final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            this.startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH);
+            LOGGER.info("Request to enable Bluetooth sent");
+        }
+    }
+
+    /**
      * Gets all types of keys in the database
      *
      * @return a List with the types of keys.
@@ -225,7 +345,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by name
      */
     private void sortOnName() {
-        final ListView lv = (ListView) findViewById(R.id.listView);
+        final ListView lv = (ListView) findViewById(R.id.list_view_main);
         final ContactsByNameListAdapter contactsByNameListAdapter = new ContactsByNameListAdapter(this, this.contacts);
         contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
@@ -247,7 +367,7 @@ public final class MainActivity extends AppCompatActivity {
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandableContactListByKeytype);
+        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter = new ContactsByKeyTypeListAdapter(this, getKeyTypes(), contacts);
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -262,4 +382,5 @@ public final class MainActivity extends AppCompatActivity {
 
         });
     }
+
 }

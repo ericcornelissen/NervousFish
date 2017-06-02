@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.service_locator;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptorAdapter;
@@ -22,16 +23,17 @@ import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
  * Manages all modules and provides access to them.
  */
-public final class ServiceLocator implements IServiceLocator {
+// TooManyMethods Suppressed because we cannot reduce the number of services or refactor the servicelocator without reducing readability
+// ConstructorCallsOverridableMethod suppressed because we actually do want the subclasses to change the behaviour of the constructor!
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.ConstructorCallsOverridableMethod"})
+public class ServiceLocator implements IServiceLocator {
     private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocator");
     private static final long serialVersionUID = 1408616442873653749L;
 
@@ -52,14 +54,14 @@ public final class ServiceLocator implements IServiceLocator {
      */
     ServiceLocator(final String androidFilesDir) {
         this.androidFilesDir = androidFilesDir;
-        this.constants = Constants.newInstance(this).getModule();
-        this.fileSystem = AndroidFileSystemAdapter.newInstance(this).getModule();
-        this.database = GsonDatabaseAdapter.newInstance(this).getModule();
-        this.keyGenerator = KeyGeneratorAdapter.newInstance(this).getModule();
-        this.encryptor = EncryptorAdapter.newInstance(this).getModule();
-        this.bluetoothHandler = AndroidBluetoothHandler.newInstance(this).getModule();
-        this.nfcHandler = DummyNFCHandler.newInstance(this).getModule();
-        this.qrHandler = DummyQRHandler.newInstance(this).getModule();
+        this.constants = initConstants();
+        this.fileSystem = initFileSystem();
+        this.database = initDatabase();
+        this.keyGenerator = initKeyGenerator();
+        this.encryptor = initEncryptor();
+        this.bluetoothHandler = initBluetoothHandler();
+        this.nfcHandler = initNfcHandler();
+        this.qrHandler = initQrHandler();
     }
 
     /**
@@ -71,14 +73,14 @@ public final class ServiceLocator implements IServiceLocator {
     // this class and it's needed for the serialization proxy
     @SuppressWarnings({"checkstyle:parameternumber", "checkstyle:javadocmethod"})
     ServiceLocator(final String androidFilesDir,
-                           final IDatabase database,
-                           final IKeyGenerator keyGenerator,
-                           final IEncryptor encryptor,
-                           final IFileSystem fileSystem,
-                           final IConstants constants,
-                           final IBluetoothHandler bluetoothHandler,
-                           final INfcHandler nfcHandler,
-                           final IQRHandler qrHandler) {
+                   final IDatabase database,
+                   final IKeyGenerator keyGenerator,
+                   final IEncryptor encryptor,
+                   final IFileSystem fileSystem,
+                   final IConstants constants,
+                   final IBluetoothHandler bluetoothHandler,
+                   final INfcHandler nfcHandler,
+                   final IQRHandler qrHandler) {
         this.androidFilesDir = androidFilesDir;
         this.database = database;
         this.keyGenerator = keyGenerator;
@@ -91,10 +93,74 @@ public final class ServiceLocator implements IServiceLocator {
     }
 
     /**
+     * @return The constants module used for this servicelocator
+     */
+    @DesignedForExtension
+    IConstants initConstants() {
+        return Constants.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The filesystem module used for this servicelocator
+     */
+    @DesignedForExtension
+    IFileSystem initFileSystem() {
+        return AndroidFileSystemAdapter.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The database module used for this servicelocator
+     */
+    @DesignedForExtension
+    IDatabase initDatabase() {
+        return GsonDatabaseAdapter.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The keygenerator module used for this servicelocator
+     */
+    @DesignedForExtension
+    IKeyGenerator initKeyGenerator() {
+        return KeyGeneratorAdapter.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The encryptor module used for this servicelocator
+     */
+    @DesignedForExtension
+    IEncryptor initEncryptor() {
+        return EncryptorAdapter.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The Bluetooth module used for this servicelocator
+     */
+    @DesignedForExtension
+    IBluetoothHandler initBluetoothHandler() {
+        return AndroidBluetoothHandler.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The NFC module used for this servicelocator
+     */
+    @DesignedForExtension
+    INfcHandler initNfcHandler() {
+        return DummyNFCHandler.newInstance(this).getModule();
+    }
+
+    /**
+     * @return The QR module used for this servicelocator
+     */
+    @DesignedForExtension
+    IQRHandler initQrHandler() {
+        return DummyQRHandler.newInstance(this).getModule();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
-    public String getAndroidFilesDir() {
+    public final String getAndroidFilesDir() {
         this.assertExists(this.androidFilesDir, "androidFilesDir");
         return this.androidFilesDir;
     }
@@ -103,7 +169,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IDatabase getDatabase() {
+    public final IDatabase getDatabase() {
         this.assertExists(this.database, "database");
         return this.database;
     }
@@ -112,7 +178,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IKeyGenerator getKeyGenerator() {
+    public final IKeyGenerator getKeyGenerator() {
         this.assertExists(this.keyGenerator, "keyGenerator");
         return this.keyGenerator;
     }
@@ -121,7 +187,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IEncryptor getEncryptor() {
+    public final IEncryptor getEncryptor() {
         this.assertExists(this.encryptor, "encryptor");
         return this.encryptor;
     }
@@ -130,7 +196,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IFileSystem getFileSystem() {
+    public final IFileSystem getFileSystem() {
         this.assertExists(this.fileSystem, "fileSystem");
         return this.fileSystem;
     }
@@ -139,7 +205,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IConstants getConstants() {
+    public final IConstants getConstants() {
         this.assertExists(this.constants, "constants");
         return this.constants;
     }
@@ -148,7 +214,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IBluetoothHandler getBluetoothHandler() {
+    public final IBluetoothHandler getBluetoothHandler() {
         this.assertExists(this.bluetoothHandler, "bluetoothHandler");
         return this.bluetoothHandler;
     }
@@ -157,7 +223,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public INfcHandler getNFCHandler() {
+    public final INfcHandler getNFCHandler() {
         this.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }
@@ -166,7 +232,7 @@ public final class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public IQRHandler getQRHandler() {
+    public final IQRHandler getQRHandler() {
         this.assertExists(this.qrHandler, "qrHandler");
         return this.qrHandler;
     }
@@ -209,34 +275,6 @@ public final class ServiceLocator implements IServiceLocator {
     }
 
     /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
-     */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
-    }
-
-    /**
      * Thrown when a module was called before it was initialized.
      */
     static class ModuleNotFoundException extends RuntimeException {
@@ -253,26 +291,26 @@ public final class ServiceLocator implements IServiceLocator {
         }
 
         /**
-         * Serialize the created proxy instead of this instance.
+         * Serialize the created proxy instead of the {@link ModuleNotFoundException} instance.
          */
         private Object writeReplace() {
             return new SerializationProxy(this);
         }
 
         /**
-         * Ensure that no instance of this class is created because it was present in the stream. A correct
-         * stream should only contain instances of the proxy.
+         * Ensure no instance of {@link ModuleNotFoundException} is created when present in the stream.
          */
         private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
             throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
         }
 
         /**
-         * Represents the logical state of this class and copies the data from that class without
-         * any consistency checking or defensive copying.
+         * A proxy representing the logical state of {@link ModuleNotFoundException}. Copies the data
+         * from that class without any consistency checking or defensive copying.
          */
         private static final class SerializationProxy implements Serializable {
-            private static final long serialVersionUID = -1930759199728515311L;
+
+            private static final long serialVersionUID = -1930759144828515311L;
 
             private final String message;
             private final Throwable throwable;
@@ -283,8 +321,8 @@ public final class ServiceLocator implements IServiceLocator {
              * @param exception The current instance of the proxy
              */
             SerializationProxy(final ModuleNotFoundException exception) {
-                message = exception.getMessage();
-                throwable = exception.getCause();
+                this.message = exception.getMessage();
+                this.throwable = exception.getCause();
             }
 
             /**
@@ -293,8 +331,10 @@ public final class ServiceLocator implements IServiceLocator {
              * @return The object resolved by this proxy
              */
             private Object readResolve() {
-                return new ModuleNotFoundException(message).initCause(throwable);
+                return new ModuleNotFoundException(this.message).initCause(this.throwable);
             }
         }
+
     }
+
 }

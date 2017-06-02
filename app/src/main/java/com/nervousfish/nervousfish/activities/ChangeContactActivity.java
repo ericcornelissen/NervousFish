@@ -5,24 +5,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -53,47 +47,21 @@ public final class ChangeContactActivity extends AppCompatActivity {
         }
 
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        this.setName(this.contact.getName());
-        this.setKeys(this.contact.getKeys());
+        ContactActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
+        ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.backButtonChange);
+        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
-    }
-
-    /**
-     * Set the name of the {@link Contact} to the {@link ContactActivity}.
-     *
-     * @param name The name.
-     */
-    private void setName(final String name) {
-        final EditText tv = (EditText) this.findViewById(R.id.edit_contact_name_input);
-        tv.setText(name);
-    }
-
-    /**
-     * Set the keys of the {@link Contact} to the {@link ContactActivity}.
-     *
-     * @param keys A {@link Collection} of {@link IKey}s.
-     */
-    private void setKeys(final Collection<IKey> keys) {
-        final List<String> keyNames = new ArrayList<>();
-        for (final IKey key : keys) {
-            keyNames.add(key.getName());
-        }
-
-        final ListView lv = (ListView) this.findViewById(R.id.listView);
-        lv.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, keyNames));
     }
 
     /**
      * When the save button is clicked this method is called.
      * It saves the new contact name.
      *
-     * @param v - the view clicked on
+     * @param v The view clicked on
      */
     public void saveContact(final View v) {
-        //Dont show keyboard anymore
+        // Don't show keyboard anymore
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -127,7 +95,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * Will return true if the name is valid. This means
      * that it has at least 1 ASCII character.
      *
-     * @param name - the name that has been entered
+     * @param name The name that has been entered
      * @return a {@link boolean} telling if the name is valid or not
      */
     private boolean isValidName(final String name) {
@@ -135,6 +103,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
     }
 
     private final class BackButtonListener implements View.OnClickListener {
+
         /**
          * {@inheritDoc}
          */
@@ -149,16 +118,24 @@ public final class ChangeContactActivity extends AppCompatActivity {
                         .setContentText(getString(R.string.go_back_changes_lost))
                         .setCancelText(getString(R.string.cancel))
                         .setConfirmText(getString(R.string.yes_go_back))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(final SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                                finish();
-                            }
-                        })
+                        .setConfirmClickListener(new DiscardChangesClickListener())
                         .show();
             }
         }
+
+    }
+
+    private final class DiscardChangesClickListener implements SweetAlertDialog.OnSweetClickListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+            sweetAlertDialog.dismiss();
+            finish();
+        }
+
     }
 
 }
