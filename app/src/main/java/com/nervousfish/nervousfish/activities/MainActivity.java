@@ -199,19 +199,23 @@ public final class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.pairing_menu_bluetooth:
                 intent = new Intent(this, ActivateBluetoothActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+                this.startActivityForResult(intent, 0);
                 break;
             case R.id.pairing_menu_nfc:
                 intent = new Intent(this, NFCActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+                this.startActivity(intent);
                 break;
             case R.id.pairing_menu_qr:
                 intent = new Intent(this, QRActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+                this.startActivity(intent);
                 break;
             default:
                 LOGGER.error("Unknown pairing button clicked");
                 throw new IllegalArgumentException("Only existing buttons can be clicked");
         }
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
     }
 
     /**

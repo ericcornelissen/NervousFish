@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -83,7 +84,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            this.serviceLocator.getBluetoothHandler().send(new Contact("Baas", new SimpleKey("testkey", "456um4h692406u2p")));
+            final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            final Contact myProfileAsPassword = new Contact(myProfile.getName(), myProfile.getPublicKey());
+            this.serviceLocator.getBluetoothHandler().send(myProfileAsPassword);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
@@ -169,7 +172,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             try {
                 LOGGER.info("Adding contact to database...");
                 this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException e) {
+            } catch (IOException | IllegalArgumentException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
 

@@ -83,6 +83,9 @@ public final class ActivateBluetoothActivity extends Activity {
             this.activationFailed();
         } else if (resultCode == RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY && requestCode == REQUEST_CODE_BLUETOOTH_ACTIVITY) {
             this.finish();
+        } else if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            finish();
         }
     }
 
