@@ -48,8 +48,8 @@
     <!-- Hoofdscherm -->
     <string name="popup_log_out_title">Uitloggen?</string>
     <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
-    <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
-    <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
+    <string name="popup_enable_bluetooth_title">Enable aanzetten?</string>
+    <string name="popup_enable_bluetooth_description">Zet Bluetooth aan zodat andere je kunnen apparaat vinden</string>
 
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>

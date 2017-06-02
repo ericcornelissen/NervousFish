@@ -295,19 +295,16 @@ public final class MainActivity extends AppCompatActivity {
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.enable_bluetooth_questionmark))
-                    .setContentText(getString(R.string.enable_bluetooth_explanation))
-                    .setCancelText(getString(R.string.cancel))
-                    .setConfirmText(getString(R.string.dialog_ok))
+            new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText(this.getString(R.string.popup_enable_bluetooth_title))
+                    .setContentText(this.getString(R.string.popup_enable_bluetooth_description))
+                    .setCancelText(this.getString(R.string.no))
+                    .setConfirmText(this.getString(R.string.yes))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-
-                        /**
-                         * {@inheritDoc}
-                         */
                         @Override
-                        public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
+                        public void onClick(final SweetAlertDialog dialog) {
+                            dialog.dismiss();
+
                             LOGGER.info("Requesting to enable Bluetooth");
                             final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                             if (buttonClicked) {
@@ -317,7 +314,6 @@ public final class MainActivity extends AppCompatActivity {
                             }
                             LOGGER.info("Request to enable Bluetooth sent");
                         }
-
                     })
                     .show();
         }
