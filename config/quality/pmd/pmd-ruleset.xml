@@ -51,7 +51,9 @@
         <exclude name="ShortClassName" />
         <exclude name="VariableNamingConventions" />
     </rule>
-    <rule ref="rulesets/java/optimizations.xml" />
+    <rule ref="rulesets/java/optimizations.xml">
+        <exclude name="RedundantFieldInitializer" />
+    </rule>
     <rule ref="rulesets/java/strictexception.xml" />
     <rule ref="rulesets/java/strings.xml" />
     <rule ref="rulesets/java/typeresolution.xml" />
