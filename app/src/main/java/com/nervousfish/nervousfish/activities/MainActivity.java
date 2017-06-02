@@ -130,6 +130,7 @@ public final class MainActivity extends AppCompatActivity {
         LOGGER.info("MainActivity created");
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -200,7 +201,7 @@ public final class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, NFCActivity.class);
                 break;
             case R.id.pairing_menu_qr:
-                intent = new Intent(this, QRActivity.class);
+                intent = new Intent(this, QRExchangeKeyActivity.class);
                 break;
             default:
                 LOGGER.error("Unknown pairing button clicked");
@@ -221,6 +222,8 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
+
+
 
     /**
      * Temporarily fill the database with demo data for development.

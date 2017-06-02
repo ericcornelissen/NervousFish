@@ -72,6 +72,9 @@
             android:name=".activities.SelectVerificationMethodActivity" />
 
         <service android:name=".modules.pairing.AndroidBluetoothService" />
+        <activity
+            android:name=".activities.QRExchangeKeyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

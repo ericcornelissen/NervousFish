@@ -10,7 +10,7 @@ import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.NFCActivity;
-import com.nervousfish.nervousfish.activities.QRActivity;
+import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
@@ -64,7 +64,7 @@ public class SelectPairingMethodSteps extends ActivityInstrumentationTestCase2<M
 
     @Then("^I go to the QRActivity$")
     public void iGoToQR() {
-        assertEquals(getCurrentActivity().getClass(), QRActivity.class);
+        assertEquals(getCurrentActivity().getClass(), QRExchangeKeyActivity.class);
     }
 
     @Then("^I go to the NFCActivity$")
