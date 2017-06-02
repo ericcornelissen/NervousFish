@@ -31,6 +31,7 @@
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
+    <string name="remember_my_choice">Onthoud mijn keuze</string>
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
@@ -77,4 +78,11 @@
     <string name="activating_bluetooth_location_text">Je moet toestemming geven om je locatie te delen om Bluetooth the kunnen gebruiken. We zullen helemaal niets met je locatie doen.</string>
     <string name="activating_bluetooth_went_wrong">Bluetooth kon niet worden geactiveerd</string>
     <string name="activating_bluetooth_went_wrong_explanation">Zet Bluetooth aan als je keys wilt versturen over Bluetooth</string>
+
+    <!-- Kies verificatie methode -->
+    <string name="select_verification_method">Selecteer een verificatie methode</string>
+    <string name="select_visual_verification">Visueel patroon</string>
+    <string name="select_rhythm_verification">Tab een ritme</string>
+    <string name="unknown_verification_method_title">Helaas…</string>
+    <string name="unknown_verification_method_description">Er ging iets fout, probeer opnieuw</string>
 </resources>

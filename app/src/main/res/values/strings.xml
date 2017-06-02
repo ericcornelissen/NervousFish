@@ -30,6 +30,7 @@
     <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
     <string name="no_devices_found">No devices found…</string>
+    <string name="remember_my_choice">Remember my choice</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
@@ -76,4 +77,11 @@
     <string name="activating_bluetooth_went_wrong_explanation">Please enable Bluetooth if you want to exchange keys over Bluetooth.</string>
     <string name="activating_bluetooth">Activating Bluetooth…</string>
     <string name="activating_bluetooth_location_text">Accepting to share your location is something needed to run Bluetooth, note that we won\'t do anything with your location.</string>
+
+    <!-- Select verification method -->
+    <string name="select_verification_method">Select a verification method</string>
+    <string name="select_visual_verification">Visual pattern</string>
+    <string name="select_rhythm_verification">Tab a rhythm</string>
+    <string name="unknown_verification_method_title">Oops…</string>
+    <string name="unknown_verification_method_description">Something went wrong, please try again</string>
 </resources>
