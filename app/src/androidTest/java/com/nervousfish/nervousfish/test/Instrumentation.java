@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.test;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.runner.MonitoringInstrumentation;
 
@@ -10,6 +11,8 @@ import cucumber.api.java.Before;
 
 public class Instrumentation extends MonitoringInstrumentation {
 
+    // Suppressed because we cannot obtain references to the data directory directly from the Instrumentation tests
+    @SuppressWarnings("SdCardPath")
     public static final String filesDir = "/data/user/0/com.nervousfish.nervousfish/files";
     private final CucumberInstrumentationCore mInstrumentationCore = new CucumberInstrumentationCore(this);
 

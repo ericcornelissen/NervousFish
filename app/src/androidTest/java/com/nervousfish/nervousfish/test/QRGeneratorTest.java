@@ -3,39 +3,60 @@ package com.nervousfish.nervousfish.test;
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.nervousfish.nervousfish.BaseTest;
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class QRGeneratorTest {
 
-    private final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0" +
-            "FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/" +
-            "3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZwIDAQAB";
-
     private static final int QRCODE_IMAGE_HEIGHT = 400;
     private static final int QRCODE_IMAGE_WIDTH = 400;
+    private IKey publicKey;
+    private String publicKeyString;
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
+
+    @Before
+    public void setUp() throws Exception {
+        final IKeyGenerator keyGenerator = serviceLocator.getKeyGenerator();
+        final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
+        publicKey = pair.getPublicKey();
+        final String space = " ";
+        publicKeyString = publicKey.getType() + space + publicKey.getName()
+                + space + publicKey.getKey();
+    }
     @Test
-    public void testEncodeAsExpected() throws Exception{
-        final Bitmap QRcode = QRGenerator.encode(publicKey);
-        final String result = QRGenerator.decode(QRcode);
-        assertEquals(publicKey, result);
+    public void testEncodeNotNull() throws Exception {
+        final Bitmap qrCode = QRGenerator.encode(publicKeyString);
+        assertNotNull(qrCode);
     }
 
     @Test
+    public void testDeconstructAsExpected() throws Exception {
+        IKey keyTest = QRGenerator.deconstructToKey(publicKeyString);
+        assertEquals(publicKey, keyTest);
+    }
+    @Test
     public void testWidthIsAsExpected() throws Exception{
-        final Bitmap QRcode = QRGenerator.encode(publicKey);
+        final Bitmap QRcode = QRGenerator.encode(publicKeyString);
         assertEquals(QRCODE_IMAGE_WIDTH, QRcode.getWidth());
     }
 
     @Test
     public void testHeightIsAsExpected() throws Exception{
-        final Bitmap QRcode = QRGenerator.encode(publicKey);
+        final Bitmap QRcode = QRGenerator.encode(publicKeyString);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }
 

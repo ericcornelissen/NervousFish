@@ -9,7 +9,7 @@
     tools:context="com.nervousfish.nervousfish.activities.ContactActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/app_bar_activity_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -21,14 +21,14 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/backButtonChange"
+                android:id="@+id/back_button_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/color_primary"
+                android:contentDescription="@string/go_back"
                 app:srcCompat="?attr/actionModeCloseDrawable"
-                android:contentDescription="@string/contact_title"
                 tools:targetApi="lollipop" />
 
             <TextView
@@ -48,14 +48,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/color_primary"
                 android:onClick="showPopupMenu"
-                app:srcCompat="@android:drawable/ic_menu_more" />
-
+                app:srcCompat="@android:drawable/ic_menu_more"
+                tools:targetApi="lollipop"
+                android:contentDescription="@string/more" />
         </LinearLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_contact" />
-
 </LinearLayout>

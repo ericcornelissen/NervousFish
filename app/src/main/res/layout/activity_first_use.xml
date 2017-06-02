@@ -1,0 +1,61 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sea_at_night">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/ten_padding_start"
+        android:paddingEnd="@dimen/ten_padding_end">
+
+        <ImageView
+            android:id="@+id/large_logo"
+            android:layout_width="wrap_content"
+            android:paddingTop="@dimen/first_use_logo_padding_top"
+            android:layout_height="@dimen/first_use_logo_height"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/large_logo_with_shadow"
+            android:contentDescription="@string/image_description_logo" />
+
+        <TextView
+            android:id="@+id/welcome_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/welcome_message_padding_top"
+            android:text="@string/welcome_message"
+            android:textSize="@dimen/welcome_message_size" />
+
+        <View
+            android:layout_width="@dimen/first_use_divider_width"
+            android:layout_height="@dimen/first_use_divider_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/first_use_divider_margin_top"
+            android:background="@color/color_accent"/>
+
+        <TextView
+            android:layout_width="@dimen/welcome_message_subpart_width"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/welcome_message_subpart_margin_top"
+            android:text="@string/welcome_message_subpart"
+            android:textSize="@dimen/welcome_message_subpart_size" />
+
+        <Button
+            android:id="@+id/get_started"
+            android:layout_width="@dimen/submit_password_width"
+            android:layout_height="@dimen/submit_password_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/submit_password_margin_top"
+            android:background="@color/color_primary"
+            android:gravity="center"
+            android:onClick="onGetStartedClick"
+            android:text="@string/get_started"
+            android:textSize="@dimen/get_started_text_size" />
+    </LinearLayout>
+</ScrollView>

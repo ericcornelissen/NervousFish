@@ -8,11 +8,12 @@
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/image_view_contact_list_entry"
         android:layout_width="@dimen/contacts_list_entry_icon_width"
         android:layout_height="@dimen/contacts_list_entry_icon_height"
         android:layout_weight="1"
-        app:srcCompat="@drawable/personplaceholder" />
+        android:src="@drawable/personplaceholder"
+        android:contentDescription="@string/contact_image" />
 
     <LinearLayout
         android:layout_width="@dimen/contacts_list_entry_text_layout_width"
@@ -22,7 +23,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/contact_name_list_entry"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/name"

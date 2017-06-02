@@ -11,8 +11,18 @@
     <Match>
         <Class name="~.*\.*Test" />
     </Match>
-    <!-- TODO Should be removed after #137 is merged -->
+
+    <!-- Suppressed because Android enforces that the onCreate method is only called once -->
     <Match>
-        <Class name="~.*\.*DatabaseAdapter" />
+        <Class name="com.nervousfish.nervousfish.service_locator.NervousFish" />
+        <Method name="onCreate" />
+        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+    </Match>
+
+    <!-- Suppressed because we don't want to short circuit here so all inputs can become red -->
+    <Match>
+        <Class name="com.nervousfish.nervousfish.activities.CreateProfileActivity" />
+        <Method name="validateInputFields" />
+        <Bug pattern="NS_DANGEROUS_NON_SHORT_CIRCUIT" />
     </Match>
 </FindBugsFilter>

@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
@@ -13,7 +14,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -26,6 +27,7 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -36,7 +38,7 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ContactSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
     private final IKey key = new SimpleKey("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
     private final Contact contact = new Contact("Yashuo", this.key);
 
@@ -50,8 +52,8 @@ public class ContactSteps {
 
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.CONTACT, contact);
-        mActivityRule.launchActivity(intent);
+        intent.putExtra(ConstantKeywords.CONTACT, this.contact);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I confirm the contact is deleted$")
@@ -64,19 +66,19 @@ public class ContactSteps {
         onView(withId(R.id.edit_menu_button)).perform(click());
     }
 
-    @When("^I press the contact activity back button")
+    @When("^I press the back button in the contact activity$")
     public void iPressTheContactActivityBackButton() {
-        onView(withId(R.id.backButtonChange)).perform(click());
+        onView(withId(R.id.back_button_change)).perform(click());
     }
 
     @When("^I select delete contact$")
     public void iPressDeleteButton() {
-        onView(withText("Delete")).perform(click());
+        onView(withText(R.string.delete)).perform(click());
     }
 
     @When("^I select edit contact$")
     public void iSelectEditContact() {
-        onView(withText("Edit")).perform(click());
+        onView(withText(R.string.edit)).perform(click());
     }
 
     @When("^I verify that I am sure I want to delete the contact$")
@@ -91,13 +93,14 @@ public class ContactSteps {
 
     @Then("^I should go to the activity I visited before the contact activity$")
     public void iShouldGoToTheActivityIVisitedBeforeTheContactActivity() {
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        final Activity activity = this.mActivityRule.getActivity();
+        assertTrue(activity.isFinishing());
     }
 
     @Then("^the contact should be deleted$")
     public void theContactShouldBeDeleted() throws IOException {
         IDatabase database = this.serviceLocator.getDatabase();
-        assertFalse(database.contactExtists(contact.getName()));
+        assertFalse(database.contactExists(this.contact.getName()));
     }
 
     /**
