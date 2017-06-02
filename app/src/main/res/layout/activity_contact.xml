@@ -27,8 +27,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@color/color_primary"
+                android:contentDescription="@string/go_back"
                 app:srcCompat="?attr/actionModeCloseDrawable"
-                android:contentDescription="@string/contact_title"
                 tools:targetApi="lollipop" />
 
             <TextView
@@ -53,11 +53,8 @@
                 app:srcCompat="@android:drawable/ic_menu_more"
                 tools:targetApi="lollipop"
                 android:contentDescription="@string/more" />
-
         </LinearLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_contact" />
-
 </LinearLayout>

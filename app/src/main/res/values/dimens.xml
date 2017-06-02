@@ -1,6 +1,4 @@
 <resources>
-    <dimen name="zero">0dp</dimen>
-
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="sorting_fab_margin">22dp</dimen>
     <dimen name="contact_picture_width">100dp</dimen>

@@ -42,7 +42,7 @@
             android:layout_marginEnd="@dimen/field_margin_right"
             android:layout_marginStart="@dimen/field_margin_left"
             android:layout_marginTop="@dimen/field_margin_top"
-            android:hint="@string/enter_profile_name"
+            android:hint="@string/name"
             android:imeOptions="actionSend"
             android:drawableStart="@drawable/user"
             android:drawablePadding="@dimen/normal_drawable_padding"/>
