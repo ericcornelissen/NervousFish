@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">NervousFish</string>
+    <string name="remember_my_choice">Onthoud mijn keuze</string>
     <string name="cancel">Annuleren</string>
     <string name="cancel_pairing">Annuleren</string>
     <string name="change_contact_title">Wijzig Contact</string>
@@ -64,4 +65,9 @@
     <string name="no">NEE</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
+    <string name="select_verification_method">Selecteer een verificatie methode</string>
+    <string name="select_visual_verification">Visueel patroon</string>
+    <string name="select_rhythm_verification">Tab een ritme</string>
+    <string name="unknown_verification_method_title">Helaas…</string>
+    <string name="unknown_verification_method_description">Er ging iets fout, probeer opnieuw</string>
 </resources>
