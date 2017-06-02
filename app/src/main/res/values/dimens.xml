@@ -1,4 +1,6 @@
 <resources>
+    <dimen name="zero">0dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="sorting_fab_margin">22dp</dimen>
     <dimen name="contact_picture_width">100dp</dimen>
@@ -59,4 +61,10 @@
     <dimen name="create_profile_message_width">300dp</dimen>
     <dimen name="create_profile_message_margin_top">20dp</dimen>
     <dimen name="create_profile_message_size">19sp</dimen>
+
+    <dimen name="select_verification_method_title_padding">20dp</dimen>
+    <dimen name="select_verification_method_title_text_size">22sp</dimen>
+    <dimen name="select_verification_method_button_padding">15dp</dimen>
+    <dimen name="select_verification_method_button_text_size">16sp</dimen>
+    <dimen name="select_verification_method_checkbox_padding">6dp</dimen>
 </resources>

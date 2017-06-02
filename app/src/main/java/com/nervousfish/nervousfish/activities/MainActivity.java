@@ -98,6 +98,7 @@ public final class MainActivity extends AppCompatActivity {
         LOGGER.info("MainActivity created");
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -182,6 +183,8 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
+
+
 
     /**
      * Temporarily fill the database with demo data for development.
