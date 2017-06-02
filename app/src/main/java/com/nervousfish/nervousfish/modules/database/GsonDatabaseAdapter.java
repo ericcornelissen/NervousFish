@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
@@ -48,8 +49,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final IFileSystem fileSystem;
 
     private final String databasePath;
-    private final List<Contact> contacts;
-    private final List<Profile> profiles;
+    private final Database database;
 
     /**
      * Prevents construction from outside the class.
@@ -352,9 +352,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
-        // Update the database
-        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-        gsonParser.toJson(profiles, writer);
+        final Writer writer = this.fileSystem.getWriter(this.databasePath);
+        gsonParser.toJson(database, writer);
         writer.close();
     }
 

@@ -2,59 +2,42 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
 
+import java.util.List;
+
 /**
  * An Profile POJO to store a name, public key and private key.
  */
 public class Profile {
 
-    private final String name;
-    private final KeyPair keyPair;
+    private final Contact contact;
+    private final List<KeyPair> keyPairs;
 
     /**
      * The constructor for the {@link Profile} class.
      *
-     * @param name the name belonging to the Profile
-     * @param keyPair the public/private key-pair
+     * @param contact The contact belonging to the user.
+     * @param keyPairs the public/private key-pairs of the user.
      */
-    public Profile(final String name, final KeyPair keyPair) {
-        this.name = name;
-        this.keyPair = keyPair;
+    public Profile(final Contact contact, final List<KeyPair> keyPairs) {
+        this.contact = contact;
+        this.keyPairs = keyPairs;
     }
 
     /**
-     * Get the name of the {@link Profile}.
-     *
-     * @return The name.
+     * Returns the contact Object of the user
+     * @return - The Contact POJO.
      */
-    public String getName() {
-        return this.name;
+    public Contact getContact() {
+        return contact;
     }
 
     /**
-     * Get the {@link KeyPair} of the {@link Profile}.
-     *
-     * @return The {@link KeyPair}.
+     * Returns the Keypairs of the users.
+     * @return
      */
-    public KeyPair getKeyPair() { return this.keyPair; }
-
-    /**
-     * Get the public {@link IKey} of the {@link Profile}.
-     *
-     * @return The public {@link IKey}.
-     */
-    public IKey getPublicKey() {
-        return this.keyPair.getPublicKey();
+    public List<KeyPair> getKeyPairs() {
+        return keyPairs;
     }
-
-    /**
-     * Get the private {@link IKey} of the {@link Profile}.
-     *
-     * @return The private {@link IKey}.
-     */
-    public IKey getPrivateKey() {
-        return this.keyPair.getPrivateKey();
-    }
-
 
     /**
      * {@inheritDoc}
