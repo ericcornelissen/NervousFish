@@ -7,10 +7,6 @@ import com.github.clans.fab.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.ViewFlipper;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -19,8 +15,6 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
-import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
-import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -33,10 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -57,21 +48,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
-    private static final int NUMBER_OF_SORTING_MODES = 2;
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_START = 100;
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
-    private static final int SORT_BY_NAME = 0;
-    private static final int SORT_BY_KEY_TYPE = 1;
-    private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
-        @Override
-        public int compare(final Contact o1, final Contact o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
+
+    private List<Contact> contacts;
 
     private IServiceLocator serviceLocator;
-    private List<Contact> contacts;
-    private int currentSorting;
+    private MainActivitySorter sorter;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -98,7 +81,8 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        sortOnName();
+        sorter = new MainActivitySorter(this);
+        sorter.sortOnName();
 
         try {
             this.serviceLocator.getBluetoothHandler().start();
@@ -133,24 +117,12 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The sort floating action button that was clicked
      */
     public void onSortButtonClicked(final View view) {
-        currentSorting++;
-        if (currentSorting >= NUMBER_OF_SORTING_MODES) {
-            currentSorting = 0;
-        }
-        final ViewFlipper flipper = (ViewFlipper) findViewById(R.id.view_flipper_sorter_main);
-        flipper.showNext();
-        switch (currentSorting) {
-            case SORT_BY_NAME:
-                sortOnName();
-                break;
-            case SORT_BY_KEY_TYPE:
-                sortOnKeyType();
-                break;
-            default:
-                break;
-        }
+        sorter.onSortButtonClicked(view);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -162,6 +134,9 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
@@ -201,7 +176,7 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @param index The index of the contact in {@code this.contacts}.
      */
-    private void openContact(final int index) {
+    void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
@@ -251,7 +226,7 @@ public final class MainActivity extends AppCompatActivity {
                     LOGGER.info("Adding contact to database...");
                     this.serviceLocator.getDatabase().addContact(contact);
                     this.contacts = this.serviceLocator.getDatabase().getAllContacts();
-                    sortOnName();
+                    sorter.sortOnName();
                 }
             } catch (IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
@@ -347,61 +322,8 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Gets all types of keys in the database
-     *
-     * @return a List with the types of keys.
-     */
-    private List<String> getKeyTypes() {
-        final Set<String> typeSet = new HashSet<>();
-        for (final Contact c : contacts) {
-            for (final IKey k : c.getKeys()) {
-                typeSet.add(k.getType());
-            }
-        }
-        return new ArrayList<>(typeSet);
-    }
-
-    /**
-     * Sorts contacts by name
-     */
-    private void sortOnName() {
-        final ListView lv = (ListView) findViewById(R.id.list_view_main);
-        final ContactsByNameListAdapter contactsByNameListAdapter = new ContactsByNameListAdapter(this, this.contacts);
-        contactsByNameListAdapter.sort(NAME_SORTER);
-        lv.setAdapter(contactsByNameListAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int index, final long id) {
-                openContact(index);
-            }
-
-        });
-
-    }
-
-    /**
-     * Sorts contacts by key type
-     */
-    private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) findViewById(R.id.expandable_contact_list_by_key_type);
-        final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter = new ContactsByKeyTypeListAdapter(this, getKeyTypes(), contacts);
-        ev.setAdapter(contactsByKeyTypeListAdapter);
-        ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int index, final long id) {
-                openContact(index);
-            }
-
-        });
+    List<Contact> getContacts() {
+        return contacts;
     }
 
 }
