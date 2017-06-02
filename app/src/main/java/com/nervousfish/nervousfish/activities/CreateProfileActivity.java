@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -24,7 +25,7 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The {@link android.app.Activity} used to create a new profile.
  */
 public final class CreateProfileActivity extends AppCompatActivity {
 
@@ -32,20 +33,25 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     private IServiceLocator serviceLocator;
+    private int red;
 
     /**
-     * Creates the new activity, should only be called by Android
+     * Creates the new activity, should only be called by Android.
      *
-     * @param savedInstanceState Don't touch this
+     * @param savedInstanceState The saved state of the previous instance.
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
-        final Intent intent = getIntent();
+
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        final Window window = this.getWindow();
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        this.red = ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null);
 
         LOGGER.info("CreateProfileActivity created");
     }
@@ -56,44 +62,57 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @param v The {@link View} clicked
      */
     public void onSubmitClick(final View v) {
-        if (validateInputFields()) {
+        if (this.validateInputFields()) {
             final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
             final String name = nameInputField.getText().toString();
             final KeyPair keyPair = this.generateKeyPair();
 
             try {
-                serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
-                showProfileCreatedDialog();
+                this.serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
+                this.showProfileCreatedDialog();
             } catch (IOException e) {
-                showProfileNotCreatedDialog();
+                this.showProfileNotCreatedDialog();
             }
         } else {
-            showProfileNotCreatedDialog();
+            this.showProfileNotCreatedDialog();
         }
     }
 
+    /**
+     * Progress to the next activity from the {@link CreateProfileActivity}.
+     */
+    private void nextActivity() {
+        final Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        this.startActivity(intent);
+    }
+
+    /**
+     * Show the dialog for when the profile could be created.
+     */
     private void showProfileCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(getString(R.string.profile_created))
-            .setContentText(getString(R.string.profile_created_explanation))
-            .setConfirmText(getString(R.string.dialog_ok))
+            .setTitleText(this.getString(R.string.profile_created))
+            .setContentText(this.getString(R.string.profile_created_explanation))
+            .setConfirmText(this.getString(R.string.dialog_ok))
             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final SweetAlertDialog sDialog) {
-                    sDialog.dismiss();
-                    final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
-                    intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                    CreateProfileActivity.this.startActivity(intent);
+                public void onClick(final SweetAlertDialog dialog) {
+                    dialog.dismiss();
+                    nextActivity();
                 }
             })
             .show();
     }
 
+    /**
+     * Show the dialog for when the profile couldn't be created.
+     */
     private void showProfileNotCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(getString(R.string.could_not_create_profile))
-                .setContentText(getString(R.string.could_not_create_profile_explanation))
-                .setConfirmText(getString(R.string.dialog_ok))
+                .setTitleText(this.getString(R.string.could_not_create_profile))
+                .setContentText(this.getString(R.string.could_not_create_profile_explanation))
+                .setConfirmText(this.getString(R.string.dialog_ok))
                 .show();
     }
 
@@ -127,60 +146,65 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return True when the name is valid
      */
     private boolean validateInputFieldName() {
-        final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
+        final EditText input = (EditText) this.findViewById(R.id.profile_enter_name);
 
-        if (this.isValidName(nameInputField.getText().toString())) {
-            nameInputField.setBackgroundColor(Color.TRANSPARENT);
+        if (this.isValidName(input.getText().toString())) {
+            input.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            nameInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            input.setBackgroundColor(this.red);
             return false;
         }
+
         return true;
     }
 
     /**
-     * @return True when the password is valid
+     * @return True when the password is valid.
      */
     private boolean validateInputFieldPassword() {
-        final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
-
-        if (this.isValidName(passwordInputField.getText().toString())
-                && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
-            passwordInputField.setBackgroundColor(Color.TRANSPARENT);
+        final EditText inputField = (EditText) this.findViewById(R.id.profile_enter_password);
+        final String password = inputField.getText().toString();
+        if (this.isValidPassword(password)) {
+            inputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            inputField.setBackgroundColor(this.red);
             return false;
         }
+
         return true;
     }
 
     /**
-     * @return True when the repeated password is valid
+     * @return True when the repeated password is valid.
      */
     private boolean validateInputFieldPasswordRepeat() {
-        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
-
-        if (this.isValidName(passwordRepeatInputField.getText().toString())) {
-            passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
+        final EditText inputField = (EditText) this.findViewById(R.id.profile_repeat_password);
+        final String password = inputField.getText().toString();
+        if (this.isValidPassword(password)) {
+            inputField.setBackgroundColor(Color.TRANSPARENT);
         } else {
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+            inputField.setBackgroundColor(this.red);
             return false;
         }
+
         return true;
     }
 
     /**
-     * @return True when the password matches the repeated password
+     * @return True when the password matches the repeated password.
      */
     private boolean validateInputPasswordsSame() {
-        final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
-        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
+        final EditText initialInput = (EditText) this.findViewById(R.id.profile_enter_password);
+        final EditText repeatInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
-        if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
+        final String initialPassword = initialInput.getText().toString();
+        final String repeatPassword = repeatInput.getText().toString();
+        if (!initialPassword.equals(repeatPassword)) {
+            initialInput.setBackgroundColor(this.red);
+            repeatInput.setBackgroundColor(this.red);
             return false;
         }
+
         return true;
     }
 
@@ -188,10 +212,27 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * Will return true if the name is valid. This means
      * that it has at least 1 ASCII character.
      *
-     * @param name The name that has been entered
-     * @return a {@link boolean} telling if the name is valid or not
+     * @param name The name that has been entered.
+     * @return a {@link boolean} indicating whether or not the name is valid.
      */
     private boolean isValidName(final String name) {
-        return name != null && !name.isEmpty() && !name.trim().isEmpty();
+        return name != null
+                && !name.isEmpty()
+                && !name.trim().isEmpty();
     }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 6 ASCII character.
+     *
+     * @param password The password that has been entered.
+     * @return a {@link boolean} indicating whether or not the password is valid.
+     */
+    private boolean isValidPassword(final String password) {
+        return password != null
+                && !password.isEmpty()
+                && !password.trim().isEmpty()
+                && password.length() >= MIN_PASSWORD_LENGTH;
+    }
+
 }

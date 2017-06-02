@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The main activity class that shows a list of all people with their public keys.
  */
 public final class FirstUseActivity extends AppCompatActivity {
 
@@ -22,15 +22,16 @@ public final class FirstUseActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
 
     /**
-     * Creates the new activity, should only be called by Android
+     * Creates the new activity, should only be called by Android.
      *
-     * @param savedInstanceState Don't touch this
+     * @param savedInstanceState The saved state of the previous instance.
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_first_use);
-        final Intent intent = getIntent();
+
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         LOGGER.info("FirstUseActivity created");
@@ -39,11 +40,12 @@ public final class FirstUseActivity extends AppCompatActivity {
     /**
      * Gets triggered when the GetStarted button is clicked.
      *
-     * @param v The {@link View} clicked
+     * @param view The {@link View} being clicked.
      */
-    public void onGetStartedClick(final View v) {
+    public void onGetStartedClick(final View view) {
         final Intent intent = new Intent(this, CreateProfileActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
+
 }
