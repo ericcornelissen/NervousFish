@@ -66,7 +66,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
             final KeyPair keyPair = this.generateKeyPair();
 
             try {
-                serviceLocator.getDatabase().addProfile(new Profile(name, password, keyPair));
+                serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
                 showProfileCreatedDialog();
             } catch (IOException e) {
                 showProfileNotCreatedDialog();

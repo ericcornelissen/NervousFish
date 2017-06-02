@@ -8,8 +8,6 @@ import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
 public class Profile {
 
     private final String name;
-    private final String encryptedPassword;
-    private final byte[] salt;
     private final KeyPair keyPair;
 
     /**
@@ -18,10 +16,8 @@ public class Profile {
      * @param name the name belonging to the Profile
      * @param keyPair the public/private key-pair
      */
-    public Profile(final String name, final String password, final KeyPair keyPair) {
+    public Profile(final String name, final KeyPair keyPair) {
         this.name = name;
-        this.salt = EncryptedSaver.generateSalt();
-        this.encryptedPassword = EncryptedSaver.hashWithoutSalt(password);
         this.keyPair = keyPair;
     }
 
@@ -59,31 +55,6 @@ public class Profile {
         return this.keyPair.getPrivateKey();
     }
 
-    /**
-     * Get the password of the {@link Profile}
-     * @return The encrypted password.
-     */
-    public String getEncryptedPassword() {
-        return encryptedPassword;
-    }
-
-    /**
-     * Get the salt bytestring of the {@link Profile}
-     * @return The salt bytestring.
-     */
-    public byte[] getSalt() {
-        return salt;
-    }
-
-    /**
-     * Checks if a given string equals the password of the user.
-     * @param password The string to check.
-     * @return Whether or not the string is the user's password.
-     */
-    public boolean checkPassword(String password){
-        String checkingPassword = EncryptedSaver.hashWithoutSalt(password);
-        return checkingPassword.equals(encryptedPassword);
-    }
 
     /**
      * {@inheritDoc}
