@@ -82,7 +82,7 @@
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Selecteer een verificatie methode</string>
     <string name="select_visual_verification">Visueel patroon</string>
-    <string name="select_rhythm_verification">Tab een ritme</string>
+    <string name="select_rhythm_verification">Tap een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
     <string name="unknown_verification_method_description">Er ging iets fout, probeer opnieuw</string>
 </resources>
