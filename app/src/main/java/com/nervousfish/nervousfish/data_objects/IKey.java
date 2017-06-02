@@ -5,11 +5,15 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 /**
  * The interface for the standard Java representation of a (public/private) key.
  */
 public interface IKey extends Serializable {
+
+    /**
+     * A list of {@link IKey} implementations known to the system.
+     */
+    enum Types { RSA, Simple }
 
     /**
      * Get a string representation of a key.
