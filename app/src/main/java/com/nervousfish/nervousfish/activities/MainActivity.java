@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.activities;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import com.github.clans.fab.FloatingActionButton;
@@ -150,26 +151,36 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The view that was clicked
      */
     public void onPairingButtonClicked(final View view) {
-        ((FloatingActionMenu) findViewById(R.id.pairing_button)).close(true);
-        final Intent intent;
+        // Close the FAB
+        ((FloatingActionMenu) this.findViewById(R.id.pairing_button)).close(true);
+
+        // Open the correct pairing activity
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+
         switch (view.getId()) {
             case R.id.pairing_menu_bluetooth:
-                this.enableBluetooth(true);
+                final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (bluetoothAdapter.isEnabled()) {
+                    intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
+                    this.startActivity(intent);
+                } else {
+                    this.enableBluetooth(true);
+                    return; // Prevent `this.startActivity()`
+                }
                 break;
             case R.id.pairing_menu_nfc:
-                intent = new Intent(this, NFCActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-                this.startActivity(intent);
+                intent.setComponent(new ComponentName(this, NFCActivity.class));
                 break;
             case R.id.pairing_menu_qr:
-                intent = new Intent(this, QRActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-                this.startActivity(intent);
+                intent.setComponent(new ComponentName(this, QRActivity.class));
                 break;
             default:
                 LOGGER.error("Unknown pairing button clicked");
                 throw new IllegalArgumentException("Only existing buttons can be clicked");
         }
+
+        this.startActivity(intent);
     }
 
     /**
