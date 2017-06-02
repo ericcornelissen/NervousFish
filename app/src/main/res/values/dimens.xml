@@ -33,7 +33,6 @@
     <dimen name="submit_password_text_size">20sp</dimen>
 
     <dimen name="waiting_for_slave_text_offset">40dp</dimen>
-    <dimen name="activating_bluetooth_location_message_offset">90dp</dimen>
 
     <dimen name="get_started_text_size">18sp</dimen>
     <dimen name="welcome_message_subpart_size">15sp</dimen>

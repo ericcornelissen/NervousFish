@@ -19,7 +19,7 @@
             android:layout_height="@dimen/first_use_logo_height"
             android:layout_gravity="center"
             app:srcCompat="@drawable/large_logo_with_shadow"
-            android:contentDescription="@string/image_description_logo" />
+            android:contentDescription="@string/logo" />
 
         <TextView
             android:id="@+id/welcome_message"

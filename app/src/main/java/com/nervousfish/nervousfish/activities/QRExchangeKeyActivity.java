@@ -134,7 +134,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.contact_set_name))
                     .setView(editName)
-                    .setPositiveButton(getString(R.string.popup_done), enClickListener);
+                    .setPositiveButton(getString(R.string.done), enClickListener);
             lastDialog = builder.create();
             lastDialog.show();
         } catch (IllegalArgumentException e) {
@@ -159,7 +159,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(imageView)
-                .setPositiveButton(getString(R.string.popup_done), new QRCloser());
+                .setPositiveButton(getString(R.string.done), new QRCloser());
 
         ((ViewGroup) imageView.getParent()).removeView(imageView);
         lastDialog = builder.create();
@@ -214,7 +214,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             } catch (final IllegalArgumentException e) {
                 LOGGER.error("IllegalArgumentException while adding new contact", e);
                 new SweetAlertDialog(QRExchangeKeyActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.contact_exists))
+                        .setTitleText(getString(R.string.contact_already_exists))
                         .setContentText(getString(R.string.contact_exists_message))
                         .setConfirmText(getString(R.string.dialog_ok))
                         .show();
