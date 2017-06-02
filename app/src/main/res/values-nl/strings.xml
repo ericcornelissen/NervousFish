@@ -70,4 +70,11 @@
     <string name="select_rhythm_verification">Tab een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
     <string name="unknown_verification_method_description">Er ging iets fout, probeer opnieuw</string>
+    <string name="QRScan">Scan QR code</string>
+    <string name="QRShow">Toon QR code</string>
+    <string name="contact_exists">Contact bestaat al</string>
+    <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
+    <string name="contact_set_name">\"Geef contact een naam\"</string>
+    <string name="contact_standard_new">Nieuwe contact</string>
+    <string name="popup_done">Klaar</string>
 </resources>

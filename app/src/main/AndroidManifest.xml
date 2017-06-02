@@ -48,9 +48,6 @@
             android:name=".activities.WaitForSlaveActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ActivateBluetoothActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -63,15 +60,15 @@
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:noHistory="true"/>
         <activity
-            android:name=".activities.QRActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SelectVerificationMethodActivity" />
 
         <service android:name=".modules.pairing.AndroidBluetoothService" />
+        <activity
+            android:name=".activities.QRExchangeKeyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
