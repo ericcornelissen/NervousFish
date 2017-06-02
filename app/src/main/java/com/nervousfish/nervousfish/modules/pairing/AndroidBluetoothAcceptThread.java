@@ -32,7 +32,7 @@ class AndroidBluetoothAcceptThread extends Thread {
      * like a server-side client. It runs until a connection is accepted
      * @param serviceLocator The service locator used
      */
-    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException, NoBluetoothException {
+    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException {
         super();
         this.serviceLocator = serviceLocator;
 

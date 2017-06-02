@@ -78,7 +78,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         synchronized (this) {
             // Cancel any thread attempting to make a connection
             if (connectThread != null) {
-                connectThread.cancel();
+                connectThread.cancel(true);
                 connectThread = null;
             }
 
@@ -110,7 +110,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         synchronized (this) {
             // Cancel any thread attempting to make a connection
             if (state == STATE_CONNECTING && connectThread != null) {
-                connectThread.cancel();
+                connectThread.cancel(true);
                 connectThread = null;
             }
 
@@ -140,7 +140,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         synchronized (this) {
             // Cancel the thread that completed the connection
             if (connectThread != null) {
-                connectThread.cancel();
+                connectThread.cancel(false);
                 connectThread = null;
             }
 
@@ -174,7 +174,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
 
         synchronized (this) {
             if (connectThread != null) {
-                connectThread.cancel();
+                connectThread.cancel(true);
                 connectThread = null;
             }
 

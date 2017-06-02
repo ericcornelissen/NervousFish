@@ -79,9 +79,19 @@ class AndroidBluetoothConnectThread extends Thread {
     }
 
     /**
-     * Cancels the connect thread and closes the socket
+     * Cancels the connect thread and closes the socket if closeSocket is set to true
+     *
+     * @param closeSocket True if its socket should be closed.
      */
-    void cancel() {
+    void cancel(final boolean closeSocket) {
         LOGGER.warn("Cancelled!");
+        if (closeSocket) {
+            try {
+                socket.close();
+                LOGGER.warn("Socket closed!");
+            } catch (final IOException e) {
+                LOGGER.error("Closing socket", e);
+            }
+        }
     }
 }
