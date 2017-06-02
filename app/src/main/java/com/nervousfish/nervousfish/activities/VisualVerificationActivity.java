@@ -7,10 +7,16 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Example activity to verify identity in Bluetooth connections.
@@ -22,6 +28,7 @@ public class VisualVerificationActivity extends Activity {
 
     private IServiceLocator serviceLocator;
     private String securityCode = "";
+    private String dataReceived;
 
     /**
      * Stuff that needs to be done when the new activity being created.
@@ -67,6 +74,38 @@ public class VisualVerificationActivity extends Activity {
         } else {
             this.securityCode += button;
             LOGGER.info("code so far: %s", this.securityCode);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        try {
+            this.serviceLocator.getBluetoothHandler().send("visual");
+        } catch (IOException e) {
+            LOGGER.error("Sending the \"visual\" string went wrong: ", e);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
+    /**
+     * Called when a new data is received.
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        if (event.getClazz().equals(String.class)) {
+            //This needs to be outside of the try catch block
+            dataReceived = (String) event.getData();
         }
     }
 

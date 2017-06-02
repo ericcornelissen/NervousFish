@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">NervousFish</string>
+    <string name="remember_my_choice">Onthoud mijn keuze</string>
     <string name="cancel">Annuleren</string>
     <string name="cancel_pairing">Annuleren</string>
     <string name="change_contact_title">Wijzig Contact</string>
@@ -64,6 +65,18 @@
     <string name="no">NEE</string>
     <string name="yes">JA</string>
     <string name="you_sure_log_out">Weet je het zeker dat je wilt uitloggen?</string>
+    <string name="select_verification_method">Selecteer een verificatie methode</string>
+    <string name="select_visual_verification">Visueel patroon</string>
+    <string name="select_rhythm_verification">Tab een ritme</string>
+    <string name="unknown_verification_method_title">Helaas…</string>
+    <string name="unknown_verification_method_description">Er ging iets fout, probeer opnieuw</string>
+    <string name="QRScan">Scan QR code</string>
+    <string name="QRShow">Toon QR code</string>
+    <string name="contact_exists">Contact bestaat al</string>
+    <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
+    <string name="contact_set_name">\"Geef contact een naam\"</string>
+    <string name="contact_standard_new">Nieuwe contact</string>
+    <string name="popup_done">Klaar</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen...</string>
     <string name="title_activity_rhythm_create">RhythmCreateActivity</string>
     <string name="tap_me">Klik me!</string>
