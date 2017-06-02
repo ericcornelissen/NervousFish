@@ -151,12 +151,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
-
-        try {
-            this.serviceLocator.getBluetoothHandler().send("rhythm");
-        } catch (IOException e) {
-            LOGGER.error("Sending the \"rhythm\" string went wrong: ", e);
-        }
     }
 
     @Override

@@ -30,8 +30,8 @@ import java.util.List;
 public final class WaitActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
-    private Contact dataReceived;
-    private List<SingleTap> tapCombination;
+    private Object dataReceived;
+    private Object tapCombination;
 
     /**
      * {@inheritDoc}
@@ -46,8 +46,8 @@ public final class WaitActivity extends Activity {
 
         this.serviceLocator.registerToEventBus(this);
 
-        this.dataReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        tapCombination = (ArrayList<SingleTap>) intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+        this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
+        tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
         LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
                 + " tapCombination is not null: " + (tapCombination != null));
