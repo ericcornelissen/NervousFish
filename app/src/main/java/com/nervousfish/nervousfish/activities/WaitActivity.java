@@ -95,6 +95,9 @@ public final class WaitActivity extends Activity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -103,6 +106,9 @@ public final class WaitActivity extends Activity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
