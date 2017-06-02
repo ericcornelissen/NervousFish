@@ -47,6 +47,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final String profilesPath;
     private final IFileSystem fileSystem;
 
+    private final String databasePath;
+    private final List<Contact> contacts;
+    private final List<Profile> profiles;
+
     /**
      * Prevents construction from outside the class.
      *
@@ -58,6 +62,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         this.contactsPath = constants.getDatabaseContactsPath();
         this.profilesPath = constants.getDatabaseUserdataPath();
+
 
         try {
             this.initializeContacts();
@@ -274,19 +279,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Profile checkPasswordForUsers(String password) throws IOException {
-        List<Profile> profiles = getProfiles();
-        for (Profile profile : profiles) {
-            if (profile.checkPassword(password)) {
-                return profile;
-            }
-        }
-        return null;
-    }
 
 
     /**
@@ -352,6 +344,18 @@ public final class GsonDatabaseAdapter implements IDatabase {
         assertNotNull(this.contactsPath);
         assertNotNull(this.profilesPath);
         assertNotNull(this.fileSystem);
+    }
+
+
+    public void saveDatabaseEncrypted() throws IOException {
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
+        // Update the database
+        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
+        gsonParser.toJson(profiles, writer);
+        writer.close();
     }
 
 }

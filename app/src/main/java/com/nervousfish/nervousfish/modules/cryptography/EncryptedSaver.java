@@ -91,15 +91,14 @@ public final class EncryptedSaver {
      * @param encrypt   whether we're encrypting or decrypting.
      * @return  The encrypted/decrypted string.
      */
-    public static String encryptOrDecryptWithPassword(final String toEncrypt, final String password, final byte[] ivSpec, final boolean encrypt) {
+    public static String encryptOrDecryptWithPassword(final byte[] toEncrypt, final String password, final byte[] ivSpec, final boolean encrypt) {
 
         try {
             final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             final byte[] psw = password.getBytes();
-            final byte[] input = toEncrypt.getBytes();
             final Cipher cipher = getCipher(psw, ivSpec, mode);
-            final byte[] converted = new byte[cipher.getOutputSize(input.length)];
-            int conv_len = cipher.update(input, 0, input.length, converted, 0);
+            final byte[] converted = new byte[cipher.getOutputSize(toEncrypt.length)];
+            int conv_len = cipher.update(toEncrypt, 0, toEncrypt.length, converted, 0);
             conv_len += cipher.doFinal(converted, conv_len);
 
             final byte[] result = new byte[conv_len];

@@ -99,9 +99,7 @@ public interface IDatabase extends IModule {
     String getUserPassword() throws IOException;
 
     /**
-     * Checks if the given password checks out with any of the profiles.
-     * @param password  the password to check
-     * @return  The profile that has this password.
+     * Saves the database in file encrypted.
      */
-    Profile checkPasswordForUsers(String password) throws IOException;
+    void saveDatabaseEncrypted() throws IOException;
 }
