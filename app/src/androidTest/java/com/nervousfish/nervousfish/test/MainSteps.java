@@ -43,7 +43,7 @@ public class MainSteps {
         mActivityRule.launchActivity(intent);
     }
 
-    @When("^I click the back button$")
+    @When("^I click the back button in main and go to the LoginActivity$")
     public void iPressTheChangeContactBackButton() {
         pressBack();
     }
@@ -58,12 +58,12 @@ public class MainSteps {
         onView(withText(R.string.no)).perform(click());
     }
 
-    @Then("^I should stay in the main activity$")
+    @Then("^I should stay in the main activity after pressing back$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
     }
 
-    @Then("^I should go to the login activity$")
+    @Then("^I should go to the login activity after pressing back$")
     public void iShouldGoToTheLoginActivity() {
         intended(hasComponent(LoginActivity.class.getName()));
     }

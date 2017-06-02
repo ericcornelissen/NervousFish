@@ -54,14 +54,27 @@
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.FirstUseActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
+        <activity
+            android:name=".activities.CreateProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:noHistory="true"/>
+        <activity
             android:name=".activities.QRActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SelectVerificationMethodActivity" />
+
         <service android:name=".modules.pairing.AndroidBluetoothService" />
         <activity
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
+
 </manifest>

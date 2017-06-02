@@ -33,4 +33,28 @@ public abstract class ATapData implements Serializable {
         // Defensive copying
         return new Timestamp(this.timestamp.getTime());
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+
+        final ATapData that = (ATapData) o;
+        return this.timestamp == null ? that.timestamp == null : this.timestamp.equals(that.timestamp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return timestamp == null ? 0 : timestamp.hashCode();
+    }
 }
