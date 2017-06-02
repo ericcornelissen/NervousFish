@@ -60,9 +60,6 @@
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:noHistory="true"/>
         <activity
-            android:name=".activities.QRActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

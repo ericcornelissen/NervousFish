@@ -173,7 +173,7 @@ public final class MainActivity extends AppCompatActivity {
                 intent.setComponent(new ComponentName(this, NFCActivity.class));
                 break;
             case R.id.pairing_menu_qr:
-                intent.setComponent(new ComponentName(this, QRActivity.class));
+                intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
                 break;
             default:
                 LOGGER.error("Unknown pairing button clicked");
