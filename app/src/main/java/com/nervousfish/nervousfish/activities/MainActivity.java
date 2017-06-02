@@ -279,7 +279,9 @@ public final class MainActivity extends AppCompatActivity {
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(final SweetAlertDialog sDialog) {
-                        finish();
+                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                        startActivity(intent);
                     }
                 })
                 .show();
