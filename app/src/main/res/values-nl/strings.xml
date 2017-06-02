@@ -46,7 +46,8 @@
     <string name="repeat_password">Herhaal wachtwoord</string>
 
     <!-- Hoofdscherm -->
-    <string name="you_sure_log_out">Weet je zeker dat je uit wilt loggen?</string>
+    <string name="popup_log_out_title">Uitloggen?</string>
+    <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
     <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
     <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
 

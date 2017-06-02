@@ -271,11 +271,11 @@ public final class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(getString(R.string.warning))
-                .setContentText(getString(R.string.you_sure_log_out))
-                .setCancelText(getString(R.string.no))
-                .setConfirmText(getString(R.string.yes))
+        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(this.getString(R.string.popup_log_out_title))
+                .setContentText(this.getString(R.string.popup_log_out_description))
+                .setCancelText(this.getString(R.string.no))
+                .setConfirmText(this.getString(R.string.yes))
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(final SweetAlertDialog sDialog) {
