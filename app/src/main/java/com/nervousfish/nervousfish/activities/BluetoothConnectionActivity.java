@@ -49,7 +49,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> newDevicesArrayAdapter;
-    private boolean master = false;
+    private boolean isMaster = false;
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -128,8 +128,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Get the Paired Devices list
-        queryPairedDevices();
-        discoverDevices();
+        this.queryPairedDevices();
+        this.discoverDevices();
         LOGGER.info("Started the service and started discovering");
     }
 
@@ -215,8 +215,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onBluetoothConnectedEvent called");
-        if (master) {
-            master = false;
+        if (isMaster) {
+            isMaster = false;
             final Intent intent = new Intent(this, RhythmCreateActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
@@ -269,7 +269,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
             if (!info.equals(getString(R.string.no_devices_found))) {
-                master = true;
+                isMaster = true;
                 final String address = info.substring(info.length() - 17);
                 final BluetoothDevice device = getDevice(address);
                 bluetoothHandler.connect(device);

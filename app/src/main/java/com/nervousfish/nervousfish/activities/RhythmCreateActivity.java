@@ -34,6 +34,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "BC_BAD_CAST_TO_CONCRETE_COLLECTION")
 public final class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+    private Button startButton;
+    private Button stopButton;
+    private Button doneButton;
     private List<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
     //TODO: change contact into an encrypted string of bytes
@@ -53,6 +56,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
+        startButton = (Button) this.findViewById(R.id.start_recording_button);
+        stopButton = (Button) this.findViewById(R.id.stop_recording_button);
+        doneButton = (Button) this.findViewById(R.id.done_tapping_button);
+
         LOGGER.info("RhythmActivity started");
     }
 
@@ -63,7 +70,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
-        final Button startButton = (Button) this.findViewById(R.id.start_recording_button);
         if (tapCombination != null && startButton.getVisibility() == View.GONE) {
             tapCombination.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
         }
@@ -74,7 +80,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      *
      * @param v - the {@link View} clicked
      */
-    public void onDoneClick(final View v) {
+    public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
             this.serviceLocator.getBluetoothHandler().send(new Contact("Baas", new SimpleKey("testkey", "456um4h692406u2p")));
@@ -98,13 +104,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("Start Recording clicked");
         tapCombination = new ArrayList<>();
 
-        final Button startButton = (Button) this.findViewById(R.id.start_recording_button);
         startButton.setVisibility(View.GONE);
 
-        final Button stopButton = (Button) this.findViewById(R.id.stop_recording_button);
         stopButton.setVisibility(View.VISIBLE);
 
-        final Button doneButton = (Button) this.findViewById(R.id.done_tapping_button);
         doneButton.setVisibility(View.GONE);
     }
 
@@ -115,13 +118,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
-        final Button startButton = (Button) this.findViewById(R.id.start_recording_button);
+
         startButton.setVisibility(View.VISIBLE);
 
-        final Button stopButton = (Button) this.findViewById(R.id.stop_recording_button);
         stopButton.setVisibility(View.GONE);
 
-        final Button doneButton = (Button) this.findViewById(R.id.done_tapping_button);
         doneButton.setVisibility(View.VISIBLE);
     }
 
