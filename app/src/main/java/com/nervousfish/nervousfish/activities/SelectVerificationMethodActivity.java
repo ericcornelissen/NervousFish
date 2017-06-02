@@ -57,7 +57,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
             case R.id.select_rhythm_verification:
                 // TODO: open correct (Rhythm) activity (also update test!)
                 LOGGER.info("Selected rhythm verification method, opening activity");
-                intent.setComponent(new ComponentName(this, WaitForSlaveActivity.class));
+                intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
                 break;
             default:
                 LOGGER.warn("unknown verification method selected, view: " + view);

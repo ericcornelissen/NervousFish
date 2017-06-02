@@ -219,7 +219,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         LOGGER.info("onBluetoothConnectedEvent called");
         if (isMaster) {
             isMaster = false;
-            final Intent intent = new Intent(this, RhythmCreateActivity.class);
+            final Intent intent = new Intent(this, SelectVerificationMethodActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         } else {
