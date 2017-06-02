@@ -5,6 +5,7 @@ package com.nervousfish.nervousfish;
  * value is irrelevant, for example for passing information between activities.
  */
 public final class ConstantKeywords {
+
     public static final String SERVICE_LOCATOR = "Service Locator";
     public static final String SECURITY_CODE = "Security Code";
     public static final String SIMPLE_KEY = "simple";
