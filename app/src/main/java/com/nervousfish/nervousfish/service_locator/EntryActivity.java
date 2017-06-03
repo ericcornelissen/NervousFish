@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The activity that's entered as soon as the app is started. This app initializes the basis components
+ * of the app like the service locator and background services.
  */
 public final class EntryActivity extends Activity {
 

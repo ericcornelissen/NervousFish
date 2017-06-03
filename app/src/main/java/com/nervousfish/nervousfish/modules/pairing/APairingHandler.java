@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Contains common methods shared by all pairing modules.
+ * Contains common methods shared by all pairing modules to reduce code duplication.
  */
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")
 abstract class APairingHandler implements IPairingHandler {

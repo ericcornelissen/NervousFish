@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,7 +35,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
- * The activity that exchanges public keys through QR codes.
+ * An {@link Activity} that is used for pairing using QR codes
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.AccessorClassGeneration"})
 //  1)  This warning is because the class relies on too many external classes, which can't really be avoided
