@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -150,6 +151,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      *
      * @param qrCode The QR code to be shown.
      */
+    @SuppressLint("InflateParams")
     private void showQRCode(final Bitmap qrCode) {
 
         final LayoutInflater li = LayoutInflater.from(this);

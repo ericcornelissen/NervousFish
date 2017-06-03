@@ -39,7 +39,7 @@ public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
 
         if (convertView == null) {
             final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, null);
+            v = vi.inflate(R.layout.contact_list_entry, parent);
         } else {
             v = convertView;
         }

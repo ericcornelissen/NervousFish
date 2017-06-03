@@ -67,6 +67,7 @@
     <issue id="InconsistentArrays" severity="error" />
     <issue id="InconsistentLayout" severity="error" />
     <issue id="InefficientWeight" severity="error" />
+    <issue id="InflateParams" severity="error" />
     <issue id="InlinedApi" severity="error" />
     <issue id="InnerclassSeparator" severity="error" />
     <issue id="Instantiatable" severity="error" />
@@ -174,9 +175,6 @@
 
     <!-- Complains about e.g. awt/javax in the Gradle cache, not really usefull -->
     <issue id="InvalidPackage" severity="ignore" />
-
-    <!-- Should be enabled
-    <issue id="InflateParams" severity="error" /> -->
 
     <!-- Used to ignore an error in activity_first_use.xml and activity_create_profile.xml,
     their root element has a background which Overdraws the background of the AppTheme.NoActionBar
