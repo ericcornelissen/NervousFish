@@ -52,6 +52,7 @@
     <issue id="HardcodedDebugMode" severity="error" />
     <issue id="HardcodedText" severity="error" />
     <issue id="IconColors" severity="error" />
+    <issue id="IconDensities" severity="error" />
     <issue id="IconDipSize" severity="error" />
     <issue id="IconDuplicates" severity="error" />
     <issue id="IconDuplicatesConfig" severity="error" />
@@ -169,9 +170,6 @@
     <!-- IGNORED -->
     <!-- Ignore Firebase warning, not relevant for this application -->
     <issue id="GoogleAppIndexingWarning" severity="ignore" />
-
-    <!-- Should be enabled
-    <issue id="IconDensities" severity="error" /> -->
 
     <!-- Complains about e.g. awt/javax in the Gradle cache, not really usefull -->
     <issue id="InvalidPackage" severity="ignore" />
