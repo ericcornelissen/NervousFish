@@ -52,7 +52,7 @@
     <issue id="HardcodedDebugMode" severity="error" />
     <issue id="HardcodedText" severity="error" />
     <issue id="IconColors" severity="error" />
-    <issue id="IconDensities" severity="error" />
+    <!-- <issue id="IconDensities" severity="error" /> Need help collecting icons -->
     <issue id="IconDipSize" severity="error" />
     <issue id="IconDuplicates" severity="error" />
     <issue id="IconDuplicatesConfig" severity="error" />
