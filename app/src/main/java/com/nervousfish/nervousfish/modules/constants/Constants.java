@@ -15,7 +15,8 @@ import java.util.UUID;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Class implementing the main constants for the application.
+ * Class containing global constants for the application. These constants are definied in this file, because
+ * they're used by multiple files and don't logically belong to any one of them.
  */
 public final class Constants implements IConstants {
 

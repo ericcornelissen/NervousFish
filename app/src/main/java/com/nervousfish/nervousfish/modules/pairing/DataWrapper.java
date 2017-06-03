@@ -7,7 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
- * This class is used to let the other party know what kind of class it contains.
+ * This class is used to let the other party know what kind of class it contains. This class is the only
+ * class that should be sent directly over the network.
  */
 final class DataWrapper implements Serializable {
     private static final long serialVersionUID = -1704556072876435760L;
