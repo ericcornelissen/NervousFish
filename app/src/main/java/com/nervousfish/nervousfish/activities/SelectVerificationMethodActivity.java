@@ -67,7 +67,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
                 try {
                     this.serviceLocator.getBluetoothHandler().send("rhythm");
                 } catch (IOException e) {
-                    LOGGER.error("Sending the \"visual\" string went wrong: ", e);
+                    LOGGER.error("Sending the \"rhythm\" string went wrong: ", e);
                 }
                 intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
                 break;

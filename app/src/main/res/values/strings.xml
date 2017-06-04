@@ -70,7 +70,6 @@
     <string name="contact_deleted_description">The contact has been deleted!</string>
     <string name="contact_doesnt_exist">The contact doesn\'t exist</string>
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
-    <string name="something_went_wrong_try_again">There went something wrong deleting this contact, please try again.</string>
 
     <string name="contact_added_popup_title">Pairing was successful!</string>
     <string name="contact_added_popup_explanation">The pairing over Bluetooth was successful and the new contact is added to the list.</string>

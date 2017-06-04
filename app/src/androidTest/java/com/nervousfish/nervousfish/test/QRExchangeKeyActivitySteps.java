@@ -96,7 +96,7 @@ public class QRExchangeKeyActivitySteps {
 
     }
 
-    private class DrawableMatcher extends TypeSafeMatcher<View> {
+    private static class DrawableMatcher extends TypeSafeMatcher<View> {
 
 
         private final Bitmap expected;

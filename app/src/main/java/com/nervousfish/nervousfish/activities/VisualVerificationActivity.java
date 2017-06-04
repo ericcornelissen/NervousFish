@@ -23,7 +23,7 @@ import java.io.IOException;
 /**
  * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
  */
-public class VisualVerificationActivity extends Activity {
+public final class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
     private static final int SECURITY_CODE_LENGTH = 5;
@@ -48,16 +48,6 @@ public class VisualVerificationActivity extends Activity {
         LOGGER.info("VisualVerificationActivity created");
     }
 
-
-    /**
-     * Gets triggered when the done button is clicked.
-     *
-     * @param v - the {@link View} clicked
-     */
-    public void onDoneCreatingRhythmClick(final View v) {
-
-
-    }
     /**
      * Go to the next activity and provide it with the generated pattern.
      */
