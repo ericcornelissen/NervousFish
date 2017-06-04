@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sea_at_night">
@@ -33,43 +34,83 @@
             android:text="@string/create_profile_message"
             android:textSize="@dimen/create_profile_message_size" />
 
-        <EditText
-            android:id="@+id/profile_enter_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginEnd="@dimen/field_margin_right"
             android:layout_marginStart="@dimen/field_margin_left"
-            android:layout_marginTop="@dimen/field_margin_top"
-            android:hint="@string/name"
-            android:imeOptions="actionSend"
-            android:drawableStart="@drawable/user"
-            android:drawablePadding="@dimen/normal_drawable_padding"/>
+            android:layout_marginTop="@dimen/field_margin_top" >
 
-        <EditText
-            android:id="@+id/profile_enter_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/field_margin_right"
-            android:layout_marginStart="@dimen/field_margin_left"
-            android:layout_marginTop="@dimen/field_margin_top"
-            android:hint="@string/password"
-            android:imeOptions="actionSend"
-            android:inputType="textPassword"
-            android:drawableStart="@drawable/lock"
-            android:drawablePadding="@dimen/normal_drawable_padding" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/user"
+                tools:ignore="ContentDescription" /> <!-- not useful for people with bad-eyesight -->
 
-        <EditText
-            android:id="@+id/profile_repeat_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            <EditText
+                android:id="@+id/profile_enter_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/imageView"
+                android:hint="@string/name"
+                android:inputType="text"
+                android:maxLines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginEnd="@dimen/field_margin_right"
             android:layout_marginStart="@dimen/field_margin_left"
-            android:layout_marginTop="@dimen/field_margin_top"
-            android:hint="@string/repeat_password"
-            android:imeOptions="actionSend"
-            android:inputType="textPassword"
-            android:drawableStart="@drawable/lock"
-            android:drawablePadding="@dimen/normal_drawable_padding"/>
+            android:layout_marginTop="@dimen/field_margin_top" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/lock"
+                tools:ignore="ContentDescription" /> <!-- not useful for people with bad-eyesight -->
+
+            <EditText
+                android:id="@+id/profile_enter_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/imageView1"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top" >
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/lock"
+                tools:ignore="ContentDescription" /> <!-- not useful for people with bad-eyesight -->
+
+            <EditText
+                android:id="@+id/profile_repeat_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/imageView2"
+                android:hint="@string/repeat_password"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="match_parent"

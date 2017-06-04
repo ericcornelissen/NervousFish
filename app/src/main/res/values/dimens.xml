@@ -53,7 +53,6 @@
     <dimen name="submit_text_size">18sp</dimen>
 
     <dimen name="field_margin_top">20dp</dimen>
-    <dimen name="normal_drawable_padding">10dp</dimen>
 
     <dimen name="create_profile_message_width">300dp</dimen>
     <dimen name="create_profile_message_margin_top">20dp</dimen>

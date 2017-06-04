@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.list_adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -34,12 +35,13 @@ public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
      */
     @NonNull
     @Override
+    @SuppressLint("InflateParams")
     public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
         final View v;
 
         if (convertView == null) {
-            final LayoutInflater vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.contact_list_entry, parent);
+            final LayoutInflater inflater = LayoutInflater.from(getContext());
+            v = inflater.inflate(R.layout.contact_list_entry, null);
         } else {
             v = convertView;
         }
