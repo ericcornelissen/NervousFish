@@ -31,7 +31,7 @@ public class VisualVerificationActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.visual_verification);
+        this.setContentView(R.layout.activity_visual_verification);
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
