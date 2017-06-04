@@ -100,6 +100,19 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
             this.enableBluetooth(false);
         }
+
+        showSuccessfullBluetoothPopup(intent);
+
+        LOGGER.info("MainActivity created");
+    }
+
+    /**
+     * Shows a popup that adding a contact went fine if the boolean
+     * added in the intent is true.
+     *
+     * @param intent The intent of this Activity
+     */
+    private void showSuccessfullBluetoothPopup(final Intent intent) {
         if (intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH) != null) {
 
             final boolean successfulBluetooth = (boolean) intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
@@ -112,8 +125,6 @@ public final class MainActivity extends AppCompatActivity {
                         .show();
             }
         }
-
-        LOGGER.info("MainActivity created");
     }
 
 
@@ -189,12 +200,10 @@ public final class MainActivity extends AppCompatActivity {
                 break;
             case R.id.pairing_menu_nfc:
                 intent.setComponent(new ComponentName(this, NFCActivity.class));
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
                 this.startActivity(intent);
                 break;
             case R.id.pairing_menu_qr:
                 intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
                 this.startActivity(intent);
                 break;
             default:
@@ -269,12 +278,10 @@ public final class MainActivity extends AppCompatActivity {
             final String verificationMessage = (String) event.getData();
 
             if ("rhythm".equals(verificationMessage)) {
-                //Go to RhythmActivity
                 final Intent intent = new Intent(this, RhythmCreateActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 this.startActivityForResult(intent, 0);
             } else if ("visual".equals(verificationMessage)) {
-                //Go to VisualVerificationActivity
                 final Intent intent = new Intent(this, VisualVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 this.startActivityForResult(intent, 0);

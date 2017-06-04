@@ -93,12 +93,18 @@ public final class VisualVerificationActivity extends Activity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);

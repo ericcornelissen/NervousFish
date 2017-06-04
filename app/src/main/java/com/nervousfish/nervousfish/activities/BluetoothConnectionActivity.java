@@ -135,12 +135,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Get the Paired Devices list
         this.queryPairedDevices();
         this.discoverDevices();
         LOGGER.info("Started the service and started discovering");
     }
-
 
     /**
      * {@inheritDoc}
@@ -246,12 +244,22 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private void addNewDevice(final Intent intent) {
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-        // Skip paired devices and devices without a name.
-        if (device != null && device.getName() != null
-            && device.getBondState() != BluetoothDevice.BOND_BONDED && !device.getName().equals("null")) {
+        // Skip paired devices and devices without a valid name.
+        if (isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED) {
             this.newDevices.add(device);
             this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
+    }
+
+    /**
+     * Checks if the {@link BluetoothDevice} is not null, has a name and that the
+     * name does not equal the string 'null'
+     *
+     * @param device The {@link BluetoothDevice} to check
+     * @return If the device is valid
+     */
+    private boolean isValidDevice(final BluetoothDevice device) {
+        return device != null && device.getName() != null && !device.getName().equals("null");
     }
 
     /**
@@ -278,12 +286,14 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
-            if (!info.equals(getString(R.string.no_devices_found))) {
-                isMaster = true;
-                final String address = info.substring(info.length() - 17);
-                final BluetoothDevice device = getDevice(address);
-                bluetoothHandler.connect(device);
+            if (info.equals(getString(R.string.no_devices_found))) {
+                return;
             }
+
+            isMaster = true;
+            final String address = info.substring(info.length() - 17);
+            final BluetoothDevice device = getDevice(address);
+            bluetoothHandler.connect(device);
         }
 
         /**

@@ -54,12 +54,12 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
-                intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 try {
                     this.serviceLocator.getBluetoothHandler().send("visual");
                 } catch (IOException e) {
                     LOGGER.error("Sending the \"visual\" string went wrong: ", e);
                 }
+                intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 break;
             case R.id.select_rhythm_verification:
                 // TODO: open correct (Rhythm) activity (also update test!)

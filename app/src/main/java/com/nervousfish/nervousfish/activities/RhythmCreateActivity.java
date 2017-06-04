@@ -40,7 +40,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private Button doneButton;
     private List<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
-    //TODO: change contact into an encrypted string of bytes
     private Contact dataReceived;
 
     @Override
@@ -49,10 +48,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhythm_create);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_create_rhythm);
         setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -156,6 +151,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.serviceLocator.registerToEventBus(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
