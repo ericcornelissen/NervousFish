@@ -25,7 +25,7 @@
         android:layout_below="@+id/avi"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/waiting_for_slave_text_offset"
-        android:text="@string/waiting_for_slave" />
+        android:text="@string/waiting_for_partner" />
 
     <Button
         android:id="@+id/cancel_wait_for_slave"
@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@color/red_alert"
-        android:text="@string/cancel_pairing"
+        android:text="@string/cancel"
         android:textColor="@android:color/white"
         android:onClick="cancelWaiting"/>
 

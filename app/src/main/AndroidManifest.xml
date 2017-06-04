@@ -17,18 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
+
         <activity
             android:name=".service_locator.EntryActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
@@ -36,11 +35,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ContactActivity"
-            android:label="@string/title_activity_contact"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ChangeContactActivity"
-            android:label="@string/change_contact_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.VisualVerificationActivity"
@@ -75,5 +72,4 @@
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 </manifest>

@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The ContactActivity shows the contacts information and his public keys.
+ * An {@link Activity} that allows the user to change attributes of contacts.
  */
 public final class ChangeContactActivity extends AppCompatActivity {
 
@@ -114,7 +115,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
                 finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.popup_you_sure))
+                        .setTitleText(getString(R.string.are_you_sure))
                         .setContentText(getString(R.string.go_back_changes_lost))
                         .setCancelText(getString(R.string.cancel))
                         .setConfirmText(getString(R.string.yes_go_back))
