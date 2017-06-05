@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * The {@link Activity} that will show up when the app is first launched (i.e. there is no user
  * account available).
  */
-public final class FirstUseActivity extends AppCompatActivity {
+public final class WelcomeActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("FirstUseActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("WelcomeActivity");
 
     private IServiceLocator serviceLocator;
 
@@ -31,7 +31,7 @@ public final class FirstUseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_first_use);
+        this.setContentView(R.layout.activity_welcome);
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
