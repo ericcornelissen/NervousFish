@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -54,9 +51,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        final Window window = this.getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         // Initialize helper class
         final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
         final int alertColor = ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null);
@@ -82,7 +76,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
             try {
                 final IDatabase database = this.serviceLocator.getDatabase();
-                database.addProfile(new Profile(name, keyPair));
+                final Profile profile = new Profile(name, keyPair);
+                database.addProfile(profile);
                 this.showProfileCreatedDialog();
             } catch (IOException e) {
                 this.showProfileNotCreatedDialog();
