@@ -30,8 +30,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * The RhythmCreateActivity is an Activity where you can tap a sequence.
  */
-//List is cast to an ArrayList, but that is needed to put in an intent
 @SuppressFBWarnings(value = "BC_BAD_CAST_TO_CONCRETE_COLLECTION")
+//List is cast to an ArrayList, but that is needed to put in an intent.
+@SuppressWarnings("PMD.LooseCoupling")
+//We don't want to use 'List' but the implementation 'ArrayList' to prevent errors.
 public final class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private Button startButton;

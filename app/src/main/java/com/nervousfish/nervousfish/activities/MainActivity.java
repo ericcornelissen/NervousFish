@@ -19,7 +19,6 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
-import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -263,62 +262,6 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
-    }
-
-    /**
-     * Called when a new contact is received
-     *
-     * @param event Contains additional data about the event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called");
-        if (event.getClazz().equals(String.class)) {
-            final String verificationMessage = (String) event.getData();
-
-            if ("rhythm".equals(verificationMessage)) {
-                final Intent intent = new Intent(this, RhythmCreateActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                this.startActivityForResult(intent, 0);
-            } else if ("visual".equals(verificationMessage)) {
-                final Intent intent = new Intent(this, VisualVerificationActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                this.startActivityForResult(intent, 0);
-            }
-        } else if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Checking if the contact exists...");
-                if (checkExists(contact)) {
-                    LOGGER.warn("Contact already existed...");
-                } else {
-                    LOGGER.info("Adding contact to database...");
-                    this.serviceLocator.getDatabase().addContact(contact);
-                    this.contacts = this.serviceLocator.getDatabase().getAllContacts();
-                    sorter.sortOnName();
-                }
-            } catch (IOException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
-        }
-    }
-
-    /**
-     * Checks if a name of a given contact exists in the database.
-     *
-     * @param contact A contact object
-     * @return true when a contact with the same exists in the database
-     * @throws IOException When database fails to respond
-     */
-    private boolean checkExists(final Contact contact) throws IOException {
-        final String name = contact.getName();
-        final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
-        for (final Contact e : list) {
-            if (e.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
