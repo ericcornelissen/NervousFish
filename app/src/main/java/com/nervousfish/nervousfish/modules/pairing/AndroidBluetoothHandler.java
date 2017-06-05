@@ -12,7 +12,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Helper class for {@link AndroidBluetoothService}
+ * Helper class for {@link AndroidBluetoothService} and acts as the bridge between the client and
+ * the service. It simplifies the whole Bluetooth functionality to the methods start, connect, stop and send
  */
 // A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")

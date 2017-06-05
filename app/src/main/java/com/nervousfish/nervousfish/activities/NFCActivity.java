@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.R;
 
 /**
- * Used for pairing over NFC
+ * An {@link Activity} that used for pairing over NFC
  */
 public class NFCActivity extends Activity {
     /**

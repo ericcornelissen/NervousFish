@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The ContactActivity shows the contacts information and his public keys.
+ * An {@link Activity} that shows the contacts information and his public keys.
  */
 public final class ContactActivity extends AppCompatActivity {
 

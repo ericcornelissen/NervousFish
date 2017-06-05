@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Used to let the Bluetooth-initiating user know that he should wait for his partner
+ * An {@link Activity} that is used to let the Bluetooth-initiating user know that he should wait for his partner
  * to complete the pairing session.
  */
 public final class WaitForSlaveActivity extends Activity {
