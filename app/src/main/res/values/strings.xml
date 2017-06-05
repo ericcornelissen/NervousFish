@@ -106,4 +106,7 @@
     <string name="pref_header_profile">Profile information</string>
 
     <string name="display_name">Display name</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
 </resources>

@@ -10,4 +10,9 @@
         android:icon="@drawable/user"
         android:title="@string/pref_header_profile" />
 
+    <header
+        android:id="@+id/key_management_header"
+        android:icon="@drawable/key"
+        android:title="@string/pref_key_management_header" />
+
 </preference-headers>
