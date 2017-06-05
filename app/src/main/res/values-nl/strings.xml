@@ -8,7 +8,6 @@
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
     <string name="edit">Bewerken</string>
-    <string name="key_type" formatted="false">Type sleutel: %s</string>
     <string name="logo">Logo</string>
     <string name="more">Meer</string>
     <string name="name">Naam</string>
@@ -24,7 +23,6 @@
     <string name="select_device">Selecteer apparaat</string>
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
-    <string name="warning">Waarschuwing</string>
     <string name="yes">Ja</string>
 
     <!-- Gebruikelijk zinnen -->
@@ -34,6 +32,7 @@
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
+    <string name="key_type" formatted="false">Type sleutel: %s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
     <string name="something_went_wrong">Er ging iets fout</string>
@@ -47,9 +46,11 @@
     <string name="repeat_password">Herhaal wachtwoord</string>
 
     <!-- Hoofdscherm -->
-    <string name="you_sure_log_out">Weet je zeker dat je uit wilt loggen?</string>
-    <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
-    <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
+    <string name="popup_log_out_title">Uitloggen?</string>
+    <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
+    <string name="popup_enable_bluetooth_title">Bluetooth aanzetten?</string>
+    <string name="popup_enable_bluetooth_findable">Zet Bluetooth aan zodat andere je apparaat kunnen vinden</string>
+    <string name="popup_enable_bluetooth_exchange">Je moet Bluetooth aanzetten voordat je verder kunt</string>
 
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>
