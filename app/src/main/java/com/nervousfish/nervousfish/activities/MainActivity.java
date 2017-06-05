@@ -192,7 +192,6 @@ public final class MainActivity extends AppCompatActivity {
                 final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (bluetoothAdapter.isEnabled()) {
                     intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
-                    this.startActivity(intent);
                 } else {
                     this.enableBluetooth(true);
                     return; // Prevent `this.startActivity()`
@@ -200,16 +199,16 @@ public final class MainActivity extends AppCompatActivity {
                 break;
             case R.id.pairing_menu_nfc:
                 intent.setComponent(new ComponentName(this, NFCActivity.class));
-                this.startActivity(intent);
                 break;
             case R.id.pairing_menu_qr:
                 intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
-                this.startActivity(intent);
                 break;
             default:
                 LOGGER.error("Unknown pairing button clicked");
                 throw new IllegalArgumentException("Only existing buttons can be clicked");
         }
+
+        this.startActivity(intent);
     }
 
     /**

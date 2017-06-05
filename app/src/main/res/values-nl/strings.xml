@@ -49,6 +49,8 @@
     <string name="you_sure_log_out">Weet je zeker dat je uit wilt loggen?</string>
     <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
     <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
+    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
+    <string name="contact_added_popup_explanation">Het uitwisselen van het contact via Bluetooth was succesvol, het nieuwe contact is toegevoegd aan de lijst.</string>
 
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>
@@ -60,6 +62,13 @@
     <string name="could_not_create_profile">Kon geen profiel maken</string>
     <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
     <string name="key_to_generate">Sleutel om te maken:</string>
+
+    <!-- RhythmActivity -->
+    <string name="title_activity_rhythm_create">RhythmCreateActivity</string>
+    <string name="tap_me">Tik hier!</string>
+    <string name="stop_recording">Stop met opnemen</string>
+    <string name="done">Klaar</string>
+    <string name="start_recording">Start met opnemen</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
@@ -92,13 +101,9 @@
     <string name="contact_set_name">\"Geef contact een naam\"</string>
     <string name="contact_standard_new">Nieuwe contact</string>
     <string name="popup_done">Klaar</string>
-    <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen...</string>
-    <string name="title_activity_rhythm_create">RhythmCreateActivity</string>
-    <string name="tap_me">Klik me!</string>
-    <string name="stop_recording">Stop met opnemen</string>
-    <string name="done">Klaar</string>
-    <string name="start_recording">Start met opnemen</string>
+
+    <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen...</string>
-    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
-    <string name="contact_added_popup_explanation">Het uitwisselen van het contact via Bluetooth was succesvol, het nieuwe contact is toegevoegd aan de lijst.</string>
+    <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen...</string>
+
 </resources>

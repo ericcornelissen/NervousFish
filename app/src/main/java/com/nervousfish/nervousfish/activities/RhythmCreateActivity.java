@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -38,7 +37,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
-    private List<SingleTap> tapCombination;
+    private ArrayList<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
     private Contact dataReceived;
 
@@ -104,11 +103,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
         tapCombination = new ArrayList<>();
-
         startButton.setVisibility(View.GONE);
-
         stopButton.setVisibility(View.VISIBLE);
-
         doneButton.setVisibility(View.GONE);
     }
 
@@ -119,11 +115,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
-
         startButton.setVisibility(View.VISIBLE);
-
         stopButton.setVisibility(View.GONE);
-
         doneButton.setVisibility(View.VISIBLE);
     }
 

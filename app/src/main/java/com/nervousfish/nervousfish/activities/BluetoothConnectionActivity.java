@@ -224,10 +224,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onBluetoothConnectedEvent called");
         if (isMaster) {
-            isMaster = false;
             final Intent intent = new Intent(this, SelectVerificationMethodActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
+            isMaster = false;
         } else {
             final Intent intent = new Intent(this, WaitActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
