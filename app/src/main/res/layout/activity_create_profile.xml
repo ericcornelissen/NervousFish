@@ -114,20 +114,23 @@
             android:layout_marginStart="@dimen/field_margin_left"
             android:text="@string/keys_to_generate" />
 
-        <RadioGroup
-            android:id="@+id/radio_key_type"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_marginEnd="@dimen/field_margin_right"
-            android:layout_marginStart="@dimen/field_margin_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_marginStart="@dimen/field_margin_left">
 
-            <RadioButton
-                android:id="@+id/radio_rsa_key"
+            <CheckBox android:id="@+id/checkbox_rsa_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rsa_key"
-                android:checked="true" />
-        </RadioGroup>
+                android:checked="true"
+                android:text="@string/rsa_key" />
+            <CheckBox android:id="@+id/checkbox_dsa_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dsa_key" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/submitProfile"

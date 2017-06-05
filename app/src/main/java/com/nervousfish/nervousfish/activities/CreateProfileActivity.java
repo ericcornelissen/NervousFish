@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
@@ -117,9 +117,14 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link KeyPair} with the key type selected
      */
     private KeyPair generateKeyPair() {
-        final RadioButton rsaKeyButton = (RadioButton) this.findViewById(R.id.radio_rsa_key);
+        final CheckBox rsaKeyButton = (CheckBox) this.findViewById(R.id.checkbox_rsa_key);
         if (rsaKeyButton.isChecked()) {
             return this.serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
+        }
+
+        final CheckBox dsaKeyButton = (CheckBox) this.findViewById(R.id.checkbox_dsa_key);
+        if (dsaKeyButton.isChecked()) {
+            LOGGER.info("Request to generate DSA key");
         }
 
         throw new IllegalArgumentException("The selected key is not implemented");

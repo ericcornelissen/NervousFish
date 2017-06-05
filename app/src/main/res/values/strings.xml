@@ -6,6 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
+    <string name="dsa_key">DSA key</string>
     <string name="edit">Edit</string>
     <string name="key_type" formatted="false">Key type: %s</string>
     <string name="logo">Logo</string>
