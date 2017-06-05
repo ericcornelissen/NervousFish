@@ -83,7 +83,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
 
         if (convertView == null) {
             final LayoutInflater vi = context.getLayoutInflater();
-            v = vi.inflate(R.layout.contact_list_entry, null);
+            v = vi.inflate(R.layout.contact_list_entry, parent);
         } else {
             v = convertView;
         }
@@ -142,7 +142,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final View view;
         if (convertView == null) {
             final LayoutInflater vi = context.getLayoutInflater();
-            view = vi.inflate(R.layout.key_type, null);
+            view = vi.inflate(R.layout.key_type, parent);
         } else {
             view = convertView;
         }

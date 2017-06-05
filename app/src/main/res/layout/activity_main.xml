@@ -37,9 +37,7 @@
             android:layout_height="wrap_content">
             <include layout="@layout/content_main" />
             <include layout="@layout/content_main_keytypes" />
-
         </ViewFlipper>
-
     </android.support.design.widget.AppBarLayout>
 
     <com.github.clans.fab.FloatingActionMenu
@@ -86,7 +84,6 @@
             android:onClick="onPairingButtonClicked"
             android:src="@drawable/qr"
             fab:fab_label="@string/qr" />
-
     </com.github.clans.fab.FloatingActionMenu>
 
     <android.support.design.widget.FloatingActionButton
@@ -100,5 +97,4 @@
         android:onClick="onSortButtonClicked"
         app:borderWidth="0dp"
         app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
-
 </merge>

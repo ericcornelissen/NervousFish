@@ -6,6 +6,7 @@ apply plugin: 'pmd'
 // Add checkstyle, findbugs, pmd and lint to the check task.
 check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
 
+
 def configDir = "${project.rootDir}/config/quality"
 def reportsDir = "${project.buildDir}/reports"
 
@@ -25,7 +26,6 @@ android {
         htmlReport true
         lintConfig file("$configDir/lint/lint.xml")
         htmlOutput file("$reportsDir/lint/lint-result.html")
-        disable "InvalidPackage", "GoogleAppIndexingWarning"
     }
 }
 
@@ -104,7 +104,6 @@ task detectInfer(type: Exec) {
         }
     }
 }
-
 task infer(type: Exec, dependsOn: [clean, detectInfer]) {
     workingDir "${project.rootDir}"
     commandLine 'infer'
