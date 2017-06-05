@@ -70,9 +70,9 @@ class MainActivitySorter {
     }
 
     /**
-     * Gets all types of keys in the database
+     * Gets all Types of keys in the database
      *
-     * @return a List with the types of keys.
+     * @return a List with the Types of keys.
      */
     private List<String> getKeyTypes() {
         final Set<String> typeSet = new HashSet<>();

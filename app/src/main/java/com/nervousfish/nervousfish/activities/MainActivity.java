@@ -44,8 +44,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //  2)  This warning means there are too many instantiations of other classes within this class,
 //      which basically comes down to the same problem as the last
 //  3)  Another suppression based on the same problem as the previous 2
-//  4)  The switch statement for switching sorting types does not have enough branches, because it is designed
-//      to be extended when necessairy to more sorting types.
+//  4)  The switch statement for switching sorting Types does not have enough branches, because it is designed
+//      to be extended when necessairy to more sorting Types.
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
@@ -281,7 +281,9 @@ public final class MainActivity extends AppCompatActivity {
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(final SweetAlertDialog sDialog) {
-                        finish();
+                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                        startActivity(intent);
                     }
                 })
                 .show();
