@@ -41,8 +41,9 @@
     <string name="waiting_for_partner">Wachten op partner…</string>
 
     <!-- Eerste gebruik -->
-    <string name="welcome_message">Welkom bij Nervous Fish</string>
-    <string name="welcome_message_subpart">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+    <string name="welcome_title">Welkom bij NervousFish</string>
+    <string name="welcome_subtitle">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+
     <string name="create_profile_message">Een profiel aanmaken</string>
     <string name="repeat_password">Herhaal wachtwoord</string>
 

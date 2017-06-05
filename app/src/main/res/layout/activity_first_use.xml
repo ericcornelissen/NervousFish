@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="@dimen/welcome_message_padding_top"
-            android:text="@string/welcome_message"
+            android:text="@string/welcome_title"
             android:textSize="@dimen/welcome_message_size" />
 
         <View
@@ -42,7 +42,7 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/welcome_message_subpart_margin_top"
-            android:text="@string/welcome_message_subpart"
+            android:text="@string/welcome_subtitle"
             android:textSize="@dimen/welcome_message_subpart_size" />
 
         <Button

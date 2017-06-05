@@ -40,8 +40,9 @@
     <string name="waiting_for_partner">Waiting for partner…</string>
 
     <!-- First time use -->
-    <string name="welcome_message">Welcome to Nervous Fish</string>
-    <string name="welcome_message_subpart">Nervous Fish is an app to securely manage and exchange your public keys</string>
+    <string name="welcome_title">Welcome to NervousFish</string>
+    <string name="welcome_subtitle">Nervous Fish is an app to securely manage and exchange your public keys</string>
+
     <string name="create_profile_message">Let\'s create your profile</string>
     <string name="repeat_password">Repeat password</string>
 
