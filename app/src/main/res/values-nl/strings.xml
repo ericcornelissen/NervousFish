@@ -36,16 +36,22 @@
     <string name="invalid_name">Ongeldige naam</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
+    <string name="repeat_password">Herhaal wachtwoord</string>
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
 
     <!-- Eerste gebruik -->
     <string name="welcome_title">Welkom bij NervousFish</string>
-    <string name="welcome_subtitle">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+    <string name="welcome_subtitle">NervousFish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
 
+    <!-- Maak een profiel -->
     <string name="create_profile_message">Een profiel aanmaken</string>
-    <string name="repeat_password">Herhaal wachtwoord</string>
+    <string name="keys_to_generate">Sleutels om te maken:</string>
+    <string name="profile_created_title">Profiel gemaakt</string>
+    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt.</string>
+    <string name="profile_not_created_title">Kon geen profiel maken</string>
+    <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
 
     <!-- Hoofdscherm -->
     <string name="you_sure_log_out">Weet je zeker dat je uit wilt loggen?</string>
@@ -55,13 +61,6 @@
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>
     <string name="login_password_mismatch">Het wachtwoord is verkeerd</string>
-
-    <!-- Maak profiel -->
-    <string name="profile_created">Profiel gemaakt</string>
-    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt, je kunt nu inloggen.</string>
-    <string name="could_not_create_profile">Kon geen profiel maken</string>
-    <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
-    <string name="key_to_generate">Sleutel om te maken:</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>

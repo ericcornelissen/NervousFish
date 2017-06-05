@@ -1,11 +1,13 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -14,6 +16,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -24,7 +27,8 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The {@link android.app.Activity} that is used to create a user profile when the app is first
+ * used.
  */
 public final class CreateProfileActivity extends AppCompatActivity {
 
@@ -36,16 +40,18 @@ public final class CreateProfileActivity extends AppCompatActivity {
     /**
      * Creates the new activity, should only be called by Android
      *
-     * @param savedInstanceState Don't touch this
+     * @param savedInstanceState A previous state of this {@link Activity}.
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
-        final Intent intent = getIntent();
+
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        final Window window = this.getWindow();
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         LOGGER.info("CreateProfileActivity created");
     }
@@ -56,43 +62,51 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @param v The {@link View} clicked
      */
     public void onSubmitClick(final View v) {
-        if (validateInputFields()) {
+        if (this.validateInputFields()) {
             final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
             final String name = nameInputField.getText().toString();
             final KeyPair keyPair = this.generateKeyPair();
 
             try {
-                serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
-                showProfileCreatedDialog();
+                final IDatabase database = this.serviceLocator.getDatabase();
+                database.addProfile(new Profile(name, keyPair));
+                this.showProfileCreatedDialog();
             } catch (IOException e) {
-                showProfileNotCreatedDialog();
+                this.showProfileNotCreatedDialog();
             }
         } else {
-            showProfileNotCreatedDialog();
+            this.showProfileNotCreatedDialog();
         }
     }
 
+    /**
+     * Show the dialog intended for when the profile was created successfully.
+     */
     private void showProfileCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(getString(R.string.profile_created))
+            .setTitleText(getString(R.string.profile_created_title))
             .setContentText(getString(R.string.profile_created_explanation))
             .setConfirmText(getString(R.string.dialog_ok))
             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(final SweetAlertDialog sDialog) {
-                    sDialog.dismiss();
+                public void onClick(final SweetAlertDialog dialog) {
+                    dialog.dismiss();
+
                     final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
                     intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                    CreateProfileActivity.this.startActivity(intent);
+                    startActivity(intent);
                 }
             })
             .show();
     }
 
+    /**
+     * Show the dialog intended for when the profile could not be created.
+     */
     private void showProfileNotCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(getString(R.string.could_not_create_profile))
-                .setContentText(getString(R.string.could_not_create_profile_explanation))
+                .setTitleText(getString(R.string.profile_not_created_title))
+                .setContentText(getString(R.string.profile_not_created_explanation))
                 .setConfirmText(getString(R.string.dialog_ok))
                 .show();
     }
@@ -119,8 +133,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link boolean} which is true if all fields are valid
      */
     private boolean validateInputFields() {
-        return this.validateInputFieldName() & this.validateInputFieldPassword()
-                & this.validateInputFieldPasswordRepeat() & this.validateInputPasswordsSame();
+        return this.validateInputFieldName()
+                & this.validateInputFieldPassword()
+                & this.validateInputFieldPasswordRepeat()
+                & this.validateInputPasswordsSame();
     }
 
     /**
@@ -194,4 +210,5 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private boolean isValidName(final String name) {
         return name != null && !name.isEmpty() && !name.trim().isEmpty();
     }
+
 }

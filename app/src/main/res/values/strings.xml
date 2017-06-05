@@ -35,16 +35,22 @@
     <string name="invalid_name">Invalid name</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
+    <string name="repeat_password">Repeat password</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
 
     <!-- First time use -->
     <string name="welcome_title">Welcome to NervousFish</string>
-    <string name="welcome_subtitle">Nervous Fish is an app to securely manage and exchange your public keys</string>
+    <string name="welcome_subtitle">NervousFish is an app to securely manage and exchange your public keys</string>
 
+    <!-- Create a profile -->
     <string name="create_profile_message">Let\'s create your profile</string>
-    <string name="repeat_password">Repeat password</string>
+    <string name="keys_to_generate">Keys to generate:</string>
+    <string name="profile_created_title">Profile created</string>
+    <string name="profile_created_explanation">Your profile is successfully created.</string>
+    <string name="profile_not_created_title">Can\'t create profile</string>
+    <string name="profile_not_created_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
 
     <!-- Main activity -->
     <string name="you_sure_log_out">Are you sure you want to log out?</string>
@@ -54,13 +60,6 @@
     <!-- Login -->
     <string name="login_message">Enter your password below</string>
     <string name="login_password_mismatch">Your password is wrong</string>
-
-    <!-- Create profile -->
-    <string name="could_not_create_profile">Can\'t create profile</string>
-    <string name="could_not_create_profile_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
-    <string name="profile_created">Profile created</string>
-    <string name="profile_created_explanation">Your profile is successfully created. Please log in now.</string>
-    <string name="key_to_generate">Key to generate:</string>
 
     <!-- Contacts -->
     <string name="delete_popup_no_recovery">You won\'t be able to recover this contact!</string>
