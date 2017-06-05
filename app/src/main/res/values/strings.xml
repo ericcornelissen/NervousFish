@@ -8,7 +8,6 @@
     <string name="done">Done</string>
     <string name="dsa_key">DSA key</string>
     <string name="edit">Edit</string>
-    <string name="key_type" formatted="false">Key type: %s</string>
     <string name="logo">Logo</string>
     <string name="more">More</string>
     <string name="name">Name</string>
@@ -24,7 +23,6 @@
     <string name="select_device">Select device</string>
     <string name="submit">Submit</string>
     <string name="type">Type</string>
-    <string name="warning">Warning</string>
     <string name="yes">Yes</string>
 
     <!-- Common sentences -->
@@ -34,6 +32,7 @@
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
+    <string name="key_type" formatted="false">Key type: %s</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
     <string name="repeat_password">Repeat password</string>
@@ -54,9 +53,11 @@
     <string name="profile_not_created_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
 
     <!-- Main activity -->
-    <string name="you_sure_log_out">Are you sure you want to log out?</string>
-    <string name="enable_bluetooth_questionmark">Enable Bluetooth?</string>
-    <string name="enable_bluetooth_explanation">Do you want to enable Bluetooth so others can find your device?</string>
+    <string name="popup_log_out_title">Log out?</string>
+    <string name="popup_log_out_description">Are you sure you want to log out?</string>
+    <string name="popup_enable_bluetooth_title">Enable Bluetooth?</string>
+    <string name="popup_enable_bluetooth_findable">Enable Bluetooth so others can find your device</string>
+    <string name="popup_enable_bluetooth_exchange">You must enable Bluetooth before continuing</string>
 
     <!-- Login -->
     <string name="login_message">Enter your password below</string>
