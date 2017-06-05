@@ -42,9 +42,9 @@ public final class WelcomeActivity extends AppCompatActivity {
     /**
      * Gets triggered when the GetStarted button is clicked.
      *
-     * @param v The {@link View} being clicked.
+     * @param view The {@link View} being clicked.
      */
-    public void onGetStartedClick(final View v) {
+    public void onGetStartedClick(final View view) {
         final Intent intent = new Intent(this, CreateProfileActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);

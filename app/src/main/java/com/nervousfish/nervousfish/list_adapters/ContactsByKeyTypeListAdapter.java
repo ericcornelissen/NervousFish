@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class that is a expandable list adapter to sort contacts by key types in a expandable view
+ * Class that is a expandable list adapter to sort contacts by key TYPES in a expandable view
  */
 
 @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
