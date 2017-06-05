@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.FirstUseActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public final class EntryActivity extends Activity {
                 } catch (IOException e) {
                     LOGGER.error("IOException while getting profiles", e);
                 }
-                Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
+                Intent intent = new Intent(EntryActivity.this, SettingsActivity.class);
                 if (profiles.isEmpty()) {
                     intent = new Intent(EntryActivity.this, FirstUseActivity.class);
                 }
