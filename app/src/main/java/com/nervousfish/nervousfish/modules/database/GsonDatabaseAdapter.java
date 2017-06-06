@@ -45,11 +45,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private static final Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>() {
     }.getType();
 
-    private final String contactsPath;
-    private final String profilesPath;
     private final IFileSystem fileSystem;
 
     private final String databasePath;
+    private final String passwordPath;
     private final Database database;
 
     /**
@@ -62,13 +61,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
         this.fileSystem = serviceLocator.getFileSystem();
 
         this.databasePath = serviceLocator.getAndroidFilesDir() + database.getDatabasePath();
-        this.contactsPath = constants.getDatabaseContactsPath();
-        this.profilesPath = constants.getDatabaseUserdataPath();
+        this.passwordPath = serviceLocator.getAndroidFilesDir() + database.getPasswordPath();
 
 
         try {
-            this.initializeContacts();
             this.initializeDatabase();
+            this.initializePassword();
         } catch (final IOException e) {
             LOGGER.error("Failed to initialize database", e);
         }
@@ -123,31 +121,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
         this.updateContacts(contacts);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
-        // Get the list of contacts
-        final List<Contact> contacts = this.getAllContacts();
-        final int lengthBefore = contacts.size();
-        contacts.remove(oldContact);
-
-        // Throw if the contact to update is not found
-        if (contacts.size() == lengthBefore) {
-            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
-        }
-
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-        // Add the new contact and update the database
-        contacts.add(newContact);
-
-        final Writer writer = this.fileSystem.getWriter(this.contactsPath);
-        gsonParser.toJson(contacts, writer);
-        writer.close();
-    }
 
     /**
      * {@inheritDoc}
@@ -184,7 +157,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public List<Profile> getProfiles() throws IOException {
+    public Profile getProfile() {
+        /*
         final GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
@@ -194,56 +168,18 @@ public final class GsonDatabaseAdapter implements IDatabase {
         reader.close();
 
         return profile;
+        */
+        return database.getProfile();
     }
+
+
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addProfile(final Profile profile) throws IOException {
-        // Get the list of profiles and add the new profile
-        final List<Profile> profiles = this.getProfiles();
-        profiles.add(profile);
-
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        // Update the database
-        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-        gsonParser.toJson(profiles, writer);
-        writer.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void deleteProfile(final Profile profile) throws IllegalArgumentException, IOException {
-        // Get the list of contacts
-        final List<Profile> profiles = this.getProfiles();
-        final int lengthBefore = profiles.size();
-        profiles.remove(profile);
-
-        // Throw if the contact to remove is not found
-        if (profiles.size() == lengthBefore) {
-            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
-        }
-
-        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        // Update the database
-        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-        gsonParser.toJson(profiles, writer);
-        writer.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException {
+    public void updateProfile(final Profile newProfile) {
+        /*
         // Get the list of contacts
         final List<Profile> profiles = this.getProfiles();
         final int lengthBefore = profiles.size();
@@ -262,17 +198,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final Writer writer = this.fileSystem.getWriter(this.profilesPath);
         gsonParser.toJson(profiles, writer);
         writer.close();
+        */
+        database.setProfile(newProfile);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getUserPassword() throws IOException {
-        return null;
-    }
-
-
 
     /**
      * Update the contact contents of the database.
@@ -293,33 +221,34 @@ public final class GsonDatabaseAdapter implements IDatabase {
         database.setContacts(contacts);
     }
 
+
     /**
-     * Initialize the contacts in the database. This does nothing
-     * if the contacts section of the database already exists.
+     * Initialize the main database. This does nothing
+     * if the main database already exists.
      */
-    private void initializeContacts() throws IOException {
-        final File file = new File(this.contactsPath);
-        if (!file.exists()) {
-            LOGGER.warn("Contacts part of the database didn't exist");
-            final Writer writer = this.fileSystem.getWriter(this.contactsPath);
+    private void initializeDatabase() throws IOException {
+        final File databaseFile = new File(this.databasePath);
+        if (!databaseFile.exists() ) {
+            LOGGER.warn("Database didn't exist: %s", this.databasePath);
+            final Writer writer = this.fileSystem.getWriter(this.databasePath);
             writer.write("[]");
             writer.close();
-            LOGGER.info("Created the contacts part of the database");
+            LOGGER.info("Created the database: %s", this.databasePath);
         }
     }
 
     /**
-     * Initialize the specified section in the database. This does nothing
-     * if the specified section of the database already exists.
+     * Initialize the password file with the keys to encrypt the database. This does nothing
+     * if the password file already exists.
      */
-    private void initializeDatabase() throws IOException {
-        final File file = new File(this.profilesPath);
-        if (!file.exists()) {
-            LOGGER.warn("Part of the database didn't exist: %s", this.profilesPath);
-            final Writer writer = this.fileSystem.getWriter(this.profilesPath);
+    private void initializePassword() throws IOException {
+        final File passwordFile = new File(this.passwordPath);
+        if(!passwordFile.exists()) {
+            LOGGER.warn("Password file didn't exist: %s", this.passwordPath);
+            final Writer writer = this.fileSystem.getWriter(this.passwordPath);
             writer.write("[]");
             writer.close();
-            LOGGER.info("Created the part of the database: %s", this.profilesPath);
+            LOGGER.info("Created the password file: %s", this.passwordPath);
         }
     }
 
@@ -337,8 +266,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
-        assertNotNull(this.contactsPath);
-        assertNotNull(this.profilesPath);
+        assertNotNull(this.databasePath);
         assertNotNull(this.fileSystem);
     }
 

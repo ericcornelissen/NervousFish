@@ -14,10 +14,11 @@ import java.util.List;
  */
 public final class Database implements Serializable {
     private final List<Contact> contacts;
-    private final Profile profile;
     private final byte[] salt;
     private final String encryptedPassword;
     private final String databasePath;
+    private Profile profile;
+
 
     /**
      * The constructor for the {@link Database} POJO
@@ -42,6 +43,10 @@ public final class Database implements Serializable {
     }
 
     public String getDatabasePath() {
+
+    }
+
+    public String getPasswordPath() {
 
     }
 
@@ -75,6 +80,12 @@ public final class Database implements Serializable {
     public Profile getProfile() {
         return this.profile;
     }
+
+    /**
+     * Sets the user's profile to a new profile
+     * @param profile The new profile.
+     */
+    public void setProfile(Profile profile) {this.profile = profile;}
 
     /**
      * Serialize the created proxy instead of this instance.

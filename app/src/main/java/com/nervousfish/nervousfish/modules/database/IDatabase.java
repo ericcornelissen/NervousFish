@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.IModule;
 
@@ -27,14 +28,6 @@ public interface IDatabase extends IModule {
      */
     void deleteContact(String contactName) throws IllegalArgumentException, IOException;
 
-    /**
-     * Update an existing contact in the database.
-     *
-     * @param oldContact The old {@link Contact} to be updated.
-     * @param newContact The new {@link Contact} details.
-     * @throws IllegalArgumentException When {@code oldContact} is not in the database.
-     */
-    void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException;
 
     /**
      * Get a list of all contacts in the database.
@@ -60,43 +53,26 @@ public interface IDatabase extends IModule {
     boolean contactExists(String name) throws IOException;
 
     /**
-     * Get the Profile list with user information.
+     * Get the Profile with user information.
      *
-     * @return A {@link List} of {@link Profile Profiles}.
+     * @return A {@link Profile Profiles}.
      */
-    List<Profile> getProfiles() throws IOException;
+    Profile getProfile();
 
-    /**
-     * Add a new profile in the database.
-     *
-     * @param profile The {@link Profile} to add to the database.
-     */
-    void addProfile(Profile profile) throws IOException;
-
-    /**
-     * Delete an profile from the database.
-     *
-     * @param profile The {@link Profile} to remove from the database.
-     * @throws IllegalArgumentException When {@code profile} is not in the database.
-     */
-    void deleteProfile(Profile profile) throws IllegalArgumentException, IOException;
 
     /**
      * Update an existing profile in the database.
      *
-     * @param oldProfile The old {@link Profile} to be updated.
      * @param newProfile The new {@link Profile} details.
-     * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
-    void updateProfile(Profile oldProfile, Profile newProfile) throws IllegalArgumentException, IOException;
+    void updateProfile(Profile newProfile);
 
     /**
-     * Get the password of the user.
-     *
-     * @return The password of the user
-     * @throws IllegalArgumentException When user account is not in the database.
+     * Loads up the database in an object using the provided password.
+     * @param password
+     * @return
      */
-    String getUserPassword() throws IOException;
+    Database loadDatabase(String password);
 
     /**
      * Saves the database in file encrypted.
