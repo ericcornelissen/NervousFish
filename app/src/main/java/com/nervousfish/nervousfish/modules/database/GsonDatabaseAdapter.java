@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -60,6 +61,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final IConstants constants = serviceLocator.getConstants();
         this.fileSystem = serviceLocator.getFileSystem();
 
+        this.databasePath = serviceLocator.getAndroidFilesDir() + database.getDatabasePath();
         this.contactsPath = constants.getDatabaseContactsPath();
         this.profilesPath = constants.getDatabaseUserdataPath();
 
@@ -152,16 +154,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public List<Contact> getAllContacts() throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Reader reader = this.fileSystem.getReader(this.contactsPath);
-
-        final List<Contact> contacts = gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
-        reader.close();
-
-        return contacts;
+        return database.getContacts();
     }
 
     /**
@@ -287,6 +280,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param contacts The list of contacts to write.
      */
     private void updateContacts(final List<Contact> contacts) throws IOException {
+        /*
         final GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
@@ -295,6 +289,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         gsonParser.toJson(contacts, writer);
         writer.close();
+        */
+        database.setContacts(contacts);
     }
 
     /**
