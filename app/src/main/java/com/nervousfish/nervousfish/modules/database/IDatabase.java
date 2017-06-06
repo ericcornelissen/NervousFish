@@ -26,7 +26,7 @@ public interface IDatabase extends IModule {
      *
      * @param contactName The {@link String} with the name of the contact to remove from the database.
      */
-    void deleteContact(String contactName) throws IllegalArgumentException, IOException;
+    void deleteContact(String contactName) throws IOException;
 
 
     /**
@@ -57,7 +57,7 @@ public interface IDatabase extends IModule {
      *
      * @return A {@link Profile Profiles}.
      */
-    Profile getProfile();
+    Profile getProfile() throws IOException;
 
 
     /**
@@ -65,7 +65,7 @@ public interface IDatabase extends IModule {
      *
      * @param newProfile The new {@link Profile} details.
      */
-    void updateProfile(Profile newProfile);
+    void updateProfile(Profile newProfile) throws IOException;
 
     /**
      * Loads up the database in an object using the provided password.
