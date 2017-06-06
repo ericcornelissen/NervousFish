@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
@@ -21,6 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -81,7 +85,12 @@ public final class CreateProfileActivity extends AppCompatActivity {
             final KeyPair keyPair = helper.generateKeyPair(IKey.Types.RSA);
 
             try {
-                this.serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
+                final List<IKey> publicKeys = new ArrayList<IKey>();
+                final List<KeyPair> keyPairs = new ArrayList<>();
+                publicKeys.add(keyPair.getPublicKey());
+                keyPairs.add(keyPair);
+                final Contact userContact = new Contact(name, publicKeys);
+                this.serviceLocator.getDatabase().addProfile(new Profile(userContact, keyPairs));
                 this.showProfileCreatedDialog();
             } catch (IOException e) {
                 this.showProfileNotCreatedDialog();
