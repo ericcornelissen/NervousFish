@@ -104,10 +104,4 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
-
-    <string-array name="verification_methods">
-        <item>Visuele verificatie</item>
-        <item>Ritme verificatie</item>
-        <item>Kies methode tijdens start uitwisseling</item>
-    </string-array>
 </resources>
