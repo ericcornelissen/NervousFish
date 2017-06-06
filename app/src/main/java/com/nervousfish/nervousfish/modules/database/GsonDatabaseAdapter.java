@@ -6,9 +6,11 @@ import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
+import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -16,14 +18,12 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +46,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private static final String PASSWORD_PATH = "password path";
     private static final String DATABASE = "database";
 
+    private final String androidFilesDir;
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
@@ -54,8 +55,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     private final Map<String, Object> databaseMap;
 
-
     private final IFileSystem fileSystem;
+    private final IKeyGenerator keyGenerator;
 
     /**
      * Prevents construction from outside the class.
@@ -65,7 +66,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
         final IConstants constants = serviceLocator.getConstants();
         this.fileSystem = serviceLocator.getFileSystem();
+        this.keyGenerator = serviceLocator.getKeyGenerator();
         this.databaseMap = new HashMap<String, Object>();
+        androidFilesDir = serviceLocator.getAndroidFilesDir();
         LOGGER.info("Initialized");
     }
 
@@ -208,6 +211,21 @@ public final class GsonDatabaseAdapter implements IDatabase {
         writer.close();
         */
         getDatabase().setProfile(newProfile);
+        updateDatabase();
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateDatabase() throws IOException {
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+
+        final Writer writer = this.fileSystem.getWriter(this.getDatabasePath());
+        gsonParser.toJson(getDatabase(), writer);
+        writer.close();
     }
 
     /**
@@ -215,6 +233,13 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public Database loadDatabase(String password) {
+        try {
+            initializePassword(password);
+            initializeDatabase(password);
+        } catch (final IOException e) {
+            LOGGER.error("Failed to initialize database", e);
+        }
+
         return null;
     }
 
@@ -235,37 +260,56 @@ public final class GsonDatabaseAdapter implements IDatabase {
         writer.close();
         */
         getDatabase().setContacts(contacts);
+        updateDatabase();
     }
 
 
     /**
      * Initialize the main database. This does nothing
      * if the main database already exists.
+     * @param password The password to initialize the database with.
      */
-    private void initializeDatabase() throws IOException {
-        final File databaseFile = new File(this.getDatabasePath());
-        if (!databaseFile.exists() ) {
-            LOGGER.warn("Database didn't exist: %s", this.getDatabasePath());
-            final Writer writer = this.fileSystem.getWriter(this.getDatabasePath());
-            writer.write("[]");
-            writer.close();
-            LOGGER.info("Created the database: %s", this.getDatabasePath());
+    private void initializeDatabase(String password) throws IOException {
+        try {
+            getDatabasePath();
+            return;
+        } catch (IOException e) {
+            LOGGER.warn("Database isn't initialized yet");
         }
+        final String databasePath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(DATABASE_PATH+password);
+        databaseMap.put(DATABASE_PATH, databasePath);
+        final Writer writer = this.fileSystem.getWriter(databasePath);
+        writer.write("[]");
+        writer.close();
+        LOGGER.info("Created the database: %s", this.getDatabasePath());
+
+
     }
 
     /**
      * Initialize the password file with the keys to encrypt the database. This does nothing
      * if the password file already exists.
+     * @param password The password to initialize the database with.
      */
-    private void initializePassword() throws IOException {
-        final File passwordFile = new File(this.getPasswordPath());
-        if(!passwordFile.exists()) {
-            LOGGER.warn("Password file didn't exist: %s", this.getPasswordPath());
-            final Writer writer = this.fileSystem.getWriter(this.getPasswordPath());
-            writer.write("[]");
-            writer.close();
-            LOGGER.info("Created the password file: %s", this.getPasswordPath());
+    private void initializePassword(String password) throws IOException {
+        try {
+            getPasswordPath();
+            return;
+        } catch (IOException e) {
+            LOGGER.warn("Password isn't initialized yet");
         }
+        final String passwordPath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(PASSWORD_PATH+password);
+        databaseMap.put(PASSWORD_PATH, passwordPath);
+
+        KeyPair lockpair = keyGenerator.generateRSAKeyPair("Database encryption");
+        
+
+        final Writer writer = this.fileSystem.getWriter(passwordPath);
+        writer.write("[]");
+        writer.close();
+        LOGGER.info("Created the password file: %s", this.getPasswordPath());
+
+
     }
 
     /**

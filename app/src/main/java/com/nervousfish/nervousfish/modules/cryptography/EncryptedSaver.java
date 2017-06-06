@@ -87,7 +87,7 @@ public final class EncryptedSaver {
      * Encrypts or decrypts a string with a password to
      * @param toEncrypt The string to be encrypted/decrypted
      * @param password  The password to encrypt/decrypt with
-     * @param ivSpec    The initialization vector specifications bytestring
+     * @param ivSpec    The initialization vector specifications bytestring (length 20)
      * @param encrypt   whether we're encrypting or decrypting.
      * @return  The encrypted/decrypted string.
      */

@@ -68,6 +68,11 @@ public interface IDatabase extends IModule {
     void updateProfile(Profile newProfile) throws IOException;
 
     /**
+     * Updates the database with the new information.
+     */
+    void updateDatabase() throws IOException;
+
+    /**
      * Loads up the database in an object using the provided password.
      * @param password
      * @return
