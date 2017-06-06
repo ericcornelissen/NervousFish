@@ -67,7 +67,7 @@
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.SettingsActivityA"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.KeyManagementActivity" />

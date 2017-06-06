@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.activities.FirstUseActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
-import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 
 import org.slf4j.Logger;

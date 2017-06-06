@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -29,12 +28,14 @@ import java.util.List;
  * A {@link PreferenceActivity} that presents a set of application settings. This
  * is the place where your profile is changed.
  */
-public class SettingsActivity extends AppCompatPreferenceActivity {
+@SuppressWarnings("checkstyle:AnonInnerLength")
+//In this class large anonymous classes are needed. It does not infer with readability.
+public final class SettingsActivityA extends AAppCompatPreferenceActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
-    private static String DISPLAY_NAME = "display_name";
+    private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivityA");
+    private static boolean firstLoad = true;
+    private static final String DISPLAY_NAME = "display_name";
     private static IServiceLocator serviceLocator;
-    private static boolean FIRST_LOAD = true;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -42,22 +43,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
+        public boolean onPreferenceChange(final Preference preference, final Object value) {
+            final String stringValue = value.toString();
 
             if (preference.getKey().equals(DISPLAY_NAME)) {
                 updateDisplayName(preference, stringValue);
             } else if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+                final ListPreference listPreference = (ListPreference) preference;
+                final int index = listPreference.findIndexOfValue(stringValue);
 
                 // Set the summary to reflect the new value.
-                    preference.setSummary(
-                            index >= 0
-                                    ? listPreference.getEntries()[index]
-                                    : null);
+                preference.setSummary(
+                        index >= 0
+                                ? listPreference.getEntries()[index]
+                                : null);
 
 
             } else {
@@ -75,14 +76,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
          * @param preference The preference which is changed
          * @param stringValue The string value which is new
          */
-        private void updateDisplayName(final Preference preference, String stringValue) {
-            if (FIRST_LOAD) {
-                FIRST_LOAD = false;
+        private void updateDisplayName(final Preference preference, final String stringValue) {
+            if (firstLoad) {
+                firstLoad = false;
 
                 try {
-                    stringValue = serviceLocator.getDatabase().getProfiles().get(0).getName();
+                    preference.setSummary(serviceLocator.getDatabase().getProfiles().get(0).getName());
+                    return;
                 } catch (IOException e) {
-                    LOGGER.error("Couldn't get profiles from database", e);
+                    LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
                 }
 
                 preference.setSummary(stringValue);
@@ -109,7 +111,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private static void bindPreferenceSummaryToValue(final Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -122,7 +124,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
@@ -141,11 +143,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LOGGER.info("SettingsActivity created");
+        LOGGER.info("SettingsActivityA created");
     }
 
     @Override
-    public void onHeaderClick(Header header, int position) {
+    public void onHeaderClick(final Header header, final int position) {
         super.onHeaderClick(header, position);
         if (header.id == R.id.key_management_header) {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
@@ -158,7 +160,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -166,8 +168,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
             return true;
@@ -180,15 +182,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(List<Header> target) {
+    public void onBuildHeaders(final List<Header> target) {
         loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
     /**
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
+     *
+     * @param fragmentName The name of the fragment
+     * @return A boolean which is true when the fragment is valid
      */
-    protected boolean isValidFragment(String fragmentName) {
+    protected boolean isValidFragment(final String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || ProfilePreferenceFragment.class.getName().equals(fragmentName);
@@ -199,9 +204,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static final class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
@@ -214,10 +219,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
+        public boolean onOptionsItemSelected(final MenuItem item) {
+            final int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                startActivity(new Intent(getActivity(), SettingsActivityA.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -228,9 +233,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * This fragment shows profile settings only.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class ProfilePreferenceFragment extends PreferenceFragment {
+    public static final class ProfilePreferenceFragment extends PreferenceFragment {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_profile);
             setHasOptionsMenu(true);
@@ -239,14 +244,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("display_name"));
+            bindPreferenceSummaryToValue(findPreference(DISPLAY_NAME));
         }
 
         @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
+        public boolean onOptionsItemSelected(final MenuItem item) {
+            final int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                startActivity(new Intent(getActivity(), SettingsActivityA.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
