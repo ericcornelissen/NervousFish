@@ -6,6 +6,10 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -84,14 +88,32 @@ public final class EncryptedSaver {
     }
 
     /**
+     * Encrypts object
+     * @param o
+     * @param password
+     * @param ivSpec
+     * @return
+     */
+    public static byte[] encryptObjectWithPassword(Object o, final String password, final byte[] ivSpec) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        ObjectOutput out = new ObjectOutputStream(bos);
+        out.writeObject(o);
+        out.flush();
+        byte[] oToBytes = bos.toByteArray();
+        out.close();
+        return encryptOrDecryptWithPassword(oToBytes, password, ivSpec, true);
+    }
+
+    /**
      * Encrypts or decrypts a string with a password to
      * @param toEncrypt The string to be encrypted/decrypted
      * @param password  The password to encrypt/decrypt with
      * @param ivSpec    The initialization vector specifications bytestring (length 20)
      * @param encrypt   whether we're encrypting or decrypting.
-     * @return  The encrypted/decrypted string.
+     * @return  The encrypted/decrypted bytearray.
      */
-    public static String encryptOrDecryptWithPassword(final byte[] toEncrypt, final String password, final byte[] ivSpec, final boolean encrypt) {
+    public static byte[] encryptOrDecryptWithPassword(final byte[] toEncrypt, final String password, final byte[] ivSpec, final boolean encrypt) {
 
         try {
             final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
@@ -104,7 +126,7 @@ public final class EncryptedSaver {
             final byte[] result = new byte[conv_len];
             for (int i = 0; i < result.length; i++)
                 result[i] = converted[i];
-            return new String(result, "UTF-8");
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -133,6 +155,8 @@ public final class EncryptedSaver {
             return null;
         }
     }
+
+
 
 
 

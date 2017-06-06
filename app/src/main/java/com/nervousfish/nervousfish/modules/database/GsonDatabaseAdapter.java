@@ -18,9 +18,12 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -301,8 +304,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String passwordPath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(PASSWORD_PATH+password);
         databaseMap.put(PASSWORD_PATH, passwordPath);
 
-        KeyPair lockpair = keyGenerator.generateRSAKeyPair("Database encryption");
-        
+        //  Encrypt the lockpair
+        KeyPair lockpair = keyGenerator.generateRSAKeyPair(DATABASE);
+
+
 
         final Writer writer = this.fileSystem.getWriter(passwordPath);
         writer.write("[]");
@@ -311,6 +316,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
 
     }
+
 
     /**
      * Deserialize the instance using readObject to ensure invariants and security.
