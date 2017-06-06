@@ -1,22 +1,127 @@
 package com.nervousfish.nervousfish.activities;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+import static android.nfc.NdefRecord.createExternal;
+import static android.nfc.NdefRecord.createMime;
 
 /**
- * An {@link Activity} that used for pairing over NFC
+ * An {@link Activity} that beams NDEF Messages to Other Devices.
+ *
  */
-public class NFCActivity extends Activity {
+public class NFCActivity extends Activity implements CreateNdefMessageCallback {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
+
+    private NfcAdapter nfcAdapter;
+    private IServiceLocator serviceLocator;
+    TextView textView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        final Intent intent = getIntent();
+        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        // Check for available NFC Adapter
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (nfcAdapter == null) {
+            Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        LOGGER.info("Start creating an NDEF message to beam");
+        try {
+            final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
+                    + myProfile.getPublicKey().toString());
+            final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
+            this.serviceLocator.getNFCHandler().send(myProfileAsContact);
+        } catch (IOException e) {
+            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+        }
+    }
+
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState The saved state of the instance.
+     * {@inheritDoc}
      */
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nfc);
+    public void onBackPressed() {
+        LOGGER.info("Back button was pressed");
+        this.finish();
+    }
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+
+        NdefMessage msg = new NdefMessage(
+                new NdefRecord[] { createExternal (
+                        "com.nervousfish", "contact" , this.serviceLocator.getNFCHandler().)
+                });
+        return msg;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Check to see that the Activity started due to an Android Beam
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+            processIntent(getIntent());
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        // onResume gets called after this to handle the intent
+        setIntent(intent);
+    }
+
+    /**
+     * Parses the NDEF Message from the intent and prints to the TextView
+     */
+    void processIntent(Intent intent) {
+        textView = (TextView) findViewById(R.id.textView);
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+                NfcAdapter.EXTRA_NDEF_MESSAGES);
+        // only one message sent during the beam
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        // record 0 contains the MIME type, record 1 is the AAR, if present
+        textView.setText(new String(msg.getRecords()[0].getPayload()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        this.serviceLocator.unregisterFromEventBus(this);
+        LOGGER.info("Stopped NFCActivity");
     }
 }
