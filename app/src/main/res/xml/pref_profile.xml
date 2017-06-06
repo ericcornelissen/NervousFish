@@ -5,9 +5,8 @@
         android:title="Profile general information" >
         <EditTextPreference
             android:capitalize="words"
-            android:defaultValue="@string/name"
             android:inputType="textCapWords"
-            android:key="example_text"
+            android:key="display_name"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"

@@ -49,7 +49,7 @@ public final class EntryActivity extends Activity {
                 } catch (IOException e) {
                     LOGGER.error("IOException while getting profiles", e);
                 }
-                Intent intent = new Intent(EntryActivity.this, SettingsActivity.class);
+                Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
                 if (profiles.isEmpty()) {
                     intent = new Intent(EntryActivity.this, FirstUseActivity.class);
                 }

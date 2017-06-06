@@ -2,31 +2,27 @@ package com.nervousfish.nervousfish.activities;
 
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,8 +32,9 @@ import java.util.List;
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
-
-    private IServiceLocator serviceLocator;
+    private static String DISPLAY_NAME = "display_name";
+    private static IServiceLocator serviceLocator;
+    private static boolean FIRST_LOAD = true;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -48,17 +45,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
+            if (preference.getKey().equals(DISPLAY_NAME)) {
+                updateDisplayName(preference, stringValue);
+            } else if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
 
                 // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
+                    preference.setSummary(
+                            index >= 0
+                                    ? listPreference.getEntries()[index]
+                                    : null);
+
 
             } else {
                 // For all other preferences, set the summary to the value's
@@ -66,6 +66,37 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 preference.setSummary(stringValue);
             }
             return true;
+        }
+
+        /**
+         * If the key is display_name this method is called to update the summary
+         * and the Profile in the database.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateDisplayName(final Preference preference, String stringValue) {
+            if (FIRST_LOAD) {
+                FIRST_LOAD = false;
+
+                try {
+                    stringValue = serviceLocator.getDatabase().getProfiles().get(0).getName();
+                } catch (IOException e) {
+                    LOGGER.error("Couldn't get profiles from database", e);
+                }
+
+                preference.setSummary(stringValue);
+            } else {
+                try {
+                    LOGGER.info("Updating profile name");
+                    final Profile profile = serviceLocator.getDatabase().getProfiles().get(0);
+                    serviceLocator.getDatabase().updateProfile(profile, new Profile(stringValue, profile.getKeyPair()));
+                } catch (IOException e) {
+                    LOGGER.error("Couldn't get profiles from database", e);
+                }
+
+                preference.setSummary(stringValue);
+            }
         }
     };
 
@@ -96,7 +127,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         setupActionBar();
 
         final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        if (serviceLocator == null) {
+            serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        }
+
+
+        try {
+            PreferenceManager
+                    .getDefaultSharedPreferences(this)
+                    .edit()
+                    .putString(DISPLAY_NAME, serviceLocator.getDatabase().getProfiles().get(0).getName())
+                    .apply();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("SettingsActivity created");
     }
 
     @Override
@@ -104,7 +149,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onHeaderClick(header, position);
         if (header.id == R.id.key_management_header) {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
             this.startActivity(intent);
         }
     }
@@ -118,6 +163,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -184,7 +239,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
+            bindPreferenceSummaryToValue(findPreference("display_name"));
         }
 
         @Override
