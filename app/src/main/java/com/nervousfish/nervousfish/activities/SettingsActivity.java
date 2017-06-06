@@ -45,11 +45,14 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object value) {
+            LOGGER.info("Preference changed");
             final String stringValue = value.toString();
 
             if (preference.getKey().equals(DISPLAY_NAME)) {
+                LOGGER.info("Preference changed at the display name");
                 updateDisplayName(preference, stringValue);
             } else if (preference instanceof ListPreference) {
+                LOGGER.info("Preference changed for a ListPreference");
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 final ListPreference listPreference = (ListPreference) preference;
@@ -63,6 +66,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
 
             } else {
+                LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
