@@ -1,9 +1,4 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference android:title="Remember Bluetooth verification method"
-        android:defaultValue="false"
-        android:summary="If this option is selected, the same verification method will be used every time you pair over Bluetooth."
-        android:key="applicationUpdates" />
-
     <ListPreference
         android:dialogTitle="@string/pref_verification_method_to_use"
         android:key="choose_verification_use_every_time"

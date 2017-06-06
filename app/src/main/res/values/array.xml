@@ -3,7 +3,6 @@
     <string-array name="verification_methods">
         <item>Visual verification</item>
         <item>Rhythm verification</item>
-    </string-array>
-    <string-array name="empty_list">
+        <item>Choose when pairing</item>
     </string-array>
 </resources>

@@ -28,14 +28,15 @@ import java.util.List;
  * A {@link PreferenceActivity} that presents a set of application settings. This
  * is the place where your profile is changed.
  */
-@SuppressWarnings("checkstyle:AnonInnerLength")
-//In this class large anonymous classes are needed. It does not infer with readability.
-public final class SettingsActivityA extends AAppCompatPreferenceActivity {
+@SuppressWarnings({"checkstyle:AnonInnerLength", "PMD.AvoidUsingVolatile"})
+//1. In this class large anonymous classes are needed. It does not infer with readability.
+//2. The volatile identifier is needed because this class uses static methods, which are essential.
+public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivityA");
+    private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
     private static boolean firstLoad = true;
     private static final String DISPLAY_NAME = "display_name";
-    private static IServiceLocator serviceLocator;
+    private static volatile IServiceLocator serviceLocator;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -58,7 +59,7 @@ public final class SettingsActivityA extends AAppCompatPreferenceActivity {
                 preference.setSummary(
                         index >= 0
                                 ? listPreference.getEntries()[index]
-                                : null);
+                                : "");
 
 
             } else {
@@ -133,7 +134,6 @@ public final class SettingsActivityA extends AAppCompatPreferenceActivity {
             serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         }
 
-
         try {
             PreferenceManager
                     .getDefaultSharedPreferences(this)
@@ -141,9 +141,9 @@ public final class SettingsActivityA extends AAppCompatPreferenceActivity {
                     .putString(DISPLAY_NAME, serviceLocator.getDatabase().getProfiles().get(0).getName())
                     .apply();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Couldn't get profiles from database at the onCreate", e);
         }
-        LOGGER.info("SettingsActivityA created");
+        LOGGER.info("SettingsActivity created");
     }
 
     @Override
@@ -222,7 +222,7 @@ public final class SettingsActivityA extends AAppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(final MenuItem item) {
             final int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivityA.class));
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -251,7 +251,7 @@ public final class SettingsActivityA extends AAppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(final MenuItem item) {
             final int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivityA.class));
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);

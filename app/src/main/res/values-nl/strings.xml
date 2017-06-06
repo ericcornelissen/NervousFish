@@ -87,4 +87,27 @@
     <string name="show_qr_code">Toon QR code</string>
     <string name="contact_set_name">Geef contact een naam</string>
     <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
+
+    <!-- Strings related to Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="content_description_settings_button">Settings knop drie punten</string>
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Algemeen</string>
+
+    <string name="pref_verification_method_to_use">Verificatie methode om te gebruiken</string>
+
+    <!-- Settings for Profile -->
+    <string name="pref_header_profile">Profiel informatie</string>
+
+    <string name="display_name">Naam</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
+
+    <string-array name="verification_methods">
+        <item>Visuele verificatie</item>
+        <item>Ritme verificatie</item>
+        <item>Kies methode tijdens start uitwisseling</item>
+    </string-array>
 </resources>

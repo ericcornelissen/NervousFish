@@ -40,7 +40,8 @@
                 android:padding="@dimen/image_button_padding"
                 android:scaleType="fitCenter"
                 android:layout_gravity="end"
-                android:onClick="onClickDotsButton"/>
+                android:onClick="onClickDotsButton"
+                android:contentDescription="@string/content_description_settings_button"/>
         </android.support.v7.widget.Toolbar>
 
         <ViewFlipper
