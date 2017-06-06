@@ -87,23 +87,6 @@ public final class EncryptedSaver {
         return null;
     }
 
-    /**
-     * Encrypts object
-     * @param o
-     * @param password
-     * @param ivSpec
-     * @return
-     */
-    public static byte[] encryptObjectWithPassword(Object o, final String password, final byte[] ivSpec) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        ObjectOutput out = new ObjectOutputStream(bos);
-        out.writeObject(o);
-        out.flush();
-        byte[] oToBytes = bos.toByteArray();
-        out.close();
-        return encryptOrDecryptWithPassword(oToBytes, password, ivSpec, true);
-    }
 
     /**
      * Encrypts or decrypts a string with a password to

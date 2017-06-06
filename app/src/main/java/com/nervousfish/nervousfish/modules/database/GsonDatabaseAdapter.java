@@ -226,9 +226,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
-        final Writer writer = this.fileSystem.getWriter(this.getDatabasePath());
-        gsonParser.toJson(getDatabase(), writer);
-        writer.close();
+        String databaseGson = gsonParser.toJson(getDatabase());
+
     }
 
     /**
