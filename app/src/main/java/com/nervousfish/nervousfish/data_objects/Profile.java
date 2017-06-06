@@ -49,8 +49,17 @@ public class Profile {
         }
 
         final Profile that = (Profile) o;
-        return this.name.equals(that.name)
-            && this.keyPair.equals(that.keyPair);
+        if (this.keyPairs != that.keyPairs) {
+            return false;
+        }
+        for (KeyPair kp : this.keyPairs) {
+            for (KeyPair kp2 : that.keyPairs) {
+                if(!kp.equals(kp2)) {
+                    return false;
+                }
+            }
+        }
+        return this.contact.equals(that.contact);
     }
 
     /**
@@ -58,7 +67,7 @@ public class Profile {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keyPair.hashCode();
+        return this.contact.hashCode() + this.keyPairs.hashCode();
     }
 
 }
