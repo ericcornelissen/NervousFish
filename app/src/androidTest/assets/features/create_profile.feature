@@ -17,8 +17,8 @@ Feature: Create a profile
       And I enter a valid <password> as password
       And I enter a valid repeat <password> as repeat password
       And I click on the submit profile button
-    And I click ok on the popup with a warning about creating an profile
-      Then I should go to the login activity
+      And I click ok on the popup with a warning about creating an profile
+      Then I should progress directly to the main activity
       And the profile with <name> should be saved in the database
 
       Examples:

@@ -35,7 +35,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This Bluetooth activity class establishes and manages a bluetooth connection.
+ * An {@link Activity} that establishes and manages a bluetooth connection.
+ * It shows a screen with the Bluetooth devices with which the user is paired and other Bluetooth devices
+ * that are detected near the device of the user.
  */
 @SuppressWarnings("PMD.ExcessiveImports") // Uses many Android and utility classes
 public final class BluetoothConnectionActivity extends AppCompatActivity {
@@ -49,7 +51,13 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> pairedDevices;
+    /**
+     * Used to fill the listview of newly discovered Bluetooth devices
+     */
     private ArrayAdapter<String> newDevicesArrayAdapter;
+    /**
+     * Used to fill the listview of paired Bluetooth devices
+     */
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -136,8 +144,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        LOGGER.info("Back button was pressed -> ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY");
-        this.setResult(ActivateBluetoothActivity.RESULT_CODE_FINISH_BLUETOOTH_ACTIVITY);
+        LOGGER.info("Back button was pressed");
         this.finish();
     }
 

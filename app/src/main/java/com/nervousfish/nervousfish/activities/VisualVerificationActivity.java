@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Example activity to verify identity in Bluetooth connections.
+ * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
  */
 public class VisualVerificationActivity extends Activity {
 
@@ -31,7 +31,7 @@ public class VisualVerificationActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.visual_verification);
+        this.setContentView(R.layout.activity_visual_verification);
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);

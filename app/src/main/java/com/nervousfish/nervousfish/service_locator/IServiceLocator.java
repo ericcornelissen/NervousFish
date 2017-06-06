@@ -13,6 +13,9 @@ import java.io.Serializable;
 
 /**
  * Provides the interface that should be implemented by all Service Locators.
+ *
+ * <p>A service locator should be dependency injected into all activities that can use it to get access
+ * to any service the service locator provides.</p>
  */
 @SuppressWarnings("checkstyle:javadocmethod")
 public interface IServiceLocator extends Serializable {

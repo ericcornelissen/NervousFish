@@ -11,7 +11,9 @@ import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
 import com.nervousfish.nervousfish.modules.pairing.PairingWrapper;
 
 /**
- * The controller of the NervousFish application
+ * The controller of the NervousFish application. It provides an access point for the
+ * {@link com.nervousfish.nervousfish.modules.pairing.IBluetoothHandlerService}
+ * and holds the current global state of the application.
  */
 public final class NervousFish extends Application implements INervousFish {
     private static NervousFish instance;

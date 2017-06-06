@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The ContactActivity shows the contacts information and his public keys.
+ * An {@link Activity} that shows the contacts information and his public keys.
  */
 public final class ContactActivity extends AppCompatActivity {
 
@@ -89,7 +90,7 @@ public final class ContactActivity extends AppCompatActivity {
         public boolean onMenuItemClick(final MenuItem menuItem) {
             if (menuItem.getItemId() == R.id.delete_contact_menu_item) {
                 new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.popup_you_sure))
+                        .setTitleText(getString(R.string.are_you_sure))
                         .setContentText(getString(R.string.delete_popup_no_recovery))
                         .setCancelText(getString(R.string.cancel))
                         .setConfirmText(getString(R.string.yes_delete))
@@ -135,7 +136,7 @@ public final class ContactActivity extends AppCompatActivity {
             } catch (final IOException e) {
                 LOGGER.error("IOException while deleting contact in ContactActivity", e);
                 sweetAlertDialog.setTitleText(getString(R.string.something_went_wrong))
-                        .setContentText(getString(R.string.something_went_wrong_try_again))
+                        .setContentText(getString(R.string.try_again))
                         .setConfirmText(getString(R.string.dialog_ok))
                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
             }
