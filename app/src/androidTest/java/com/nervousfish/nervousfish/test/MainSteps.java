@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
+import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
@@ -25,6 +26,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @CucumberOptions(features = "features")
@@ -58,6 +60,11 @@ public class MainSteps {
         onView(withText(R.string.no)).perform(click());
     }
 
+    @When("^I click the three dots in the main activity$")
+    public void iClickThreeDotsButton() {
+        onView(withId(R.id.settings_button)).perform(click());
+    }
+
     @Then("^I should stay in the main activity after pressing back$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
@@ -66,5 +73,10 @@ public class MainSteps {
     @Then("^I should go to the login activity after pressing back$")
     public void iShouldGoToTheLoginActivity() {
         intended(hasComponent(LoginActivity.class.getName()));
+    }
+
+    @Then("^I should go to the settings screen$")
+    public void iShouldGoToSettingsScreen() {
+        intended(hasComponent(SettingsActivity.class.getName()));
     }
 }
