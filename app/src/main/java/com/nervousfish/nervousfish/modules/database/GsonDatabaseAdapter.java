@@ -409,5 +409,5 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
 
     }
-    
+
 }

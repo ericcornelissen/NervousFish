@@ -16,6 +16,8 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -79,10 +81,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
         if (this.validateInputFields()) {
             final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
             final String name = nameInputField.getText().toString();
-
             final String password = passwordInput.getText().toString();
-
             final KeyPair keyPair = helper.generateKeyPair(IKey.Types.RSA);
+            final IDatabase database = this.serviceLocator.getDatabase();
 
             try {
                 final List<IKey> publicKeys = new ArrayList<IKey>();
@@ -90,7 +91,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 publicKeys.add(keyPair.getPublicKey());
                 keyPairs.add(keyPair);
                 final Contact userContact = new Contact(name, publicKeys);
-                this.serviceLocator.getDatabase().addProfile(new Profile(userContact, keyPairs));
+                final Profile userProfile = new Profile(userContact, keyPairs);
+                database.createDatabase(userProfile, password);
+                
                 this.showProfileCreatedDialog();
             } catch (IOException e) {
                 this.showProfileNotCreatedDialog();
