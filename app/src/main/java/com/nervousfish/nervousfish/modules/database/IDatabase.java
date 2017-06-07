@@ -75,12 +75,21 @@ public interface IDatabase extends IModule {
     /**
      * Loads up the database in an object using the provided password.
      * @param password
-     * @return
      */
-    Database loadDatabase(String password) throws IOException;
+    void loadDatabase(String password) throws IOException;
+
+    /**
+     * Creates a database for a new profile.
+     * @param profile   -   The user profile to create a database for.
+     * @param password - The password for the database
+     */
+    void createDatabase(Profile profile, String password) throws IOException;
+
 
     /**
      * Saves the database in file encrypted.
      */
     void saveDatabaseEncrypted() throws IOException;
+
+
 }
