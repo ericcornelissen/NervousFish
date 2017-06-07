@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -64,6 +65,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
         LOGGER.info("activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (this.serviceLocator == null) {
+            final Intent intent = new Intent(this, EntryActivity.class);
+            this.startActivity(intent);
+        }
     }
 
     /**

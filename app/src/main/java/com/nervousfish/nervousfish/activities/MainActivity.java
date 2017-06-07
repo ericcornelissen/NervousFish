@@ -19,6 +19,7 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -108,6 +109,7 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         try {
             this.contacts = serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
@@ -116,25 +118,22 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Switches the sorting mode.
-     *
-     * @param view The sort floating action button that was clicked
-     */
-    public void onSortButtonClicked(final View view) {
-        sorter.onSortButtonClicked(view);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     protected void onStart() {
         super.onStart();
-        this.serviceLocator.registerToEventBus(this);
-        try {
-            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            LOGGER.error("onStart in MainActivity threw an IOException", e);
+
+        if (this.serviceLocator == null) {
+            final Intent intent = new Intent(this, EntryActivity.class);
+            this.startActivity(intent);
+        } else {
+            this.serviceLocator.registerToEventBus(this);
+            try {
+                this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+            } catch (final IOException e) {
+                LOGGER.error("onStart in MainActivity threw an IOException", e);
+            }
         }
     }
 
@@ -145,6 +144,15 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
         super.onStop();
+    }
+
+    /**
+     * Switches the sorting mode.
+     *
+     * @param view The sort floating action button that was clicked
+     */
+    public void onSortButtonClicked(final View view) {
+        sorter.onSortButtonClicked(view);
     }
 
     /**

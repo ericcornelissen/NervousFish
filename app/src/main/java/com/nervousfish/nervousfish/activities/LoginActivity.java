@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public final class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final Intent intent = getIntent();
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         final IDatabase database = this.serviceLocator.getDatabase();
@@ -45,6 +46,19 @@ public final class LoginActivity extends AppCompatActivity {
         }
 
         LOGGER.info("LoginActivity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (this.serviceLocator == null) {
+            final Intent intent = new Intent(this, EntryActivity.class);
+            this.startActivity(intent);
+        }
     }
 
     /**
