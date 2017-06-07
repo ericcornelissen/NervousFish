@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
+import com.nervousfish.nervousfish.activities.WaitActivity;
 
 import org.junit.Rule;
 
@@ -57,7 +57,7 @@ public class VisualVerificationSteps {
 
     @Then("^I leave the visual verification activity$")
     public void iLeaveTheVisualVerificationActivity() {
-        intended(hasComponent(MainActivity.class.getName()));
+        intended(hasComponent(WaitActivity.class.getName()));
     }
 
 }

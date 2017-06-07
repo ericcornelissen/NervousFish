@@ -65,10 +65,12 @@ public final class AndroidBluetoothConnectedThread extends Thread {
         final byte[] buffer = new byte[BUFFER_SIZE];
         try {
             // Read from the InputStream
-            final int bytes = inStream.read(buffer);
-            LOGGER.info("Read {} bytes", bytes);
+            while (true) {
+                final int bytes = inStream.read(buffer);
+                LOGGER.info("Read {} bytes", bytes);
 
-            this.dataReceiver.dataReceived(buffer);
+                this.dataReceiver.dataReceived(buffer);
+            }
         } catch (final IOException e) {
             LOGGER.warn("Disconnected from the paired device", e);
             this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());

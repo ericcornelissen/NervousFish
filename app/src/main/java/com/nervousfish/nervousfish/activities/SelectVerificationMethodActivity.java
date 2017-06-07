@@ -7,9 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -20,6 +24,8 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SelectVerificationMethodActivity");
 
+    private IServiceLocator serviceLocator;
+
     /**
      * Creates a new {@link SelectVerificationMethodActivity} activity.
      *
@@ -29,6 +35,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_select_verification_method);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         LOGGER.info("Activity created");
     }
@@ -43,12 +50,22 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
+                try {
+                    this.serviceLocator.getBluetoothHandler().send("visual");
+                } catch (IOException e) {
+                    LOGGER.error("Sending the \"visual\" string went wrong: ", e);
+                }
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 break;
             case R.id.select_rhythm_verification:
                 // TODO: open correct (Rhythm) activity (also update test!)
                 LOGGER.info("Selected rhythm verification method, opening activity");
-                intent.setComponent(new ComponentName(this, WaitForSlaveActivity.class));
+                try {
+                    this.serviceLocator.getBluetoothHandler().send("rhythm");
+                } catch (IOException e) {
+                    LOGGER.error("Sending the \"rhythm\" string went wrong: ", e);
+                }
+                intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
                 break;
             default:
                 LOGGER.warn("unknown verification method selected, view: " + view);
