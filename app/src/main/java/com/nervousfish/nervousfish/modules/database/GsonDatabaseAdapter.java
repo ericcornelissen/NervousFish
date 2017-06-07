@@ -45,9 +45,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_LOADED = "Database is not loaded";
+
     private static final String DATABASE_PATH = "database path";
     private static final String PASSWORD_PATH = "password path";
     private static final String DATABASE = "database";
+    private static final String PUBLIC_KEY = "public key";
+
 
     private final String androidFilesDir;
 
@@ -303,9 +306,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String passwordPath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(PASSWORD_PATH+password);
         databaseMap.put(PASSWORD_PATH, passwordPath);
 
-        //  Encrypt the lockpair
         KeyPair lockpair = keyGenerator.generateRSAKeyPair(DATABASE);
-
+        databaseMap.put(PUBLIC_KEY, lockpair.getPublicKey());
 
 
         final Writer writer = this.fileSystem.getWriter(passwordPath);

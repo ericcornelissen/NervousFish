@@ -11,10 +11,18 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPrivateCrtKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -139,8 +147,67 @@ public final class EncryptedSaver {
         }
     }
 
+    /**
+     * Encrypt data using a public key.
+     * @param text  -   The data to encrypt
+     * @param publicKey -   The public key to encrypt the data with
+     * @return  The encrypted data in String.
+     * @throws IOException  -   Throws an IOException when the key can't be split up correctly
+     */
+    public static String encryptUsingRSA(String text, IKey publicKey) throws IOException {
+        String[] keyComponents = publicKey.getKey().split(" ");
+        if(keyComponents.length > 2) {
+            throw new IOException("Public key can't be split up correctly");
+        }
+        try {
+            RSAPublicKeySpec spec = new RSAPublicKeySpec(new BigInteger(keyComponents[0]), new BigInteger(keyComponents[1]));
 
+            KeyFactory factory = KeyFactory.getInstance("RSA");
+            PublicKey pub = factory.generatePublic(spec);
 
+            final Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, pub);
+            final byte[] cipherText = cipher.doFinal(text.getBytes());
+            return new String(cipherText);
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("Error in generating rsa key factory from components", e);
+        } catch (InvalidKeySpecException e) {
+            LOGGER.error("Error in generating public key from factory and specs", e);
+        } catch (Exception e) {
+            LOGGER.error("Something went wrong encrypting the string", e);
+        }
+        return null;
 
+    }
+
+    /**
+     * Decrypts data using a private key.
+     * @param text  -   The data to decrypt.
+     * @param privateKey    -   The private key to decrypt the data with.
+     * @return  The decrypted data in String
+     * @throws IOException  -   Throws an IOException when the key can't be split up correctly
+     */
+    public static String decryptUsingRSA(String text, IKey privateKey) throws IOException {
+        String[] keyComponents = privateKey.getKey().split(" ");
+        if(keyComponents.length > 2) {
+            throw new IOException("Private key can't be split up correctly");
+        }
+        try {
+            RSAPrivateKeySpec spec = new RSAPrivateKeySpec(new BigInteger(keyComponents[0]), new BigInteger(keyComponents[1]));
+            KeyFactory factory = KeyFactory.getInstance("RSA");
+            PrivateKey priv = factory.generatePrivate(spec);
+            final Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, priv);
+            byte[] decryptedData = cipher.doFinal(text.getBytes());
+            return new String(decryptedData);
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("Error in generating rsa key factory from components", e);
+        } catch (InvalidKeySpecException e) {
+            LOGGER.error("Error in generating private key from factory and specs", e);
+        } catch (Exception e) {
+            LOGGER.error("Something went wrong decrypting the string", e);
+        }
+        return null;
+    }
 
 }
