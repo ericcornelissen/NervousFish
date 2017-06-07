@@ -1,5 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
+        android:id="@+id/unique_tag"
         android:dialogTitle="@string/pref_verification_method_to_use"
         android:key="choose_verification_use_every_time"
         android:summary=""
