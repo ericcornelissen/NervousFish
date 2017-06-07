@@ -46,7 +46,7 @@
     <dimen name="welcome_message_subpart_margin_top">20dp</dimen>
     <dimen name="welcome_message_padding_top">20dp</dimen>
     <dimen name="first_use_logo_padding_top">50dp</dimen>
-    <dimen name="first_use_logo_height">170dp</dimen>
+    <dimen name="first_use_logo_height">200dp</dimen>
 
     <dimen name="ten_padding_start">10dp</dimen>
     <dimen name="ten_padding_end">10dp</dimen>
