@@ -14,6 +14,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class ContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ContactActivity");
+
     private IServiceLocator serviceLocator;
     private Contact contact;
 
@@ -42,7 +44,7 @@ public final class ContactActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_contact);
 
         final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
         ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
@@ -99,7 +101,6 @@ public final class ContactActivity extends AppCompatActivity {
                 return true;
             } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
                 final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 intent.putExtra(ConstantKeywords.CONTACT, contact);
                 ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
                 return true;

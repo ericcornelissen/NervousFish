@@ -17,12 +17,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -81,9 +81,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_bluetooth_connection);
-
-        final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         // Register for broadcasts when a device is discovered.
         final IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -235,6 +233,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * The on-click listener for all devices in the ListViews
      */
     private final class DeviceClickListener implements AdapterView.OnItemClickListener {
+
         /**
          * {@inheritDoc}
          */

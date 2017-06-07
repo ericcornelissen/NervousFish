@@ -21,6 +21,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -46,7 +47,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //      which basically comes down to the same problem as the last
 //  3)  Another suppression based on the same problem as the previous 2
 //  4)  The switch statement for switching sorting Types does not have enough branches, because it is designed
-//      to be extended when necessairy to more sorting Types.
+//      to be extended when necessary to more sorting Types.
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
@@ -68,9 +69,8 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.setContentView(R.layout.activity_main);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
@@ -102,7 +102,6 @@ public final class MainActivity extends AppCompatActivity {
         LOGGER.info("MainActivity created");
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -110,10 +109,12 @@ public final class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-        } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException", e);
+        if (this.serviceLocatorAvailable()) {
+            try {
+                this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+            } catch (final IOException e) {
+                LOGGER.error("onResume in MainActivity threw an IOException", e);
+            }
         }
     }
 
@@ -124,10 +125,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (this.serviceLocator == null) {
-            final Intent intent = new Intent(this, EntryActivity.class);
-            this.startActivity(intent);
-        } else {
+        if (this.serviceLocatorAvailable()) {
             this.serviceLocator.registerToEventBus(this);
             try {
                 this.contacts = this.serviceLocator.getDatabase().getAllContacts();
@@ -142,8 +140,43 @@ public final class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
         super.onStop();
+
+        if (this.serviceLocatorAvailable()) {
+            this.serviceLocator.unregisterFromEventBus(this);
+        }
+    }
+
+    /**
+     * Exit the application when the user taps the back button twice
+     */
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(this.getString(R.string.popup_log_out_title))
+                .setContentText(this.getString(R.string.popup_log_out_description))
+                .setCancelText(this.getString(R.string.no))
+                .setConfirmText(this.getString(R.string.yes))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sDialog) {
+                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
+            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            this.startActivity(intent);
+        }
     }
 
     /**
@@ -166,8 +199,6 @@ public final class MainActivity extends AppCompatActivity {
 
         // Open the correct pairing activity
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-
         switch (view.getId()) {
             case R.id.pairing_menu_bluetooth:
                 final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -200,12 +231,9 @@ public final class MainActivity extends AppCompatActivity {
      */
     void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
-
-
 
     /**
      * Temporarily fill the database with demo data for development.
@@ -277,27 +305,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Exit the application when the user taps the back button twice
-     */
-    @Override
-    public void onBackPressed() {
-        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText(this.getString(R.string.popup_log_out_title))
-                .setContentText(this.getString(R.string.popup_log_out_description))
-                .setCancelText(this.getString(R.string.no))
-                .setConfirmText(this.getString(R.string.yes))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog sDialog) {
-                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                        startActivity(intent);
-                    }
-                })
-                .show();
-    }
-
-    /**
      * Prompt user to enable Bluetooth if it is disabled.
      */
     private void enableBluetooth(final boolean buttonClicked) {
@@ -305,7 +312,6 @@ public final class MainActivity extends AppCompatActivity {
 
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
             final String description;
@@ -340,16 +346,18 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * {@inheritDoc}
+     * Verify if the {@link IServiceLocator} for this instance is set and restart the application
+     * if it is not.
+     *
+     * @return A {@link boolean} indicating if the {@code serviceLocator} is set.
      */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+    private boolean serviceLocatorAvailable() {
+        if (this.serviceLocator == null) {
+            final Intent intent = new Intent(this, EntryActivity.class);
             this.startActivity(intent);
         }
+
+        return this.serviceLocator != null;
     }
 
     List<Contact> getContacts() {

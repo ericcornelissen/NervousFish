@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ public class VisualVerificationActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
     private static final int SECURITY_CODE_LENGTH = 5;
 
-    private IServiceLocator serviceLocator;
     private String securityCode = "";
 
     /**
@@ -33,9 +31,6 @@ public class VisualVerificationActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_visual_verification);
 
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
         LOGGER.info("VisualVerificationActivity created");
     }
 
@@ -45,7 +40,6 @@ public class VisualVerificationActivity extends Activity {
     private void nextActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SECURITY_CODE, this.securityCode);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
 

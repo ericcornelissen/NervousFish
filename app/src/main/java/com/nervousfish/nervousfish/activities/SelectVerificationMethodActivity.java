@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +20,6 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SelectVerificationMethodActivity");
 
-    private IServiceLocator serviceLocator;
-
     /**
      * Creates a new {@link SelectVerificationMethodActivity} activity.
      *
@@ -33,9 +29,6 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_select_verification_method);
-
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         LOGGER.info("Activity created");
     }
@@ -47,8 +40,6 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
      */
     public void openVerificationMethod(final View view) {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-
         switch (view.getId()) {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");

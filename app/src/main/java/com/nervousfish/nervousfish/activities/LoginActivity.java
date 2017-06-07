@@ -7,11 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +24,9 @@ import java.io.IOException;
 public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
-    private String actualPassword;
+
     private IServiceLocator serviceLocator;
+    private String actualPassword;
 
     /**
      * {@inheritDoc}
@@ -34,9 +35,7 @@ public final class LoginActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
-
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         final IDatabase database = this.serviceLocator.getDatabase();
         try {
@@ -104,7 +103,6 @@ public final class LoginActivity extends AppCompatActivity {
      */
     private void toMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 }
