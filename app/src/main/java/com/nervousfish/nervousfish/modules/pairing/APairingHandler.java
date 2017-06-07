@@ -57,8 +57,8 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public void send(final Serializable object) throws IOException {
-        LOGGER.info("Begin writing object");
+    public byte[] objectToBytes(final Serializable object) throws IOException {
+        LOGGER.info("Begin serializing object:" + object);
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
@@ -66,7 +66,7 @@ abstract class APairingHandler implements IPairingHandler {
             oos.flush();
             bytes = bos.toByteArray();
         }
-        send(bytes);
+        return bytes;
     }
 
     protected IServiceLocator getServiceLocator() {

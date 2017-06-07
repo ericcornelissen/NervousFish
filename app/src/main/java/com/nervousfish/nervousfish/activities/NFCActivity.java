@@ -25,29 +25,31 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static android.nfc.NdefRecord.createExternal;
-import static android.nfc.NdefRecord.createMime;
 
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
- *
  */
 public class NFCActivity extends Activity implements CreateNdefMessageCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
-
+    private TextView textView;
     private NfcAdapter nfcAdapter;
     private IServiceLocator serviceLocator;
-    TextView textView;
+    private Contact contact;
+    private byte[] bytes;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        TextView textView = (TextView) findViewById(R.id.textView);
+        final TextView textView = (TextView) findViewById(R.id.textView);
         // Check for available NFC Adapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
@@ -60,11 +62,13 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
             final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
             LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
                     + myProfile.getPublicKey().toString());
-            final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
-            this.serviceLocator.getNFCHandler().send(myProfileAsContact);
+            contact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
+            bytes = this.serviceLocator.getNFCHandler().objectToBytes(contact);
         } catch (IOException e) {
-            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+            LOGGER.error("Could not serialize my contact to other device " + e.getMessage());
         }
+        // Register callback
+        nfcAdapter.setNdefPushMessageCallback(this, this);
     }
 
     /**
@@ -76,16 +80,22 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
         this.finish();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public NdefMessage createNdefMessage(NfcEvent event) {
+    public NdefMessage createNdefMessage(final NfcEvent event) {
 
-        NdefMessage msg = new NdefMessage(
-                new NdefRecord[] { createExternal (
-                        "com.nervousfish", "contact" , this.serviceLocator.getNFCHandler().)
+        final NdefMessage msg = new NdefMessage(
+                new NdefRecord[]{createExternal(
+                        "com.nervousfish", "contact", bytes)
                 });
         return msg;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -95,23 +105,30 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param intent NFC connection intent
+     */
     @Override
-    public void onNewIntent(Intent intent) {
+    public void onNewIntent(final Intent intent) {
         // onResume gets called after this to handle the intent
         setIntent(intent);
     }
 
     /**
      * Parses the NDEF Message from the intent and prints to the TextView
+     * @param intent intent received by this {@link Activity}
      */
-    void processIntent(Intent intent) {
+    final void processIntent(final Intent intent) {
+        LOGGER.info("Started processing intent");
         textView = (TextView) findViewById(R.id.textView);
-        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+        final Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
                 NfcAdapter.EXTRA_NDEF_MESSAGES);
         // only one message sent during the beam
-        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        final NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        textView.setText(new String(msg.getRecords()[0].getPayload()));
+        this.serviceLocator.getNFCHandler().dataReceived(msg.getRecords()[0].getPayload());
+        textView.setText("Contact rececived: " + msg.getRecords()[0].getPayload());
     }
 
     /**

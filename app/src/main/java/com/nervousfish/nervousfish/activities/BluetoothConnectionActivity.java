@@ -199,7 +199,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         try {
             final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
             for (final Contact e : list) {
-                this.bluetoothHandler.send(e);
+                this.bluetoothHandler.send(this.bluetoothHandler.objectToBytes(e));
             }
         } catch (final IOException e) {
             LOGGER.warn("Writing all contacts issued an IOexception", e);

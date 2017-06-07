@@ -11,12 +11,13 @@ import java.io.Serializable;
 interface IPairingHandler extends IModule, Serializable {
 
     /**
-     * Serializes an object and sends it by using the subclass specific method
+     * Serializes an object and returns it's bytes by using the subclass specific method
      *
      * @param object The object to serialize
+     * @return the byte representation of the {@code object}
      * @throws IOException When deserialization goes wrong
      */
-    void send(Serializable object) throws IOException;
+    byte[] objectToBytes(Serializable object) throws IOException;
 
     /**
      * Write the buffer to the world

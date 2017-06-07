@@ -1,11 +1,5 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -17,26 +11,26 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import static android.nfc.NdefRecord.createExternal;
-
 /**
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
-public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
+public final class NFCHandler extends APairingHandler implements INfcHandler {
 
     private static final long serialVersionUID = -6465987636766819498L;
+    private static final Logger LOGGER = LoggerFactory.getLogger("NFCHandler");
+    private final IDataReceiver dataReceiver;
     private IServiceLocator serviceLocator;
-    private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
 
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    private DummyNFCHandler(final IServiceLocator serviceLocator) {
+    private NFCHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         this.serviceLocator = serviceLocator;
         this.serviceLocator.registerToEventBus(this);
+        this.dataReceiver = getDataReceiver().get();
         LOGGER.info("Initialized");
     }
 
@@ -47,15 +41,15 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<DummyNFCHandler> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new DummyNFCHandler(serviceLocator));
+    public static ModuleWrapper<NFCHandler> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new NFCHandler(serviceLocator));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void send(Serializable object) throws IOException {
+    public byte[] objectToBytes(final Serializable object) throws IOException {
         LOGGER.info("Begin writing object");
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -64,25 +58,17 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
             oos.flush();
             bytes = bos.toByteArray();
         }
-        final Profile myProfile;
-        final Contact myProfileAsContact;
-        try {
-            myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
-            myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        NdefMessage msg = new NdefMessage(
-                new NdefRecord[] { createExternal (
-                        "com.nervousfish", "contact" , bytes)
-                });
-
+        return bytes;
     }
 
     @Override
-    public void send(byte[] buffer) {
-        
+    public void send(final byte[] buffer) {
+        // The NFC Handler handles the exchange of bytes in the activity
     }
 
 
+    @Override
+    public void dataReceived(final byte[] bytes) {
+        getDataReceiver().get().dataReceived(bytes);
+    }
 }
