@@ -209,7 +209,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     /**
      * Executes K-means++ clustering on the intervals to divide them into a short and long cluster
      */
-    static final class KMeansClusterHelper {
+    public static final class KMeansClusterHelper {
         private List<Long> intervals;
         private List<Long> clusterCenter1;
         private List<Long> clusterCenter2;
