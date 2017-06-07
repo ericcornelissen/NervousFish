@@ -69,6 +69,23 @@ abstract class APairingHandler implements IPairingHandler {
         send(bytes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void send(final Serializable object, final int key) throws IOException {
+        LOGGER.info("Begin writing object");
+        final byte[] bytes;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(new DataWrapper(object));
+            oos.flush();
+            bytes = bos.toByteArray();
+        }
+        // TODO encrypt the bytes
+        send(bytes);
+    }
+
     protected IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }

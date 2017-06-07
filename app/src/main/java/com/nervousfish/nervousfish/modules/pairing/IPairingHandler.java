@@ -19,6 +19,15 @@ interface IPairingHandler extends IModule, Serializable {
     void send(Serializable object) throws IOException;
 
     /**
+     * Serializes an object, encrypts it with a certain key and sends it by using the subclass specific method
+     *
+     * @param object The object to serialize
+     * @param key    The key to encrypt the message with
+     * @throws IOException When deserialization goes wrong
+     */
+    void send(Serializable object, int key) throws IOException;
+
+    /**
      * Write the buffer to the world
      *
      * @param buffer The bytes to send
