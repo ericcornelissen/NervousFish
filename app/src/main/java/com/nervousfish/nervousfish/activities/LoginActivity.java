@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -25,7 +24,6 @@ public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
 
-    private IServiceLocator serviceLocator;
     private String actualPassword;
 
     /**
@@ -35,29 +33,27 @@ public final class LoginActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
-        this.serviceLocator = NervousFish.getServiceLocator();
 
-        final IDatabase database = this.serviceLocator.getDatabase();
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        final IDatabase database = serviceLocator.getDatabase();
         try {
             this.actualPassword = database.getUserPassword();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve password from database", e);
         }
 
-        LOGGER.info("LoginActivity created");
+        LOGGER.info("Activity created");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (this.serviceLocator == null) {
-            final Intent intent = new Intent(this, EntryActivity.class);
-            this.startActivity(intent);
-        }
+    public void onBackPressed() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
     }
 
     /**
@@ -88,14 +84,6 @@ public final class LoginActivity extends AppCompatActivity {
                 this.toMainActivity();
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     /**

@@ -34,9 +34,7 @@ public final class VisualVerificationActivity extends Activity {
     private Contact dataReceived;
 
     /**
-     * Stuff that needs to be done when the new activity being created.
-     *
-     * @param savedInstanceState The saved state
+     * {@inheritDoc}
      */
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -44,7 +42,29 @@ public final class VisualVerificationActivity extends Activity {
         this.setContentView(R.layout.activity_visual_verification);
         this.serviceLocator = NervousFish.getServiceLocator();
 
-        LOGGER.info("VisualVerificationActivity created");
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        LOGGER.info("Activity stopped");
+
+        super.onStop();
     }
 
     /**
@@ -91,24 +111,6 @@ public final class VisualVerificationActivity extends Activity {
             this.securityCode += button;
             LOGGER.info("code so far: %s", this.securityCode);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.serviceLocator.registerToEventBus(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
     }
 
     /**

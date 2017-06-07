@@ -36,7 +36,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings("PMD.LooseCoupling")
 //We don't want to use 'List' but the implementation 'ArrayList' to prevent errors.
 public final class RhythmCreateActivity extends AppCompatActivity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
@@ -44,6 +46,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private Contact dataReceived;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +62,44 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
         this.doneButton = (Button) this.findViewById(R.id.done_tapping_button);
 
-        LOGGER.info("RhythmActivity started");
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.serviceLocator.unregisterFromEventBus(this);
+
+        LOGGER.info("Activity stopped");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            this.finish();
+        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+            this.finish();
+        }
     }
 
     /**
@@ -122,39 +164,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
-            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-            finish();
-        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
-            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-            finish();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.serviceLocator.registerToEventBus(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
-    }
-
-    /**
      * Called when a new data is received.
      *
      * @param event Contains additional data about the event
@@ -175,4 +184,5 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             dataReceived = contact;
         }
     }
+
 }

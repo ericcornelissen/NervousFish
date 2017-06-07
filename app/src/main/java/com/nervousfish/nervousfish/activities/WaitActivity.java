@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,11 +41,9 @@ public final class WaitActivity extends Activity {
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
 
-        this.serviceLocator.registerToEventBus(this);
-
         final Intent intent = this.getIntent();
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+        this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
         LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
                 + " tapCombination is not null: " + (tapCombination != null));
@@ -55,23 +52,33 @@ public final class WaitActivity extends Activity {
         final TextView waitingMessage = (TextView) findViewById(R.id.waiting_message);
         waitingMessage.setText(message);
 
-        LOGGER.info("WaitActivity created");
-    }
-
-    private void evaluateData() {
-        LOGGER.info("Evaluating data");
-        final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
-        this.startActivity(intent);
+        LOGGER.info("Activity created");
     }
 
     /**
-     * Can be called by a button to cancel the pairing
-     * @param view The view that called this method
+     * {@inheritDoc}
      */
-    public void cancelWaiting(final View view) {
-        setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-        finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        if (this.dataReceived != null && this.tapCombination != null) {
+            evaluateData();
+        }
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        LOGGER.info("Activity stopped");
+
+        super.onStop();
     }
 
     /**
@@ -87,26 +94,6 @@ public final class WaitActivity extends Activity {
             this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
             finish();
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (this.dataReceived != null && this.tapCombination != null) {
-            evaluateData();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
     }
 
     /**
@@ -143,4 +130,24 @@ public final class WaitActivity extends Activity {
             evaluateData();
         }
     }
+
+    /**
+     * Can be called by a button to cancel the pairing
+     * @param view The view that called this method
+     */
+    public void cancelWaiting(final View view) {
+        setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        finish();
+    }
+
+    /**
+     * Evaluate the data received for Bluetooth.
+     */
+    private void evaluateData() {
+        LOGGER.info("Evaluating data");
+        final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        this.startActivity(intent);
+    }
+
 }

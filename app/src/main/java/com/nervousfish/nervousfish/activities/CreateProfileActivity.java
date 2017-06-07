@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
@@ -14,7 +12,6 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
-import com.nervousfish.nervousfish.service_locator.EntryActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -39,18 +36,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText repeatPasswordInput;
 
     /**
-     * Creates the new activity, should only be called by Android.
-     *
-     * @param savedInstanceState The saved state of the previous instance.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
         this.serviceLocator = NervousFish.getServiceLocator();
-
-        final Window window = this.getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Initialize helper class
         final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
@@ -62,20 +54,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
-        LOGGER.info("activity created");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (this.serviceLocator == null) {
-            final Intent intent = new Intent(this, EntryActivity.class);
-            this.startActivity(intent);
-        }
+        LOGGER.info("Activity created");
     }
 
     /**

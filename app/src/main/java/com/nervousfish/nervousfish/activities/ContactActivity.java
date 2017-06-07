@@ -34,28 +34,40 @@ public final class ContactActivity extends AppCompatActivity {
     private Contact contact;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState The saved state of the instance.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_contact);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         final Intent intent = this.getIntent();
-        this.serviceLocator = NervousFish.getServiceLocator();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
         ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
         ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_contact);
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
+        final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 finish();
             }
         });
+
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_FIRST_USER) {
+            this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
+            ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
+        }
     }
 
     /**
@@ -69,18 +81,6 @@ public final class ContactActivity extends AppCompatActivity {
         final MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.edit_contact_menu, popup.getMenu());
         popup.show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_FIRST_USER) {
-            this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
-            ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
-        }
     }
 
     private final class PopupMenuListener implements PopupMenu.OnMenuItemClickListener {

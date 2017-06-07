@@ -55,15 +55,12 @@ public final class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_START = 100;
     private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
 
-    private List<Contact> contacts;
-
     private IServiceLocator serviceLocator;
     private MainActivitySorter sorter;
+    private List<Contact> contacts;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState Don't touch this
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -71,12 +68,15 @@ public final class MainActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_main);
         this.serviceLocator = NervousFish.getServiceLocator();
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+
+        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        // Fill database with demo data
         try {
             if (this.serviceLocator.getDatabase().getAllContacts().isEmpty()) {
                 fillDatabaseWithDemoData();
@@ -86,9 +86,7 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        sorter = new MainActivitySorter(this);
-        sorter.sortOnName();
-
+        // Start Bluetooth
         try {
             this.serviceLocator.getBluetoothHandler().start();
         } catch (NoBluetoothException e) {
@@ -100,45 +98,15 @@ public final class MainActivity extends AppCompatActivity {
             this.enableBluetooth(false);
         }
 
+        // Bluetooth exchange result
         final Intent intent = this.getIntent();
         final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
         this.showSuccessfulBluetoothPopup(successfulBluetooth);
 
-        LOGGER.info("MainActivity created");
-    }
+        // Initialize sorter
+        this.sorter = new MainActivitySorter(this);
 
-    /**
-     * Shows a popup that adding a contact went fine if the boolean
-     * added in the intent is true.
-     *
-     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
-     */
-    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
-        if (successfulBluetooth != null) {
-            final boolean success = (boolean) successfulBluetooth;
-            if (success) {
-                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(this.getString(R.string.contact_added_popup_title))
-                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
-                        .setConfirmText(this.getString(R.string.dialog_ok))
-                        .show();
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-            sorter.sortOnName();
-        } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException", e);
-        }
+        LOGGER.info("Activity created");
     }
 
     /**
@@ -149,11 +117,25 @@ public final class MainActivity extends AppCompatActivity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
 
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         try {
-            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+            final IDatabase database = this.serviceLocator.getDatabase();
+            this.contacts = database.getAllContacts();
+            this.sorter.sortOnName();
         } catch (final IOException e) {
-            LOGGER.error("onStart in MainActivity threw an IOException", e);
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
         }
+
+        LOGGER.info("Activity resumed");
     }
 
     /**
@@ -163,6 +145,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         this.serviceLocator.unregisterFromEventBus(this);
+
+        LOGGER.info("Activity stopped");
     }
 
     /**
@@ -289,6 +273,25 @@ public final class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
+    }
+
+    /**
+     * Shows a popup that adding a contact went fine if the boolean
+     * added in the intent is true.
+     *
+     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
+     */
+    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
+        if (successfulBluetooth != null) {
+            final boolean success = (boolean) successfulBluetooth;
+            if (success) {
+                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(this.getString(R.string.contact_added_popup_title))
+                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
+                        .setConfirmText(this.getString(R.string.dialog_ok))
+                        .show();
+            }
+        }
     }
 
     /**

@@ -27,9 +27,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
 
     /**
-     * Creates a new {@link SelectVerificationMethodActivity} activity.
-     *
-     * @param savedInstanceState state previous instance of this activity
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

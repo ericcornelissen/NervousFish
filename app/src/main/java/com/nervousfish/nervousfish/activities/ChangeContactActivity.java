@@ -28,13 +28,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class ChangeContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
+
     private IServiceLocator serviceLocator;
     private Contact contact;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState The saved state of the instance.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -51,8 +50,10 @@ public final class ChangeContactActivity extends AppCompatActivity {
         ContactActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
         ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
+        final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
+
+        LOGGER.info("Activity created");
     }
 
     /**

@@ -52,9 +52,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private IKey publicKey;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState Don't touch this
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -66,6 +64,22 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         this.publicKey = pair.getPublicKey();
+
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult == null) {
+            LOGGER.error("No scan result in QR Scanner");
+        } else {
+            final String result = scanResult.getContents();
+            addNewContact(result);
+        }
     }
 
     /**
@@ -97,23 +111,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         LOGGER.info("Started scanning QR code");
         final IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
-        LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult == null) {
-            LOGGER.error("No scan result in QR Scanner");
-        } else {
-            final String result = scanResult.getContents();
-            addNewContact(result);
-        }
-
-
     }
 
 

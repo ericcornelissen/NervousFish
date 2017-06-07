@@ -19,7 +19,8 @@
         tools:replace="android:icon,android:theme">
 
         <activity
-            android:name=".service_locator.EntryActivity">
+            android:name=".service_locator.EntryActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
