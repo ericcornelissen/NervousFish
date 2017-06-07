@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.BaseTest;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.FirstUseActivity;
@@ -25,8 +24,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 
 @CucumberOptions(features = "features")
 public class FirstTimeUseSteps {
@@ -40,8 +37,7 @@ public class FirstTimeUseSteps {
     @Given("^I am viewing first time use activity$")
     public void iAmViewingTheFirstUseActivity() throws IOException {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I click on the get started button$")

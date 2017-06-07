@@ -3,14 +3,9 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
-import com.nervousfish.nervousfish.BaseTest;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.WaitForSlaveActivity;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -28,8 +23,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class WaitingForSlaveSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
-
     @Rule
     public ActivityTestRule<WaitForSlaveActivity> mActivityRule =
             new ActivityTestRule<>(WaitForSlaveActivity.class, true, false);
@@ -37,8 +30,7 @@ public class WaitingForSlaveSteps {
     @Given("^I am viewing the waiting for slave activity$")
     public void iAmViewingWaitingForSlaveActivity() {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I press the cancel waiting for slave button$")
