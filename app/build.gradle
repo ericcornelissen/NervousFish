@@ -18,6 +18,10 @@ android {
         testApplicationId "com.nervousfish.nervousfish.test"
         testInstrumentationRunner "com.nervousfish.nervousfish.test.Instrumentation"
         vectorDrawables.useSupportLibrary = true
+
+        jackOptions {
+            enabled true
+        }
     }
 
     sourceSets {
@@ -39,6 +43,10 @@ android {
 
     packagingOptions {
         exclude 'LICENSE.txt'
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
