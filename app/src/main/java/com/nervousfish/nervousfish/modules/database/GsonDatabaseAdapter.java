@@ -197,8 +197,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
-        String databaseGson = gsonParser.toJson(getDatabase());
-
+        String databaseJson = gsonParser.toJson(getDatabase());
+        String encryptedDatabase = EncryptedSaver.encryptUsingRSA(databaseJson, getPublicKey());
+        final Writer writer = this.fileSystem.getWriter(getDatabasePath());
+        writer.write(encryptedDatabase);
+        writer.close();
     }
 
     /**
@@ -392,15 +395,19 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     }
 
+    /**
+     * Gets the publicKey from the databaseMap
+     * @throws IOException throws IOException if the database isn't loaded yet.
+     */
+    private IKey getPublicKey() throws IOException {
+        Object object = databaseMap.get(PUBLIC_KEY);
+        if(object instanceof IKey) {
+            IKey pk = (IKey) object;
+            return pk;
+        } else {
+            throw new IOException(DATABASE_NOT_CREATED);
+        }
 
-    public void saveDatabaseEncrypted() throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Writer writer = this.fileSystem.getWriter(this.getDatabasePath());
-        gsonParser.toJson(this.getDatabase(), writer);
-        writer.close();
     }
-
+    
 }

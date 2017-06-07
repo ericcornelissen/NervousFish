@@ -86,10 +86,4 @@ public interface IDatabase extends IModule {
     void createDatabase(Profile profile, String password) throws IOException;
 
 
-    /**
-     * Saves the database in file encrypted.
-     */
-    void saveDatabaseEncrypted() throws IOException;
-
-
 }
