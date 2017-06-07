@@ -69,6 +69,8 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         publicKey = pair.getPublicKey();
 
+        showQRCode();
+
     }
 
     /**
@@ -86,10 +88,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onShowQRButtonClick(final View view) {
         LOGGER.info("Started generating QR code");
-        final String space = " ";
-        final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
-                + space + publicKey.getKey());
-        showQRCode(qrCode);
+//        showQRCode(qrCode);
     }
 
     /**
@@ -148,25 +147,27 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
 
     /**
-     * Shows the QR Code in an alert dialog popup screen
-     *
-     * @param qrCode The QR code to be shown.
+     * Shows the QR Code in the activity.
      */
     @SuppressLint("InflateParams")
-    private void showQRCode(final Bitmap qrCode) {
+    private void showQRCode() {
 
-        final LayoutInflater li = LayoutInflater.from(this);
-        final View myView = li.inflate(R.layout.qrcode, null);
+        final String space = " ";
+        final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
+                + space + publicKey.getKey());
+//        final LayoutInflater li = LayoutInflater.from(this);
+//        final View myView = li.inflate(R.layout.qrcode, null);
 
-        final ImageView imageView = (ImageView) myView.findViewById(R.id.QR_code_image);
+        final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setView(imageView)
-                .setPositiveButton(getString(R.string.done), new QRCloser());
-
-        ((ViewGroup) imageView.getParent()).removeView(imageView);
-        lastDialog = builder.create();
-        lastDialog.show();
+        imageView.setMaxWidth(30);
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+//                .setView(imageView)
+//                .setPositiveButton(getString(R.string.done), new QRCloser());
+//
+//        ((ViewGroup) imageView.getParent()).removeView(imageView);
+//        lastDialog = builder.create();
+//        lastDialog.show();
     }
 
 

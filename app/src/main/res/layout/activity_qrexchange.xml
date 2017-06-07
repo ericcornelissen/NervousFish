@@ -65,18 +65,29 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <FrameLayout
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
+        android:padding="20dp">
+        <ImageView
+            android:id="@+id/QR_code_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@string/qr_code"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"/>
+    </FrameLayout>
+
     <Button
         android:id="@+id/scan_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onScanButtonClick"
-        android:text="@string/scan_qr_code" />
+        android:text="@string/scan_qr_code"
+        android:drawableStart="@drawable/scan_qr"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
 
-    <Button
-        android:id="@+id/generate_QR_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onShowQRButtonClick"
-
-        android:text="@string/show_qr_code" />
 </LinearLayout>
