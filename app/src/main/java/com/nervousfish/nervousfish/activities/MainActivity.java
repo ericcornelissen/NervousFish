@@ -100,7 +100,8 @@ public final class MainActivity extends AppCompatActivity {
             this.enableBluetooth(false);
         }
 
-        showSuccessfullBluetoothPopup(intent);
+        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
+        this.showSuccessfulBluetoothPopup(successfulBluetooth);
 
         LOGGER.info("MainActivity created");
     }
@@ -109,23 +110,20 @@ public final class MainActivity extends AppCompatActivity {
      * Shows a popup that adding a contact went fine if the boolean
      * added in the intent is true.
      *
-     * @param intent The intent of this Activity
+     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
      */
-    private void showSuccessfullBluetoothPopup(final Intent intent) {
-        if (intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH) != null) {
-
-            final boolean successfulBluetooth = (boolean) intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
-
-            if (successfulBluetooth) {
+    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
+        if (successfulBluetooth != null) {
+            final boolean success = (boolean) successfulBluetooth;
+            if (success) {
                 new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(getString(R.string.contact_added_popup_title))
-                        .setContentText(getString(R.string.contact_added_popup_explanation))
-                        .setConfirmText(getString(R.string.dialog_ok))
+                        .setTitleText(this.getString(R.string.contact_added_popup_title))
+                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
+                        .setConfirmText(this.getString(R.string.dialog_ok))
                         .show();
             }
         }
     }
-
 
     /**
      * {@inheritDoc}
