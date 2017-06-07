@@ -77,7 +77,7 @@ public interface IDatabase extends IModule {
      * @param password
      * @return
      */
-    Database loadDatabase(String password);
+    Database loadDatabase(String password) throws IOException;
 
     /**
      * Saves the database in file encrypted.

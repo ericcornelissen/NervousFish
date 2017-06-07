@@ -18,13 +18,10 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -46,23 +43,27 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_LOADED = "Database is not loaded";
 
+    //  Strings for saving database related objects in the map
     private static final String DATABASE_PATH = "database path";
     private static final String PASSWORD_PATH = "password path";
     private static final String DATABASE = "database";
     private static final String PUBLIC_KEY = "public key";
 
-
     private final String androidFilesDir;
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private static final Type TYPE_DATABASE = new TypeToken<Database>() {
+    }.getType();
+    private static final Type TYPE_KEY_PAIR = new TypeToken<KeyPair>() {
     }.getType();
 
     private final Map<String, Object> databaseMap;
 
     private final IFileSystem fileSystem;
     private final IKeyGenerator keyGenerator;
+
+    private final byte[] ivSpec;
+    private final int randomSeed = 1234569;
 
     /**
      * Prevents construction from outside the class.
@@ -74,7 +75,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
         this.fileSystem = serviceLocator.getFileSystem();
         this.keyGenerator = serviceLocator.getKeyGenerator();
         this.databaseMap = new HashMap<String, Object>();
-        androidFilesDir = serviceLocator.getAndroidFilesDir();
+        this.androidFilesDir = serviceLocator.getAndroidFilesDir();
+        this.ivSpec = EncryptedSaver.generateSalt(randomSeed);
         LOGGER.info("Initialized");
     }
 
@@ -237,13 +239,47 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Database loadDatabase(String password) {
+    public Database loadDatabase(String password) throws IOException {
+        checkPassword(password);
         try {
             initializePassword(password);
             initializeDatabase(password);
         } catch (final IOException e) {
             LOGGER.error("Failed to initialize database", e);
         }
+
+        // Get the keypair from the password file
+        final String passwordPath = getPasswordPath();
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        final Gson gsonParser = gsonBuilder.create();
+
+        final BufferedReader passReader = (BufferedReader) this.fileSystem.getReader(passwordPath);
+        String line;
+        String passwordFileString = "";
+        while((line = passReader.readLine()) != null) {
+            passwordFileString += line;
+        }
+        final String keyPairJson = new String(EncryptedSaver.encryptOrDecryptWithPassword(passwordFileString.getBytes(),
+                password, ivSpec, false));
+        final KeyPair keyPair = gsonParser.fromJson(keyPairJson, TYPE_KEY_PAIR);
+        databaseMap.put(PUBLIC_KEY, keyPair.getPublicKey());
+
+        passReader.close();
+
+        // Get the database from the database file
+        final String databasePath = getDatabasePath();
+        final BufferedReader databaseReader = (BufferedReader) this.fileSystem.getReader(databasePath);
+
+        String databaseFileString = "";
+        while((line = databaseReader.readLine()) != null) {
+            databaseFileString += line;
+        }
+        final String databaseJson = new String(EncryptedSaver.decryptUsingRSA(databaseFileString, keyPair.getPrivateKey()));
+        final Database database = gsonParser.fromJson(databaseJson, TYPE_DATABASE);
+        databaseMap.put(DATABASE, database);
+
+        passReader.close();
+
 
         return null;
     }
@@ -270,13 +306,13 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
 
     /**
-     * Initialize the main database. This does nothing
-     * if the main database already exists.
+     * Initialize the main database. Does nothing when file is present.
      * @param password The password to initialize the database with.
      */
     private void initializeDatabase(String password) throws IOException {
         try {
             getDatabasePath();
+
             return;
         } catch (IOException e) {
             LOGGER.warn("Database isn't initialized yet");
@@ -284,6 +320,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String databasePath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(DATABASE_PATH+password);
         databaseMap.put(DATABASE_PATH, databasePath);
         final Writer writer = this.fileSystem.getWriter(databasePath);
+
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+        String lockpairJson = gsonParser.toJson(lockpair);
         writer.write("[]");
         writer.close();
         LOGGER.info("Created the database: %s", this.getDatabasePath());
@@ -292,8 +332,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
     /**
-     * Initialize the password file with the keys to encrypt the database. This does nothing
-     * if the password file already exists.
+     * Initialize the password file with the keys to encrypt the database. When there's no file yet
+     * it creates a new file and a new keypair. Does nothing when file is present.
      * @param password The password to initialize the database with.
      */
     private void initializePassword(String password) throws IOException {
@@ -309,9 +349,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
         KeyPair lockpair = keyGenerator.generateRSAKeyPair(DATABASE);
         databaseMap.put(PUBLIC_KEY, lockpair.getPublicKey());
 
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+        final Gson gsonParser = gsonBuilder.create();
+        String lockpairJson = gsonParser.toJson(lockpair);
+
 
         final Writer writer = this.fileSystem.getWriter(passwordPath);
-        writer.write("[]");
+        writer.write(new String(EncryptedSaver.encryptOrDecryptWithPassword(lockpairJson.getBytes(),
+                password, ivSpec, true)));
         writer.close();
         LOGGER.info("Created the password file: %s", this.getPasswordPath());
 

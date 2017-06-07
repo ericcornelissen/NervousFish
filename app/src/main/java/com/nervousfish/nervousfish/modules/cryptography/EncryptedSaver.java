@@ -1,15 +1,11 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -20,9 +16,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -30,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public final class EncryptedSaver {
 
-    private static final int SALT_LENGTH = 30;
+    private static final int SALT_LENGTH = 8;
     private static final Logger LOGGER = LoggerFactory.getLogger("QRGenerator");
 
     /**
@@ -42,11 +38,11 @@ public final class EncryptedSaver {
     }
 
     /**
-     * Generates a salt bytestring
+     * Generates a salt bytestring using a seed.
      * @return The salt bytestring.
      */
-    public static byte[] generateSalt() {
-        final SecureRandom random = new SecureRandom();
+    public static byte[] generateSalt(int seed) {
+        final Random random = new Random(seed);
         byte bytes[] = new byte[SALT_LENGTH];
         random.nextBytes(bytes);
         LOGGER.info("Generated salt bytestring");
@@ -100,7 +96,7 @@ public final class EncryptedSaver {
      * Encrypts or decrypts a string with a password to
      * @param toEncrypt The string to be encrypted/decrypted
      * @param password  The password to encrypt/decrypt with
-     * @param ivSpec    The initialization vector specifications bytestring (length 20)
+     * @param ivSpec    The initialization vector specifications bytestring (length 8)
      * @param encrypt   whether we're encrypting or decrypting.
      * @return  The encrypted/decrypted bytearray.
      */
