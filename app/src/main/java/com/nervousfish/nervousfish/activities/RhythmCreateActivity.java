@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
+import com.nervousfish.nervousfish.exceptions.CannotHappenException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -30,17 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * The RhythmCreateActivity is an Activity where you can tap a sequence.
  */
-@SuppressFBWarnings(value = "BC_BAD_CAST_TO_CONCRETE_COLLECTION")
 //List is cast to an ArrayList, but that is needed to put in an intent.
 @SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized"})
 //We don't want to use 'List' but the implementation 'ArrayList' to prevent errors.
 public final class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+    private static final int MINIMUM_TAPS = 3;
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
@@ -93,7 +93,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", myProfile.getName(), myProfile.getPublicKey());
             final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
-            final int encryptionKey = new KMeansClusterHelper().getEncryptionKey(this.taps);
+            final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
@@ -114,7 +114,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
-        this.taps = new ArrayList<>(10);
+        this.taps = new ArrayList<>();
         this.startButton.setVisibility(View.GONE);
         this.stopButton.setVisibility(View.VISIBLE);
         this.doneButton.setVisibility(View.GONE);
@@ -130,10 +130,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.startButton.setVisibility(View.VISIBLE);
         this.stopButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
-        if (this.taps.size() < 3) {
+        if (this.taps.size() < MINIMUM_TAPS) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(this.getString(R.string.too_few_taps_title))
-                    .setContentText(this.getString(R.string.too_few_taps_description))
+                    .setContentText(String.format(this.getString(R.string.too_few_taps_description), MINIMUM_TAPS))
                     .setConfirmText(this.getString(R.string.try_again))
                     .setConfirmClickListener(sweetAlertDialog -> {
                         this.taps.clear();
@@ -198,11 +198,17 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Denotes the cluster to which a certain tap interval belongs
+     */
     private enum Cluster {
         SHORT,
         LONG
     }
 
+    /**
+     * Executes K-means++ clustering on the intervals to divide them into a short and long cluster
+     */
     static final class KMeansClusterHelper {
         private List<Long> intervals;
         private List<Long> clusterCenter1;
@@ -212,6 +218,20 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             // Prevent instantiation from outside the package
         }
 
+        private static List<Long> getIntervals(final List<SingleTap> taps) {
+            final List<Long> intervals = new ArrayList<>(taps.size() - 1);
+            for (int i = 0; i < taps.size() - 1; i++) {
+                intervals.add(taps.get(i + 1).getTimestamp().getTime() - taps.get(i).getTimestamp().getTime());
+            }
+            return intervals;
+        }
+
+        /**
+         * Returns the unique key that corresponds to the taps specified.
+         *
+         * @param taps The taps that should be encoded to a key
+         * @return The unique key that corresponds to the taps
+         */
         int getEncryptionKey(final List<SingleTap> taps) {
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
@@ -231,14 +251,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return this.generateKey(breakpoint);
         }
 
-        private static List<Long> getIntervals(final List<SingleTap> taps) {
-            final List<Long> intervals = new ArrayList<>(taps.size() - 1);
-            for (int i = 0; i < taps.size() - 1; i++) {
-                intervals.add(taps.get(i + 1).getTimestamp().getTime() - taps.get(i).getTimestamp().getTime());
-            }
-            return intervals;
-        }
-
         private long makeAndReturnFirstClusterMean() {
             this.clusterCenter1.add(this.intervals.get(0));
             this.intervals.remove(0);
@@ -252,34 +264,34 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         }
 
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
-            ImmutablePair<Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
-            if (closestPoint.getLeft() == Cluster.SHORT) {
+            final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
+            if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
                 this.clusterCenter1.add(closestPoint.getRight());
-            } else if (closestPoint.getLeft() == Cluster.LONG) {
+            } else if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.LONG) {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
                 LOGGER.error("A timestamp does neither belong to the short or long timestamp");
-                throw new RuntimeException("This cannot happen");
+                throw new CannotHappenException("This cannot happen");
             }
             this.intervals.remove(closestPoint.getRight());
         }
 
-        private ImmutablePair<Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+        private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
-            Cluster targetCluster = null;
+            RhythmCreateActivity.Cluster targetCluster = null;
             for (final Long interval : this.intervals) {
                 final long dist1 = interval - centerMean1;
                 if (dist1 < distance) {
                     closestPoint = interval;
                     distance = dist1;
-                    targetCluster = Cluster.SHORT;
+                    targetCluster = RhythmCreateActivity.Cluster.SHORT;
                 }
                 final long dist2 = centerMean2 - interval;
                 if (dist2 < distance) {
                     closestPoint = interval;
                     distance = dist2;
-                    targetCluster = Cluster.LONG;
+                    targetCluster = RhythmCreateActivity.Cluster.LONG;
                 }
             }
             return new ImmutablePair<>(targetCluster, closestPoint);
@@ -287,12 +299,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         private ImmutablePair<Long, Long> recalculateClusterCenters() {
             long clusterCenterMean1 = 0L;
-            long clusterCenterMean2 = 0L;
-
-            for (Long interval : this.clusterCenter1) {
+            for (final Long interval : this.clusterCenter1) {
                 clusterCenterMean1 += interval;
             }
-            for (Long interval : this.clusterCenter2) {
+
+            long clusterCenterMean2 = 0L;
+            for (final Long interval : this.clusterCenter2) {
                 clusterCenterMean2 += interval;
             }
 
@@ -309,7 +321,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                 if (interval < breakpoint) {
                     counter++;
                 } else {
-                    key += Math.pow(2, counter);
+                    key += StrictMath.pow(2, counter);
                     counter++;
                 }
             }

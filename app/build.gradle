@@ -1,15 +1,19 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'me.tatarka.retrolambda'
 
 apply from: '../config/coverage.gradle'
 apply from: '../config/quality.gradle'
+
+// Decreased the build times leveraging ART without losing the lint checks
+def minSdk = hasProperty('minSdk') ? minSdk : 19
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.nervousfish.nervousfish"
-        minSdkVersion 19
+        minSdkVersion minSdk
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -18,10 +22,6 @@ android {
         testApplicationId "com.nervousfish.nervousfish.test"
         testInstrumentationRunner "com.nervousfish.nervousfish.test.Instrumentation"
         vectorDrawables.useSupportLibrary = true
-
-        jackOptions {
-            enabled true
-        }
     }
 
     sourceSets {

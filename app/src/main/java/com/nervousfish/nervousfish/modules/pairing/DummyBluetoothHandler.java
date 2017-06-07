@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * A Bluetooth handler without implementation, needed because Bluetooth is unavailable on the emulator
@@ -57,18 +56,8 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public void send(final Serializable object) throws IOException {
-        // Do nothing
-    }
-
-    @Override
     public void send(final byte[] buffer) {
         // Do nothing
-    }
-
-    @Override
-    public PairingWrapper getDataReceiver() {
-        return new PairingWrapper<>(new DataReceiver());
     }
 
     /**
@@ -78,7 +67,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ensureClassInvariant();
+        this.ensureClassInvariant();
     }
 
     /**
@@ -95,12 +84,5 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     private void ensureClassInvariant() {
         // No checks to perform
-    }
-
-    private static class DataReceiver implements IDataReceiver {
-        @Override
-        public void dataReceived(final byte[] bytes) {
-            throw new UnsupportedOperationException("Sending data with Bluetooth is not implemented yet");
-        }
     }
 }
