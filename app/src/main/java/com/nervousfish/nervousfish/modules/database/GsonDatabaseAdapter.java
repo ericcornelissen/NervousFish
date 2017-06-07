@@ -84,9 +84,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
+        LOGGER.info("Adding new contact with name: " + contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
         }
+        LOGGER.info("Contact added");
 
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);

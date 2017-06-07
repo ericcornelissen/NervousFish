@@ -54,6 +54,9 @@
     <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
 
     <!-- Hoofdscherm -->
+    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
+    <string name="contact_added_popup_explanation">De uitwisseling via Bluetooth was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
+
     <string name="popup_log_out_title">Uitloggen?</string>
     <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
     <string name="popup_enable_bluetooth_title">Bluetooth aanzetten?</string>
@@ -63,6 +66,11 @@
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>
     <string name="login_password_mismatch">Het wachtwoord is verkeerd</string>
+
+    <!-- Ritme -->
+    <string name="tap_me">Tik hier!</string>
+    <string name="stop_recording">Stop met opnemen</string>
+    <string name="start_recording">Start met opnemen</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
@@ -88,4 +96,9 @@
     <string name="show_qr_code">Toon QR code</string>
     <string name="contact_set_name">Geef contact een naam</string>
     <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
+
+    <!-- WaitActivity -->
+    <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
+    <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
+
 </resources>

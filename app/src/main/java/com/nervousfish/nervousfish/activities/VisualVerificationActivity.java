@@ -7,21 +7,30 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
  */
-public class VisualVerificationActivity extends Activity {
+public final class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
     private static final int SECURITY_CODE_LENGTH = 5;
 
     private IServiceLocator serviceLocator;
     private String securityCode = "";
+    private Contact dataReceived;
 
     /**
      * Stuff that needs to be done when the new activity being created.
@@ -43,10 +52,24 @@ public class VisualVerificationActivity extends Activity {
      * Go to the next activity and provide it with the generated pattern.
      */
     private void nextActivity() {
-        final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SECURITY_CODE, this.securityCode);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        this.startActivity(intent);
+        LOGGER.info("Done tapping the VisualVerification");
+        try {
+            final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
+
+            LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
+                    + myProfile.getPublicKey().toString());
+            final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
+            this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
+        } catch (IOException e) {
+            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+        }
+
+        final Intent intent = new Intent(this, WaitActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
+        intent.putExtra(ConstantKeywords.TAP_DATA, securityCode);
+        this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
     /**
@@ -67,6 +90,46 @@ public class VisualVerificationActivity extends Activity {
         } else {
             this.securityCode += button;
             LOGGER.info("code so far: %s", this.securityCode);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        super.onStop();
+    }
+
+    /**
+     * Called when a new data is received.
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        if (event.getClazz().equals(Contact.class)) {
+            final Contact contact = (Contact) event.getData();
+            try {
+                LOGGER.info("Adding contact to database...");
+                this.serviceLocator.getDatabase().addContact(contact);
+            } catch (IOException | IllegalArgumentException e) {
+                LOGGER.error("Couldn't get contacts from database", e);
+            }
+
+            //This needs to be outside of the try catch block
+            this.dataReceived = contact;
         }
     }
 
