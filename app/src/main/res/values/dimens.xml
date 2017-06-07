@@ -45,17 +45,12 @@
     <dimen name="welcome_message_subpart_width">300dp</dimen>
     <dimen name="welcome_message_subpart_margin_top">20dp</dimen>
     <dimen name="welcome_message_padding_top">20dp</dimen>
-    <dimen name="first_use_logo_padding_top">50dp</dimen>
-    <dimen name="first_use_logo_height">200dp</dimen>
+    <dimen name="first_use_logo_height">175dp</dimen>
 
-    <dimen name="ten_padding_start">10dp</dimen>
-    <dimen name="ten_padding_end">10dp</dimen>
     <dimen name="submit_text_size">18sp</dimen>
 
     <dimen name="field_margin_top">20dp</dimen>
-
-    <dimen name="create_profile_message_width">300dp</dimen>
-    <dimen name="create_profile_message_margin_top">20dp</dimen>
+    
     <dimen name="create_profile_message_size">19sp</dimen>
 
     <dimen name="select_verification_method_title_padding">20dp</dimen>
