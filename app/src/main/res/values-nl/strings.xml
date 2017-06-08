@@ -27,7 +27,6 @@
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
-    <string name="contact_already_exists">Contact bestaat al</string>
     <string name="discovered_devices">Gevonden apparaten</string>
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
@@ -92,8 +91,6 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="contact_set_name">Geef contact een naam</string>
-    <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>

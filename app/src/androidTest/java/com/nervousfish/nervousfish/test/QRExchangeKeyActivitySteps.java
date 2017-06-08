@@ -63,43 +63,4 @@ public class QRExchangeKeyActivitySteps {
     public void iShouldReturnFromTheQRExchangeKeyActivity() {
         assertTrue(mActivityRule.getActivity().isDestroyed());
     }
-
-
-    private class EspressoTestsMatchers {
-
-        public Matcher<View> withDrawable(final Bitmap resource) {
-            return new DrawableMatcher(resource);
-        }
-
-    }
-
-    private static class DrawableMatcher extends TypeSafeMatcher<View> {
-
-
-        private final Bitmap expected;
-
-        public DrawableMatcher(Bitmap expected) {
-            super(View.class);
-            this.expected = expected;
-        }
-
-        @Override
-        protected boolean matchesSafely(View target) {
-            if (!(target instanceof ImageView)){
-                return false;
-            }
-            ImageView imageView = (ImageView) target;
-
-
-            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
-            return bitmap.sameAs(expected);
-        }
-
-
-        @Override
-        public void describeTo(Description description) {
-
-        }
-    }
 }

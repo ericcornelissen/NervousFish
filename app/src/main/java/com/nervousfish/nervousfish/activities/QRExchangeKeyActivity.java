@@ -2,17 +2,11 @@ package com.nervousfish.nervousfish.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -21,10 +15,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -32,9 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 
 /**
  * An {@link Activity} that is used for pairing using QR codes
@@ -50,7 +38,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private IServiceLocator serviceLocator;
-    private AlertDialog lastDialog;
     private Profile profile;
 
     /**
@@ -150,6 +137,5 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
-        imageView.setMaxWidth(30);
     }
 }

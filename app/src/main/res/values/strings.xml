@@ -26,7 +26,6 @@
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
-    <string name="contact_already_exists">Contact already exists</string>
     <string name="discovered_devices">Discovered devices</string>
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
@@ -91,8 +90,6 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="contact_set_name">Give contact a name</string>
-    <string name="contact_exists_message">Contact already exists, please give a unique value</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
