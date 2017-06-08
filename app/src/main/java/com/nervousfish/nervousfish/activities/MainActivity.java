@@ -18,7 +18,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -78,7 +78,9 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         try {
-            fillDatabaseWithDemoData();
+            if (this.serviceLocator.getDatabase().getAllContacts().isEmpty()) {
+                fillDatabaseWithDemoData();
+            }
             this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
@@ -98,9 +100,30 @@ public final class MainActivity extends AppCompatActivity {
             this.enableBluetooth(false);
         }
 
+        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
+        this.showSuccessfulBluetoothPopup(successfulBluetooth);
+
         LOGGER.info("MainActivity created");
     }
 
+    /**
+     * Shows a popup that adding a contact went fine if the boolean
+     * added in the intent is true.
+     *
+     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
+     */
+    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
+        if (successfulBluetooth != null) {
+            final boolean success = (boolean) successfulBluetooth;
+            if (success) {
+                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(this.getString(R.string.contact_added_popup_title))
+                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
+                        .setConfirmText(this.getString(R.string.dialog_ok))
+                        .show();
+            }
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -110,6 +133,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onResume();
         try {
             this.contacts = serviceLocator.getDatabase().getAllContacts();
+            sorter.sortOnName();
         } catch (final IOException e) {
             LOGGER.error("onResume in MainActivity threw an IOException", e);
         }
@@ -165,7 +189,6 @@ public final class MainActivity extends AppCompatActivity {
                 final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (bluetoothAdapter.isEnabled()) {
                     intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
-                    this.startActivity(intent);
                 } else {
                     this.enableBluetooth(true);
                     return; // Prevent `this.startActivity()`
@@ -236,47 +259,18 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when a new contact is received
+     * Called when a Bluetooth connection is established.
      *
      * @param event Contains additional data about the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called");
-        if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Checking if the contact exists...");
-                if (checkExists(contact)) {
-                    LOGGER.warn("Contact already existed...");
-                } else {
-                    LOGGER.info("Adding contact to database...");
-                    this.serviceLocator.getDatabase().addContact(contact);
-                    this.contacts = this.serviceLocator.getDatabase().getAllContacts();
-                    sorter.sortOnName();
-                }
-            } catch (IOException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
-        }
-    }
+    public void onNewBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
+        LOGGER.info("onNewBluetoothConnectedEvent called");
 
-    /**
-     * Checks if a name of a given contact exists in the database.
-     *
-     * @param contact A contact object
-     * @return true when a contact with the same exists in the database
-     * @throws IOException When database fails to respond
-     */
-    private boolean checkExists(final Contact contact) throws IOException {
-        final String name = contact.getName();
-        final List<Contact> list = this.serviceLocator.getDatabase().getAllContacts();
-        for (final Contact e : list) {
-            if (e.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        final Intent intent = new Intent(this, WaitActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+        this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
     /**

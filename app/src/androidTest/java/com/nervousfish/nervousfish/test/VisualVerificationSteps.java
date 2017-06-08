@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
+import com.nervousfish.nervousfish.activities.WaitActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
@@ -63,7 +64,7 @@ public class VisualVerificationSteps {
 
     @Then("^I leave the visual verification activity$")
     public void iLeaveTheVisualVerificationActivity() {
-        intended(hasComponent(MainActivity.class.getName()));
+        intended(hasComponent(WaitActivity.class.getName()));
     }
 
 }
