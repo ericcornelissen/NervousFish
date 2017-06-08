@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.activities;
 
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,16 +51,18 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
                 LOGGER.info("Preference changed at the display name");
                 updateDisplayName(preference, stringValue);
+                return true;
             } else if (preference instanceof ListPreference) {
                 LOGGER.info("Preference changed for a ListPreference");
                 updateListPreference(preference, stringValue);
+                return true;
             } else {
                 LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
+                return true;
             }
-            return true;
         }
 
         /**
@@ -233,7 +236,9 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(final MenuItem item) {
             final int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                final Activity activity = this.getActivity();
+                final Intent intent = new Intent(activity, SettingsActivity.class); // Needed bacause we're in a Fragment
+                startActivity(intent);
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -262,7 +267,9 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(final MenuItem item) {
             final int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                final Activity activity = this.getActivity();
+                final Intent intent = new Intent(activity, SettingsActivity.class); // Needed bacause we're in a Fragment
+                startActivity(intent);
                 return true;
             }
             return super.onOptionsItemSelected(item);
