@@ -10,14 +10,24 @@ import java.io.Serializable;
  * Carries the verification method to use.
  */
 public class VerificationMethod implements Serializable {
-    private final VerificationMethodEnum verificationMethod;
+    private static final long serialVersionUID = 6711854169751606007L;
+    private final VerificationMethodEnum verificationMethodEnum;
 
-    public VerificationMethod(final VerificationMethodEnum verificationMethod) {
-        this.verificationMethod = verificationMethod;
+    /**
+     * Creates and initializes a VerificationMethod.
+     *
+     * @param verificationMethodEnum The verification method this object should represent.
+     */
+    public VerificationMethod(final VerificationMethodEnum verificationMethodEnum) {
+        this.verificationMethodEnum = verificationMethodEnum;
     }
 
+    /**
+     * Returns the Verification method represent by this object.
+     * @return The {@link VerificationMethodEnum}
+     */
     public VerificationMethodEnum getVerificationMethod() {
-        return verificationMethod;
+        return verificationMethodEnum;
     }
 
     /**
