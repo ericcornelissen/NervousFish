@@ -138,13 +138,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                     .setContentText(this.getString(R.string.too_few_taps_description))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
-            /*new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(this.getString(R.string.too_few_taps_title))
-                    .setContentText(String.format(this.getString(R.string.too_few_taps_description), MINIMUM_TAPS))
-                    .setConfirmText(this.getString(R.string.try_again))
-                    .setConfirmClickListener(sweetAlertDialog -> {
-                    })
-                    .show();*/
         }
     }
 
@@ -339,19 +332,4 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return (firstLongInterval - lastShortInterval) / 2 + lastShortInterval;
         }
     }
-
-    /**
-     * Greenrobot's EventBus message event
-     *
-     * Sent when the user tapped the screen too few times before submitting
-     */
-    public static final class TooFewTapsEvent {
-
-        /**
-         * Constructs a new TooFewTapsEvent
-         */
-        TooFewTapsEvent() {
-        }
-    }
-
 }
