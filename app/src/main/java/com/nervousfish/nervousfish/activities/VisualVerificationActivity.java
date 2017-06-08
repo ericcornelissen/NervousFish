@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Example activity to verify identity in Bluetooth connections.
+ * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
  */
-public class VisualVerificationActivity extends Activity {
+public final class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
     private static final int SECURITY_CODE_LENGTH = 5;
@@ -40,7 +40,7 @@ public class VisualVerificationActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.visual_verification);
+        this.setContentView(R.layout.activity_visual_verification);
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -48,16 +48,6 @@ public class VisualVerificationActivity extends Activity {
         LOGGER.info("VisualVerificationActivity created");
     }
 
-
-    /**
-     * Gets triggered when the done button is clicked.
-     *
-     * @param v - the {@link View} clicked
-     */
-    public void onDoneCreatingRhythmClick(final View v) {
-
-
-    }
     /**
      * Go to the next activity and provide it with the generated pattern.
      */
@@ -103,12 +93,18 @@ public class VisualVerificationActivity extends Activity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);

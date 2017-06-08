@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,10 +17,11 @@
             android:id="@+id/image_view_visual_verification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/example_overlay"
+            android:src="@drawable/visualverification_farm"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            tools:ignore="ContentDescription" /> <!-- Overlay doesn't need description, not relevant for people with bad eyesight -->
     </RelativeLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -36,7 +37,10 @@
             android:layout_weight="1"
             android:contentDescription="A"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
+
         <Button
             android:id="@+id/visual_verification_button01"
             android:layout_height="match_parent"
@@ -44,7 +48,9 @@
             android:layout_weight="1"
             android:contentDescription="B"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button02"
             android:layout_height="match_parent"
@@ -52,7 +58,9 @@
             android:layout_weight="1"
             android:contentDescription="C"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -69,7 +77,9 @@
             android:layout_weight="1"
             android:contentDescription="D"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button11"
             android:layout_height="match_parent"
@@ -77,7 +87,9 @@
             android:layout_weight="1"
             android:contentDescription="E"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button12"
             android:layout_height="match_parent"
@@ -85,7 +97,9 @@
             android:layout_weight="1"
             android:contentDescription="F"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -102,7 +116,9 @@
             android:layout_weight="1"
             android:contentDescription="G"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button21"
             android:layout_height="match_parent"
@@ -110,7 +126,9 @@
             android:layout_weight="1"
             android:contentDescription="H"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button22"
             android:layout_height="match_parent"
@@ -118,7 +136,9 @@
             android:layout_weight="1"
             android:contentDescription="I"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -134,7 +154,9 @@
             android:layout_weight="1"
             android:contentDescription="J"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button31"
             android:layout_height="match_parent"
@@ -142,7 +164,9 @@
             android:layout_weight="1"
             android:contentDescription="K"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:id="@+id/visual_verification_button32"
             android:layout_height="match_parent"
@@ -150,6 +174,8 @@
             android:layout_weight="1"
             android:contentDescription="L"
             android:onClick="buttonAction"
-            android:background="@drawable/visual_verification_button" />
+            android:background="@drawable/visual_verification_button"
+            tools:ignore="HardcodedText"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 </android.support.percent.PercentRelativeLayout>

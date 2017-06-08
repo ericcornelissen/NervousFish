@@ -24,23 +24,23 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * The RhythmCreateActivity is an Activity where you can tap a sequence.
  */
-//List is cast to an ArrayList, but that is needed to put in an intent
 @SuppressFBWarnings(value = "BC_BAD_CAST_TO_CONCRETE_COLLECTION")
+//List is cast to an ArrayList, but that is needed to put in an intent.
+@SuppressWarnings("PMD.LooseCoupling")
+//We don't want to use 'List' but the implementation 'ArrayList' to prevent errors.
 public final class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
-    private List<SingleTap> tapCombination;
+    private ArrayList<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
-    //TODO: change contact into an encrypted string of bytes
     private Contact dataReceived;
 
     @Override
@@ -49,10 +49,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhythm_create);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_create_rhythm);
         setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
@@ -109,11 +105,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
         tapCombination = new ArrayList<>();
-
         startButton.setVisibility(View.GONE);
-
         stopButton.setVisibility(View.VISIBLE);
-
         doneButton.setVisibility(View.GONE);
     }
 
@@ -124,11 +117,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
-
         startButton.setVisibility(View.VISIBLE);
-
         stopButton.setVisibility(View.GONE);
-
         doneButton.setVisibility(View.VISIBLE);
     }
 
@@ -156,6 +146,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.serviceLocator.registerToEventBus(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);

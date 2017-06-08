@@ -29,7 +29,8 @@ import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_L
 import static com.nervousfish.nervousfish.modules.pairing.BluetoothState.STATE_NONE;
 
 /**
- * Runs on the background and accepts incoming Bluetooth pairing requests
+ * Runs on the background and accepts incoming Bluetooth pairing requests. It also progresses the Bluetooth
+ * state by managing the start and stopping of the Bluetooth threads.
  */
 // Suppressed because we cannot reduce the threads and events that it needs to run
 // NullAssignment suppressed, because assigning null to bluetooth threads is the recommended way

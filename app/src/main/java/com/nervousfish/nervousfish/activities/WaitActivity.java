@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -20,12 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
- * to complete the pairing session.
+ * to complete the pairing session. Via this Activity the verification method
+ * is started. Lastly, this activity evaluates the received data with the tap combination
+ * created by our own device.
  */
 public final class WaitActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
@@ -60,15 +59,11 @@ public final class WaitActivity extends Activity {
     }
 
     private void evaluateData() {
-        //TODO: check if when we decrypt the dataReceived with the tapCombination that we get a normal contact
         LOGGER.info("Evaluating data");
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
         this.startActivity(intent);
-        //setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-        //finish();
-
     }
 
     /**
@@ -101,7 +96,7 @@ public final class WaitActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (this.dataReceived != null && tapCombination != null) {
+        if (this.dataReceived != null && this.tapCombination != null) {
             evaluateData();
         }
     }
