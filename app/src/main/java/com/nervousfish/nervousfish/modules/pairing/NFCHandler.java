@@ -19,7 +19,6 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
 
     private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCHandler");
-    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -28,8 +27,6 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
      */
     private NFCHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        this.serviceLocator = serviceLocator;
-        this.serviceLocator.registerToEventBus(this);
         LOGGER.info("Initialized");
     }
 

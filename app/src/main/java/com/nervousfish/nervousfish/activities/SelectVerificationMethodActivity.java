@@ -55,7 +55,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
                 try {
-                    this.serviceLocator.getBluetoothHandler().send("visual");
+                    this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes("visual"));
                 } catch (IOException e) {
                     LOGGER.error("Sending the \"visual\" string went wrong: ", e);
                 }
@@ -65,7 +65,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
                 // TODO: open correct (Rhythm) activity (also update test!)
                 LOGGER.info("Selected rhythm verification method, opening activity");
                 try {
-                    this.serviceLocator.getBluetoothHandler().send("rhythm");
+                    this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes("rhythm"));
                 } catch (IOException e) {
                     LOGGER.error("Sending the \"rhythm\" string went wrong: ", e);
                 }

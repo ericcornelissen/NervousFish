@@ -88,11 +88,10 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
     @Override
     public NdefMessage createNdefMessage(final NfcEvent event) {
 
-        final NdefMessage msg = new NdefMessage(
+        return new NdefMessage(
                 new NdefRecord[]{createExternal(
-                        "com.nervousfish", "contact", bytes)
+                        "com.nervousfish.nervousfish", "contact", bytes)
                 });
-        return msg;
     }
 
     /**

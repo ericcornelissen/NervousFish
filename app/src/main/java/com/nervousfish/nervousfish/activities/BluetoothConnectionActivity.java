@@ -28,7 +28,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,11 +55,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * Used to fill the listview of newly discovered Bluetooth devices
      */
     private ArrayAdapter<String> newDevicesArrayAdapter;
-    /**
-     * Used to fill the listview of paired Bluetooth devices
-     */
-    private ArrayAdapter<String> pairedDevicesArrayAdapter;
-
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -74,6 +68,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         }
 
     };
+    /**
+     * Used to fill the listview of paired Bluetooth devices
+     */
+    private ArrayAdapter<String> pairedDevicesArrayAdapter;
 
     /**
      * {@inheritDoc}
