@@ -14,12 +14,12 @@ import java.io.Serializable;
 /**
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
+@SuppressWarnings("PMD.SingularField") // it's the serviceLocator, which isn't being used yet
 public final class NFCHandler extends APairingHandler implements INfcHandler {
 
     private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCHandler");
-    private final IDataReceiver dataReceiver;
-    private IServiceLocator serviceLocator;
+    private final IServiceLocator serviceLocator;
 
     /**
      * Prevents construction from outside the class.
@@ -30,7 +30,6 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
         super(serviceLocator);
         this.serviceLocator = serviceLocator;
         this.serviceLocator.registerToEventBus(this);
-        this.dataReceiver = getDataReceiver().get();
         LOGGER.info("Initialized");
     }
 

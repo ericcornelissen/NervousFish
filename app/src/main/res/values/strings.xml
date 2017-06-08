@@ -85,4 +85,7 @@
     <string name="show_qr_code">Show QR code</string>
     <string name="contact_set_name">Give contact a name</string>
     <string name="contact_exists_message">Contact already exists, please give a unique value</string>
+
+    <!-- NFC -->
+    <string name="descr_gif">This should be a gif representing nfc usage.</string>
 </resources>
