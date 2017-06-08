@@ -51,11 +51,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     private final Object lock = new Object();
     private BluetoothState state = STATE_NONE;
     @Nullable
-    private AndroidBluetoothConnectThread connectThread;
-    @Nullable
-    private AndroidBluetoothAcceptThread acceptThread;
-    @Nullable
-    private AndroidBluetoothConnectedThread connectedThread;
+    private IBluetoothThread bluetoothThread;
     private IServiceLocator serviceLocator;
 
     /**
@@ -83,29 +79,21 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     public void start() throws IOException {
         LOGGER.info("Bluetooth service starting...");
 
-        synchronized (this.lock) {
-            // Cancel any thread attempting to make a connection
-            if (this.connectThread != null) {
-                this.connectThread.cancel(true);
-                this.connectThread = null;
-            }
-
-            // Cancel any thread currently running a connection
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
-            }
-
-            // Start the thread to listen on a BluetoothServerSocket
-            if (this.acceptThread == null) {
+        if (this.state == STATE_LISTEN) {
+            LOGGER.warn("Bluetooth Service was already listening");
+        } else {
+            synchronized (this.lock) {
+                // Cancel any running thread
+                if (this.bluetoothThread != null) {
+                    this.bluetoothThread.cancel(true);
+                }
                 this.state = STATE_LISTEN;
-                this.acceptThread = new AndroidBluetoothAcceptThread(this.serviceLocator);
-                this.acceptThread.start();
+                this.bluetoothThread = new AndroidBluetoothAcceptThread(this.serviceLocator);
+                this.bluetoothThread.start();
                 this.serviceLocator.postOnEventBus(new BluetoothListeningEvent());
             }
+            LOGGER.info("Bluetooth service started");
         }
-
-        LOGGER.info("Bluetooth service started");
     }
 
     /**
@@ -116,22 +104,15 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         LOGGER.info("Connect Bluetooth thread initialized");
 
         synchronized (this.lock) {
-            // Cancel any thread attempting to make a connection
-            if (this.state == STATE_CONNECTING && this.connectThread != null) {
-                this.connectThread.cancel(true);
-                this.connectThread = null;
-            }
-
-            // Cancel any thread currently running a connection
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
+            // Cancel any running thread
+            if (this.bluetoothThread != null) {
+                this.bluetoothThread.cancel(true);
             }
 
             this.state = STATE_CONNECTING;
             // Start the thread to connect with the given device
-            this.connectThread = new AndroidBluetoothConnectThread(this.serviceLocator, device);
-            this.connectThread.start();
+            this.bluetoothThread = new AndroidBluetoothConnectThread(this.serviceLocator, device);
+            this.bluetoothThread.start();
             this.serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
         }
     }
@@ -146,29 +127,16 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         LOGGER.info("onBluetoothAlmostConnectedEvent called");
 
         synchronized (this.lock) {
-            // Cancel the thread that completed the connection
-            if (this.connectThread != null) {
-                this.connectThread.cancel(false);
-                this.connectThread = null;
-            }
-
-            // Cancel any thread currently running a connection
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
-            }
-
-            // Cancel the accept thread because we only want to connect to one device
-            if (this.acceptThread != null) {
-                this.acceptThread.cancel();
-                this.acceptThread = null;
+            // Cancel the running thread, namely the ConnectThread
+            if (this.bluetoothThread != null) {
+                this.bluetoothThread.cancel(true);
             }
 
             this.state = STATE_CONNECTED;
             // Start the thread to manage the connection and perform transmissions
-            this.connectedThread = new AndroidBluetoothConnectedThread(this.serviceLocator, event.getSocket());
-            this.connectedThread.start();
-            this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(this.connectedThread));
+            this.bluetoothThread = new AndroidBluetoothConnectedThread(this.serviceLocator, event.getSocket());
+            this.bluetoothThread.start();
+            this.serviceLocator.postOnEventBus(new BluetoothConnectedEvent(this.bluetoothThread));
         }
         LOGGER.info("Connected Bluetooth thread started");
     }
@@ -181,19 +149,9 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         LOGGER.info("Bluetooth service stopped");
 
         synchronized (this.lock) {
-            if (this.connectThread != null) {
-                this.connectThread.cancel(true);
-                this.connectThread = null;
-            }
-
-            if (this.connectedThread != null) {
-                this.connectedThread.cancel();
-                this.connectedThread = null;
-            }
-
-            if (this.acceptThread != null) {
-                this.acceptThread.cancel();
-                this.acceptThread = null;
+            // Cancel the running thread, namely the ConnectThread
+            if (this.bluetoothThread != null) {
+                this.bluetoothThread.cancel(true);
             }
 
             this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
@@ -210,12 +168,11 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
         final AndroidBluetoothConnectedThread ready;
         // Synchronize a copy of the AndroidBluetoothConnectedThread
         synchronized (this.lock) {
-            if (this.state != STATE_CONNECTED || this.connectedThread == null) {
+            if (this.state != STATE_CONNECTED || this.bluetoothThread == null) {
                 return;
             }
-            ready = this.connectedThread;
+            ready = (AndroidBluetoothConnectedThread) this.bluetoothThread;
         }
-        // Perform the write unsynchronized
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Write bytes: {}", Arrays.toString(output));
         }

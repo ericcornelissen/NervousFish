@@ -21,7 +21,7 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  * like a server-side client. It runs until a connection is accepted
  * (or until cancelled).
  */
-final class AndroidBluetoothAcceptThread {
+final class AndroidBluetoothAcceptThread implements IBluetoothThread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothAcceptThread");
     // The local server socket
     private final BluetoothServerSocket serverSocket;
@@ -44,21 +44,24 @@ final class AndroidBluetoothAcceptThread {
     }
 
     /**
-     * Starts the thread.
+     * {@inheritDoc}
      */
-    void start() {
+    @Override
+    public void start() {
         this.thread.start();
     }
 
     /**
-     * Cancels the current accepting of the pairing request of other Bluetooth devices
+     * {@inheritDoc}
      */
-    void cancel() {
+    @Override
+    public void cancel(final boolean closeSocket) {
         LOGGER.warn("Cancelled!");
         try {
             this.serverSocket.close();
+            LOGGER.info("Server socket closed");
         } catch (final IOException e) {
-            LOGGER.warn("Server failed or closed", e);
+            LOGGER.warn("Closing the server socket failed or closed", e);
         }
     }
 
