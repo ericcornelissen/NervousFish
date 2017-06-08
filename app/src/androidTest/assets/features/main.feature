@@ -13,13 +13,25 @@ Feature: Main Activity
     And I verify that I do not want to log out
     Then I should stay in the main activity after pressing back
 
+  Scenario Outline: Clicking on a contact in the list of contacts
+    Given there is a contact with the name <name> in the database
+    And I am viewing the main activity
+    When I click on the contact with the name <name>
+    Then I should go to the contact activity from main
+
+    Examples:
+      | name     |
+      | Henk     |
+      | Zoidberg |
+      | Dr. Evil |
+
   Scenario: Clicking the QR button
       Given I am viewing the main activity
       When I click open buttons with the plus
       And I click the button with the QR icon
       Then I should go to the QR activity from main
 
-  Scenario: Clicking the QR button text
+  Scenario: Clicking the QR button label
         Given I am viewing the main activity
         When I click open buttons with the plus
         And I click the button with the QR text label
