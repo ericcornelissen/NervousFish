@@ -50,7 +50,7 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        textView = (TextView) findViewById(R.id.textView);
+        textView = (TextView) findViewById(R.id.nfc_instruction);
         // Check for available NFC Adapter
         final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
@@ -59,7 +59,7 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
             return;
         }
         LOGGER.info("Start creating an NDEF message to beam");
-        Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) findViewById(R.id.gif));
+        Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) findViewById(R.id.nfc_gif));
         try {
             final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
             LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "

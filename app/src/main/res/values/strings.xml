@@ -102,5 +102,6 @@
 
     <!-- NFC -->
     <string name="descr_gif">This should be a gif representing nfc usage.</string>
+    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
 
 </resources>
