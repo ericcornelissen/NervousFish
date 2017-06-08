@@ -63,14 +63,13 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-
-        //TODO: Get the user's generated public key from the database
-        final IKeyGenerator keyGenerator = serviceLocator.getKeyGenerator();
-        final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
-        publicKey = pair.getPublicKey();
+        try {
+            publicKey = this.serviceLocator.getDatabase().getProfiles().get(0).getPublicKey();
+        } catch (IOException e) {
+            LOGGER.error("Loading the public key went wrong", e);
+        }
 
         showQRCode();
-
     }
 
     /**
@@ -80,15 +79,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     public void onBackButtonClick(final View view) {
         LOGGER.info("Return to previous screen");
         finish();
-    }
-
-    /**
-     * Shows the QR code of the person's public key on screen.
-     * @param view - the imagebutton
-     */
-    public void onShowQRButtonClick(final View view) {
-        LOGGER.info("Started generating QR code");
-//        showQRCode(qrCode);
     }
 
     /**
@@ -143,31 +133,18 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     /**
      * Shows the QR Code in the activity.
      */
     @SuppressLint("InflateParams")
     private void showQRCode() {
-
         final String space = " ";
         final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
                 + space + publicKey.getKey());
-//        final LayoutInflater li = LayoutInflater.from(this);
-//        final View myView = li.inflate(R.layout.qrcode, null);
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
         imageView.setMaxWidth(30);
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-//                .setView(imageView)
-//                .setPositiveButton(getString(R.string.done), new QRCloser());
-//
-//        ((ViewGroup) imageView.getParent()).removeView(imageView);
-//        lastDialog = builder.create();
-//        lastDialog.show();
     }
 
 
