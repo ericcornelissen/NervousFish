@@ -1,5 +1,5 @@
 Feature: Create a rhythm
-When you create a rhythm
+  Simulates the situation when you create a rhythm
 
   Scenario Outline: Tapping too few times
     Given I am viewing the create rhythm activity
