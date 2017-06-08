@@ -35,7 +35,6 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
     private static boolean firstLoad = true;
-    private static final String DISPLAY_NAME = "display_name";
     private static volatile IServiceLocator serviceLocator;
 
     /**
@@ -48,7 +47,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             LOGGER.info("Preference changed");
             final String stringValue = value.toString();
 
-            if (preference.getKey().equals(DISPLAY_NAME)) {
+            if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
                 LOGGER.info("Preference changed at the display name");
                 updateDisplayName(preference, stringValue);
             } else if (preference instanceof ListPreference) {
@@ -150,7 +149,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             PreferenceManager
                     .getDefaultSharedPreferences(this)
                     .edit()
-                    .putString(DISPLAY_NAME, serviceLocator.getDatabase().getProfiles().get(0).getName())
+                    .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfiles().get(0).getName())
                     .apply();
         } catch (IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);
@@ -227,7 +226,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("choose_verification_method_every_time"));
+            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.CHOOSE_VERIFICATION_PREFERENCE));
         }
 
         @Override
@@ -256,7 +255,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference(DISPLAY_NAME));
+            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.DISPLAY_NAME));
         }
 
         @Override
