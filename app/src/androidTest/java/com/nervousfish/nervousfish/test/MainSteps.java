@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.test;
 
 import android.content.Intent;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.BaseTest;
@@ -53,6 +54,10 @@ public class MainSteps {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.mActivityRule.launchActivity(intent);
+      
+        try {
+            onView(withText(R.string.no)).perform(click());
+        } catch (NoMatchingViewException ignore) { }
     }
 
     @Given("^there is a contact with the name (.*?) in the database$")
