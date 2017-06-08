@@ -34,7 +34,6 @@ final class AndroidBluetoothAcceptThread {
      * @param serviceLocator The service locator used
      */
     AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException {
-
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             throw new NoBluetoothException("No Bluetooth available");
