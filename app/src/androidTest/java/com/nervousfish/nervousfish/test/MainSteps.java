@@ -26,8 +26,13 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 
 @CucumberOptions(features = "features")
 public class MainSteps {
@@ -62,12 +67,18 @@ public class MainSteps {
 
     @When("^I click open buttons with the plus$")
     public void clickPlusButton() {
-        onView(withId(R.id.pairing_button)).perform(click());
+        onView(allOf(withParent(withId(R.id.pairing_button)), withClassName(endsWith("ImageView")), isDisplayed()))
+                .perform(click());
     }
 
     @When("^I click the button with the QR icon$")
     public void iClickQRButton() {
         onView(withId(R.id.pairing_menu_qr)).perform(click());
+    }
+
+    @When("^I click the button with the QR text label$")
+    public void iClickQRLabel() {
+        onView(withText(R.string.qr)).perform(click());
     }
 
     @Then("^I should stay in the main activity after pressing back$")
