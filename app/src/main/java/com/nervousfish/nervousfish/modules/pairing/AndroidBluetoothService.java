@@ -278,6 +278,11 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     public static final class LocalBinder extends Binder {
         private final AndroidBluetoothService service;
 
+        /**
+         * Creates a new LocalBinder
+         *
+         * @param service The AndroidBluetoothService that the clients may use
+         */
         LocalBinder(final AndroidBluetoothService service) {
             this.service = service;
         }

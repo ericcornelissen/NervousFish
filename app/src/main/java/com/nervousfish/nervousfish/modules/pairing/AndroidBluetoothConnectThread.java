@@ -55,7 +55,9 @@ final class AndroidBluetoothConnectThread {
     }
 
     /**
-     * Cancels the connect thread and closes the socket
+     * Cancels the connect thread and optionally closes the socket
+     *
+     * @param closeSocket True if the socket should be closed
      */
     void cancel(final boolean closeSocket) {
         LOGGER.warn("Cancelled!");
