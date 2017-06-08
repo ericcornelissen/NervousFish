@@ -12,6 +12,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -23,7 +24,8 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The {@link android.app.Activity} used to create a new profile.
+ * The {@link android.app.Activity} that is used to create a user profile when the app is first
+ * used.
  */
 public final class CreateProfileActivity extends AppCompatActivity {
 
@@ -60,15 +62,17 @@ public final class CreateProfileActivity extends AppCompatActivity {
     /**
      * Gets triggered when the Submit button is clicked.
      *
-     * @param v The {@link View} clicked
+     * @param view The {@link View} clicked
      */
-    public void onSubmitClick(final View v) {
+    public void onSubmitClick(final View view) {
         if (this.validateInputFields()) {
             final String name = this.nameInput.getText().toString();
             final KeyPair keyPair = this.helper.generateKeyPair(IKey.Types.RSA);
 
             try {
-                this.serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
+                final IDatabase database = this.serviceLocator.getDatabase();
+                final Profile profile = new Profile(name, keyPair);
+                database.addProfile(profile);
                 this.showProfileCreatedDialog();
             } catch (IOException e) {
                 this.showProfileNotCreatedDialog();
@@ -105,7 +109,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void showProfileCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(this.getString(R.string.profile_created))
+            .setTitleText(this.getString(R.string.profile_created_title))
             .setContentText(this.getString(R.string.profile_created_explanation))
             .setConfirmText(this.getString(R.string.dialog_ok))
             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -123,8 +127,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void showProfileNotCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(this.getString(R.string.could_not_create_profile))
-                .setContentText(this.getString(R.string.could_not_create_profile_explanation))
+                .setTitleText(this.getString(R.string.profile_not_created_title))
+                .setContentText(this.getString(R.string.profile_not_created_explanation))
                 .setConfirmText(this.getString(R.string.dialog_ok))
                 .show();
     }

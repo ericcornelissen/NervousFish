@@ -6,7 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
-import com.nervousfish.nervousfish.activities.FirstUseActivity;
+import com.nervousfish.nervousfish.activities.WelcomeActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
@@ -26,15 +26,15 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class FirstTimeUseSteps {
+public class WelcomeSteps {
 
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
     @Rule
-    public ActivityTestRule<FirstUseActivity> mActivityRule =
-            new ActivityTestRule<>(FirstUseActivity.class, true, false);
+    public ActivityTestRule<WelcomeActivity> mActivityRule =
+            new ActivityTestRule<>(WelcomeActivity.class, true, false);
 
-    @Given("^I am viewing first time use activity$")
+    @Given("^I am viewing welcome activity$")
     public void iAmViewingTheFirstUseActivity() throws IOException {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);

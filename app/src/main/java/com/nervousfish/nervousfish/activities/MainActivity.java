@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
@@ -201,25 +202,28 @@ public final class MainActivity extends AppCompatActivity {
 
         // Open the correct pairing activity
         final Intent intent = new Intent();
-        switch (view.getId()) {
-            case R.id.pairing_menu_bluetooth:
-                final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (bluetoothAdapter.isEnabled()) {
-                    intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
-                } else {
-                    this.enableBluetooth(true);
-                    return; // Prevent `this.startActivity()`
-                }
-                break;
-            case R.id.pairing_menu_nfc:
-                intent.setComponent(new ComponentName(this, NFCActivity.class));
-                break;
-            case R.id.pairing_menu_qr:
-                intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
-                break;
-            default:
-                LOGGER.error("Unknown pairing button clicked");
-                throw new IllegalArgumentException("Only existing buttons can be clicked");
+
+        String textOnLabel = "";
+        if (view instanceof Label) {
+            textOnLabel = ((Label) view).getText().toString();
+        }
+
+        if (view.getId() == R.id.pairing_menu_bluetooth || textOnLabel.equals(getResources().getString(R.string.bluetooth))) {
+            final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter.isEnabled()) {
+                intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
+                this.startActivity(intent);
+            } else {
+                this.enableBluetooth(true);
+                return; // Prevent `this.startActivity()`
+            }
+        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
+            intent.setComponent(new ComponentName(this, NFCActivity.class));
+        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
+            intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
+        } else {
+            LOGGER.error("Unknown pairing button clicked: " + view.getId() + " or " + textOnLabel);
+            throw new IllegalArgumentException("Only existing buttons can be clicked");
         }
 
         this.startActivity(intent);

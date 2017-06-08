@@ -5,8 +5,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.nervousfish.nervousfish.activities.FirstUseActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.WelcomeActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
@@ -52,7 +52,7 @@ public final class EntryActivity extends Activity {
 
         final Intent intent = new Intent();
         if (profiles.isEmpty()) {
-            intent.setComponent(new ComponentName(this, FirstUseActivity.class));
+            intent.setComponent(new ComponentName(this, WelcomeActivity.class));
         } else {
             intent.setComponent(new ComponentName(this, LoginActivity.class));
         }
