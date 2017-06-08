@@ -25,8 +25,9 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        getDelegate().installViewFactory();
-        getDelegate().onCreate(savedInstanceState);
+        mDelegate = AppCompatDelegate.create(this, null);
+        this.mDelegate.installViewFactory();
+        this.mDelegate.onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
     }
 
@@ -36,7 +37,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        getDelegate().onPostCreate(savedInstanceState);
+        this.mDelegate.onPostCreate(savedInstanceState);
     }
 
     /**
@@ -45,7 +46,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      * @return the support bar as {@link ActionBar}
      */
     public ActionBar getSupportActionBar() {
-        return getDelegate().getSupportActionBar();
+        return this.mDelegate.getSupportActionBar();
     }
 
     /**
@@ -53,7 +54,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      * @param toolbar The {@link Toolbar} to set
      */
     public void setSupportActionBar(@Nullable final Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
+        this.mDelegate.setSupportActionBar(toolbar);
     }
 
     /**
@@ -61,7 +62,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     public MenuInflater getMenuInflater() {
-        return getDelegate().getMenuInflater();
+        return this.mDelegate.getMenuInflater();
     }
 
     /**
@@ -69,7 +70,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     public void setContentView(@LayoutRes final int layoutResID) {
-        getDelegate().setContentView(layoutResID);
+        this.mDelegate.setContentView(layoutResID);
     }
 
     /**
@@ -77,7 +78,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     public void setContentView(final View view) {
-        getDelegate().setContentView(view);
+        this.mDelegate.setContentView(view);
     }
 
     /**
@@ -85,7 +86,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     public void setContentView(final View view, final ViewGroup.LayoutParams params) {
-        getDelegate().setContentView(view, params);
+        this.mDelegate.setContentView(view, params);
     }
 
     /**
@@ -93,7 +94,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     public void addContentView(final View view, final ViewGroup.LayoutParams params) {
-        getDelegate().addContentView(view, params);
+        this.mDelegate.addContentView(view, params);
     }
 
     /**
@@ -102,7 +103,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        getDelegate().onPostResume();
+        this.mDelegate.onPostResume();
     }
 
     /**
@@ -111,7 +112,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onTitleChanged(final CharSequence title, final int color) {
         super.onTitleChanged(title, color);
-        getDelegate().setTitle(title);
+        this.mDelegate.setTitle(title);
     }
 
     /**
@@ -120,7 +121,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        getDelegate().onConfigurationChanged(newConfig);
+        this.mDelegate.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -129,7 +130,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        getDelegate().onStop();
+        this.mDelegate.onStop();
     }
 
     /**
@@ -138,24 +139,13 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getDelegate().onDestroy();
+        this.mDelegate.onDestroy();
     }
 
     /**
      * Invalidates the option menu.
      */
     public void invalidateOptionsMenu() {
-        getDelegate().invalidateOptionsMenu();
-    }
-
-    /**
-     * Returns the {@link AppCompatDelegate}.
-     * @return the {@link AppCompatDelegate}
-     */
-    private AppCompatDelegate getDelegate() {
-        if (mDelegate == null) {
-            mDelegate = AppCompatDelegate.create(this, null);
-        }
-        return mDelegate;
+        this.mDelegate.invalidateOptionsMenu();
     }
 }

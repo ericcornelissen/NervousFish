@@ -53,7 +53,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 updateDisplayName(preference, stringValue);
             } else if (preference instanceof ListPreference) {
                 LOGGER.info("Preference changed for a ListPreference");
-                updateDisplayName(preference, stringValue);
+                updateListPreference(preference, stringValue);
             } else {
                 LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
                 // For all other preferences, set the summary to the value's
@@ -227,7 +227,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("choose_verification_use_every_time"));
+            bindPreferenceSummaryToValue(findPreference("choose_verification_method_every_time"));
         }
 
         @Override
