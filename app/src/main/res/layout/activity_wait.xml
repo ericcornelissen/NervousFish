@@ -26,8 +26,8 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:layout_marginTop="@dimen/waiting_for_slave_text_offset"
-        android:paddingEnd="@dimen/ten_padding_start"
-        android:paddingStart="@dimen/ten_padding_start"
+        android:paddingEnd="@dimen/ten_padding"
+        android:paddingStart="@dimen/ten_padding"
         android:text="@string/waiting_for_partner" />
 
     <Button
