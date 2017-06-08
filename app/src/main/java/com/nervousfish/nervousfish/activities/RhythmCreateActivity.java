@@ -35,9 +35,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The RhythmCreateActivity is an Activity where you can tap a sequence.
  */
-//List is cast to an ArrayList, but that is needed to put in an intent.
 @SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized"})
-//We don't want to use 'List' but the implementation 'ArrayList' to prevent errors.
+// 1) List is cast to an ArrayList, but that is needed to put in an intent.
+// 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
 public final class RhythmCreateActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private static final int MINIMUM_TAPS = 3;
