@@ -53,18 +53,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 updateDisplayName(preference, stringValue);
             } else if (preference instanceof ListPreference) {
                 LOGGER.info("Preference changed for a ListPreference");
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                final ListPreference listPreference = (ListPreference) preference;
-                final int index = listPreference.findIndexOfValue(stringValue);
-
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : "");
-
-
+                updateDisplayName(preference, stringValue);
             } else {
                 LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
                 // For all other preferences, set the summary to the value's
@@ -104,6 +93,25 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
                 preference.setSummary(stringValue);
             }
+        }
+
+        /**
+         * If the preference is a list preference this method is called to update the summary.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateListPreference(final Preference preference, final String stringValue) {
+            // For list preferences, look up the correct display value in
+            // the preference's 'entries' list.
+            final ListPreference listPreference = (ListPreference) preference;
+            final int index = listPreference.findIndexOfValue(stringValue);
+
+            // Set the summary to reflect the new value.
+            preference.setSummary(
+                    index >= 0
+                            ? listPreference.getEntries()[index]
+                            : "");
         }
     };
 
