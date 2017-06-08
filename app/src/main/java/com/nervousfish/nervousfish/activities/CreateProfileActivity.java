@@ -1,19 +1,20 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -24,91 +25,66 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The {@link android.app.Activity} that is used to create a user profile when the app is first
+ * used.
  */
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
-    private static final int MIN_PASSWORD_LENGTH = 6;
 
     private IServiceLocator serviceLocator;
+    private CreateProfileHelper helper;
+    private EditText nameInput;
+    private EditText passwordInput;
+    private EditText repeatPasswordInput;
 
     /**
-     * Creates the new activity, should only be called by Android
+     * Creates the new activity, should only be called by Android.
      *
-     * @param savedInstanceState Don't touch this
+     * @param savedInstanceState A previous state of this {@link Activity}.
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
-        final Intent intent = getIntent();
+
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        // Initialize helper class
+        final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
+        final int alertColor = ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null);
+        this.helper = new CreateProfileHelper(keyGenerator, alertColor);
 
-        LOGGER.info("CreateProfileActivity created");
+        // Find input views
+        this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
+        this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
+        this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
+
+        LOGGER.info("activity created");
     }
 
     /**
      * Gets triggered when the Submit button is clicked.
      *
-     * @param v The {@link View} clicked
+     * @param view The {@link View} clicked
      */
-    public void onSubmitClick(final View v) {
-        if (validateInputFields()) {
-            final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
-            final String name = nameInputField.getText().toString();
-            final KeyPair keyPair = this.generateKeyPair();
+    public void onSubmitClick(final View view) {
+        if (this.validateInputFields()) {
+            final String name = this.nameInput.getText().toString();
+            final KeyPair keyPair = this.helper.generateKeyPair(IKey.Types.RSA);
 
             try {
-                serviceLocator.getDatabase().addProfile(new Profile(name, keyPair));
-                showProfileCreatedDialog();
+                final IDatabase database = this.serviceLocator.getDatabase();
+                final Profile profile = new Profile(name, keyPair);
+                database.addProfile(profile);
+                this.showProfileCreatedDialog();
             } catch (IOException e) {
-                showProfileNotCreatedDialog();
+                this.showProfileNotCreatedDialog();
             }
         } else {
-            showProfileNotCreatedDialog();
+            this.showProfileNotCreatedDialog();
         }
-    }
-
-    private void showProfileCreatedDialog() {
-        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(getString(R.string.profile_created))
-            .setContentText(getString(R.string.profile_created_explanation))
-            .setConfirmText(getString(R.string.dialog_ok))
-            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(final SweetAlertDialog sDialog) {
-                    sDialog.dismiss();
-                    final Intent intent = new Intent(CreateProfileActivity.this, LoginActivity.class);
-                    intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                    CreateProfileActivity.this.startActivity(intent);
-                }
-            })
-            .show();
-    }
-
-    private void showProfileNotCreatedDialog() {
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(getString(R.string.could_not_create_profile))
-                .setContentText(getString(R.string.could_not_create_profile_explanation))
-                .setConfirmText(getString(R.string.dialog_ok))
-                .show();
-    }
-
-    /**
-     * Generates a KeyPair based on the type selected.
-     *
-     * @return a {@link KeyPair} with the key type selected
-     */
-    private KeyPair generateKeyPair() {
-        final RadioButton rsaKeyButton = (RadioButton) this.findViewById(R.id.radio_rsa_key);
-        if (rsaKeyButton.isChecked()) {
-            return this.serviceLocator.getKeyGenerator().generateRSAKeyPair("NervousFish generated key");
-        }
-
-        throw new IllegalArgumentException("The selected key is not implemented");
     }
 
     /**
@@ -119,79 +95,48 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return a {@link boolean} which is true if all fields are valid
      */
     private boolean validateInputFields() {
-        return this.validateInputFieldName() & this.validateInputFieldPassword()
-                & this.validateInputFieldPasswordRepeat() & this.validateInputPasswordsSame();
+        return this.helper.validateName(this.nameInput)
+                & this.helper.validatePassword(this.passwordInput)
+                & this.helper.validatePassword(this.repeatPasswordInput)
+                & this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput);
     }
 
     /**
-     * @return True when the name is valid
+     * Progress to the next activity from the {@link CreateProfileActivity}.
      */
-    private boolean validateInputFieldName() {
-        final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
-
-        if (this.isValidName(nameInputField.getText().toString())) {
-            nameInputField.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            nameInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
-            return false;
-        }
-        return true;
+    private void nextActivity() {
+        final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
+        this.startActivity(intent);
     }
 
     /**
-     * @return True when the password is valid
+     * Show the dialog for when the profile could be created.
      */
-    private boolean validateInputFieldPassword() {
-        final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
-
-        if (this.isValidName(passwordInputField.getText().toString())
-                && passwordInputField.getText().toString().length() >= MIN_PASSWORD_LENGTH) {
-            passwordInputField.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
-            return false;
-        }
-        return true;
+    private void showProfileCreatedDialog() {
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+            .setTitleText(this.getString(R.string.profile_created_title))
+            .setContentText(this.getString(R.string.profile_created_explanation))
+            .setConfirmText(this.getString(R.string.dialog_ok))
+            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(final SweetAlertDialog dialog) {
+                    dialog.dismiss();
+                    nextActivity();
+                }
+            })
+            .show();
     }
 
     /**
-     * @return True when the repeated password is valid
+     * Show the dialog for when the profile couldn't be created.
      */
-    private boolean validateInputFieldPasswordRepeat() {
-        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
-
-        if (this.isValidName(passwordRepeatInputField.getText().toString())) {
-            passwordRepeatInputField.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
-            return false;
-        }
-        return true;
+    private void showProfileNotCreatedDialog() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(this.getString(R.string.profile_not_created_title))
+                .setContentText(this.getString(R.string.profile_not_created_explanation))
+                .setConfirmText(this.getString(R.string.dialog_ok))
+                .show();
     }
 
-    /**
-     * @return True when the password matches the repeated password
-     */
-    private boolean validateInputPasswordsSame() {
-        final EditText passwordInputField = (EditText) this.findViewById(R.id.profile_enter_password);
-        final EditText passwordRepeatInputField = (EditText) this.findViewById(R.id.profile_repeat_password);
-
-        if (!passwordInputField.getText().toString().equals(passwordRepeatInputField.getText().toString())) {
-            passwordInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
-            passwordRepeatInputField.setBackgroundColor(ResourcesCompat.getColor(this.getResources(), R.color.red_fail, null));
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 1 ASCII character.
-     *
-     * @param name The name that has been entered
-     * @return a {@link boolean} telling if the name is valid or not
-     */
-    private boolean isValidName(final String name) {
-        return name != null && !name.isEmpty() && !name.trim().isEmpty();
-    }
 }

@@ -6,10 +6,14 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 /**
  * Helper class for {@link AndroidBluetoothService} and acts as the bridge between the client and
@@ -18,6 +22,7 @@ import java.io.ObjectOutputStream;
 // A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
     private static final long serialVersionUID = -6465987636766819498L;
 
     /**
@@ -98,6 +103,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     @Override
     public void send(final byte[] bytes) {
         this.getService().write(bytes);
+
+        LOGGER.info("Bytes written: " + Arrays.toString(bytes));
     }
 
     private IBluetoothHandlerService getService() {

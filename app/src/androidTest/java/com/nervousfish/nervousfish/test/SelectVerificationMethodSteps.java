@@ -6,9 +6,9 @@ import android.support.test.rule.ActivityTestRule;
 import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.activities.RhythmCreateActivity;
 import com.nervousfish.nervousfish.activities.SelectVerificationMethodActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
-import com.nervousfish.nervousfish.activities.WaitForSlaveActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
@@ -20,7 +20,6 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -52,8 +51,7 @@ public class SelectVerificationMethodSteps {
 
     @Then("I should go to the rhythm activity to provide a pattern")
     public void iShouldGoToTheRhythmActivityToProvideAPattern() {
-        // TODO: verify correct (Rhythm) activity
-        intended(hasComponent(WaitForSlaveActivity.class.getName()));
+        intended(hasComponent(RhythmCreateActivity.class.getName()));
     }
 
     @Then("I should go to the visual pattern activity to provide a pattern")

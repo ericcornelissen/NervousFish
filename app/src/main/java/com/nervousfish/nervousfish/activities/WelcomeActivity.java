@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,37 +14,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The main activity class that shows a list of all people with their public keys
+ * The {@link Activity} that will show up when the app is first launched (i.e. there is no user
+ * account available).
  */
-public final class FirstUseActivity extends AppCompatActivity {
+public final class WelcomeActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("FirstUseActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("WelcomeActivity");
 
     private IServiceLocator serviceLocator;
 
     /**
-     * Creates the new activity, should only be called by Android
+     * Creates the new activity, should only be called by Android.
      *
-     * @param savedInstanceState Don't touch this
+     * @param savedInstanceState A previous state of this {@link Activity}.
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_first_use);
-        final Intent intent = getIntent();
+        this.setContentView(R.layout.activity_welcome);
+
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        LOGGER.info("FirstUseActivity created");
+        LOGGER.info("activity created");
     }
 
     /**
      * Gets triggered when the GetStarted button is clicked.
      *
-     * @param v The {@link View} clicked
+     * @param view The {@link View} being clicked.
      */
-    public void onGetStartedClick(final View v) {
+    public void onGetStartedClick(final View view) {
         final Intent intent = new Intent(this, CreateProfileActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
+
 }

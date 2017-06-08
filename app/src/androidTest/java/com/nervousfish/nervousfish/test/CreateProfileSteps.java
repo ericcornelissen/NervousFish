@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.test;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.InsetDrawable;
 import android.support.test.espresso.intent.Checks;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
@@ -16,7 +15,7 @@ import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
-import com.nervousfish.nervousfish.activities.LoginActivity;
+import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
@@ -42,7 +41,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
@@ -123,9 +121,9 @@ public class CreateProfileSteps {
         intended(hasComponent(CreateProfileActivity.class.getName()));
     }
 
-    @Then("^I should go to the login activity$")
-    public void iShouldGoToLoginActivity() {
-        intended(hasComponent(LoginActivity.class.getName()));
+    @Then("^I should progress directly to the main activity$")
+    public void iShouldProgressDirectlyToTheMainActivity() {
+        intended(hasComponent(MainActivity.class.getName()));
     }
 
     @Then("^the name input field should become red$")

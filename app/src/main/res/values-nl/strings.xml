@@ -7,8 +7,8 @@
     <string name="cancel">Annuleren</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
+    <string name="dsa_key">DSA sleutel</string>
     <string name="edit">Bewerken</string>
-    <string name="key_type" formatted="false">Type sleutel: %s</string>
     <string name="logo">Logo</string>
     <string name="more">Meer</string>
     <string name="name">Naam</string>
@@ -24,7 +24,6 @@
     <string name="select_device">Selecteer apparaat</string>
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
-    <string name="warning">Waarschuwing</string>
     <string name="yes">Ja</string>
 
     <!-- Gebruikelijk zinnen -->
@@ -34,33 +33,44 @@
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
+    <string name="key_type" formatted="false">Type sleutel: %s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
+    <string name="repeat_password">Herhaal wachtwoord</string>
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
 
     <!-- Eerste gebruik -->
-    <string name="welcome_message">Welkom bij Nervous Fish</string>
-    <string name="welcome_message_subpart">Nervous Fish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+    <string name="welcome_title">Welkom bij NervousFish</string>
+    <string name="welcome_subtitle">NervousFish is een app waarmee je veilig public keys kunt uitwisselen en opslaan</string>
+
+    <!-- Maak een profiel -->
     <string name="create_profile_message">Een profiel aanmaken</string>
-    <string name="repeat_password">Herhaal wachtwoord</string>
+    <string name="keys_to_generate">Sleutels om te maken:</string>
+    <string name="profile_created_title">Profiel gemaakt</string>
+    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt.</string>
+    <string name="profile_not_created_title">Kon geen profiel maken</string>
+    <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
 
     <!-- Hoofdscherm -->
-    <string name="you_sure_log_out">Weet je zeker dat je uit wilt loggen?</string>
-    <string name="enable_bluetooth_questionmark">Bluetooth aanzetten?</string>
-    <string name="enable_bluetooth_explanation">Wil je Bluetooth aanzetten zodat andere je apparaat kunnen vinden?</string>
+    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
+    <string name="contact_added_popup_explanation">De uitwisseling via Bluetooth was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
+
+    <string name="popup_log_out_title">Uitloggen?</string>
+    <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
+    <string name="popup_enable_bluetooth_title">Bluetooth aanzetten?</string>
+    <string name="popup_enable_bluetooth_findable">Zet Bluetooth aan zodat andere je apparaat kunnen vinden</string>
+    <string name="popup_enable_bluetooth_exchange">Je moet Bluetooth aanzetten voordat je verder kunt</string>
 
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>
     <string name="login_password_mismatch">Het wachtwoord is verkeerd</string>
 
-    <!-- Maak profiel -->
-    <string name="profile_created">Profiel gemaakt</string>
-    <string name="profile_created_explanation">Je profiel is succesvol aangemaakt, je kunt nu inloggen.</string>
-    <string name="could_not_create_profile">Kon geen profiel maken</string>
-    <string name="could_not_create_profile_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
-    <string name="key_to_generate">Sleutel om te maken:</string>
+    <!-- Ritme -->
+    <string name="tap_me">Tik hier!</string>
+    <string name="stop_recording">Stop met opnemen</string>
+    <string name="start_recording">Start met opnemen</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
@@ -89,4 +99,9 @@
 
     <!-- NFC -->
     <string name="descr_gif">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>
+
+    <!-- WaitActivity -->
+    <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
+    <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
+
 </resources>
