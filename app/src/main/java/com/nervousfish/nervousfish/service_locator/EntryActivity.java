@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.activities.FirstUseActivity;
+import com.nervousfish.nervousfish.activities.WelcomeActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 
@@ -50,7 +50,7 @@ public final class EntryActivity extends Activity {
                 }
                 Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
                 if (profiles.isEmpty()) {
-                    intent = new Intent(EntryActivity.this, FirstUseActivity.class);
+                    intent = new Intent(EntryActivity.this, WelcomeActivity.class);
                 }
 
                 intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
