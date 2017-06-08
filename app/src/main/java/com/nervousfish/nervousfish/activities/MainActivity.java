@@ -100,8 +100,8 @@ public final class MainActivity extends AppCompatActivity {
             this.enableBluetooth(false);
         }
 
-        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
-        this.showSuccessfulBluetoothPopup(successfulBluetooth);
+        final Object successfulExchange = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE);
+        this.showSuccessfulExchange(successfulExchange);
 
         LOGGER.info("MainActivity created");
     }
@@ -110,11 +110,11 @@ public final class MainActivity extends AppCompatActivity {
      * Shows a popup that adding a contact went fine if the boolean
      * added in the intent is true.
      *
-     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
+     * @param successfulExchange The intents value for {@code SUCCESSFUL_EXCHANGE}.
      */
-    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
-        if (successfulBluetooth != null) {
-            final boolean success = (boolean) successfulBluetooth;
+    private void showSuccessfulExchange(final Object successfulExchange) {
+        if (successfulExchange != null) {
+            final boolean success = (boolean) successfulExchange;
             if (success) {
                 new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText(this.getString(R.string.contact_added_popup_title))

@@ -22,6 +22,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
@@ -44,11 +45,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
 public class QRExchangeKeyActivity extends AppCompatActivity {
 
+    private static final String SPACE = " ";
+    private static final String SEMICOLON = ";";
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private IServiceLocator serviceLocator;
     private AlertDialog lastDialog;
-    private IKey publicKey;
+    private Profile profile;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -64,7 +67,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         try {
-            publicKey = this.serviceLocator.getDatabase().getProfiles().get(0).getPublicKey();
+            profile = this.serviceLocator.getDatabase().getProfiles().get(0);
         } catch (IOException e) {
             LOGGER.error("Loading the public key went wrong", e);
         }
@@ -117,19 +120,22 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private void addNewContact(final String qrMessage) {
         try {
             LOGGER.info("Adding new contact to database");
-            //TODO: Add recognizer for contact name to avoid saving the same key twice (add your personal name to QR code)
-            final IKey key = QRGenerator.deconstructToKey(qrMessage);
-            final EditText editName = new EditText(this);
-            editName.setInputType(InputType.TYPE_CLASS_TEXT);
-            final EditNameClickListener enClickListener = new EditNameClickListener(editName, key);
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.contact_set_name))
-                    .setView(editName)
-                    .setPositiveButton(getString(R.string.done), enClickListener);
-            lastDialog = builder.create();
-            lastDialog.show();
+            //Name is the first part
+            final String name = qrMessage.split(SEMICOLON)[0];
+            //Key is the second part
+            final IKey key = QRGenerator.deconstructToKey(qrMessage.split(SEMICOLON)[1]);
+
+            final Contact contact = new Contact(name, key);
+            this.serviceLocator.getDatabase().addContact(contact);
+
+            final Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+            intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+            this.startActivity(intent);
         } catch (IllegalArgumentException e) {
             LOGGER.error("Illegal argument exception in addNewContact", e);
+        } catch (IOException e) {
+            LOGGER.error("IOException in addNewContact", e);
         }
     }
 
@@ -138,73 +144,12 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     @SuppressLint("InflateParams")
     private void showQRCode() {
-        final String space = " ";
-        final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
-                + space + publicKey.getKey());
+        final IKey publicKey = profile.getPublicKey();
+        final Bitmap qrCode = QRGenerator.encode(profile.getName() + SEMICOLON + publicKey.getType()
+                + SPACE + publicKey.getName() + SPACE + publicKey.getKey());
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
         imageView.setMaxWidth(30);
     }
-
-
-    private static final class QRCloser implements DialogInterface.OnClickListener {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            dialog.dismiss();
-        }
-    }
-
-    private final class EditNameClickListener implements DialogInterface.OnClickListener {
-
-        private final EditText editName;
-        private final IKey key;
-
-        /**
-         * Constructor for editname click listener.
-         * @param editName The textinput from which we show and get the name from.
-         * @param key The key made from the QR code.
-         */
-        private EditNameClickListener(final EditText editName, final IKey key) {
-            this.editName = editName;
-            this.key = key;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            LOGGER.info("Adding new contact with name input");
-            try {
-                final String name = editName.getText().toString();
-
-                final Contact contact = new Contact(name, key);
-                final IDatabase database = serviceLocator.getDatabase();
-                database.addContact(contact);
-                dialog.dismiss();
-                final Intent intent = new Intent(QRExchangeKeyActivity.this, ContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                intent.putExtra(ConstantKeywords.CONTACT, contact);
-                QRExchangeKeyActivity.this.startActivity(intent);
-            } catch (final IOException e) {
-                LOGGER.error("IOException while adding new contact", e);
-            } catch (final IllegalArgumentException e) {
-                LOGGER.error("IllegalArgumentException while adding new contact", e);
-                new SweetAlertDialog(QRExchangeKeyActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.contact_already_exists))
-                        .setContentText(getString(R.string.contact_exists_message))
-                        .setConfirmText(getString(R.string.dialog_ok))
-                        .show();
-            }
-        }
-
-
-
-    }
-
-
 }

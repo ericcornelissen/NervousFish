@@ -45,8 +45,8 @@
     <string name="repeat_password">Repeat password</string>
 
     <!-- Main activity -->
-    <string name="contact_added_popup_title">Pairing was successful!</string>
-    <string name="contact_added_popup_explanation">The pairing over Bluetooth was successful and the new contact is added to the list.</string>
+    <string name="contact_added_popup_title">Successfully received!</string>
+    <string name="contact_added_popup_explanation">The exchange was successful and the new contact is added to the list.</string>
     <string name="popup_log_out_title">Log out?</string>
     <string name="popup_log_out_description">Are you sure you want to log out?</string>
     <string name="popup_enable_bluetooth_title">Enable Bluetooth?</string>

@@ -62,7 +62,7 @@ public final class WaitActivity extends Activity {
         LOGGER.info("Evaluating data");
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         this.startActivity(intent);
     }
 
