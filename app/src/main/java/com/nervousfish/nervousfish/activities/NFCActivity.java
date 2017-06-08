@@ -59,7 +59,7 @@ public class NFCActivity extends Activity implements CreateNdefMessageCallback {
             return;
         }
         LOGGER.info("Start creating an NDEF message to beam");
-        Glide.with(this).load(R.drawable.s_contact_animado400).into((ImageView) findViewById(R.id.gif));
+        Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) findViewById(R.id.gif));
         try {
             final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
             LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
