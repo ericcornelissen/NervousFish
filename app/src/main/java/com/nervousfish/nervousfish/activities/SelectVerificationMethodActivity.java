@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.VerificationMethod;
+import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.slf4j.Logger;
@@ -55,19 +57,18 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
                 try {
-                    this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes("visual"));
+                    this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes(new VerificationMethod(VerificationMethodEnum.VISUAL)));
                 } catch (IOException e) {
-                    LOGGER.error("Sending the \"visual\" string went wrong: ", e);
+                    LOGGER.error("Sending the Verification VISUAL went wrong: ", e);
                 }
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 break;
             case R.id.select_rhythm_verification:
-                // TODO: open correct (Rhythm) activity (also update test!)
                 LOGGER.info("Selected rhythm verification method, opening activity");
                 try {
-                    this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes("rhythm"));
+                    this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes(new VerificationMethod(VerificationMethodEnum.RHYTHM)));
                 } catch (IOException e) {
-                    LOGGER.error("Sending the \"rhythm\" string went wrong: ", e);
+                    LOGGER.error("Sending the Verification RHYTHM went wrong: ", e);
                 }
                 intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
                 break;
