@@ -44,6 +44,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -52,16 +53,13 @@ import static junit.framework.Assert.assertTrue;
 public class RhythmCreateActivitySteps {
 
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-    private boolean tappedTooFewTimes;
 
     @Rule
     public ActivityTestRule<RhythmCreateActivity> mActivityRule =
             new ActivityTestRule<>(RhythmCreateActivity.class, true, false);
 
     @Given("^I am viewing the create rhythm activity$")
-    public void iAmVieweingTheCreateRhythmActivity() throws IOException {
-        this.serviceLocator.registerToEventBus(this);
-        this.tappedTooFewTimes = false;
+    public void iAmViewingTheCreateRhythmActivity() throws IOException {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         mActivityRule.launchActivity(intent);
@@ -69,9 +67,7 @@ public class RhythmCreateActivitySteps {
 
     @When("^I tap the start button$")
     public void iTapTheStartButton() {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.start_recording_button)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.start_recording_button)).perform(click());
     }
 
     @When("^I press the stop button$")
@@ -81,33 +77,25 @@ public class RhythmCreateActivitySteps {
 
     @When("^I press the done button$")
     public void iPressTheDoneButton() {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.done_tapping_button)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.done_tapping_button)).perform(click());
     }
 
     @When("^I tap the screen (.*?) times$")
     public void iTapTheScreenTimes(final int tapCount) {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         for (int i = 0; i < tapCount; i++) {
-            onView(withId(R.id.tap_screen_rhythm_activity)).perform(scrollTo()).perform(click());
+            onView(withId(R.id.tap_screen_rhythm_activity)).perform(click());
         }
     }
 
     @Then("^I get an error that I tapped not enough times$")
     public void iGetAnErrorThatITappedNotEnoughTimes() {
-        assertTrue(tappedTooFewTimes);
+        onView(withId(R.id.error_frame)).check(matches(isDisplayed()));
+        onView(withId(R.id.confirm_button)).perform(click());
     }
 
     @Then("^I go to WaitActivity$")
     public void iGoToWaitActivity() {
         intended(hasComponent(WaitActivity.class.getName()));
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTooFewTapsEvent(final RhythmCreateActivity.TooFewTapsEvent event) {
-        this.tappedTooFewTimes = true;
     }
 
     /**

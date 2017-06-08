@@ -131,16 +131,20 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.stopButton.setVisibility(View.GONE);
         this.doneButton.setVisibility(View.VISIBLE);
         if (this.taps.size() < MINIMUM_TAPS) {
+            this.taps.clear();
+            this.doneButton.setVisibility(View.GONE);
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(this.getString(R.string.too_few_taps_title))
+                    .setContentText(this.getString(R.string.too_few_taps_description))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .show();
+            /*new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(this.getString(R.string.too_few_taps_title))
                     .setContentText(String.format(this.getString(R.string.too_few_taps_description), MINIMUM_TAPS))
                     .setConfirmText(this.getString(R.string.try_again))
                     .setConfirmClickListener(sweetAlertDialog -> {
-                        this.serviceLocator.postOnEventBus(new RhythmCreateActivity.TooFewTapsEvent());
-                        this.taps.clear();
-                        this.doneButton.setVisibility(View.GONE);
                     })
-                    .show();
+                    .show();*/
         }
     }
 
