@@ -74,7 +74,7 @@ abstract class APairingHandler implements IPairingHandler {
      */
     @Override
     public void send(final Serializable object) throws IOException {
-        LOGGER.info("Begin serializing object:" + object);
+        LOGGER.info("Begin writing object:" + object);
         send(objectToBytes(object));
     }
 

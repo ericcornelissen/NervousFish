@@ -40,11 +40,11 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      */
     @Override
     public void send(final byte[] buffer) {
-        throw new UnsupportedOperationException("Sending data with NFC is not implemented yet");
+        throw new UnsupportedOperationException("Sending data with NFC should not be implemented here");
     }
 
     @Override
     public void dataReceived(byte[] bytes) {
-        throw new UnsupportedOperationException("Sending data with NFC is not implemented yet");
+        throw new UnsupportedOperationException("Receiving data with NFC should not be implemented here");
     }
 }
