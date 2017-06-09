@@ -137,7 +137,6 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
 
         this.serviceLocator.unregisterFromEventBus(this);
         LOGGER.info("Stopped NFCActivity");
-
-        super.onStop();
     }
+
 }

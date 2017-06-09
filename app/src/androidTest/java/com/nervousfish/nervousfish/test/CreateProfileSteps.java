@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.BaseTest;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
@@ -56,8 +55,7 @@ public class CreateProfileSteps {
     @Given("^I am viewing the create profile activity$")
     public void iAmViewingTheCreateProfileActivity() throws IOException {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @Given("^there are no profiles in the database$")

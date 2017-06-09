@@ -12,6 +12,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -33,19 +34,37 @@ public final class VisualVerificationActivity extends Activity {
     private Contact dataReceived;
 
     /**
-     * Stuff that needs to be done when the new activity being created.
-     *
-     * @param savedInstanceState The saved state
+     * {@inheritDoc}
      */
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_visual_verification);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        LOGGER.info("Activity created");
+    }
 
-        LOGGER.info("VisualVerificationActivity created");
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        LOGGER.info("Activity stopped");
+
+        super.onStop();
     }
 
     /**
@@ -53,11 +72,13 @@ public final class VisualVerificationActivity extends Activity {
      */
     private void nextActivity() {
         LOGGER.info("Done tapping the VisualVerification");
+
         try {
             final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
 
             LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
                     + myProfile.getPublicKey().toString());
+
             final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
             this.serviceLocator.getBluetoothHandler().send(this.serviceLocator.getBluetoothHandler().objectToBytes(myProfileAsContact));
         } catch (IOException e) {
@@ -65,10 +86,9 @@ public final class VisualVerificationActivity extends Activity {
         }
 
         final Intent intent = new Intent(this, WaitActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
-        intent.putExtra(ConstantKeywords.TAP_DATA, securityCode);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.TAP_DATA, this.securityCode);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
@@ -91,24 +111,6 @@ public final class VisualVerificationActivity extends Activity {
             this.securityCode += button;
             LOGGER.info("code so far: %s", this.securityCode);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.serviceLocator.registerToEventBus(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
     }
 
     /**

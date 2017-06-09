@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -35,7 +36,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings("PMD.LooseCoupling")
 //We don't want to use 'List' but the implementation 'ArrayList' to prevent errors.
 public final class RhythmCreateActivity extends AppCompatActivity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
@@ -43,21 +46,60 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private Contact dataReceived;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rhythm_create);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_create_rhythm);
-        setSupportActionBar(toolbar);
+        this.setContentView(R.layout.activity_rhythm_create);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
+        this.setSupportActionBar(toolbar);
 
-        startButton = (Button) this.findViewById(R.id.start_recording_button);
-        stopButton = (Button) this.findViewById(R.id.stop_recording_button);
-        doneButton = (Button) this.findViewById(R.id.done_tapping_button);
+        this.startButton = (Button) this.findViewById(R.id.start_recording_button);
+        this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
+        this.doneButton = (Button) this.findViewById(R.id.done_tapping_button);
 
-        LOGGER.info("RhythmActivity started");
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.serviceLocator.unregisterFromEventBus(this);
+
+        LOGGER.info("Activity stopped");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            this.finish();
+        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+            this.finish();
+        }
     }
 
     /**
@@ -90,7 +132,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
         final Intent intent = new Intent(this, WaitActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, (ArrayList) tapCombination);
@@ -123,39 +164,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
-            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-            finish();
-        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
-            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-            finish();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.serviceLocator.registerToEventBus(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
-    }
-
-    /**
      * Called when a new data is received.
      *
      * @param event Contains additional data about the event
@@ -176,4 +184,5 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             dataReceived = contact;
         }
     }
+
 }

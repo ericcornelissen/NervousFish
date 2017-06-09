@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,32 +28,32 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class ChangeContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
+
     private IServiceLocator serviceLocator;
     private Contact contact;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState The saved state of the instance.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_change_contact);
-
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+        final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         ContactActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
         ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
-        final ImageButton backButton = (ImageButton) findViewById(R.id.back_button_change);
+        final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
+
+        LOGGER.info("Activity created");
     }
 
     /**
