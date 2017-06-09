@@ -56,6 +56,9 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
         return bytes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void send(final byte[] buffer) {
         // The NFC Handler handles the exchange of bytes in the activity
@@ -63,7 +66,9 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
         throw new UnsupportedOperationException("Shouldn't be used");
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void dataReceived(final byte[] bytes) {
         getDataReceiver().get().dataReceived(bytes);

@@ -27,6 +27,14 @@ interface IPairingHandler extends IModule, Serializable {
     void send(byte[] buffer);
 
     /**
+     * Serializes an object and write's it to an outputstream according to the send with bytes method
+     *
+     * @param object The object to serialize
+     * @throws IOException When deserialization goes wrong
+     */
+    void send(Serializable object) throws IOException;
+
+    /**
      * @return The object responsible for newly received data
      */
     PairingWrapper getDataReceiver();

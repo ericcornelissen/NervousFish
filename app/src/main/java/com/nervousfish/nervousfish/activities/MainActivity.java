@@ -244,32 +244,6 @@ public final class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-
-    /**
-     * Temporarily fill the database with demo data for development.
-     * Checkstyle is disabled, because this method is only temporarily
-     */
-    @SuppressWarnings("checkstyle:multipleStringLiterals")
-    private void fillDatabaseWithDemoData() throws IOException {
-        final IDatabase database = this.serviceLocator.getDatabase();
-        final Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
-        keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
-        final Contact a = new Contact("Eric", keys);
-        final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
-        //final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-        //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-        //final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-
-        final List<Contact> contacts = database.getAllContacts();
-        for (final Contact contact : contacts) {
-            database.deleteContact(contact.getName());
-        }
-
-        database.addContact(a);
-        database.addContact(b);
-    }
-
     /**
      * Called when a Bluetooth connection is established.
      *
@@ -349,12 +323,11 @@ public final class MainActivity extends AppCompatActivity {
 
         if (nfcAdapter.isEnabled()) {
             final Intent intent = new Intent(this, NFCActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
         } else {
             final String description;
             description = this.getString(R.string.popup_enable_nfc_exchange);
-
+            LOGGER.info("Requesting to enable NFC");
             new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
                     .setTitleText(this.getString(R.string.popup_enable_nfc_title))
                     .setContentText(description)
@@ -364,36 +337,11 @@ public final class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(final SweetAlertDialog dialog) {
                             dialog.dismiss();
-
-                            LOGGER.info("Requesting to enable NFC");
-                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE)
-                                    .setTitleText(MainActivity.this.getString(R.string.popup_enable_nfc_settings))
-                                    .setConfirmText(MainActivity.this.getString(R.string.yes))
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(final SweetAlertDialog dialog) {
-                                            dialog.dismiss();
-                                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                                            LOGGER.info("Request to enable NFC sent, forwarded to settings");
-                                        }
-                                    })
-                                    .show();
+                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                            LOGGER.info("Request to enable NFC sent, forwarded to settings");
                         }
                     })
                     .show();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-            this.startActivity(intent);
         }
     }
 

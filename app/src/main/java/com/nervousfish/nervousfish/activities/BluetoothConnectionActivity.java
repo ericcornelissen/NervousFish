@@ -54,7 +54,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     // Used to fill the listview of newly discovered Bluetooth devices
     private ArrayAdapter<String> newDevicesArrayAdapter;
     // Used to fill the listview of paired Bluetooth devices
-    private ArrayAdapter<String> pairedDevicesArrayAdapter;
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 

@@ -69,6 +69,15 @@ abstract class APairingHandler implements IPairingHandler {
         return bytes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void send(final Serializable object) throws IOException {
+        LOGGER.info("Begin serializing object:" + object);
+        send(objectToBytes(object));
+    }
+
     protected IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }

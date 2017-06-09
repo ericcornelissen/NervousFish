@@ -12,13 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         this.setContentView(R.layout.activity_nfc);
 
         final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = this.serviceLocator.getDatabase();
 
         this.descriptionText = (TextView) this.findViewById(R.id.nfc_instruction);
