@@ -7,10 +7,10 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
-import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -71,7 +71,7 @@ public class ServiceLocatorNoNetwork extends ServiceLocator {
     @Override
     @DesignedForExtension
     INfcHandler initNfcHandler() {
-        return NFCHandler.newInstance(this).getModule();
+        return DummyNFCHandler.newInstance(this).getModule();
     }
 
     /**

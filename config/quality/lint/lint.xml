@@ -44,6 +44,7 @@
     <issue id="ExtraText" severity="error" />
     <issue id="ExtraTranslation" severity="error" />
     <issue id="FloatMath" severity="error" />
+    <issue id="GifUsage" severity="error" />
     <issue id="GradleOverrides" severity="error" />
     <issue id="GrantAllUris" severity="error" />
     <issue id="GridLayout" severity="error" />
@@ -177,7 +178,4 @@
     their root element has a background which Overdraws the background of the AppTheme.NoActionBar
     style(s.xml). Please fix if you know how ^.^' -->
     <issue id="Overdraw" severity="ignore" />
-
-    <!-- It's really a lot more work to split up a gif into parts of jpg/png's and animate them -->
-    <issue id="GifUsage" severity="ignore" />
 </lint>

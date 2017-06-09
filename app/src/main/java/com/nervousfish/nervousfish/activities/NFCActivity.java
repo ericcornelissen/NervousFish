@@ -1,32 +1,9 @@
 package com.nervousfish.nervousfish.activities;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.Arrays;
-
-import static android.nfc.NdefRecord.createExternal;
 
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.

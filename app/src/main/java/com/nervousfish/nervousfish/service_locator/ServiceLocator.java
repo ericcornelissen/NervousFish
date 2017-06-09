@@ -13,11 +13,11 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
-import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
@@ -146,7 +146,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @DesignedForExtension
     INfcHandler initNfcHandler() {
-        return NFCHandler.newInstance(this).getModule();
+        return DummyNFCHandler.newInstance(this).getModule();
     }
 
     /**

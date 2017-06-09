@@ -57,9 +57,8 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     }
 
     @Override
-    public byte[] objectToBytes(final Serializable object) throws IOException {
+    public void send(final Serializable object) throws IOException {
         // Do nothing
-        return new byte[0];
     }
 
     @Override
