@@ -20,6 +20,6 @@ public final class BluetoothAlmostConnectedEvent {
     }
 
     public BluetoothSocket getSocket() {
-        return socket;
+        return this.socket;
     }
 }

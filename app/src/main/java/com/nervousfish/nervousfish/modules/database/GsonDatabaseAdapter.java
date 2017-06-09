@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.hamcrest.CoreMatchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
@@ -84,7 +87,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
-        LOGGER.info("Adding new contact with name: " + contact.getName());
+        LOGGER.info("Adding new contact with name: {}", contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
         }
@@ -100,7 +103,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void deleteContact(final String contactName) throws IllegalArgumentException, IOException {
+    public void deleteContact(final String contactName) throws IOException {
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         for (final Contact contact : contacts) {
@@ -122,7 +125,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
+    public void updateContact(final Contact oldContact, final Contact newContact) throws IOException {
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
@@ -166,7 +169,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public Contact getContactWithName(final String contactName) throws IOException {
-        final List<Contact> contacts = getAllContacts();
+        final List<Contact> contacts = this.getAllContacts();
         for (final Contact contact : contacts) {
             if (contact.getName().equals(contactName)) {
                 return contact;
@@ -181,7 +184,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public boolean contactExists(final String name) throws IOException {
-        return getContactWithName(name) != null;
+        return this.getContactWithName(name) != null;
     }
 
     /**
@@ -223,7 +226,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void deleteProfile(final Profile profile) throws IllegalArgumentException, IOException {
+    public void deleteProfile(final Profile profile) throws IOException {
         // Get the list of contacts
         final List<Profile> profiles = this.getProfiles();
         final int lengthBefore = profiles.size();
@@ -247,7 +250,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void updateProfile(final Profile oldProfile, final Profile newProfile) throws IllegalArgumentException, IOException {
+    public void updateProfile(final Profile oldProfile, final Profile newProfile) throws IOException {
         // Get the list of contacts
         final List<Profile> profiles = this.getProfiles();
         final int lengthBefore = profiles.size();
@@ -272,7 +275,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public String getUserPassword() throws IOException {
+    public String getUserPassword() {
         return null;
     }
 
@@ -300,10 +303,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final File file = new File(this.contactsPath);
         if (!file.exists()) {
             LOGGER.warn("Contacts part of the database didn't exist");
-            final Writer writer = this.fileSystem.getWriter(this.contactsPath);
-            writer.write("[]");
-            writer.close();
-            LOGGER.info("Created the contacts part of the database");
+            try (Writer writer = this.fileSystem.getWriter(this.contactsPath)) {
+                writer.write("[]");
+                writer.close();
+                LOGGER.info("Created the contacts part of the database");
+            }
         }
     }
 
@@ -314,31 +318,31 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private void initializeDatabase() throws IOException {
         final File file = new File(this.profilesPath);
         if (!file.exists()) {
-            LOGGER.warn("Part of the database didn't exist: %s", this.profilesPath);
-            final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-            writer.write("[]");
-            writer.close();
-            LOGGER.info("Created the part of the database: %s", this.profilesPath);
+            LOGGER.warn("Part of the database didn't exist: {}", this.profilesPath);
+            try (Writer writer = this.fileSystem.getWriter(this.profilesPath)) {
+                writer.write("[]");
+                writer.close();
+                LOGGER.info("Created the part of the database: {}", this.profilesPath);
+            }
         }
     }
 
     /**
      * Deserialize the instance using readObject to ensure invariants and security.
+     *
      * @param stream The serialized object to be deserialized
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ensureClassInvariant();
+        this.ensureClassInvariant();
     }
 
     /**
      * Ensure that the instance meets its class invariant
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        assertNotNull(this.contactsPath);
-        assertNotNull(this.profilesPath);
-        assertNotNull(this.fileSystem);
+    private void ensureClassInvariant() {
+        assertThat(this.contactsPath, notNullValue());
+        assertThat(this.profilesPath, notNullValue());
+        assertThat(this.fileSystem, notNullValue());
     }
-
 }

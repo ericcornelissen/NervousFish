@@ -42,11 +42,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //  1)  This warning is because the class relies on too many external classes, which can't really be avoided
 //  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
-public class QRExchangeKeyActivity extends AppCompatActivity {
+public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private IServiceLocator serviceLocator;
+    private IKeyGenerator keyGenerator;
     private AlertDialog lastDialog;
     private IKey publicKey;
 
@@ -60,14 +61,14 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
 
-        final Intent intent = getIntent();
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.keyGenerator = this.serviceLocator.getKeyGenerator();
 
 
         //TODO: Get the user's generated public key from the database
-        final IKeyGenerator keyGenerator = serviceLocator.getKeyGenerator();
-        final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
-        publicKey = pair.getPublicKey();
+        final KeyPair pair = this.keyGenerator.generateRSAKeyPair("test");
+        this.publicKey = pair.getPublicKey();
 
     }
 
@@ -77,7 +78,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onBackButtonClick(final View view) {
         LOGGER.info("Return to previous screen");
-        finish();
+        this.finish();
     }
 
     /**
@@ -86,10 +87,8 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onShowQRButtonClick(final View view) {
         LOGGER.info("Started generating QR code");
-        final String space = " ";
-        final Bitmap qrCode = QRGenerator.encode(publicKey.getType() + space + publicKey.getName()
-                + space + publicKey.getKey());
-        showQRCode(qrCode);
+        final Bitmap qrCode = QRGenerator.encode(String.format("%s %s %s", this.publicKey.getType(), this.publicKey.getName(), this.publicKey.getKey()));
+        this.showQRCode(qrCode);
     }
 
     /**
@@ -106,14 +105,14 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult == null) {
             LOGGER.error("No scan result in QR Scanner");
         } else {
             final String result = scanResult.getContents();
-            addNewContact(result);
+            this.addNewContact(result);
         }
 
 
@@ -132,14 +131,14 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             final IKey key = QRGenerator.deconstructToKey(qrMessage);
             final EditText editName = new EditText(this);
             editName.setInputType(InputType.TYPE_CLASS_TEXT);
-            final EditNameClickListener enClickListener = new EditNameClickListener(editName, key);
+            final QRExchangeKeyActivity.EditNameClickListener enClickListener = new QRExchangeKeyActivity.EditNameClickListener(this, this.serviceLocator, editName, key);
             final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.contact_set_name))
+                    .setTitle(this.getString(R.string.contact_set_name))
                     .setView(editName)
-                    .setPositiveButton(getString(R.string.done), enClickListener);
-            lastDialog = builder.create();
-            lastDialog.show();
-        } catch (IllegalArgumentException e) {
+                    .setPositiveButton(this.getString(R.string.done), enClickListener);
+            this.lastDialog = builder.create();
+            this.lastDialog.show();
+        } catch (final IllegalArgumentException e) {
             LOGGER.error("Illegal argument exception in addNewContact", e);
         }
     }
@@ -162,11 +161,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(imageView)
-                .setPositiveButton(getString(R.string.done), new QRCloser());
+                .setPositiveButton(this.getString(R.string.done), new QRExchangeKeyActivity.QRCloser());
 
         ((ViewGroup) imageView.getParent()).removeView(imageView);
-        lastDialog = builder.create();
-        lastDialog.show();
+        this.lastDialog = builder.create();
+        this.lastDialog.show();
     }
 
 
@@ -180,8 +179,10 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         }
     }
 
-    private final class EditNameClickListener implements DialogInterface.OnClickListener {
-
+    private static final class EditNameClickListener implements DialogInterface.OnClickListener {
+        private final Activity activity;
+        private final IServiceLocator serviceLocator;
+        private final IDatabase database;
         private final EditText editName;
         private final IKey key;
 
@@ -190,7 +191,10 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
          * @param editName The textinput from which we show and get the name from.
          * @param key The key made from the QR code.
          */
-        private EditNameClickListener(final EditText editName, final IKey key) {
+        private EditNameClickListener(final Activity activity, final IServiceLocator serviceLocator, final EditText editName, final IKey key) {
+            this.activity = activity;
+            this.serviceLocator = serviceLocator;
+            this.database = serviceLocator.getDatabase();
             this.editName = editName;
             this.key = key;
         }
@@ -202,31 +206,25 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         public void onClick(final DialogInterface dialog, final int which) {
             LOGGER.info("Adding new contact with name input");
             try {
-                final String name = editName.getText().toString();
+                final String name = this.editName.getText().toString();
 
-                final Contact contact = new Contact(name, key);
-                final IDatabase database = serviceLocator.getDatabase();
-                database.addContact(contact);
+                final Contact contact = new Contact(name, this.key);
+                this.database.addContact(contact);
                 dialog.dismiss();
-                final Intent intent = new Intent(QRExchangeKeyActivity.this, ContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+                final Intent intent = new Intent(this.activity, ContactActivity.class);
+                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
                 intent.putExtra(ConstantKeywords.CONTACT, contact);
-                QRExchangeKeyActivity.this.startActivity(intent);
+                this.activity.startActivity(intent);
             } catch (final IOException e) {
                 LOGGER.error("IOException while adding new contact", e);
             } catch (final IllegalArgumentException e) {
                 LOGGER.error("IllegalArgumentException while adding new contact", e);
-                new SweetAlertDialog(QRExchangeKeyActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.contact_already_exists))
-                        .setContentText(getString(R.string.contact_exists_message))
-                        .setConfirmText(getString(R.string.dialog_ok))
+                new SweetAlertDialog(this.activity, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(this.activity.getString(R.string.contact_already_exists))
+                        .setContentText(this.activity.getString(R.string.contact_exists_message))
+                        .setConfirmText(this.activity.getString(R.string.dialog_ok))
                         .show();
             }
         }
-
-
-
     }
-
-
 }

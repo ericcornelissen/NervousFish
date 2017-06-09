@@ -34,7 +34,7 @@ public final class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final Intent intent = getIntent();
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         final IDatabase database = this.serviceLocator.getDatabase();
@@ -55,8 +55,8 @@ public final class LoginActivity extends AppCompatActivity {
     public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
 
-        final View mError = findViewById(R.id.error_message_login);
-        final EditText passwordInput = (EditText) findViewById(R.id.login_password_input);
+        final View mError = this.findViewById(R.id.error_message_login);
+        final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
 
         final boolean skipPassword = passwordInput.getText().toString().isEmpty();
         if (skipPassword) {
@@ -82,7 +82,7 @@ public final class LoginActivity extends AppCompatActivity {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     /**
@@ -91,6 +91,6 @@ public final class LoginActivity extends AppCompatActivity {
     private void toMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 }

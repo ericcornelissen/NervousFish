@@ -53,10 +53,10 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @param name The name of the key
      * @return a randomly generated KeyPair
      */
+    @Override
     public KeyPair generateRSAKeyPair(final String name) {
-        final KeyPairGenerator keyPairGenerator;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
+            final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
             keyPairGenerator.initialize(RSA_KEY_SIZE);
 
             final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();

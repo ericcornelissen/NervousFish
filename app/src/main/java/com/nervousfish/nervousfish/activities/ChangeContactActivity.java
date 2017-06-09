@@ -43,7 +43,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
-        if (getSupportActionBar() != null) {
+        if (this.getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 

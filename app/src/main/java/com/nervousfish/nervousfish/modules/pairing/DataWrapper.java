@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -28,15 +30,15 @@ final class DataWrapper implements Serializable {
     /**
      * @return The data object {@link DataWrapper} wraps
      */
-    public Serializable getData() {
-        return new DataWrapper(this.data).data;
+    Serializable getData() {
+        return SerializationUtils.clone(this.data);
     }
 
     /**
      * @return The class of the thing the {@link DataWrapper} wraps
      */
-    public Class<?> getClazz() {
-        return clazz;
+    Class<?> getClazz() {
+        return this.clazz;
     }
 
     /**
@@ -62,7 +64,7 @@ final class DataWrapper implements Serializable {
      * ordinary serialization - is far more dangerous
      */
     // A private constructor is safer than a hidden constructor
-    @SuppressWarnings("PMD.AccessorClassGeneration")
+    @SuppressWarnings({"PMD.AccessorClassGeneration", "SerializableHasSerializationMethods"})
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
         private final Serializable data;
@@ -72,7 +74,7 @@ final class DataWrapper implements Serializable {
          * @param wrapper The current instance of the proxy
          */
         SerializationProxy(final DataWrapper wrapper) {
-            this.data = wrapper.data;
+            this.data = wrapper.getData();
         }
 
         /**
@@ -80,7 +82,7 @@ final class DataWrapper implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new DataWrapper(data);
+            return new DataWrapper(this.data);
         }
     }
 }

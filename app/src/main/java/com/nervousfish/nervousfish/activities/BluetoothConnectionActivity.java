@@ -50,7 +50,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> pairedDevices;
-    private boolean isMaster = false;
+    private boolean isMaster;
     /**
      * Used to fill the listview of newly discovered Bluetooth devices
      */
@@ -63,12 +63,13 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
+        @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                addNewDevice(intent);
+                BluetoothConnectionActivity.this.addNewDevice(intent);
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                setNoDevicesFound();
+                BluetoothConnectionActivity.this.setNoDevicesFound();
             }
         }
 
@@ -82,7 +83,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_bluetooth_connection);
 
-        final Intent intent = getIntent();
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
 
         // Register for broadcasts when a device is discovered.
@@ -98,18 +99,18 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.newDevicesArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         // Find and set up the ListView for paired devices
-        final ListView pairedListView = (ListView) findViewById(R.id.paired_list);
+        final ListView pairedListView = (ListView) this.findViewById(R.id.paired_list);
         pairedListView.setAdapter(this.pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(new DeviceClickListener());
 
         // Find and set up the ListView for newly discovered devices
-        final ListView newDevicesListView = (ListView) findViewById(R.id.discovered_list);
+        final ListView newDevicesListView = (ListView) this.findViewById(R.id.discovered_list);
         newDevicesListView.setAdapter(this.newDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(new DeviceClickListener());
 
         // Register for broadcasts when discovery has finished
         final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(broadcastReceiver, filter);
+        this.registerReceiver(this.broadcastReceiver, filter);
 
         this.serviceLocator.registerToEventBus(this);
 
@@ -126,7 +127,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         this.serviceLocator.unregisterFromEventBus(this);
-        unregisterReceiver(this.broadcastReceiver);
+        this.unregisterReceiver(this.broadcastReceiver);
     }
 
     /**
@@ -168,10 +169,10 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
             this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-            finish();
+            this.finish();
         } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
             this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-            finish();
+            this.finish();
         }
     }
 
@@ -223,15 +224,15 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onBluetoothConnectedEvent called");
-        if (isMaster) {
+        if (this.isMaster) {
             final Intent intent = new Intent(this, SelectVerificationMethodActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
-            isMaster = false;
+            this.isMaster = false;
         } else {
             final Intent intent = new Intent(this, WaitActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         }
     }
@@ -245,7 +246,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
         // Skip paired devices and devices without a valid name.
-        if (isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED) {
+        if (this.isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED) {
             this.newDevices.add(device);
             this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }
@@ -268,7 +269,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private void setNoDevicesFound() {
         this.setTitle(R.string.select_device);
         if (this.newDevicesArrayAdapter.getCount() == 0) {
-            this.newDevicesArrayAdapter.add(getString(R.string.no_devices_found));
+            this.newDevicesArrayAdapter.add(this.getString(R.string.no_devices_found));
         }
     }
 
@@ -282,18 +283,18 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         @Override
         public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
             // Cancel discovery because it's costly and we're about to connect
-            stopDiscovering();
+            BluetoothConnectionActivity.this.stopDiscovering();
 
             // Get the device MAC address, which is the last 17 chars in the View
             final String info = ((TextView) v).getText().toString();
-            if (info.equals(getString(R.string.no_devices_found))) {
+            if (info.equals(BluetoothConnectionActivity.this.getString(R.string.no_devices_found))) {
                 return;
             }
 
-            isMaster = true;
+            BluetoothConnectionActivity.this.isMaster = true;
             final String address = info.substring(info.length() - 17);
-            final BluetoothDevice device = getDevice(address);
-            bluetoothHandler.connect(device);
+            final BluetoothDevice device = this.getDevice(address);
+            BluetoothConnectionActivity.this.bluetoothHandler.connect(device);
         }
 
         /**
@@ -303,12 +304,12 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
          * @return The BLuetoothDevice corresponding to the mac address.
          */
         private BluetoothDevice getDevice(final String address) {
-            for (final BluetoothDevice device : pairedDevices) {
+            for (final BluetoothDevice device : BluetoothConnectionActivity.this.pairedDevices) {
                 if (device.getAddress().equals(address)) {
                     return device;
                 }
             }
-            for (final BluetoothDevice device : newDevices) {
+            for (final BluetoothDevice device : BluetoothConnectionActivity.this.newDevices) {
                 if (device.getAddress().equals(address)) {
                     return device;
                 }

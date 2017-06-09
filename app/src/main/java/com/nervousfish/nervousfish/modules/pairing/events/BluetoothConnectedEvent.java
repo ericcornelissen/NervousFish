@@ -20,6 +20,6 @@ public final class BluetoothConnectedEvent {
     }
 
     public AndroidBluetoothConnectedThread getThread() {
-        return thread;
+        return this.thread;
     }
 }

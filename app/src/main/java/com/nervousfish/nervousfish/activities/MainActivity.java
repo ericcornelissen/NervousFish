@@ -16,6 +16,8 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -25,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -47,12 +50,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
-    private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_START = 100;
-    private static final int REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
+    private static final int ENABLE_BLUETOOTH_ON_START = 100;
+    private static final int ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
 
     private List<Contact> contacts;
 
     private IServiceLocator serviceLocator;
+    private IDatabase database;
     private MainActivitySorter sorter;
 
     /**
@@ -63,33 +67,36 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Intent intent = getIntent();
+        final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.database = this.serviceLocator.getDatabase();
         this.setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (this.getSupportActionBar() != null) {
+            this.getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         try {
-            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+            this.contacts = this.database.getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        sorter = new MainActivitySorter(this);
-        sorter.sortOnName();
+        this.sorter = new MainActivitySorter(this);
+        this.sorter.sortOnName();
 
+        final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         try {
-            this.serviceLocator.getBluetoothHandler().start();
-        } catch (NoBluetoothException e) {
-            LOGGER.info("Bluetooth not available on device, disabling button");
+            //noinspection LawOfDemeter because we don't want to clutter the service locator
+            bluetoothHandler.start();
+        } catch (final NoBluetoothException e) {
+            LOGGER.info("Bluetooth not available on device, disabling button", e);
             final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
             button.setEnabled(false);
-        } catch (IOException e) {
-            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
+        } catch (final IOException e) {
+            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled", e);
             this.enableBluetooth(false);
         }
 
@@ -125,8 +132,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            this.contacts = serviceLocator.getDatabase().getAllContacts();
-            sorter.sortOnName();
+            this.contacts = this.database.getAllContacts();
+            this.sorter.sortOnName();
         } catch (final IOException e) {
             LOGGER.error("onResume in MainActivity threw an IOException", e);
         }
@@ -138,7 +145,7 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The sort floating action button that was clicked
      */
     public void onSortButtonClicked(final View view) {
-        sorter.onSortButtonClicked(view);
+        this.sorter.onSortButtonClicked(view);
     }
 
     /**
@@ -149,7 +156,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
         try {
-            this.contacts = this.serviceLocator.getDatabase().getAllContacts();
+            this.contacts = this.database.getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("onStart in MainActivity threw an IOException", e);
         }
@@ -182,7 +189,7 @@ public final class MainActivity extends AppCompatActivity {
             textOnLabel = ((Label) view).getText().toString();
         }
 
-        if (view.getId() == R.id.pairing_menu_bluetooth || textOnLabel.equals(getResources().getString(R.string.bluetooth))) {
+        if (view.getId() == R.id.pairing_menu_bluetooth || textOnLabel.equals(this.getResources().getString(R.string.bluetooth))) {
             final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
@@ -191,12 +198,12 @@ public final class MainActivity extends AppCompatActivity {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
             }
-        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
+        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(this.getResources().getString(R.string.nfc))) {
             intent.setComponent(new ComponentName(this, NFCActivity.class));
-        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
+        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(this.getResources().getString(R.string.qr))) {
             intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
         } else {
-            LOGGER.error("Unknown pairing button clicked: " + view.getId());
+            LOGGER.error("Unknown pairing button clicked: {}", view.getId());
             throw new IllegalArgumentException("Only existing buttons can be clicked");
         }
 
@@ -226,7 +233,7 @@ public final class MainActivity extends AppCompatActivity {
 
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
@@ -242,10 +249,10 @@ public final class MainActivity extends AppCompatActivity {
                 .setConfirmText(this.getString(R.string.yes))
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
-                    public void onClick(final SweetAlertDialog sDialog) {
+                    public void onClick(final SweetAlertDialog sweetAlertDialog) {
                         final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                        startActivity(intent);
+                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, MainActivity.this.serviceLocator);
+                        MainActivity.this.startActivity(intent);
                     }
                 })
                 .show();
@@ -262,12 +269,10 @@ public final class MainActivity extends AppCompatActivity {
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
-            final String description;
-            if (buttonClicked) {
-                description = this.getString(R.string.popup_enable_bluetooth_exchange);
-            } else {
-                description = this.getString(R.string.popup_enable_bluetooth_findable);
-            }
+            final String description = this.getString(
+                    buttonClicked
+                            ? R.string.popup_enable_bluetooth_exchange
+                            : R.string.popup_enable_bluetooth_findable);
 
             new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
                     .setTitleText(this.getString(R.string.popup_enable_bluetooth_title))
@@ -276,15 +281,15 @@ public final class MainActivity extends AppCompatActivity {
                     .setConfirmText(this.getString(R.string.yes))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
-                        public void onClick(final SweetAlertDialog dialog) {
-                            dialog.dismiss();
+                        public void onClick(final SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
 
                             LOGGER.info("Requesting to enable Bluetooth");
                             final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                             if (buttonClicked) {
-                                startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK);
+                                MainActivity.this.startActivityForResult(intent, ENABLE_BLUETOOTH_ON_BUTTON_CLICK);
                             } else {
-                                startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_START);
+                                MainActivity.this.startActivityForResult(intent, ENABLE_BLUETOOTH_ON_START);
                             }
                             LOGGER.info("Request to enable Bluetooth sent");
                         }
@@ -299,7 +304,7 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
+        if (resultCode == RESULT_OK && requestCode == ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
             intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
@@ -307,7 +312,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     List<Contact> getContacts() {
-        return contacts;
+        return new ArrayList<>(this.contacts);
     }
 
 }

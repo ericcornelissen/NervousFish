@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -37,15 +38,15 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
+    @DesignedForExtension
     public PairingWrapper<IDataReceiver> getDataReceiver() {
         return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
             @Override
             public void dataReceived(final byte[] bytes) {
-                final DataWrapper object;
                 try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                      ObjectInputStream ois = new ObjectInputStream(bis)) {
-                    object = (DataWrapper) ois.readObject();
-                    serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                    final DataWrapper object = (DataWrapper) ois.readObject();
+                    APairingHandler.this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 } catch (final ClassNotFoundException | IOException e) {
                     LOGGER.error(" Couldn't start deserialization!", e);
                 }
@@ -66,10 +67,10 @@ abstract class APairingHandler implements IPairingHandler {
             oos.flush();
             bytes = bos.toByteArray();
         }
-        send(bytes);
+        this.send(bytes);
     }
 
-    protected IServiceLocator getServiceLocator() {
+    protected final IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }
 }
