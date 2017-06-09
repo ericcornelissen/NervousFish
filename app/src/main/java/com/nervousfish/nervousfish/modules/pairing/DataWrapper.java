@@ -61,8 +61,9 @@ final class DataWrapper implements Serializable {
      * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
      * ordinary serialization - is far more dangerous
      */
-    // A private constructor is safer than a hidden constructor
     @SuppressWarnings({"PMD.AccessorClassGeneration", "SerializableHasSerializationMethods"})
+    // 1) A private constructor is safer than a hidden constructor
+    // 2) SerializationProxy doesn't need the write method, because it creates the class by calling the contstructor in readResolve
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
         private final Serializable data;
