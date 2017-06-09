@@ -15,10 +15,7 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -28,8 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -79,9 +74,6 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         try {
-            if (this.serviceLocator.getDatabase().getAllContacts().isEmpty()) {
-                fillDatabaseWithDemoData();
-            }
             this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
@@ -232,33 +224,6 @@ public final class MainActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
-    }
-
-
-
-    /**
-     * Temporarily fill the database with demo data for development.
-     * Checkstyle is disabled, because this method is only temporarily
-     */
-    @SuppressWarnings("checkstyle:multipleStringLiterals")
-    private void fillDatabaseWithDemoData() throws IOException {
-        final IDatabase database = this.serviceLocator.getDatabase();
-        final Collection<IKey> keys = new ArrayList<>();
-        keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
-        keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
-        final Contact a = new Contact("Eric", keys);
-        final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
-        //final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
-        //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
-        //final Contact e = new Contact("Cornel", new SimpleKey("Awesomeness", "nr23uinr3uin2o3uin23oi4un234ijn"));
-
-        final List<Contact> contacts = database.getAllContacts();
-        for (final Contact contact : contacts) {
-            database.deleteContact(contact.getName());
-        }
-
-        database.addContact(a);
-        database.addContact(b);
     }
 
     /**

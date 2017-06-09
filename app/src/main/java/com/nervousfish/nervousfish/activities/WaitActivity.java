@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.activities;
 
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.VerificationMethod;
+import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -118,20 +121,25 @@ public final class WaitActivity extends Activity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called, type is " + event.getClazz());
-        if (event.getClazz().equals(String.class)) {
-            final String verificationMessage = (String) event.getData();
+        if (event.getClazz().equals(VerificationMethod.class)) {
+            final VerificationMethodEnum verificationMethod = ((VerificationMethod) event.getData()).getVerificationMethod();
 
-            if ("rhythm".equals(verificationMessage)) {
-                //Go to RhythmActivity
-                final Intent intent = new Intent(this, RhythmCreateActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                this.startActivityForResult(intent, 0);
-            } else if ("visual".equals(verificationMessage)) {
-                //Go to VisualVerificationActivity
-                final Intent intent = new Intent(this, VisualVerificationActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
-                this.startActivityForResult(intent, 0);
+            final Intent intent = new Intent();
+            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
+            switch (verificationMethod) {
+                case RHYTHM:
+                    //Go to RhythmActivity
+                    intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                    break;
+                case VISUAL:
+                    //Go to VisualVerificationActivity
+                    intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
+                    break;
+                default:
+                    LOGGER.error("Unknown verification method");
+                    throw new IllegalArgumentException("Only existing verification methods can be used");
             }
+            this.startActivityForResult(intent, 0);
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             try {
