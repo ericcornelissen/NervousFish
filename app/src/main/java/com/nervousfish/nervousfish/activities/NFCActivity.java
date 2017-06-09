@@ -34,7 +34,6 @@ import static android.nfc.NdefRecord.createExternal;
 public final class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
-    private IDatabase database;
     private TextView descriptionText;
     private IServiceLocator serviceLocator;
     private byte[] bytes;
@@ -49,7 +48,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        this.database = this.serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
 
         this.descriptionText = (TextView) this.findViewById(R.id.nfc_instruction);
         // Check for available NFC Adapter
@@ -57,7 +56,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         LOGGER.info("Start creating an NDEF message to beam");
         Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) this.findViewById(R.id.nfc_gif));
         try {
-            final Profile myProfile = this.database.getProfiles().get(0);
+            final Profile myProfile = database.getProfiles().get(0);
             LOGGER.info("Sending my profile with name: {} , public key: {} ", myProfile.getName(),
                     myProfile.getPublicKey());
             final Contact contact = new Contact(myProfile.getName(), myProfile.getPublicKey());
@@ -117,7 +116,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
      * Parses the NDEF Message from the intent and prints to the TextView
      * @param intent intent received by this {@link Activity}
      */
-    final void processIntent(final Intent intent) {
+    void processIntent(final Intent intent) {
         LOGGER.info("Started processing intent");
         this.descriptionText = (TextView) this.findViewById(R.id.textView);
         final Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
