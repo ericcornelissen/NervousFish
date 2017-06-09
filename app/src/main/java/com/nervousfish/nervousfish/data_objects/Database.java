@@ -6,6 +6,7 @@ import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -96,7 +97,11 @@ public final class Database implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Database(Arrays.asList(this.contacts), this.profile);
+            final List<Contact> contactsList = new ArrayList<>();
+            for (final Contact contact : contacts) {
+                contactsList.add(contact);
+            }
+            return new Database(contactsList, this.profile);
         }
     }
 }

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,13 +23,18 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.Random;
 
 import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public final class EncryptedSaver {
 
-    private static final int SALT_LENGTH = 8;
-    private static final Logger LOGGER = LoggerFactory.getLogger("QRGenerator");
+    private static final Logger LOGGER = LoggerFactory.getLogger("Encrypted Saver");
+    private static final int SEED = 1234569;
 
     /**
      * Unused constructor for utility class.
@@ -41,9 +48,9 @@ public final class EncryptedSaver {
      * Generates a salt bytestring using a seed.
      * @return The salt bytestring.
      */
-    public static byte[] generateSalt(int seed) {
+    public static byte[] generateSalt(int seed, int length) {
         final Random random = new Random(seed);
-        byte bytes[] = new byte[SALT_LENGTH];
+        byte bytes[] = new byte[length];
         random.nextBytes(bytes);
         LOGGER.info("Generated salt bytestring");
         return bytes;
@@ -96,16 +103,17 @@ public final class EncryptedSaver {
      * Encrypts or decrypts a string with a password to
      * @param toEncrypt The string to be encrypted/decrypted
      * @param password  The password to encrypt/decrypt with
-     * @param ivSpec    The initialization vector specifications bytestring (length 8)
      * @param encrypt   whether we're encrypting or decrypting.
      * @return  The encrypted/decrypted bytearray.
      */
-    public static byte[] encryptOrDecryptWithPassword(final byte[] toEncrypt, final String password, final byte[] ivSpec, final boolean encrypt) {
-
+    public static byte[] encryptOrDecryptWithPassword(final byte[] toEncrypt, final String password,  final boolean encrypt) {
+        LOGGER.info("Started encrypting with password");
         try {
+            final byte[] ivSpec = new byte[8];
+            final Random random = new Random(SEED);
+            random.nextBytes(ivSpec);
             final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
-            final byte[] psw = password.getBytes();
-            final Cipher cipher = getCipher(psw, ivSpec, mode);
+            final Cipher cipher = getCipher(password, ivSpec, mode);
             final byte[] converted = new byte[cipher.getOutputSize(toEncrypt.length)];
             int conv_len = cipher.update(toEncrypt, 0, toEncrypt.length, converted, 0);
             conv_len += cipher.doFinal(converted, conv_len);
@@ -130,17 +138,34 @@ public final class EncryptedSaver {
      * @param mode  Whether we're encrypting or decrypting
      * @return  the configured Cipher.
      */
-    private static final Cipher getCipher(final byte[] psw, final byte[] ivSpec, final int mode) {
+    private static final Cipher getCipher(final String psw, final byte[] ivSpec, final int mode) {
+        LOGGER.info("Getting cipher for decrypting");
         try {
-            final IvParameterSpec spec = new IvParameterSpec(ivSpec);
-            final Cipher chiper = Cipher.getInstance("DES/CBC/PKCS5Padding");
-            final SecretKeySpec key = new SecretKeySpec(psw, "DES");
-            chiper.init(mode, key, spec);
-            return chiper;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            PBEKeySpec keySpec = new PBEKeySpec(psw.toCharArray());
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            //Create parameters from the salt and an arbitrary number of iterations:
+            PBEParameterSpec pbeParamSpec = new PBEParameterSpec(ivSpec, 42);
+
+
+            //Set up the cipher:
+            Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+            cipher.init(mode, key, pbeParamSpec);
+            return cipher;
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
+
+        } catch (InvalidKeySpecException e) {
+            LOGGER.error("The key spec is invalid", e);
+        } catch (NoSuchPaddingException e) {
+            LOGGER.error("There isn't a padding as PBEWithMD5AndDES", e);
+        } catch (InvalidKeyException e) {
+            LOGGER.error("The key is invalid", e);
+        } catch (InvalidAlgorithmParameterException e) {
+            LOGGER.error("The algorithm parameter is invalid", e);
         }
+        return null;
     }
 
     /**

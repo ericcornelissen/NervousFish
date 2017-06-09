@@ -66,9 +66,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final IFileSystem fileSystem;
     private final IKeyGenerator keyGenerator;
 
-    private final byte[] ivSpec;
-    private final int randomSeed = 1234569;
-
     /**
      * Prevents construction from outside the class.
      *
@@ -79,7 +76,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
         this.fileSystem = serviceLocator.getFileSystem();
         this.keyGenerator = serviceLocator.getKeyGenerator();
         this.databaseMap = new HashMap<String, Object>();
-        this.ivSpec = EncryptedSaver.generateSalt(randomSeed);
         this.databasePath = serviceLocator.getConstants().getDatabasePath();
         this.passwordPath = serviceLocator.getConstants().getPasswordPath();
         LOGGER.info("Initialized");
@@ -238,7 +234,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             passwordFileString += line;
         }
         final String databasePassJson = new String(EncryptedSaver.encryptOrDecryptWithPassword(passwordFileString.getBytes(),
-                password, ivSpec, false));
+                password, false));
         final DatabasePass databasePass =  gsonParser.fromJson(databasePassJson, TYPE_DATABASE_PASS);
         if(!databasePass.getEncryptedPassword().equals(EncryptedSaver.hashWithoutSalt(password))) {
             throw new IOException("Password is wrong");
@@ -334,15 +330,18 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
 
         DatabasePass databasePass = getDatabasePass();
+        LOGGER.info("DatabasePass" + databasePass);
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
         String databasePassJson = gsonParser.toJson(databasePass);
 
-        LOGGER.info("Database pass translated to json:", databasePass);
+        LOGGER.info("Database pass translated to json: "+ databasePass);
         final Writer writer = this.fileSystem.getWriter(passwordPath);
 
+        LOGGER.info("Database pass"+databasePassJson);
+        LOGGER.info("Password" + password);
         writer.write(new String(EncryptedSaver.encryptOrDecryptWithPassword(databasePassJson.getBytes(),
-                password, ivSpec, true)));
+                password, true)));
         writer.close();
         LOGGER.info("Created the password file: %s", this.passwordPath);
 
