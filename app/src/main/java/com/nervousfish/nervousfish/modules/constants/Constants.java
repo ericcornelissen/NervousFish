@@ -24,6 +24,8 @@ public final class Constants implements IConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private static final String DB_USERDATA_PATH = "accountInformation.json";
     private static final String DB_CONTACTS_PATH = "contacts.json";
+    private static final String DB_DATABASE_PATH = "database.txt";
+    private static final String DB_PASSWORD_PATH = "databaseKey.txt";
     // Unique secure uuid for this application
     private static final UUID MY_UUID = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
@@ -49,6 +51,23 @@ public final class Constants implements IConstants {
      */
     public static ModuleWrapper<Constants> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new Constants(serviceLocator));
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPasswordPath() {
+        return this.androidFilesDir + Constants.DB_PASSWORD_PATH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDatabasePath() {
+        return this.androidFilesDir + Constants.DB_DATABASE_PATH;
     }
 
     /**

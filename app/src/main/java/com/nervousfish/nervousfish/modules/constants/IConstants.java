@@ -11,6 +11,20 @@ import java.util.UUID;
 public interface IConstants extends IModule {
 
     /**
+     * Get the path to the password file.
+     *
+     * @return
+     */
+    String getPasswordPath();
+
+    /**
+     * Get the path to the database file.
+     *
+     * @return A {@link String} of the path.
+     */
+    String getDatabasePath();
+
+    /**
      * Get the path to the database file for the contacts.
      *
      * @return A {@link String} of the path.

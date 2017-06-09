@@ -49,14 +49,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
 
     //  Strings for saving database related objects in the map
-    private static final String DATABASE_PATH = "database path";
-    private static final String PASSWORD_PATH = "databaseKey";
+    private final String databasePath;
+    private final String passwordPath;
     private static final String DATABASE = "database";
     private static final String DATABASE_PASS = "database pass";
     private static final String PUBLIC_KEY = "public key";
-
-    private final String passwordPath;
-    private final String androidFilesDir;
 
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private static final Type TYPE_DATABASE = new TypeToken<Database>() {
@@ -82,9 +79,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
         this.fileSystem = serviceLocator.getFileSystem();
         this.keyGenerator = serviceLocator.getKeyGenerator();
         this.databaseMap = new HashMap<String, Object>();
-        this.androidFilesDir = serviceLocator.getAndroidFilesDir();
         this.ivSpec = EncryptedSaver.generateSalt(randomSeed);
-        this.passwordPath = androidFilesDir + PASSWORD_PATH;
+        this.databasePath = serviceLocator.getConstants().getDatabasePath();
+        this.passwordPath = serviceLocator.getConstants().getPasswordPath();
         LOGGER.info("Initialized");
     }
 
@@ -218,7 +215,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         String databaseJson = gsonParser.toJson(getDatabase());
         String encryptedDatabase = EncryptedSaver.encryptUsingRSA(databaseJson, getPublicKey());
-        final Writer writer = this.fileSystem.getWriter(getDatabasePath());
+        final Writer writer = this.fileSystem.getWriter(databasePath);
         writer.write(encryptedDatabase);
         writer.close();
     }
@@ -253,7 +250,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
 
         // Get the database from the database file
-        final String databasePath = getDatabasePath();
         final BufferedReader databaseReader = (BufferedReader) this.fileSystem.getReader(databasePath);
 
         String databaseFileString = "";
@@ -301,10 +297,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param password The password to initialize the database with.
      */
     private void initializeDatabase(String password) throws IOException {
-        final String databasePath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(DATABASE_PATH+password);
         LOGGER.info("Database path created: " + databasePath);
         File file = new File(databasePath);
-        databaseMap.put(DATABASE_PATH, databasePath);
 
         if (file.exists()) {
             return;
@@ -320,7 +314,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         writer.write(databaseJson);
         writer.close();
-        LOGGER.info("Created the database: %s", this.getDatabasePath());
+        LOGGER.info("Created the database: %s", this.databasePath);
 
 
     }
@@ -356,8 +350,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
 
-
-
     /**
      * Gets the databasePass from the databaseMap
      * @throws IOException throws IOException if the database isn't loaded yet.
@@ -386,20 +378,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
     }
 
-    /**
-     * Gets the databasepath from the databaseMap
-     * @throws IOException throws IOException if the database isn't loaded yet.
-     */
-    private String getDatabasePath() throws IOException {
-        Object object = databaseMap.get(DATABASE_PATH);
-        if(object instanceof String) {
-            String dbp = (String) object;
-            return dbp;
-        } else {
-            throw new IOException(DATABASE_NOT_CREATED);
-        }
-
-    }
 
     /**
      * Gets the publicKey from the databaseMap
