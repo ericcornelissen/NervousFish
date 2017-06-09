@@ -9,6 +9,7 @@ import com.nervousfish.nervousfish.R;
  * An {@link Activity} that used for pairing over NFC
  */
 public class NFCActivity extends Activity {
+
     /**
      * Creates the new activity, should only be called by Android
      *
@@ -17,6 +18,7 @@ public class NFCActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nfc);
+        this.setContentView(R.layout.activity_nfc);
     }
+
 }
