@@ -67,7 +67,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
         this.serviceLocator = NervousFish.getServiceLocator();
-
+        final IDatabase database = this.serviceLocator.getDatabase();
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
