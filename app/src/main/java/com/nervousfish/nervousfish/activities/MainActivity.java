@@ -235,7 +235,7 @@ public final class MainActivity extends AppCompatActivity {
         final Collection<IKey> keys = new ArrayList<>();
         keys.add(new SimpleKey("Webmail", "jdfs09jdfs09jfs0djfds9jfsd0"));
         keys.add(new SimpleKey("Webserver", "jasdgoijoiahl328hg09asdf322"));
-        final Contact a = new Contact("Eric", keys);
+        final Contact a = new Contact("Joost", keys);
         final Contact b = new Contact("Stas", new SimpleKey("FTP", "4ji395j495i34j5934ij534i"));
         //final Contact c = new Contact("Joost", new SimpleKey("Webserver", "dnfh4nl4jknlkjnr4j34klnk3j4nl"));
         //final Contact d = new Contact("Kilian", new SimpleKey("Webmail", "sdjnefiniwfnfejewjnwnkenfk32"));
