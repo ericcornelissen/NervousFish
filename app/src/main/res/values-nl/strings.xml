@@ -99,7 +99,7 @@
 
     <!-- NFC -->
     <string name="descr_gif">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>
-    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om contacten uit te wisselen .</string>
+    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om contacten uit te wisselen.</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>

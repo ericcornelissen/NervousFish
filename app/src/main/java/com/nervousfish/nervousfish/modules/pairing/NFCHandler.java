@@ -14,7 +14,6 @@ import java.io.Serializable;
 /**
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
-@SuppressWarnings("PMD.SingularField") // it's the serviceLocator, which isn't being used yet
 public final class NFCHandler extends APairingHandler implements INfcHandler {
 
     private static final long serialVersionUID = -6465987636766819498L;
@@ -60,6 +59,8 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
     @Override
     public void send(final byte[] buffer) {
         // The NFC Handler handles the exchange of bytes in the activity
+        LOGGER.error("NFC Handler's send method has been called!!!");
+        throw new UnsupportedOperationException("Shouldn't be used");
     }
 
 

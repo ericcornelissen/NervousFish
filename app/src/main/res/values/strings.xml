@@ -101,7 +101,7 @@
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
 
     <!-- NFC -->
-    <string name="descr_gif">This should be a gif representing nfc usage.</string>
+    <string name="descr_gif">This should be a gif representing the use of NFC.</string>
     <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
 
 </resources>
