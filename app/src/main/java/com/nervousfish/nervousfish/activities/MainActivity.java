@@ -326,7 +326,7 @@ public final class MainActivity extends AppCompatActivity {
             this.startActivity(intent);
         } else {
             final String description;
-            description = this.getString(R.string.popup_enable_nfc_exchange);
+            description = this.getString(R.string.popup_enable_nfc_settings);
             LOGGER.info("Requesting to enable NFC");
             new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
                     .setTitleText(this.getString(R.string.popup_enable_nfc_title))

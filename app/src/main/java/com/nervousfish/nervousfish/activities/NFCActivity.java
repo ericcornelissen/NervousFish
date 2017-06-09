@@ -46,7 +46,6 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_nfc);
 
-        final Intent intent = this.getIntent();
         this.serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = this.serviceLocator.getDatabase();
 
@@ -133,10 +132,9 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
      */
     @Override
     public void onStop() {
-        super.onStop();
-
         this.serviceLocator.unregisterFromEventBus(this);
         LOGGER.info("Stopped NFCActivity");
+        super.onStop();
     }
 
 }
