@@ -105,8 +105,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(this.broadcastReceiver, filter);
 
-        this.serviceLocator.registerToEventBus(this);
-
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Get the AndroidBluetoothHandler.
