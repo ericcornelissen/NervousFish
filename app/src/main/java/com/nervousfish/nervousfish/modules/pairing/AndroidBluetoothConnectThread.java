@@ -22,6 +22,7 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  * succeeds or fails.
  */
 final class AndroidBluetoothConnectThread implements IBluetoothThread {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectThread");
     private final BluetoothSocket socket;
     private final Thread thread;
@@ -59,7 +60,7 @@ final class AndroidBluetoothConnectThread implements IBluetoothThread {
      * {@inheritDoc}
      */
     @Override
-    public void cancel(final boolean closeSocket) {
+    public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
             this.socket.close();
@@ -70,11 +71,19 @@ final class AndroidBluetoothConnectThread implements IBluetoothThread {
     }
 
     private static final class ConnectThread implements Runnable {
+
         private final IServiceLocator serviceLocator;
         private final BluetoothSocket socket;
 
+        /**
+         * Simple constructor for the {@link ConnectThread}.
+         *
+         * @param serviceLocator An {@link IServiceLocator}.
+         * @param socket The {@link BluetoothSocket}.
+         */
         ConnectThread(final IServiceLocator serviceLocator, final BluetoothSocket socket) {
             super();
+
             this.serviceLocator = serviceLocator;
             this.socket = socket;
         }
@@ -106,5 +115,7 @@ final class AndroidBluetoothConnectThread implements IBluetoothThread {
 
             this.serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(this.socket));
         }
+
     }
+
 }
