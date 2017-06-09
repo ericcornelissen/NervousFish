@@ -46,6 +46,7 @@ public final class WaitActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.database = this.serviceLocator.getDatabase();
 
         final Intent intent = this.getIntent();
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
