@@ -30,6 +30,16 @@ public interface IDatabase extends IModule {
 
 
     /**
+     * Update an existing contact in the database.
+     *
+     * @param oldContact The old {@link Contact} to be updated.
+     * @param newContact The new {@link Contact} details.
+     * @throws IllegalArgumentException When {@code oldContact} is not in the database.
+     */
+    void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException;
+
+
+    /**
      * Get a list of all contacts in the database.
      *
      * @return A {@link List} of {@link Contact Contacts}.

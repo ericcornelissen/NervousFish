@@ -50,7 +50,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     //  Strings for saving database related objects in the map
     private static final String DATABASE_PATH = "database path";
-    private static final String PASSWORD_PATH = "databaseKey.txt";
+    private static final String PASSWORD_PATH = "databaseKey";
     private static final String DATABASE = "database";
     private static final String DATABASE_PASS = "database pass";
     private static final String PUBLIC_KEY = "public key";
@@ -134,6 +134,25 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
 
         this.updateContacts(contacts);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException {
+        Database database = getDatabase();
+        List<Contact> contacts = database.getContacts();
+        final int lengthBefore = contacts.size();
+        contacts.remove(oldContact);
+
+        // Throw if the contact to update is not found
+        if (contacts.size() == lengthBefore) {
+            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
+        }
+
+        contacts.add(newContact);
+        updateDatabase();
     }
 
 
@@ -283,7 +302,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private void initializeDatabase(String password) throws IOException {
         final String databasePath = this.androidFilesDir + EncryptedSaver.hashWithoutSalt(DATABASE_PATH+password);
-
+        LOGGER.info("Database path created: " + databasePath);
         File file = new File(databasePath);
         databaseMap.put(DATABASE_PATH, databasePath);
 
@@ -297,6 +316,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final Gson gsonParser = gsonBuilder.create();
 
         final String databaseJson = gsonParser.toJson(getDatabase());
+        LOGGER.info("Database translated to json:", databaseJson);
+
         writer.write(databaseJson);
         writer.close();
         LOGGER.info("Created the database: %s", this.getDatabasePath());
@@ -310,7 +331,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param password The password to initialize the database with.
      */
     private void initializePassword(String password) throws IOException {
-        final String passwordPath = PASSWORD_PATH;
+        final String passwordPath = this.passwordPath;
 
         File file = new File(passwordPath);
 
@@ -321,11 +342,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
         DatabasePass databasePass = getDatabasePass();
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
-        String lockpairJson = gsonParser.toJson(databasePass);
+        String databasePassJson = gsonParser.toJson(databasePass);
 
-
+        LOGGER.info("Database pass translated to json:", databasePass);
         final Writer writer = this.fileSystem.getWriter(passwordPath);
-        writer.write(new String(EncryptedSaver.encryptOrDecryptWithPassword(lockpairJson.getBytes(),
+
+        writer.write(new String(EncryptedSaver.encryptOrDecryptWithPassword(databasePassJson.getBytes(),
                 password, ivSpec, true)));
         writer.close();
         LOGGER.info("Created the password file: %s", this.passwordPath);
@@ -334,23 +356,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     }
 
 
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        ensureClassInvariant();
-    }
 
-    /**
-     * Ensure that the instance meets its class invariant
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
-     */
-    private void ensureClassInvariant() throws InvalidObjectException, IOException {
-        this.getDatabasePath();
-        assertNotNull(this.fileSystem);
-    }
 
     /**
      * Gets the databasePass from the databaseMap

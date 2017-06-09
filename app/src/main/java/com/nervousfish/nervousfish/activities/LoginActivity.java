@@ -63,20 +63,15 @@ public final class LoginActivity extends AppCompatActivity {
             final String providedPassword = passwordInput.getText().toString();
 
             try {
-                currentUser = database.checkPasswordForUsers(providedPassword);
-            } catch (IOException e) {
-                LOGGER.error("Failed to find profile in database", e);
-            }
-
-            final boolean wrongPassword = (currentUser == null);
-            if (wrongPassword) {
-                LOGGER.warn("Password incorrect!");
+                database.loadDatabase(providedPassword);
                 mError.setVisibility(View.VISIBLE);
-            } else {
-                LOGGER.info("Password correct");
+            } catch (IOException e) {
+                LOGGER.error("Something went wrong when loading the database", e);
                 mError.setVisibility(View.GONE);
                 this.toMainActivity();
             }
+
+           
         }
     }
 

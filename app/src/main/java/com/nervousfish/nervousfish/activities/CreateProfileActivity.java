@@ -93,9 +93,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 final Contact userContact = new Contact(name, publicKeys);
                 final Profile userProfile = new Profile(userContact, keyPairs);
                 database.createDatabase(userProfile, password);
-                
+
                 this.showProfileCreatedDialog();
             } catch (IOException e) {
+                LOGGER.error("Something went wrong when creating a profile", e);
                 this.showProfileNotCreatedDialog();
             }
         } else {
