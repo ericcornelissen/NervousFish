@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
@@ -24,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * An {@link Activity} that is used for pairing using QR codes
@@ -41,7 +35,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private static final String SEMICOLON = ";";
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
-    private IServiceLocator serviceLocator;
     private Profile profile;
 
     /**
@@ -51,10 +44,10 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-        this.serviceLocator = NervousFish.getServiceLocator();
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
 
         try {
-            profile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            profile = serviceLocator.getDatabase().getProfiles().get(0);
         } catch (IOException e) {
             LOGGER.error("Loading the public key went wrong", e);
         }
@@ -79,33 +72,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         LOGGER.info("Started scanning QR code");
         final IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
-    }
-
-
-    /**
-     * Adds new contact with the scanned key and opens change
-     *
-     * @param qrMessage The information we got from the QR code.
-     */
-    private void addNewContact(final String qrMessage) {
-        try {
-            LOGGER.info("Adding new contact to database");
-            //Name is the first part
-            final String name = qrMessage.split(SEMICOLON)[0];
-            //Key is the second part
-            final IKey key = QRGenerator.deconstructToKey(qrMessage.split(SEMICOLON)[1]);
-
-            final Contact contact = new Contact(name, key);
-            this.serviceLocator.getDatabase().addContact(contact);
-
-            final Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
-            this.startActivity(intent);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Illegal argument exception in addNewContact", e);
-        } catch (IOException e) {
-            LOGGER.error("IOException in addNewContact", e);
-        }
     }
 
     /**
