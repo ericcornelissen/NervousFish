@@ -226,6 +226,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         /**
          * Returns the unique key that corresponds to the taps specified.
+         * The key is a binary number.
+         * Short interval = 0, long interval = 1
+         * If the user taps a short - long - short - long interval, then the returned key is
+         * 1010 (because the numbers are always written from right to left
          *
          * @param taps The taps that should be encoded to a key
          * @return The unique key that corresponds to the taps
