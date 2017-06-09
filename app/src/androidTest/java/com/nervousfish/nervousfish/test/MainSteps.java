@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 
-import com.nervousfish.nervousfish.BaseTest;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
@@ -17,7 +15,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.junit.Rule;
 
@@ -44,8 +42,6 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
 @CucumberOptions(features = "features")
 public class MainSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, true, false);
@@ -53,7 +49,6 @@ public class MainSteps {
     @Given("^I am viewing the main activity$")
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.mActivityRule.launchActivity(intent);
       
         try {
@@ -66,7 +61,8 @@ public class MainSteps {
         final IKey key = new RSAKey("Email", "42", "13");
         final Contact contact = new Contact(name, key);
 
-        final IDatabase database = this.serviceLocator.getDatabase();
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        final IDatabase database = serviceLocator.getDatabase();
         database.addContact(contact);
     }
 
