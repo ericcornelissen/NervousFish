@@ -229,7 +229,6 @@ public final class MainActivity extends AppCompatActivity {
      */
     public void onClickDotsButton(final View view) {
         final Intent intent = new Intent(this, SettingsActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
 

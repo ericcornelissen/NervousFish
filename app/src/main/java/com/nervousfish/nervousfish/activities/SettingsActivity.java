@@ -18,6 +18,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. This
  * is the place where your profile is changed.
  */
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+//Because of the structure with the static methods, a static attribute has to be set.
 @SuppressWarnings({"checkstyle:AnonInnerLength", "PMD.AvoidUsingVolatile"})
 //1. In this class large anonymous classes are needed. It does not infer with readability.
 //2. The volatile identifier is needed because this class uses static methods, which are essential.
@@ -143,9 +149,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
-        final Intent intent = getIntent();
         if (serviceLocator == null) {
-            serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+            serviceLocator = NervousFish.getServiceLocator();
         }
 
         try {
@@ -165,7 +170,6 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         super.onHeaderClick(header, position);
         if (header.id == R.id.key_management_header) {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
             this.startActivity(intent);
         }
     }
