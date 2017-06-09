@@ -18,19 +18,23 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * An {@link Activity} that is used for pairing using QR codes
  */
-@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.AccessorClassGeneration"})
+@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.AccessorClassGeneration", "PMD.ExcessiveImports"})
 //  1)  This warning is because the class relies on too many external classes, which can't really be avoided
 //  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
+//  3)  Uses many utility imports.
 public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final String SPACE = " ";
@@ -41,17 +45,13 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private Profile profile;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState Don't touch this
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-
-        final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         try {
             profile = this.serviceLocator.getDatabase().getProfiles().get(0);
@@ -81,23 +81,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         integrator.initiateScan();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
-        LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult == null) {
-            LOGGER.error("No scan result in QR Scanner");
-        } else {
-            final String result = scanResult.getContents();
-            addNewContact(result);
-        }
-
-
-    }
-
 
     /**
      * Adds new contact with the scanned key and opens change
@@ -116,7 +99,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             this.serviceLocator.getDatabase().addContact(contact);
 
             final Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
             intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
             this.startActivity(intent);
         } catch (IllegalArgumentException e) {

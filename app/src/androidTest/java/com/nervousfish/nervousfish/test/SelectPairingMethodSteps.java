@@ -22,8 +22,6 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-
-
 @CucumberOptions(features = "features")
 public class SelectPairingMethodSteps extends ActivityInstrumentationTestCase2<MainActivity> {
     private static final Activity[] activity = new Activity[1];
