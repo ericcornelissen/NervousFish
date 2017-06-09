@@ -19,6 +19,7 @@
         app:indicatorName="BallGridPulseIndicator" />
 
     <TextView
+        android:id="@+id/waiting_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/avi"
@@ -35,7 +36,7 @@
         android:background="@color/red_alert"
         android:text="@string/cancel"
         android:textColor="@android:color/white"
-        android:onClick="cancelWaitingForSlave"/>
+        android:onClick="cancelWaiting"/>
 
 
 </RelativeLayout>

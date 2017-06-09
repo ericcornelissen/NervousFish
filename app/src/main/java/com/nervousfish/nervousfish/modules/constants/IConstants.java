@@ -5,7 +5,8 @@ import com.nervousfish.nervousfish.modules.IModule;
 import java.util.UUID;
 
 /**
- * Interface for a class containing all main constants of the application.
+ * Defines a class containing global constants for the application. These constants are definied in this file, because
+ * they're used by multiple files and don't logically belong to one of them.
  */
 public interface IConstants extends IModule {
 

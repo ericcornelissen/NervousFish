@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +26,7 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +35,14 @@ import java.io.IOException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 /**
- * The activity that exchanges public keys through QR codes.
+ * An {@link Activity} that is used for pairing using QR codes
  */
-@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.AccessorClassGeneration"})
+@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.AccessorClassGeneration", "PMD.ExcessiveImports"})
 //  1)  This warning is because the class relies on too many external classes, which can't really be avoided
 //  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
+//  3)  Uses many utility imports.
 public class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
@@ -49,24 +52,34 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private IKey publicKey;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState Don't touch this
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-
-        final Intent intent = getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         //TODO: Get the user's generated public key from the database
-        final IKeyGenerator keyGenerator = serviceLocator.getKeyGenerator();
+        final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
-        publicKey = pair.getPublicKey();
+        this.publicKey = pair.getPublicKey();
 
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult == null) {
+            LOGGER.error("No scan result in QR Scanner");
+        } else {
+            final String result = scanResult.getContents();
+            addNewContact(result);
+        }
     }
 
     /**
@@ -100,23 +113,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         integrator.initiateScan();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
-        LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult == null) {
-            LOGGER.error("No scan result in QR Scanner");
-        } else {
-            final String result = scanResult.getContents();
-            addNewContact(result);
-        }
-
-
-    }
-
 
     /**
      * Adds new contact with the scanned key and opens change
@@ -134,7 +130,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.contact_set_name))
                     .setView(editName)
-                    .setPositiveButton(getString(R.string.popup_done), enClickListener);
+                    .setPositiveButton(getString(R.string.done), enClickListener);
             lastDialog = builder.create();
             lastDialog.show();
         } catch (IllegalArgumentException e) {
@@ -150,6 +146,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      *
      * @param qrCode The QR code to be shown.
      */
+    @SuppressLint("InflateParams")
     private void showQRCode(final Bitmap qrCode) {
 
         final LayoutInflater li = LayoutInflater.from(this);
@@ -159,7 +156,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         imageView.setImageBitmap(qrCode);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(imageView)
-                .setPositiveButton(getString(R.string.popup_done), new QRCloser());
+                .setPositiveButton(getString(R.string.done), new QRCloser());
 
         ((ViewGroup) imageView.getParent()).removeView(imageView);
         lastDialog = builder.create();
@@ -206,7 +203,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                 database.addContact(contact);
                 dialog.dismiss();
                 final Intent intent = new Intent(QRExchangeKeyActivity.this, ContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, serviceLocator);
                 intent.putExtra(ConstantKeywords.CONTACT, contact);
                 QRExchangeKeyActivity.this.startActivity(intent);
             } catch (final IOException e) {
@@ -214,7 +210,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             } catch (final IllegalArgumentException e) {
                 LOGGER.error("IllegalArgumentException while adding new contact", e);
                 new SweetAlertDialog(QRExchangeKeyActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.contact_exists))
+                        .setTitleText(getString(R.string.contact_already_exists))
                         .setContentText(getString(R.string.contact_exists_message))
                         .setConfirmText(getString(R.string.dialog_ok))
                         .show();

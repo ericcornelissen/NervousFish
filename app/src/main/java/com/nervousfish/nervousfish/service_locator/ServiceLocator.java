@@ -28,7 +28,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
- * Manages all modules and provides access to them.
+ * Manages all modules and provides access to them. This class should be dependency injected into all
+ * activities that can use it to get access to any service the service locator provides.
  */
 // TooManyMethods Suppressed because we cannot reduce the number of services or refactor the servicelocator without reducing readability
 // ConstructorCallsOverridableMethod suppressed because we actually do want the subclasses to change the behaviour of the constructor!
