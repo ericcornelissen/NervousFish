@@ -14,6 +14,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +29,20 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class ContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ContactActivity");
+
     private IServiceLocator serviceLocator;
     private Contact contact;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState The saved state of the instance.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_contact);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
         ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
@@ -55,6 +55,20 @@ public final class ContactActivity extends AppCompatActivity {
                 ContactActivity.this.finish();
             }
         });
+
+        LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_FIRST_USER) {
+            this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
+            ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
+        }
     }
 
     /**
@@ -68,18 +82,6 @@ public final class ContactActivity extends AppCompatActivity {
         final MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.edit_contact_menu, popup.getMenu());
         popup.show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_FIRST_USER) {
-            this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
-            ContactActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
-        }
     }
 
     private final class PopupMenuListener implements PopupMenu.OnMenuItemClickListener {
@@ -100,7 +102,6 @@ public final class ContactActivity extends AppCompatActivity {
                 return true;
             } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
                 final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
-                intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, ContactActivity.this.serviceLocator);
                 intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
                 ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
                 return true;

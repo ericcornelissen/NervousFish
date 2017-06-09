@@ -5,11 +5,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import com.github.clans.fab.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -20,6 +20,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -44,7 +45,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //      which basically comes down to the same problem as the last
 //  3)  Another suppression based on the same problem as the previous 2
 //  4)  The switch statement for switching sorting Types does not have enough branches, because it is designed
-//      to be extended when necessairy to more sorting Types.
+//      to be extended when necessary to more sorting Types.
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
 public final class MainActivity extends AppCompatActivity {
@@ -53,24 +54,20 @@ public final class MainActivity extends AppCompatActivity {
     private static final int ENABLE_BLUETOOTH_ON_START = 100;
     private static final int ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
 
-    private List<Contact> contacts;
-
     private IServiceLocator serviceLocator;
     private IDatabase database;
     private MainActivitySorter sorter;
+    private List<Contact> contacts;
 
     /**
-     * Creates the new activity, should only be called by Android
-     *
-     * @param savedInstanceState Don't touch this
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        this.database = this.serviceLocator.getDatabase();
         this.setContentView(R.layout.activity_main);
+        this.serviceLocator = NervousFish.getServiceLocator();
+
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
@@ -78,16 +75,16 @@ public final class MainActivity extends AppCompatActivity {
         if (this.getSupportActionBar() != null) {
             this.getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        // Fill database with demo data
         try {
             this.contacts = this.database.getAllContacts();
         } catch (final IOException e) {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        this.sorter = new MainActivitySorter(this);
-        this.sorter.sortOnName();
-
         final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+        // Start Bluetooth
         try {
             //noinspection LawOfDemeter because we don't want to clutter the service locator
             bluetoothHandler.start();
@@ -100,52 +97,15 @@ public final class MainActivity extends AppCompatActivity {
             this.enableBluetooth(false);
         }
 
+        // Bluetooth exchange result
+        final Intent intent = this.getIntent();
         final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
         this.showSuccessfulBluetoothPopup(successfulBluetooth);
 
-        LOGGER.info("MainActivity created");
-    }
+        // Initialize sorter
+        this.sorter = new MainActivitySorter(this);
 
-    /**
-     * Shows a popup that adding a contact went fine if the boolean
-     * added in the intent is true.
-     *
-     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
-     */
-    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
-        if (successfulBluetooth != null) {
-            final boolean success = (boolean) successfulBluetooth;
-            if (success) {
-                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(this.getString(R.string.contact_added_popup_title))
-                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
-                        .setConfirmText(this.getString(R.string.dialog_ok))
-                        .show();
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            this.contacts = this.database.getAllContacts();
-            this.sorter.sortOnName();
-        } catch (final IOException e) {
-            LOGGER.error("onResume in MainActivity threw an IOException", e);
-        }
-    }
-
-    /**
-     * Switches the sorting mode.
-     *
-     * @param view The sort floating action button that was clicked
-     */
-    public void onSortButtonClicked(final View view) {
-        this.sorter.onSortButtonClicked(view);
+        LOGGER.info("Activity created");
     }
 
     /**
@@ -155,11 +115,25 @@ public final class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         try {
             this.contacts = this.database.getAllContacts();
+            this.sorter.sortOnName();
         } catch (final IOException e) {
-            LOGGER.error("onStart in MainActivity threw an IOException", e);
+            LOGGER.error("onResume in MainActivity threw an IOException", e);
         }
+
+        LOGGER.info("Activity resumed");
     }
 
     /**
@@ -167,8 +141,51 @@ public final class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
         super.onStop();
+        this.serviceLocator.unregisterFromEventBus(this);
+
+        LOGGER.info("Activity stopped");
+    }
+
+    /**
+     * Exit the application when the user taps the back button twice
+     */
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(this.getString(R.string.popup_log_out_title))
+                .setContentText(this.getString(R.string.popup_log_out_description))
+                .setCancelText(this.getString(R.string.no))
+                .setConfirmText(this.getString(R.string.yes))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sDialog) {
+                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
+            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            this.startActivity(intent);
+        }
+    }
+
+    /**
+     * Switches the sorting mode.
+     *
+     * @param view The sort floating action button that was clicked
+     */
+    public void onSortButtonClicked(final View view) {
+        sorter.onSortButtonClicked(view);
     }
 
     /**
@@ -182,7 +199,6 @@ public final class MainActivity extends AppCompatActivity {
 
         // Open the correct pairing activity
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
 
         String textOnLabel = "";
         if (view instanceof Label) {
@@ -217,7 +233,6 @@ public final class MainActivity extends AppCompatActivity {
      */
     void openContact(final int index) {
         final Intent intent = new Intent(this, ContactActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.CONTACT, this.contacts.get(index));
         this.startActivity(intent);
     }
@@ -232,30 +247,27 @@ public final class MainActivity extends AppCompatActivity {
         LOGGER.info("onNewBluetoothConnectedEvent called");
 
         final Intent intent = new Intent(this, WaitActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
     /**
-     * Exit the application when the user taps the back button twice
+     * Shows a popup that adding a contact went fine if the boolean
+     * added in the intent is true.
+     *
+     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
      */
-    @Override
-    public void onBackPressed() {
-        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText(this.getString(R.string.popup_log_out_title))
-                .setContentText(this.getString(R.string.popup_log_out_description))
-                .setCancelText(this.getString(R.string.no))
-                .setConfirmText(this.getString(R.string.yes))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, MainActivity.this.serviceLocator);
-                        MainActivity.this.startActivity(intent);
-                    }
-                })
-                .show();
+    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
+        if (successfulBluetooth != null) {
+            final boolean success = (boolean) successfulBluetooth;
+            if (success) {
+                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(this.getString(R.string.contact_added_popup_title))
+                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
+                        .setConfirmText(this.getString(R.string.dialog_ok))
+                        .show();
+            }
+        }
     }
 
     /**
@@ -266,7 +278,6 @@ public final class MainActivity extends AppCompatActivity {
 
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
             final String description = this.getString(
@@ -295,19 +306,6 @@ public final class MainActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-            this.startActivity(intent);
         }
     }
 

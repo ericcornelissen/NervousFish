@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -31,6 +31,7 @@ import java.io.IOException;
  * created by our own device.
  */
 public final class WaitActivity extends Activity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
     private IDatabase database;
@@ -44,13 +45,9 @@ public final class WaitActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        this.database = this.serviceLocator.getDatabase();
-
-        this.serviceLocator.registerToEventBus(this);
-
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
@@ -61,24 +58,33 @@ public final class WaitActivity extends Activity {
         final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
         waitingMessage.setText(message);
 
-        LOGGER.info("WaitActivity created");
-    }
-
-    private void evaluateData() {
-        LOGGER.info("Evaluating data");
-        final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
-        this.startActivity(intent);
+        LOGGER.info("Activity created");
     }
 
     /**
-     * Can be called by a button to cancel the pairing
-     * @param view The view that called this method
+     * {@inheritDoc}
      */
-    public void cancelWaiting(final View view) {
-        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-        this.finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        if (this.dataReceived != null && this.tapCombination != null) {
+            this.evaluateData();
+        }
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        LOGGER.info("Activity stopped");
+
+        super.onStop();
     }
 
     /**
@@ -97,26 +103,6 @@ public final class WaitActivity extends Activity {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (this.dataReceived != null && this.tapCombination != null) {
-            this.evaluateData();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        super.onStop();
-    }
-
-    /**
      * Called when a new data is received.
      *
      * @param event Contains additional data about the event
@@ -128,7 +114,6 @@ public final class WaitActivity extends Activity {
             final VerificationMethodEnum verificationMethod = ((VerificationMethod) event.getData()).getVerificationMethod();
 
             final Intent intent = new Intent();
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             switch (verificationMethod) {
                 case RHYTHM:
                     //Go to RhythmActivity
@@ -157,4 +142,24 @@ public final class WaitActivity extends Activity {
             this.evaluateData();
         }
     }
+
+    /**
+     * Can be called by a button to cancel the pairing
+     * @param view The view that called this method
+     */
+    public void cancelWaiting(final View view) {
+        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        this.finish();
+    }
+
+    /**
+     * Evaluate the data received for Bluetooth.
+     */
+    private void evaluateData() {
+        LOGGER.info("Evaluating data");
+        final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        this.startActivity(intent);
+    }
+
 }

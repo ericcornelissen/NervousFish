@@ -22,6 +22,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -45,21 +46,15 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private static final int DISCOVERABLE_DURATION = 300; // Device discoverable for 300 seconds
 
     private final Set<BluetoothDevice> newDevices = new HashSet<>();
-
     private IServiceLocator serviceLocator;
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> pairedDevices;
     private boolean isMaster;
-    /**
-     * Used to fill the listview of newly discovered Bluetooth devices
-     */
+    // Used to fill the listview of newly discovered Bluetooth devices
     private ArrayAdapter<String> newDevicesArrayAdapter;
-    /**
-     * Used to fill the listview of paired Bluetooth devices
-     */
+    // Used to fill the listview of paired Bluetooth devices
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
-
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -82,9 +77,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_bluetooth_connection);
-
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         // Register for broadcasts when a device is discovered.
         final IntentFilter foundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -117,17 +110,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Get the AndroidBluetoothHandler.
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.serviceLocator.unregisterFromEventBus(this);
-        this.unregisterReceiver(this.broadcastReceiver);
     }
 
     /**
@@ -136,9 +120,12 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
+        this.serviceLocator.registerToEventBus(this);
         this.queryPairedDevices();
         this.discoverDevices();
-        LOGGER.info("Started the service and started discovering");
+
+        LOGGER.info("Activity started");
     }
 
     /**
@@ -147,9 +134,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-
         this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Stopped BluetoothConnectionActivity");
+
+        LOGGER.info("Activity stopped");
     }
 
     /**
@@ -205,6 +192,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         this.startActivity(discoverableIntent);
 
         this.bluetoothAdapter.startDiscovery();
+        LOGGER.info("Bluetooth service started discovering");
     }
 
     /**
@@ -226,13 +214,11 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         LOGGER.info("onBluetoothConnectedEvent called");
         if (this.isMaster) {
             final Intent intent = new Intent(this, SelectVerificationMethodActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
             this.isMaster = false;
         } else {
             final Intent intent = new Intent(this, WaitActivity.class);
-            intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
+            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         }
     }
@@ -277,6 +263,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      * The on-click listener for all devices in the ListViews
      */
     private final class DeviceClickListener implements AdapterView.OnItemClickListener {
+
         /**
          * {@inheritDoc}
          */

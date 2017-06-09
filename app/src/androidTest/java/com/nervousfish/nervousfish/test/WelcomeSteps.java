@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.BaseTest;
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.WelcomeActivity;
@@ -38,7 +37,6 @@ public class WelcomeSteps {
     @Given("^I am viewing welcome activity$")
     public void iAmViewingTheFirstUseActivity() throws IOException {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.mActivityRule.launchActivity(intent);
     }
 

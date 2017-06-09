@@ -10,78 +10,74 @@ import android.os.IBinder;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
 import com.nervousfish.nervousfish.modules.pairing.PairingWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The controller of the NervousFish application. It provides an access point for the
- * {@link com.nervousfish.nervousfish.modules.pairing.IBluetoothHandlerService}
- * and holds the current global state of the application.
+ * {@link com.nervousfish.nervousfish.modules.pairing.IBluetoothHandlerService} and holds the
+ * current global state of the application.
  */
 public final class NervousFish extends Application implements INervousFish {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("NervousFish");
+
     private static NervousFish instance;
+    private static IServiceLocator serviceLocator;
 
+    private final ServiceConnection connection = new BluetoothServiceConnection();
     private AndroidBluetoothService bluetoothService;
-    private boolean bound;
-    private Runnable onServiceBoundRunnable;
-    private final ServiceConnection connection = new ServiceConnectionImpl();
 
     /**
-     * @return The NervousFish {@link Application} instance
-     */
-    public static Context getInstance() {
-        return instance;
-    }
-
-    /**
-     * {@inheritDoc     }
+     * {@inheritDoc}
      */
     @Override
     public void onCreate() {
         super.onCreate();
 
         final Intent serviceIntent = new Intent(this, AndroidBluetoothService.class);
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+        this.bindService(serviceIntent, this.connection, Context.BIND_AUTO_CREATE);
 
+        final String androidFileDir = this.getFilesDir().getPath();
+        NervousFish.serviceLocator = new ServiceLocator(androidFileDir);
         NervousFish.instance = this;
+
+        LOGGER.info("Application created");
     }
 
     /**
-     * Warning: this method should only be used by {@link EntryActivity} to initialize the Service Locator
-     * @return The global bluetooth service used for bluetooth connections
+     * @return The NervousFish {@link Application} instance,
      */
-    AndroidBluetoothService getBluetoothServiceWithinPackage() {
-        return bluetoothService;
+    public static Context getInstance() {
+        return NervousFish.instance;
+    }
+
+    /**
+     * @return The ServiceLocator of the {@link Application} instance.
+     */
+    public static IServiceLocator getServiceLocator() {
+        return NervousFish.serviceLocator;
     }
 
     /**
      * @return The global bluetooth service used for bluetooth connections
      */
     public PairingWrapper<AndroidBluetoothService> getBluetoothService() {
-        return new PairingWrapper<>(bluetoothService);
+        return new PairingWrapper<>(this.bluetoothService);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setOnBluetoothServiceBound(final Runnable runnable) {
-        if (bound) {
-            runnable.run();
-        } else {
-            this.onServiceBoundRunnable = runnable;
-        }
-    }
+    private class BluetoothServiceConnection implements ServiceConnection {
 
-    private class ServiceConnectionImpl implements ServiceConnection {
         /**
          * {@inheritDoc}
          */
         @Override
         public void onServiceConnected(final ComponentName componentName, final IBinder service) {
             final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
-            bluetoothService = binder.getService();
-            bound = true;
-            if (onServiceBoundRunnable != null) {
-                onServiceBoundRunnable.run();
-            }
+            NervousFish.this.bluetoothService = binder.getService();
+            NervousFish.this.bluetoothService.setServiceLocator(NervousFish.serviceLocator);
+
+            LOGGER.info("Bluetooth service connected");
         }
 
         /**
@@ -89,7 +85,9 @@ public final class NervousFish extends Application implements INervousFish {
          */
         @Override
         public void onServiceDisconnected(final ComponentName componentName) {
-            bound = false;
+            LOGGER.info("Bluetooth service disconnected");
         }
+
     }
+
 }
