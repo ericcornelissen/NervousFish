@@ -52,7 +52,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             LOGGER.error("Loading the public key went wrong", e);
         }
 
-        showQRCode();
+        drawQRCode();
     }
 
     /**
@@ -78,7 +78,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      * Shows the QR Code in the activity.
      */
     @SuppressLint("InflateParams")
-    private void showQRCode() {
+    private void drawQRCode() {
         final IKey publicKey = profile.getPublicKey();
         final Bitmap qrCode = QRGenerator.encode(profile.getName() + SEMICOLON + publicKey.getType()
                 + SPACE + publicKey.getName() + SPACE + publicKey.getKey());
