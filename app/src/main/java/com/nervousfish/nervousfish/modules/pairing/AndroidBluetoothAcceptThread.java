@@ -55,7 +55,7 @@ final class AndroidBluetoothAcceptThread implements IBluetoothThread {
      * {@inheritDoc}
      */
     @Override
-    public void cancel(final boolean closeSocket) {
+    public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
             this.serverSocket.close();

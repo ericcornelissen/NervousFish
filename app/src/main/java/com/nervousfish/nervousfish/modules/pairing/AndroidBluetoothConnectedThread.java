@@ -80,15 +80,13 @@ public final class AndroidBluetoothConnectedThread implements IBluetoothThread {
      * {@inheritDoc}
      */
     @Override
-    public void cancel(final boolean closeSocket) {
+    public void cancel() {
         LOGGER.warn("Cancelled!");
-        if (closeSocket) {
-            try {
-                this.socket.close();
-                LOGGER.info("Socket closed");
-            } catch (final IOException e) {
-                LOGGER.error("Closing socket", e);
-            }
+        try {
+            this.socket.close();
+            LOGGER.info("Socket closed");
+        } catch (final IOException e) {
+            LOGGER.error("Closing socket", e);
         }
     }
 

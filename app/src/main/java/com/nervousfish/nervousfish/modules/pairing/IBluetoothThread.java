@@ -12,8 +12,6 @@ public interface IBluetoothThread {
 
     /**
      * Cancels the connect thread and optionally closes the socket
-     *
-     * @param closeSocket True if the socket should be closed
      */
-    void cancel(boolean closeSocket);
+    void cancel();
 }
