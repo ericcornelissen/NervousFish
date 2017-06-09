@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -353,10 +354,11 @@ public final class MainActivity extends AppCompatActivity {
             this.startActivity(intent);
         } else {
             final String description;
-            description = this.getString(R.string.popup_enable_nfc_exchange);
+            description = this.getString(R.string.popup_enable_nfc_settings);
 
+            LOGGER.info("Requesting to enable NFC");
             new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                    .setTitleText(this.getString(R.string.popup_enable_nfc_title))
+                    .setTitleText(this.getString(R.string.popup_enable_nfc_exchange))
                     .setContentText(description)
                     .setCancelText(this.getString(R.string.no))
                     .setConfirmText(this.getString(R.string.yes))
@@ -364,20 +366,8 @@ public final class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(final SweetAlertDialog dialog) {
                             dialog.dismiss();
-
-                            LOGGER.info("Requesting to enable NFC");
-                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE)
-                                    .setTitleText(MainActivity.this.getString(R.string.popup_enable_nfc_settings))
-                                    .setConfirmText(MainActivity.this.getString(R.string.yes))
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(final SweetAlertDialog dialog) {
-                                            dialog.dismiss();
-                                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                                            LOGGER.info("Request to enable NFC sent, forwarded to settings");
-                                        }
-                                    })
-                                    .show();
+                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                            LOGGER.info("Request to enable NFC sent, forwarded to settings");
                         }
                     })
                     .show();
