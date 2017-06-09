@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.test;
 
 import android.content.Intent;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.BaseTest;
@@ -47,7 +48,11 @@ public class MainSteps {
     public void iAmViewingMainActivity() throws IOException {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
+
+        try {
+            onView(withText(R.string.no)).perform(click());
+        } catch (NoMatchingViewException ignore) { }
     }
 
     @When("^I click the back button in main and go to the LoginActivity$")
