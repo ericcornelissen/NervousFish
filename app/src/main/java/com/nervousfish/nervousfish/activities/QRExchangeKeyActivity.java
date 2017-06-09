@@ -47,7 +47,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private IServiceLocator serviceLocator;
-    private IKeyGenerator keyGenerator;
     private AlertDialog lastDialog;
     private IKey publicKey;
 
@@ -63,11 +62,11 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
         final Intent intent = this.getIntent();
         this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-        this.keyGenerator = this.serviceLocator.getKeyGenerator();
+        final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
 
 
         //TODO: Get the user's generated public key from the database
-        final KeyPair pair = this.keyGenerator.generateRSAKeyPair("test");
+        final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         this.publicKey = pair.getPublicKey();
 
     }
@@ -87,7 +86,11 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onShowQRButtonClick(final View view) {
         LOGGER.info("Started generating QR code");
-        final Bitmap qrCode = QRGenerator.encode(String.format("%s %s %s", this.publicKey.getType(), this.publicKey.getName(), this.publicKey.getKey()));
+        final Bitmap qrCode = QRGenerator.encode(
+                String.format("%s %s %s",
+                        this.publicKey.getType(),
+                        this.publicKey.getName(),
+                        this.publicKey.getKey()));
         this.showQRCode(qrCode);
     }
 
@@ -105,9 +108,9 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
         LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult == null) {
             LOGGER.error("No scan result in QR Scanner");
         } else {
@@ -131,7 +134,8 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             final IKey key = QRGenerator.deconstructToKey(qrMessage);
             final EditText editName = new EditText(this);
             editName.setInputType(InputType.TYPE_CLASS_TEXT);
-            final QRExchangeKeyActivity.EditNameClickListener enClickListener = new QRExchangeKeyActivity.EditNameClickListener(this, this.serviceLocator, editName, key);
+            final QRExchangeKeyActivity.EditNameClickListener enClickListener =
+                    new QRExchangeKeyActivity.EditNameClickListener(this, this.serviceLocator, editName, key);
             final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(this.getString(R.string.contact_set_name))
                     .setView(editName)
