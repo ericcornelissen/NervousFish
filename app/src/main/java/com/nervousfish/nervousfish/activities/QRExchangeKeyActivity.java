@@ -178,7 +178,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final class EditNameClickListener implements DialogInterface.OnClickListener {
         private final Activity activity;
-        private final IServiceLocator serviceLocator;
         private final IDatabase database;
         private final EditText editName;
         private final IKey key;
@@ -190,7 +189,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
          */
         private EditNameClickListener(final Activity activity, final IServiceLocator serviceLocator, final EditText editName, final IKey key) {
             this.activity = activity;
-            this.serviceLocator = serviceLocator;
             this.database = serviceLocator.getDatabase();
             this.editName = editName;
             this.key = key;

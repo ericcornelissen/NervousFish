@@ -27,7 +27,6 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SelectVerificationMethodActivity");
 
-    private IServiceLocator serviceLocator;
     private IBluetoothHandler bluetoothHandler;
 
     /**
@@ -38,8 +37,8 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_select_verification_method);
 
-        this.serviceLocator = NervousFish.getServiceLocator();
-        this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        this.bluetoothHandler = serviceLocator.getBluetoothHandler();
 
         LOGGER.info("Activity created");
     }

@@ -85,6 +85,7 @@ public final class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
     /**
      * Go to the next activity from the {@link LoginActivity}.
      */
