@@ -68,7 +68,7 @@ public class ChangeContactSteps {
 
     @When("^I press OK on the change contact error popup$")
     public void iPressOKOnTheChangeContactErrorPopup() {
-        onView(withText(R.string.dialog_ok)).perform(scrollTo()).perform(click());
+        onView(withText(R.string.dialog_ok)).perform(click());
     }
 
     @When("^I remove all text from the name$")
