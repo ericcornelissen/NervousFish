@@ -36,14 +36,15 @@ final class AndroidBluetoothConnectThread implements IBluetoothThread {
     AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
         BluetoothSocket tmp = null;
 
-        // Get a BluetoothSocket for a connection with the
-        // given BluetoothDevice
+        // Get a BluetoothSocket for a connection with the given BluetoothDevice
         try {
             tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
         } catch (final IOException e) {
             LOGGER.error("Connection failed", e);
         }
+
         this.socket = tmp;
+
         serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
         this.thread = new Thread(new AndroidBluetoothConnectThread.ConnectThread(serviceLocator, this.socket));
     }
