@@ -30,6 +30,7 @@ import java.io.IOException;
  * created by our own device.
  */
 public final class WaitActivity extends Activity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
     private Object dataReceived;
@@ -49,10 +50,10 @@ public final class WaitActivity extends Activity {
         this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
         LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
-                + " tapCombination is not null: " + (tapCombination != null));
+                + " tapCombination is not null: " + (this.tapCombination != null));
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
-        final TextView waitingMessage = (TextView) findViewById(R.id.waiting_message);
+        final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
         waitingMessage.setText(message);
 
         LOGGER.info("Activity created");
@@ -67,7 +68,7 @@ public final class WaitActivity extends Activity {
         this.serviceLocator.registerToEventBus(this);
 
         if (this.dataReceived != null && this.tapCombination != null) {
-            evaluateData();
+            this.evaluateData();
         }
 
         LOGGER.info("Activity started");
@@ -92,10 +93,10 @@ public final class WaitActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
             this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-            finish();
+            this.finish();
         } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
             this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-            finish();
+            this.finish();
         }
     }
 
@@ -136,7 +137,7 @@ public final class WaitActivity extends Activity {
 
             //This needs to be outside of the try catch block
             this.dataReceived = contact;
-            evaluateData();
+            this.evaluateData();
         }
     }
 
@@ -145,8 +146,8 @@ public final class WaitActivity extends Activity {
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
-        setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-        finish();
+        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        this.finish();
     }
 
     /**
