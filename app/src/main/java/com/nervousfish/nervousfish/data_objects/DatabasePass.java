@@ -14,27 +14,17 @@ import java.util.Arrays;
  */
 public class DatabasePass implements Serializable {
 
-    final KeyPair keyPair;
     final String encryptedPassword;
 
 
     /**
      * Constructor for the {@link DatabasePass} POJO
-     * @param keyPair - The keyPair of the databasePass
      * @param password - The password of the database
      */
-    public DatabasePass(KeyPair keyPair, String password) {
+    public DatabasePass(String password) {
         this.encryptedPassword = EncryptedSaver.hashWithoutSalt(password);
-        this.keyPair = keyPair;
     }
 
-    /**
-     * Getter for the keyPair
-     * @return  The key pair for database encryption
-     */
-    public KeyPair getKeyPair() {
-        return keyPair;
-    }
 
     /**
      * Getter for the encrypted password
@@ -65,7 +55,6 @@ public class DatabasePass implements Serializable {
      */
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -4715364587956219157L;
-        final KeyPair keyPair;
         final String encryptedPassword;
 
 
@@ -74,7 +63,6 @@ public class DatabasePass implements Serializable {
          * @param databasePass - the databasePass
          */
         SerializationProxy(final DatabasePass databasePass) {
-            this.keyPair = databasePass.keyPair;
             this.encryptedPassword = databasePass.encryptedPassword;
         }
 
@@ -83,7 +71,7 @@ public class DatabasePass implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new DatabasePass(this.keyPair, this.encryptedPassword);
+            return new DatabasePass(this.encryptedPassword);
         }
     }
 }

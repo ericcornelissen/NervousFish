@@ -86,12 +86,14 @@ public final class CreateProfileActivity extends AppCompatActivity {
             final IDatabase database = this.serviceLocator.getDatabase();
 
             try {
+                // Create the new profile
                 final List<IKey> publicKeys = new ArrayList<IKey>();
                 final List<KeyPair> keyPairs = new ArrayList<>();
                 publicKeys.add(keyPair.getPublicKey());
                 keyPairs.add(keyPair);
                 final Contact userContact = new Contact(name, publicKeys);
                 final Profile userProfile = new Profile(userContact, keyPairs);
+
                 database.createDatabase(userProfile, password);
                 database.loadDatabase(password);
 

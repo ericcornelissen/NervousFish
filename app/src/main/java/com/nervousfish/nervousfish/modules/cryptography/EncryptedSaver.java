@@ -98,33 +98,45 @@ public final class EncryptedSaver {
         return null;
     }
 
+    /**
+     * Make a key for encryption based on a password.
+     * @param password The password to make the key with
+     * @return The SecretKey based on the password.
+     */
+    public static SecretKey makeKey(String password) {
+        LOGGER.info("Making key for encryption");
+        try {
+            PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+            LOGGER.info("Key successfully made");
+            return key;
+        }  catch (NoSuchAlgorithmException e) {
+            LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
+        }   catch (InvalidKeySpecException e) {
+            LOGGER.error("The key spec is invalid", e);
+        }
+
+        return null;
+    }
 
     /**
      * Encrypts or decrypts a string with a password to
      * @param toEncrypt The string to be encrypted/decrypted
-     * @param password  The password to encrypt/decrypt with
+     * @param key  The secret key made from the password.
      * @param encrypt   whether we're encrypting or decrypting.
      * @return  The encrypted/decrypted bytearray.
      */
-    public static String encryptOrDecryptWithPassword(final String toEncrypt, final String password,  final boolean encrypt) {
+    public static String encryptOrDecryptWithPassword(final String toEncrypt, final SecretKey key,  final boolean encrypt) {
         LOGGER.info("Started encrypting with password");
         try {
             final byte[] ivSpec = new byte[8];
             final Random random = new Random(SEED);
             random.nextBytes(ivSpec);
-            LOGGER.info(toEncrypt);
             byte[] decodedValue = Base64.decode(toEncrypt,Base64.DEFAULT);
 
             final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
-            final Cipher cipher = getCipher(password, ivSpec, mode);
-
-            //final byte[] converted = new byte[cipher.getOutputSize(toEncryptBytes.length)];
-            //int conv_len = cipher.update(toEncryptBytes, 0, toEncrypt.length(), converted, 0);
-            //conv_len += cipher.doFinal(converted, conv_len);
-
-            //final byte[] result = new byte[conv_len];
-            //for (int i = 0; i < result.length; i++)
-            //    result[i] = converted[i];
+            final Cipher cipher = getCipher(key, ivSpec, mode);
 
             if (encrypt) {
                 byte[] cipherText = cipher.doFinal(toEncrypt.getBytes());
@@ -150,21 +162,16 @@ public final class EncryptedSaver {
      * It set the ivSpec and the encryption to
      * DES
      *
-     * @param psw   The password in bytestring used to encrypt
+     * @param key   The SecretKey used to encrypt
      * @param ivSpec    The initializations vector for the encryption
      * @param mode  Whether we're encrypting or decrypting
      * @return  the configured Cipher.
      */
-    private static final Cipher getCipher(final String psw, final byte[] ivSpec, final int mode) {
+    private static final Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) {
         LOGGER.info("Getting cipher for decrypting");
         try {
-            PBEKeySpec keySpec = new PBEKeySpec(psw.toCharArray());
-            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-            SecretKey key = keyFactory.generateSecret(keySpec);
-
             //Create parameters from the salt and an arbitrary number of iterations:
             PBEParameterSpec pbeParamSpec = new PBEParameterSpec(ivSpec, 42);
-
 
             //Set up the cipher:
             Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
@@ -173,8 +180,6 @@ public final class EncryptedSaver {
         } catch (NoSuchAlgorithmException e) {
             LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
 
-        } catch (InvalidKeySpecException e) {
-            LOGGER.error("The key spec is invalid", e);
         } catch (NoSuchPaddingException e) {
             LOGGER.error("There isn't a padding as PBEWithMD5AndDES", e);
         } catch (InvalidKeyException e) {
