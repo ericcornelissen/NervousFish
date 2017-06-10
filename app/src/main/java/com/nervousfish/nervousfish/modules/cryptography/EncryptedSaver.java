@@ -1,5 +1,8 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+
+import android.util.Base64;
+
 import com.nervousfish.nervousfish.data_objects.IKey;
 
 import org.slf4j.Logger;
@@ -16,7 +19,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
@@ -26,10 +28,8 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 public final class EncryptedSaver {
 
@@ -106,27 +106,44 @@ public final class EncryptedSaver {
      * @param encrypt   whether we're encrypting or decrypting.
      * @return  The encrypted/decrypted bytearray.
      */
-    public static byte[] encryptOrDecryptWithPassword(final byte[] toEncrypt, final String password,  final boolean encrypt) {
+    public static String encryptOrDecryptWithPassword(final String toEncrypt, final String password,  final boolean encrypt) {
         LOGGER.info("Started encrypting with password");
         try {
             final byte[] ivSpec = new byte[8];
             final Random random = new Random(SEED);
             random.nextBytes(ivSpec);
+            LOGGER.info(toEncrypt);
+            byte[] decodedValue = Base64.decode(toEncrypt,Base64.DEFAULT);
+
             final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             final Cipher cipher = getCipher(password, ivSpec, mode);
-            final byte[] converted = new byte[cipher.getOutputSize(toEncrypt.length)];
-            int conv_len = cipher.update(toEncrypt, 0, toEncrypt.length, converted, 0);
-            conv_len += cipher.doFinal(converted, conv_len);
 
-            final byte[] result = new byte[conv_len];
-            for (int i = 0; i < result.length; i++)
-                result[i] = converted[i];
-            return result;
+            //final byte[] converted = new byte[cipher.getOutputSize(toEncryptBytes.length)];
+            //int conv_len = cipher.update(toEncryptBytes, 0, toEncrypt.length(), converted, 0);
+            //conv_len += cipher.doFinal(converted, conv_len);
+
+            //final byte[] result = new byte[conv_len];
+            //for (int i = 0; i < result.length; i++)
+            //    result[i] = converted[i];
+
+            if (encrypt) {
+                byte[] cipherText = cipher.doFinal(toEncrypt.getBytes());
+                byte[] secretString = Base64.encode(cipherText, Base64.DEFAULT);
+                LOGGER.info(new String(secretString));
+                return new String(secretString);
+            } else {
+                byte[] plaintext = cipher.doFinal(decodedValue);
+                return new String(plaintext);
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
+
 
     /**
      * Method that return a configured {@link Cipher}.<br>

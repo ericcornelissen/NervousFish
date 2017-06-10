@@ -222,7 +222,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public void loadDatabase(String password) throws IOException, RuntimeException {
 
-        final GsonBuilder gsonBuilder = new GsonBuilder();
+        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
         // Get the keypair from the password file
@@ -233,7 +233,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         while ((line = passReader.readLine()) != null) {
             passwordFileString += line;
         }
-        final String databasePassJson = new String(EncryptedSaver.encryptOrDecryptWithPassword(passwordFileString.getBytes(),
+        final String databasePassJson = new String(EncryptedSaver.encryptOrDecryptWithPassword(passwordFileString,
                 password, false));
         final DatabasePass databasePass =  gsonParser.fromJson(databasePassJson, TYPE_DATABASE_PASS);
         if(!databasePass.getEncryptedPassword().equals(EncryptedSaver.hashWithoutSalt(password))) {
@@ -340,7 +340,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         LOGGER.info("Database pass"+databasePassJson);
         LOGGER.info("Password" + password);
-        writer.write(new String(EncryptedSaver.encryptOrDecryptWithPassword(databasePassJson.getBytes(),
+        writer.write(new String(EncryptedSaver.encryptOrDecryptWithPassword(databasePassJson,
                 password, true)));
         writer.close();
         LOGGER.info("Created the password file: %s", this.passwordPath);
