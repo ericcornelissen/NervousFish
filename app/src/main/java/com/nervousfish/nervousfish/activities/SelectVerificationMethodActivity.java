@@ -49,12 +49,12 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
      *
      * @param view The view on which the click was performed
      */
-    public void openVerificationMethod(final View view) {
+    public void onVerificationMethodClick(final View view) {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
 
         switch (view.getId()) {
-            case R.id.select_visual_verification:
+            case R.id.btn_select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
                 try {
                     this.serviceLocator.getBluetoothHandler().send(new VerificationMethod(VerificationMethodEnum.VISUAL));
@@ -63,7 +63,7 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
                 }
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
                 break;
-            case R.id.select_rhythm_verification:
+            case R.id.btn_select_rhythm_verification:
                 LOGGER.info("Selected rhythm verification method, opening activity");
                 try {
                     this.serviceLocator.getBluetoothHandler().send(new VerificationMethod(VerificationMethodEnum.RHYTHM));

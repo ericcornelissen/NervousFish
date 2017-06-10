@@ -85,7 +85,7 @@
     <string name="yes_go_back">Ja, ga terug!</string>
 
     <!-- Kies verificatie methode -->
-    <string name="select_verification_method">Selecteer een verificatie methode</string>
+    <string name="select_verification_method">Hoe wil je verbinden?</string>
     <string name="select_visual_verification">Visueel patroon</string>
     <string name="select_rhythm_verification">Tap een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
@@ -100,5 +100,7 @@
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
+    <string name="by_tapping_a_rhythm">Door een ritme te tikken</string>
+    <string name="by_tapping_on_an_image">Door op een plaatje te drukken</string>
 
 </resources>
