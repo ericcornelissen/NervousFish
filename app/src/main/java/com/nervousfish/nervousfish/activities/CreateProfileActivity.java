@@ -5,11 +5,8 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -19,6 +16,7 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,8 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The {@link android.app.Activity} used to create a new profile.
+ * The {@link android.app.Activity} that is used to create a user profile when the app is first
+ * used.
  */
 public final class CreateProfileActivity extends AppCompatActivity {
 
@@ -44,20 +43,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText repeatPasswordInput;
 
     /**
-     * Creates the new activity, should only be called by Android.
-     *
-     * @param savedInstanceState The saved state of the previous instance.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
-
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
-
-        final Window window = this.getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         // Initialize helper class
         final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
@@ -69,15 +61,15 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
-        LOGGER.info("activity created");
+        LOGGER.info("Activity created");
     }
 
     /**
      * Gets triggered when the Submit button is clicked.
      *
-     * @param v The {@link View} clicked
+     * @param view The {@link View} clicked
      */
-    public void onSubmitClick(final View v) {
+    public void onSubmitClick(final View view) {
         if (this.validateInputFields()) {
             final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
             final String name = nameInputField.getText().toString();
@@ -126,7 +118,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void nextActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
 
@@ -135,7 +126,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void showProfileCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(this.getString(R.string.profile_created))
+            .setTitleText(this.getString(R.string.profile_created_title))
             .setContentText(this.getString(R.string.profile_created_explanation))
             .setConfirmText(this.getString(R.string.dialog_ok))
             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -153,8 +144,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void showProfileNotCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(this.getString(R.string.could_not_create_profile))
-                .setContentText(this.getString(R.string.could_not_create_profile_explanation))
+                .setTitleText(this.getString(R.string.profile_not_created_title))
+                .setContentText(this.getString(R.string.profile_not_created_explanation))
                 .setConfirmText(this.getString(R.string.dialog_ok))
                 .show();
     }

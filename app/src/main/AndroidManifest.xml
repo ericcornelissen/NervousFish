@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ContactActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -42,13 +42,17 @@
             android:name=".activities.VisualVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.WaitForSlaveActivity"
+            android:name=".activities.WaitActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.RhythmCreateActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.BluetoothConnectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.FirstUseActivity"
+            android:name=".activities.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true"/>
         <activity

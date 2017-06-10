@@ -44,6 +44,18 @@ public class Profile implements Serializable {
     }
 
     /**
+     * Returns the (first) public key of the profile.
+     * @return the (first) public key.
+     */
+    public IKey getPublicKey() {return keyPairs.get(0).getPublicKey();};
+
+    /**
+     * Returns the name of the profile.
+     * @return Name of the profile.
+     */
+    public String getName() { return contact.getName();}
+
+    /**
      * {@inheritDoc}
      */
     @Override
