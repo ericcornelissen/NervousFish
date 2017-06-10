@@ -13,7 +13,7 @@ public interface IConstants extends IModule {
     /**
      * Get the path to the password file.
      *
-     * @return
+     * @return A {@link String} of the path.
      */
     String getPasswordPath();
 

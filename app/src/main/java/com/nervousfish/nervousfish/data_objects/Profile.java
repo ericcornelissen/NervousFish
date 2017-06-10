@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Profile implements Serializable {
 
+    private static final long serialVersionUID = -4715364587956219157L;
     private final Contact contact;
     private final List<KeyPair> keyPairs;
 
@@ -28,6 +29,15 @@ public class Profile implements Serializable {
     }
 
     /**
+     * Adds a new keyPair to the profile
+     * @param keyPair the keyPair to add.
+     */
+    public void addKeyPair(final KeyPair keyPair) {
+        keyPairs.add(keyPair);
+        contact.getKeys().add(keyPair.getPublicKey());
+    }
+
+    /**
      * Returns the contact Object of the user
      * @return - The Contact POJO.
      */
@@ -36,8 +46,8 @@ public class Profile implements Serializable {
     }
 
     /**
-     * Returns the Keypairs of the users.
-     * @return
+     * Returns the Keypairs of the user.
+     * @return The list of keypairs of the user.
      */
     public List<KeyPair> getKeyPairs() {
         return keyPairs;
@@ -47,13 +57,13 @@ public class Profile implements Serializable {
      * Returns the (first) public key of the profile.
      * @return the (first) public key.
      */
-    public IKey getPublicKey() {return keyPairs.get(0).getPublicKey();};
+    public IKey getPublicKey() { return keyPairs.get(0).getPublicKey(); }
 
     /**
      * Returns the name of the profile.
      * @return Name of the profile.
      */
-    public String getName() { return contact.getName();}
+    public String getName() { return contact.getName(); }
 
     /**
      * {@inheritDoc}
@@ -68,9 +78,9 @@ public class Profile implements Serializable {
         if (this.keyPairs != that.keyPairs) {
             return false;
         }
-        for (KeyPair kp : this.keyPairs) {
-            for (KeyPair kp2 : that.keyPairs) {
-                if(!kp.equals(kp2)) {
+        for (final KeyPair kp : this.keyPairs) {
+            for (final KeyPair kp2 : that.keyPairs) {
+                if (!kp.equals(kp2)) {
                     return false;
                 }
             }

@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * KeyPair POJO which keeps a public and private key.

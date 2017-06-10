@@ -7,9 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -26,7 +24,6 @@ public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private IServiceLocator serviceLocator;
-    private Profile currentUser;
 
 
     /**
@@ -37,7 +34,7 @@ public final class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        serviceLocator = NervousFish.getServiceLocator();
 
         LOGGER.info("LoginActivity created");
     }
@@ -75,11 +72,11 @@ public final class LoginActivity extends AppCompatActivity {
 
             try {
                 database.loadDatabase(providedPassword);
-                mError.setVisibility(View.VISIBLE);
-            } catch (IOException e) {
-                LOGGER.error("Something went wrong when loading the database", e);
                 mError.setVisibility(View.GONE);
                 this.toMainActivity();
+            } catch (IOException e) {
+                LOGGER.error("Something went wrong when loading the database", e);
+                mError.setVisibility(View.VISIBLE);
             }
 
 

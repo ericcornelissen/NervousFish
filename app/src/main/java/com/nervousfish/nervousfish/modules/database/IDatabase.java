@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.modules.database;
 
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.IModule;
 
@@ -84,7 +83,7 @@ public interface IDatabase extends IModule {
 
     /**
      * Loads up the database in an object using the provided password.
-     * @param password
+     * @param password The password of the database.
      */
     void loadDatabase(String password) throws IOException;
 
@@ -95,5 +94,10 @@ public interface IDatabase extends IModule {
      */
     void createDatabase(Profile profile, String password) throws IOException;
 
+    /**
+     * Checks if there's already a databasefile created.
+     * @return  Whether or not it isn't the first time using the app.
+     */
+    boolean checkFirstUse();
 
 }

@@ -6,22 +6,21 @@ import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.Arrays;
 
 
 /**
  * A databasePass object to save the enccryption elements
  */
 public class DatabasePass implements Serializable {
-
-    final String encryptedPassword;
+    private static final long serialVersionUID = -4715364587956219157L;
+    private final String encryptedPassword;
 
 
     /**
      * Constructor for the {@link DatabasePass} POJO
      * @param password - The password of the database
      */
-    public DatabasePass(String password) {
+    public DatabasePass(final String password) {
         this.encryptedPassword = EncryptedSaver.hashWithoutSalt(password);
     }
 
@@ -55,7 +54,7 @@ public class DatabasePass implements Serializable {
      */
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -4715364587956219157L;
-        final String encryptedPassword;
+        private final String encryptedPassword;
 
 
         /**

@@ -1,27 +1,26 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * A database object to write and encrypt to file
  */
 public final class Database implements Serializable {
+    private static final long serialVersionUID = -4715364587956219157L;
     private final List<Contact> contacts;
     private Profile profile;
 
 
     /**
      * The constructor for the {@link Database} POJO
-     * @param contacts
-     * @param profile
+     * @param contacts The contacts the user has.
+     * @param profile The profile of the user.
      */
     public Database(final List<Contact> contacts, final Profile profile) {
         this.contacts = contacts;
@@ -41,10 +40,11 @@ public final class Database implements Serializable {
      * Sets the list of contacts to the given list of contacts.
      * @param contacts  The new list of contacts.
      */
-    public void setContacts(List<Contact> contacts) {
+    public void setContacts(final List<Contact> contacts) {
         this.contacts.clear();
         this.contacts.addAll(contacts);
     }
+
     /**
      * Getter for the user profile
      * @return  The User profile.
@@ -57,7 +57,7 @@ public final class Database implements Serializable {
      * Sets the user's profile to a new profile
      * @param profile The new profile.
      */
-    public void setProfile(Profile profile) {this.profile = profile;}
+    public void setProfile(final Profile profile) { this.profile = profile; }
 
     /**
      * Serialize the created proxy instead of this instance.
