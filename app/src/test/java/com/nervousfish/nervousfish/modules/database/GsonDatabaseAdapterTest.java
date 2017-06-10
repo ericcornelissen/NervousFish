@@ -36,12 +36,12 @@ import java.util.ArrayList;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
 public class GsonDatabaseAdapterTest {
 
     private static final String DB_DATABASE_PATH = "database.txt";
@@ -70,14 +70,8 @@ public class GsonDatabaseAdapterTest {
         profile = new Profile(contact, new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         databaseObject = new Database(new ArrayList<Contact>(), profile);
+        
 
-        PowerMockito.when(Base64.decode(anyString(), anyInt())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                encryptionCalled = true;
-                return null;
-            }
-        });
         try {
             database.createDatabase(profile, TEST_PASSWORD);
         } catch (IOException e) {
