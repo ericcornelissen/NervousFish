@@ -25,7 +25,6 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
@@ -47,7 +46,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
-    private IServiceLocator serviceLocator;
     private AlertDialog lastDialog;
     private IKey publicKey;
 
@@ -58,10 +56,9 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-        this.serviceLocator = NervousFish.getServiceLocator();
 
         //TODO: Get the user's generated public key from the database
-        final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
+        final IKeyGenerator keyGenerator = NervousFish.getServiceLocator().getKeyGenerator();
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         this.publicKey = pair.getPublicKey();
 
@@ -84,6 +81,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Returns to the previous activity.
+     *
      * @param view - the imagebutton
      */
     public void onBackButtonClick(final View view) {
@@ -93,6 +91,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Shows the QR code of the person's public key on screen.
+     *
      * @param view - the imagebutton
      */
     public void onShowQRButtonClick(final View view) {
@@ -107,6 +106,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Starts the scan qr feature.
+     *
      * @param view - the imagebutton
      */
     public void onScanButtonClick(final View view) {
@@ -139,8 +139,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             LOGGER.error("Illegal argument exception in addNewContact", e);
         }
     }
-
-
 
 
     /**
@@ -184,8 +182,9 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
         /**
          * Constructor for editname click listener.
+         *
          * @param editName The textinput from which we show and get the name from.
-         * @param key The key made from the QR code.
+         * @param key      The key made from the QR code.
          */
         private EditNameClickListener(final Activity activity, final EditText editName, final IKey key) {
             this.activity = activity;
