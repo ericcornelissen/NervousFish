@@ -71,7 +71,7 @@ public final class WaitActivity extends Activity {
         this.serviceLocator.registerToEventBus(this);
 
         if (this.dataReceived != null && this.tapCombination != null) {
-            this.evaluateData();
+            this.goToMainActivity();
         }
 
         LOGGER.info("Activity started");
@@ -140,7 +140,7 @@ public final class WaitActivity extends Activity {
 
             //This needs to be outside of the try catch block
             this.dataReceived = contact;
-            this.evaluateData();
+            this.goToMainActivity();
         }
     }
 
@@ -156,8 +156,8 @@ public final class WaitActivity extends Activity {
     /**
      * Evaluate the data received for Bluetooth.
      */
-    private void evaluateData() {
-        LOGGER.info("Evaluating data");
+    private void goToMainActivity() {
+        LOGGER.info("Going to MainActivity");
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
         this.startActivity(intent);
