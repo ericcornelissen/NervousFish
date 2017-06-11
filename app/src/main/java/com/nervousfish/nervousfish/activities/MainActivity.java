@@ -86,7 +86,7 @@ public final class MainActivity extends AppCompatActivity {
         final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         // Start Bluetooth
         try {
-            //noinspection LawOfDemeter because we don't want to clutter the service locator
+            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
             bluetoothHandler.start();
         } catch (final NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button", e);
