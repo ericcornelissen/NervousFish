@@ -49,7 +49,6 @@ public class SettingsSteps {
     @Given("^I am viewing the settings activity$")
     public void iAmViewingSettingsActivity() throws IOException {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         mActivityRule.launchActivity(intent);
     }
 
