@@ -20,17 +20,19 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
+    // 1) Suppressed because key is a lot more descripte than t (the parameter name of the superclass)
     @Override
-    public void write(final JsonWriter jsonWriter, final IKey t) throws IOException {
+    public void write(final JsonWriter jsonWriter, final IKey key) throws IOException {
         jsonWriter.beginArray();
 
         // First write the key type
-        final String keyType = t.getType();
+        final String keyType = key.getType();
         jsonWriter.value(keyType);
 
         // Then write the rest of the key
         jsonWriter.beginObject();
-        t.toJson(jsonWriter);
+        key.toJson(jsonWriter);
         jsonWriter.endObject();
 
         jsonWriter.endArray();
