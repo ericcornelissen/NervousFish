@@ -128,7 +128,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             final EditText editName = new EditText(this);
             editName.setInputType(InputType.TYPE_CLASS_TEXT);
             final QRExchangeKeyActivity.EditNameClickListener enClickListener =
-                    new QRExchangeKeyActivity.EditNameClickListener(this, this.serviceLocator, editName, key);
+                    new QRExchangeKeyActivity.EditNameClickListener(this, editName, key);
             final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(this.getString(R.string.contact_set_name))
                     .setView(editName)
@@ -187,9 +187,9 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
          * @param editName The textinput from which we show and get the name from.
          * @param key The key made from the QR code.
          */
-        private EditNameClickListener(final Activity activity, final IServiceLocator serviceLocator, final EditText editName, final IKey key) {
+        private EditNameClickListener(final Activity activity, final EditText editName, final IKey key) {
             this.activity = activity;
-            this.database = serviceLocator.getDatabase();
+            this.database = NervousFish.getServiceLocator().getDatabase();
             this.editName = editName;
             this.key = key;
         }
