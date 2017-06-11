@@ -223,6 +223,16 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Gets triggered when the 3 dots button in the toolbar is clicked.
+     *
+     * @param view The view that was clicked
+     */
+    public void onClickDotsButton(final View view) {
+        final Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
+    }
+
+    /**
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
      * @param index The index of the contact in {@code this.contacts}.
