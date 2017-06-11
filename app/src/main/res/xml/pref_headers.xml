@@ -1,0 +1,18 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="com.nervousfish.nervousfish.activities.SettingsActivity$GeneralPreferenceFragment"
+        android:icon="@drawable/info"
+        android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="com.nervousfish.nervousfish.activities.SettingsActivity$ProfilePreferenceFragment"
+        android:icon="@drawable/user"
+        android:title="@string/pref_header_profile" />
+
+    <header
+        android:id="@+id/key_management_header"
+        android:icon="@drawable/key"
+        android:title="@string/pref_key_management_header" />
+
+</preference-headers>

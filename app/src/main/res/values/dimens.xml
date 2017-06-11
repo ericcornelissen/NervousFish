@@ -58,4 +58,6 @@
     <dimen name="select_verification_method_button_padding">15dp</dimen>
     <dimen name="select_verification_method_button_text_size">16sp</dimen>
     <dimen name="select_verification_method_checkbox_padding">6dp</dimen>
+
+    <dimen name="image_button_padding">17dp</dimen>
 </resources>
