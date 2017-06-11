@@ -282,8 +282,7 @@ public final class MainActivity extends AppCompatActivity {
         } else if (!bluetoothAdapter.isEnabled()) {
             final String description = this.getString(
                     buttonClicked
-                            ? R.string.popup_enable_bluetooth_exchange
-                            : R.string.popup_enable_bluetooth_findable);
+                            ? R.string.popup_enable_bluetooth_exchange : R.string.popup_enable_bluetooth_findable);
 
             new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
                     .setTitleText(this.getString(R.string.popup_enable_bluetooth_title))
