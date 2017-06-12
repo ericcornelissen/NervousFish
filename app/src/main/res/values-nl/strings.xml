@@ -97,6 +97,12 @@
     <string name="contact_set_name">Geef contact een naam</string>
     <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
 
+    <!-- NFC -->
+    <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>
+    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om contacten uit te wisselen.</string>
+    <string name="popup_enable_nfc_title">NFC aanzetten?</string>
+    <string name="popup_enable_nfc_settings">Activeer a.u.b. NFC in de instellingen en click de terug knop om terug te gaan naar de app</string>
+
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
