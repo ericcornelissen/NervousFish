@@ -105,10 +105,10 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        super.onStop();
         this.serviceLocator.unregisterFromEventBus(this);
 
         LOGGER.info("Activity stopped");
+        super.onStop();
     }
 
     /**

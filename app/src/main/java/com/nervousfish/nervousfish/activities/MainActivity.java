@@ -88,8 +88,7 @@ public final class MainActivity extends AppCompatActivity {
         // Start Bluetooth
         try {
             this.serviceLocator.getBluetoothHandler().start();
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            askBluetoothLocationPermission();
         } catch (NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button");
             final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
@@ -108,6 +107,16 @@ public final class MainActivity extends AppCompatActivity {
         this.sorter = new MainActivitySorter(this);
 
         LOGGER.info("Activity created");
+    }
+
+    /**
+     * Asks if the users wants to give permission to use their location.
+     */
+    private void askBluetoothLocationPermission() {
+        LOGGER.info("Location permission for Bluetooth asked");
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
     }
 
     /**
@@ -329,8 +338,7 @@ public final class MainActivity extends AppCompatActivity {
                                 startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_START);
                             }
 
-                            ActivityCompat.requestPermissions(MainActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                            askBluetoothLocationPermission();
                             LOGGER.info("Request to enable Bluetooth sent");
                         }
                     })
