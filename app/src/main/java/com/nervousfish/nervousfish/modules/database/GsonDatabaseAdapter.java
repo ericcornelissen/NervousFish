@@ -253,7 +253,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String passwordFileString = passwordFileStringBuffer.toString();
         final DatabasePass databasePass = gsonParser.fromJson(passwordFileString, TYPE_DATABASE_PASS);
         if (!databasePass.getEncryptedPassword().equals(EncryptedSaver.hashWithoutSalt(password))) {
-            throw new IOException("Password is wrong");
+            throw new IOException("Password is wrong " + databasePass.getEncryptedPassword()+ " "+EncryptedSaver.hashWithoutSalt(password));
         }
         passReader.close();
 
@@ -328,14 +328,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private void initializeDatabase(final Profile profile, final String password) throws IOException {
         LOGGER.info("Database path created: " + databasePath);
-        final File file = new File(databasePath);
-
-
-        if (file.exists()) {
-            LOGGER.info("Database file already exists");
-            return;
-        }
-        LOGGER.info("There is no Database file yet");
+//        final File file = new File(databasePath);
+//
+//
+//        if (file.exists()) {
+//            LOGGER.info("Database file already exists");
+//            return;
+//        }
+//        LOGGER.info("There is no Database file yet");
         databaseMap.put(DATABASE, new Database(new ArrayList<Contact>(), profile));
 
 
@@ -370,14 +370,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private void initializePassword(final String password) throws IOException {
         LOGGER.info("Initializing password");
-        final File file = new File(passwordPath);
-
-        if (file.exists()) {
-            LOGGER.info("Password pass file already exists");
-            return;
-        }
-
-        LOGGER.info("Password path doesn't exist yet");
+//        final File file = new File(passwordPath);
+//
+//        if (file.exists()) {
+//            LOGGER.info("Password pass file already exists");
+//            return;
+//        }
+//
+//        LOGGER.info("Password path doesn't exist yet");
         databaseMap.put(DATABASE_PASS, new DatabasePass(password));
 
 

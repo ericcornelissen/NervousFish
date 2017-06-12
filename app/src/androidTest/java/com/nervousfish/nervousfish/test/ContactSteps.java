@@ -11,7 +11,10 @@ import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
@@ -19,6 +22,7 @@ import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 import org.junit.Rule;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
@@ -31,6 +35,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -48,6 +53,7 @@ public class ContactSteps {
     @Given("^I am viewing the contact activity$")
     public void iAmViewingTheContactActivity() throws IOException {
         this.initDatabase();
+
 
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.CONTACT, this.contact);
@@ -106,7 +112,16 @@ public class ContactSteps {
      */
     private void initDatabase() throws IOException {
         final IDatabase database = this.serviceLocator.getDatabase();
-        for(Contact contact : database.getAllContacts()) {
+
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
+        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        Contact contactu = new Contact("name", new ArrayList<IKey>());
+        Profile profile = new Profile(contactu, new ArrayList<KeyPair>());
+        profile.addKeyPair(keyPair);
+        database.createDatabase(profile, "Testpass");
+        database.loadDatabase("Testpass");
+
+        for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());
         }
         database.addContact(this.contact);
