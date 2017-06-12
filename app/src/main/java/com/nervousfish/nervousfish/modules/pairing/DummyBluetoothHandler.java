@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * A Bluetooth handler without implementation, needed because Bluetooth is unavailable on the emulator
@@ -54,12 +53,6 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
     @Override
     public void stop() {
         // Do nothing
-    }
-
-    @Override
-    public byte[] objectToBytes(final Serializable object) throws IOException {
-        // Do nothing
-        return new byte[0];
     }
 
     @Override
