@@ -41,10 +41,8 @@ class CreateProfileHelper {
         switch (keyType) {
             case RSA:
                 return this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
-            case Simple:
-                final IKey publicKey = new Ed25519Key("public", "foo");
-                final IKey privateKey = new Ed25519Key("private", "bar");
-                return new KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME, publicKey, privateKey);
+            case Ed25519:
+                return this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
             default:
                 throw new IllegalArgumentException("The selected key is not implemented");
         }

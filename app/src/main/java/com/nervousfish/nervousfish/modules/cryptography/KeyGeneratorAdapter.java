@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -48,15 +49,12 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     }
 
     /**
-     * Generates a random KeyPair with the RSA algorithm.
-     *
-     * @param name The name of the key
-     * @return a randomly generated KeyPair
+     * {@inheritDoc}
      */
+    @Override
     public KeyPair generateRSAKeyPair(final String name) {
-        final KeyPairGenerator keyPairGenerator;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
+            final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
             keyPairGenerator.initialize(RSA_KEY_SIZE);
 
             final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -73,6 +71,16 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new KeyGenerationException(e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KeyPair generateEd25519KeyPair(final String name) throws KeyGenerationException {
+        final Ed25519Key publicKey = new Ed25519Key(name, "foo");
+        final Ed25519Key privateKey = new Ed25519Key(name, "bar");
+        return new KeyPair(name, publicKey, privateKey);
     }
 
 }
