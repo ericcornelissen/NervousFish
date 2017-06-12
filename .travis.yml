@@ -24,6 +24,15 @@ android:
     - sys-img-armeabi-v7a-android-22
     - sys-img-armeabi-v7a-android-25
 
+# Enable parallelisation
+env:
+  matrix:
+    - COMPONENT=unit
+    - COMPONENT=instrumentation-provider
+    - COMPONENT=instrumentation-sdk
+    - COMPONENT=sample
+    - COMPONENT=build
+
 # Start emulators
 before_script:
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
