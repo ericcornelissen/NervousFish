@@ -69,4 +69,5 @@
     <dimen name="qr_code_wrapper_padding">20dp</dimen>
     <dimen name="qr_code_margin">20dp</dimen>
 
+    <dimen name="image_button_padding">17dp</dimen>
 </resources>
