@@ -100,4 +100,21 @@
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
+
+    <!-- Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="content_description_settings_button">Settings button three dots</string>
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_verification_method_to_use">Verification method to use</string>
+
+    <!-- Profile Settings -->
+    <string name="pref_header_profile">Profile information</string>
+
+    <string name="display_name">Display name</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
 </resources>

@@ -8,13 +8,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.nervousfish.nervousfish.*;
+import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -29,17 +27,11 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
 
-
 @CucumberOptions(features = "features")
 public class QRExchangeKeyActivitySteps {
-
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
     @Rule
     public ActivityTestRule<QRExchangeKeyActivity> mActivityRule =
@@ -47,14 +39,9 @@ public class QRExchangeKeyActivitySteps {
 
     @Given("^I am viewing QRExchange activity$")
     public void iAmViewingQRExchangeActivity() {
-
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
-        mActivityRule.launchActivity(intent);
-
+        this.mActivityRule.launchActivity(intent);
     }
-
-
 
     @When("^I press the generate button$")
     public void iPressTheGenerateButton(){
@@ -88,7 +75,7 @@ public class QRExchangeKeyActivitySteps {
     }
 
 
-    private class EspressoTestsMatchers {
+    private static class EspressoTestsMatchers {
 
         public Matcher<View> withDrawable(final Bitmap resource) {
             return new DrawableMatcher(resource);

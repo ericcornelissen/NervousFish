@@ -8,16 +8,15 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:name=".service_locator.NervousFish"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/app_logo_round"
         android:label="@string/app_name"
-        android:name=".service_locator.NervousFish"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
-
         <activity
             android:name=".service_locator.EntryActivity"
             android:noHistory="true">
@@ -57,18 +56,21 @@
             android:noHistory="true"/>
         <activity
             android:name=".activities.CreateProfileActivity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:noHistory="true"/>
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.SelectVerificationMethodActivity" />
+        <activity android:name=".activities.SelectVerificationMethodActivity" />
         <activity
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".activities.KeyManagementActivity" />
         <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
 </manifest>
