@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -54,9 +55,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_rhythm_create);
         this.serviceLocator = NervousFish.getServiceLocator();
-
-        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
-        this.setSupportActionBar(toolbar);
 
         this.startButton = (Button) this.findViewById(R.id.start_recording_button);
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);

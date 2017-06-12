@@ -79,10 +79,10 @@ public final class WaitActivity extends Activity {
      */
     @Override
     protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Activity stopped");
-
         super.onStop();
+        this.serviceLocator.unregisterFromEventBus(this);
+
+        LOGGER.info("Activity stopped");
     }
 
     /**
