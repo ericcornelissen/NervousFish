@@ -60,6 +60,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'junit:junit:4.12'
     compile 'com.google.code.findbugs:annotations:2.0.1'
+    compile group: 'net.i2p.crypto', name: 'eddsa', version: '0.1.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.8.9'

@@ -22,7 +22,9 @@ import java.security.spec.RSAPublicKeySpec;
 public final class KeyGeneratorAdapter implements IKeyGenerator {
 
     private static final long serialVersionUID = -5933759426888012276L;
+
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
+
     private static final String RSA_KEY_ALGORITHM = "RSA";
     private static final int RSA_KEY_SIZE = 2048;
 
@@ -78,8 +80,9 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      */
     @Override
     public KeyPair generateEd25519KeyPair(final String name) throws KeyGenerationException {
-        final Ed25519Key publicKey = new Ed25519Key(name, "foo");
-        final Ed25519Key privateKey = new Ed25519Key(name, "bar");
+        final Ed25519 keyPairGenerator = Ed25519.generatePair();
+        final Ed25519Key publicKey = new Ed25519Key(name, keyPairGenerator.getPublicKey());
+        final Ed25519Key privateKey = new Ed25519Key(name, keyPairGenerator.getPrivateKey());
         return new KeyPair(name, publicKey, privateKey);
     }
 

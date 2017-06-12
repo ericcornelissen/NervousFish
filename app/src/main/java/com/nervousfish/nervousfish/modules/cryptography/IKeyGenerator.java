@@ -10,7 +10,7 @@ import com.nervousfish.nervousfish.modules.IModule;
 public interface IKeyGenerator extends IModule {
 
     /**
-     * Generates a random KeyPair with the RSA algorithm.
+     * Generates a random {@link KeyPair} with the RSA algorithm.
      *
      * @param name The name of the newly generated key
      * @return a randomly generated KeyPair
@@ -18,7 +18,8 @@ public interface IKeyGenerator extends IModule {
     KeyPair generateRSAKeyPair(String name) throws KeyGenerationException;
 
     /**
-     * Generates a random KeyPair with the RSA algorithm.
+     * Generates a random {@link KeyPair} with the Ed25519 algorithm. For more
+     * details about Ed25519: https://ed25519.cr.yp.to/
      *
      * @param name The name of the newly generated key
      * @return a randomly generated KeyPair
