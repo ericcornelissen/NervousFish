@@ -100,6 +100,12 @@ public final class MainActivity extends AppCompatActivity {
         final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
         this.showSuccessfulBluetoothPopup(successfulBluetooth);
 
+        if (NfcAdapter.getDefaultAdapter(this) == null) {
+            LOGGER.info("NFC not available on device, disabling button");
+            final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_nfc);
+            button.setEnabled(false);
+        }
+
         // Initialize sorter
         this.sorter = new MainActivitySorter(this);
 
