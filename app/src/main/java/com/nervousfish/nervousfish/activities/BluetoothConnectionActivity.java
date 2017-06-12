@@ -181,9 +181,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     public void discoverDevices() {
         this.setTitle(R.string.scanning);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-
         this.stopDiscovering();
 
         final Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -231,7 +228,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
         // Skip paired devices and devices without a valid name.
-        if (isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED) {
+        if (isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED &&
+                this.newDevicesArrayAdapter.getPosition(device.getName() + "\n" + device.getAddress()) == -1) {
             this.newDevices.add(device);
             this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
         }

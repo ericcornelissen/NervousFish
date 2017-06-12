@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -86,6 +88,8 @@ public final class MainActivity extends AppCompatActivity {
         // Start Bluetooth
         try {
             this.serviceLocator.getBluetoothHandler().start();
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         } catch (NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button");
             final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
@@ -324,6 +328,9 @@ public final class MainActivity extends AppCompatActivity {
                             } else {
                                 startActivityForResult(intent, MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_START);
                             }
+
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
                             LOGGER.info("Request to enable Bluetooth sent");
                         }
                     })
