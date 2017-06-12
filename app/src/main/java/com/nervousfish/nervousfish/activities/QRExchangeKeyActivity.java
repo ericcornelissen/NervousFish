@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
@@ -20,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * An {@link Activity} that is used for pairing using QR codes
@@ -35,6 +41,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     private static final String SEMICOLON = ";";
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
+    private IServiceLocator serviceLocator;
     private Profile profile;
 
     /**
@@ -44,7 +51,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        serviceLocator = NervousFish.getServiceLocator();
 
         try {
             profile = serviceLocator.getDatabase().getProfiles().get(0);
@@ -85,5 +92,50 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+        LOGGER.info("Activity resulted");
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult == null) {
+            LOGGER.error("No scan result in QR Scanner");
+        } else if (resultCode == RESULT_OK){
+            final String result = scanResult.getContents();
+            addNewContact(result);
+        }
+    }
+
+    /**
+     * Adds new contact with the scanned key and opens change
+     *
+     * @param qrMessage The information we got from the QR code.
+     */
+    private void addNewContact(final String qrMessage) {
+        try {
+            LOGGER.info("Adding new contact to database");
+            //Name is the first part
+            final String name = qrMessage.split(SEMICOLON)[0];
+            //Key is the second part
+            final IKey key = QRGenerator.deconstructToKey(qrMessage.split(SEMICOLON)[1]);
+
+            final Contact contact = new Contact(name, key);
+            this.serviceLocator.getDatabase().addContact(contact);
+
+            final Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+            this.startActivity(intent);
+        } catch (IllegalArgumentException e) {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(this.getString(R.string.contact_already_exists_popup))
+                    .setContentText(this.getString(R.string.contact_already_exists_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .show();
+        } catch (IOException e) {
+            LOGGER.error("IOException in addNewContact", e);
+        }
     }
 }
