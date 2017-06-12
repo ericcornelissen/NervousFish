@@ -10,7 +10,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -53,13 +55,17 @@ public class ContactTest {
 
     @Test
     public void testGetKeysReturnsTheKeys() {
-        Contact contactA = new Contact("foo", this.key);
+        final Map<String, String> map = new HashMap<>();
+        map.put("name", "foo");
+        map.put("key", "bar");
+        final IKey simpleKey = new SimpleKey(map);
+        Contact contactA = new Contact("foo", simpleKey);
         List<IKey> keysA = new ArrayList<>();
-        keysA.add(this.key);
+        keysA.add(simpleKey);
         assertEquals(keysA, contactA.getKeys());
 
         Collection<IKey> keysB = new ArrayList<>();
-        keysB.add(this.key);
+        keysB.add(simpleKey);
         Contact contactB = new Contact("foo", keysB);
         assertEquals(keysB, contactB.getKeys());
     }
@@ -85,8 +91,12 @@ public class ContactTest {
 
     @Test
     public void testEqualsReturnsTrueForEqualKeys() {
-        Contact contactA = new Contact("Stas", this.key);
-        Contact contactB = new Contact("Stas", this.key);
+        final Map<String, String> map = new HashMap<>();
+        map.put("name", "foo");
+        map.put("key", "bar");
+        final IKey simpleKey = new SimpleKey(map);
+        Contact contactA = new Contact("Stas", simpleKey);
+        Contact contactB = new Contact("Stas", simpleKey);
         assertTrue(contactA.equals(contactB));
     }
 

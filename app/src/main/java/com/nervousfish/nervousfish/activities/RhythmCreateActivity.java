@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -44,6 +45,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private Button doneButton;
     private ArrayList<SingleTap> tapCombination;
     private IServiceLocator serviceLocator;
+    private IDatabase database;
     private Contact dataReceived;
 
     /**
@@ -54,6 +56,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_rhythm_create);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.database = this.serviceLocator.getDatabase();
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
         this.setSupportActionBar(toolbar);
@@ -109,8 +112,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
-        if (tapCombination != null && startButton.getVisibility() == View.GONE) {
-            tapCombination.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
+        if (this.tapCombination != null && this.startButton.getVisibility() == View.GONE) {
+            this.tapCombination.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
         }
     }
 
@@ -122,7 +125,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            final Profile myProfile = this.database.getProfiles().get(0);
 
             LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
                     + myProfile.getPublicKey().toString());
@@ -133,8 +136,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         }
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, dataReceived);
-        intent.putExtra(ConstantKeywords.TAP_DATA, (ArrayList) tapCombination);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.TAP_DATA, (ArrayList) this.tapCombination);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
@@ -145,10 +148,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
-        tapCombination = new ArrayList<>();
-        startButton.setVisibility(View.GONE);
-        stopButton.setVisibility(View.VISIBLE);
-        doneButton.setVisibility(View.GONE);
+        this.tapCombination = new ArrayList<>();
+        this.startButton.setVisibility(View.GONE);
+        this.stopButton.setVisibility(View.VISIBLE);
+        this.doneButton.setVisibility(View.GONE);
     }
 
     /**
@@ -158,9 +161,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
-        startButton.setVisibility(View.VISIBLE);
-        stopButton.setVisibility(View.GONE);
-        doneButton.setVisibility(View.VISIBLE);
+        this.startButton.setVisibility(View.VISIBLE);
+        this.stopButton.setVisibility(View.GONE);
+        this.doneButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -173,15 +176,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
 
             //This needs to be outside of the try catch block
-            dataReceived = contact;
+            this.dataReceived = contact;
         }
     }
 

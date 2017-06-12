@@ -14,7 +14,7 @@
     <string name="name">Naam</string>
     <string name="nfc">NFC</string>
     <string name="no">Nee</string>
-    <string name="paired_devices">Gepaarde apparaten</string>
+    <string name="paired_devices">Gekoppelde apparaten</string>
     <string name="password">Wachtwoord</string>
     <string name="qr">QR</string>
     <string name="qr_code">QR code</string>
@@ -33,7 +33,7 @@
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
-    <string name="key_type" formatted="false">Type sleutel: %s</string>
+    <string name="key_type">Type sleutel: %1$s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
     <string name="repeat_password">Herhaal wachtwoord</string>
@@ -83,6 +83,12 @@
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
     <string name="yes_delete">Ja, verwijder het!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
+    <string name="contact_exists">Er bestaat al een contact met de naam "%1$s"</string>
+    <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
+    <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
+    <string name="create_new_contact">Creëer een nieuw contact</string>
+    <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
+    <string name="confirm">Bevestigen</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Selecteer een verificatie methode</string>
@@ -96,6 +102,7 @@
     <string name="show_qr_code">Toon QR code</string>
     <string name="contact_set_name">Geef contact een naam</string>
     <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
+    <string name="contact_exists_give_unique_name">Het contact bestaat al. Voer alstublieft een nieuwe naam in.</string>
 
     <!-- NFC -->
     <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>

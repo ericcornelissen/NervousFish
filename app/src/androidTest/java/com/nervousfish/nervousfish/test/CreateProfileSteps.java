@@ -17,6 +17,7 @@ import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.hamcrest.Description;
@@ -46,7 +47,7 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class CreateProfileSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
 
     @Rule
     public ActivityTestRule<CreateProfileActivity> mActivityRule =

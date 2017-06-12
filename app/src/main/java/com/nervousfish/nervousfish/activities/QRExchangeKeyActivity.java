@@ -210,7 +210,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             } catch (final IllegalArgumentException e) {
                 LOGGER.error("IllegalArgumentException while adding new contact", e);
                 new SweetAlertDialog(QRExchangeKeyActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.contact_already_exists))
+                        .setTitleText(getString(R.string.contact_exists_give_unique_name))
                         .setContentText(getString(R.string.contact_exists_message))
                         .setConfirmText(getString(R.string.dialog_ok))
                         .show();
