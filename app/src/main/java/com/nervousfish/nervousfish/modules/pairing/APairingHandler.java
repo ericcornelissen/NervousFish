@@ -57,7 +57,7 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public byte[] objectToBytes(final Serializable object) throws IOException {
+    public final byte[] objectToBytes(final Serializable object) throws IOException {
         LOGGER.info("Begin serializing object:" + object);
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();

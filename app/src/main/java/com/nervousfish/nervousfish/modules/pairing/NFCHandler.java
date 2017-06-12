@@ -6,11 +6,6 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 /**
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
@@ -38,22 +33,6 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
      */
     public static ModuleWrapper<NFCHandler> newInstance(final IServiceLocator serviceLocator) {
         return new ModuleWrapper<>(new NFCHandler(serviceLocator));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public byte[] objectToBytes(final Serializable object) throws IOException {
-        LOGGER.info("Begin writing object");
-        final byte[] bytes;
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(new DataWrapper(object));
-            oos.flush();
-            bytes = bos.toByteArray();
-        }
-        return bytes;
     }
 
     /**
