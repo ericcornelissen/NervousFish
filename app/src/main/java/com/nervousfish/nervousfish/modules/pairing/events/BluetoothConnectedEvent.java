@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.modules.pairing.events;
 
-import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothConnectedThread;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothThread;
 
 /**
