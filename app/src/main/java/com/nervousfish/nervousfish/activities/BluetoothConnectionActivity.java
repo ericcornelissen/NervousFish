@@ -168,7 +168,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
         this.pairedDevices = this.bluetoothAdapter.getBondedDevices();
         for (final BluetoothDevice device : this.pairedDevices) {
-            this.pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            if(this.pairedDevicesArrayAdapter.getPosition(device.getName() + "\n" + device.getAddress()) == -1) {
+                this.pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
         }
 
         LOGGER.info("Pairing query done");
