@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An NFC handler without implementation, needed because NFC is unavailable on the emulator
+ * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
 public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
 

@@ -17,12 +17,16 @@
     <rule ref="rulesets/java/controversial.xml" >
         <!-- Often you use a variable only in a single method, but the variable should stay constant in that method -->
         <exclude name="AvoidFinalLocalVariable" />
+
         <!-- Sometimes we have to use package-private classes -->
         <exclude name="DefaultPackage" />
+
         <!-- Multiple returns are allowed in some cases, but have to be used with caution -->
         <exclude name="OnlyOneReturn" />
+
         <!-- Very useful in C++, but not in Java -->
         <exclude name="DataflowAnomalyAnalysis" />
+        
         <!-- Many classes don't need an explicit empty constructor (like activities) -->
         <exclude name="AtLeastOneConstructor" />
     </rule>
@@ -35,14 +39,10 @@
     <rule ref="rulesets/java/empty.xml" />
     <rule ref="rulesets/java/finalizers.xml" />
     <rule ref="rulesets/java/imports.xml">
-        <!-- Espresso is designed this way !-->
+        <!-- Espresso is designed this way -->
         <exclude name="TooManyStaticImports" />
     </rule>
     <rule ref="rulesets/java/junit.xml" />
-    <rule ref="rulesets/java/logging-java.xml">
-        <!-- This rule wasn't working properly and given errors in every var call info -->
-        <exclude name="GuardLogStatementJavaUtil" />
-    </rule>
     <rule ref="rulesets/java/naming.xml">
         <exclude name="AbstractNaming" />
         <exclude name="LongVariable" />
@@ -51,7 +51,9 @@
         <exclude name="ShortClassName" />
         <exclude name="VariableNamingConventions" />
     </rule>
-    <rule ref="rulesets/java/optimizations.xml" />
+    <rule ref="rulesets/java/optimizations.xml">
+        <exclude name="RedundantFieldInitializer" />
+    </rule>
     <rule ref="rulesets/java/strictexception.xml" />
     <rule ref="rulesets/java/strings.xml" />
     <rule ref="rulesets/java/typeresolution.xml" />

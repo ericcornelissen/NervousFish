@@ -10,6 +10,8 @@ import cucumber.api.java.Before;
 
 public class Instrumentation extends MonitoringInstrumentation {
 
+    // Suppressed because we cannot obtain references to the data directory directly from the Instrumentation tests
+    @SuppressWarnings("SdCardPath")
     public static final String filesDir = "/data/user/0/com.nervousfish.nervousfish/files";
     private final CucumberInstrumentationCore mInstrumentationCore = new CucumberInstrumentationCore(this);
 
@@ -17,16 +19,16 @@ public class Instrumentation extends MonitoringInstrumentation {
     public void onCreate(final Bundle bundle) {
         super.onCreate(bundle);
 
-        mInstrumentationCore.create(bundle);
-        start();
+        this.mInstrumentationCore.create(bundle);
+        this.start();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        waitForIdleSync();
-        mInstrumentationCore.start();
+        this.waitForIdleSync();
+        this.mInstrumentationCore.start();
     }
 
     @Before

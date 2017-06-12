@@ -1,6 +1,4 @@
 <resources>
-    <dimen name="zero">0dp</dimen>
-
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="sorting_fab_margin">22dp</dimen>
     <dimen name="contact_picture_width">100dp</dimen>
@@ -35,7 +33,6 @@
     <dimen name="submit_password_text_size">20sp</dimen>
 
     <dimen name="waiting_for_slave_text_offset">40dp</dimen>
-    <dimen name="activating_bluetooth_location_message_offset">90dp</dimen>
 
     <dimen name="get_started_text_size">18sp</dimen>
     <dimen name="welcome_message_subpart_size">15sp</dimen>
@@ -48,18 +45,12 @@
     <dimen name="welcome_message_subpart_width">300dp</dimen>
     <dimen name="welcome_message_subpart_margin_top">20dp</dimen>
     <dimen name="welcome_message_padding_top">20dp</dimen>
-    <dimen name="first_use_logo_padding_top">50dp</dimen>
-    <dimen name="first_use_logo_height">170dp</dimen>
+    <dimen name="first_use_logo_height">175dp</dimen>
 
-    <dimen name="ten_padding_start">10dp</dimen>
-    <dimen name="ten_padding_end">10dp</dimen>
     <dimen name="submit_text_size">18sp</dimen>
 
     <dimen name="field_margin_top">20dp</dimen>
-    <dimen name="normal_drawable_padding">10dp</dimen>
-
-    <dimen name="create_profile_message_width">300dp</dimen>
-    <dimen name="create_profile_message_margin_top">20dp</dimen>
+    
     <dimen name="create_profile_message_size">19sp</dimen>
 
     <dimen name="select_verification_method_title_padding">20dp</dimen>
@@ -67,4 +58,6 @@
     <dimen name="select_verification_method_button_padding">15dp</dimen>
     <dimen name="select_verification_method_button_text_size">16sp</dimen>
     <dimen name="select_verification_method_checkbox_padding">6dp</dimen>
+
+    <dimen name="image_button_padding">17dp</dimen>
 </resources>
