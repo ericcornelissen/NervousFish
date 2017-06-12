@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.test;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.runner.MonitoringInstrumentation;
 
@@ -20,16 +19,16 @@ public class Instrumentation extends MonitoringInstrumentation {
     public void onCreate(final Bundle bundle) {
         super.onCreate(bundle);
 
-        mInstrumentationCore.create(bundle);
-        start();
+        this.mInstrumentationCore.create(bundle);
+        this.start();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        waitForIdleSync();
-        mInstrumentationCore.start();
+        this.waitForIdleSync();
+        this.mInstrumentationCore.start();
     }
 
     @Before

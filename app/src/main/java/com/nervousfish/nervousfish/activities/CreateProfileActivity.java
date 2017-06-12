@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
@@ -16,6 +14,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,17 +38,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText repeatPasswordInput;
 
     /**
-     * Creates the new activity, should only be called by Android.
-     *
-     * @param savedInstanceState A previous state of this {@link Activity}.
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
-
-        final Intent intent = this.getIntent();
-        this.serviceLocator = (IServiceLocator) intent.getSerializableExtra(ConstantKeywords.SERVICE_LOCATOR);
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         // Initialize helper class
         final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
@@ -61,7 +56,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
-        LOGGER.info("activity created");
+        LOGGER.info("Activity created");
     }
 
     /**
@@ -106,7 +101,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void nextActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         this.startActivity(intent);
     }
 

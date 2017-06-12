@@ -103,4 +103,20 @@
     <string name="by_tapping_a_rhythm">Door een ritme te tikken</string>
     <string name="by_tapping_on_an_image">Door op een plaatje te drukken</string>
 
+    <!-- Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="content_description_settings_button">Settings knop drie punten</string>
+
+    <!-- General settings -->
+    <string name="pref_header_general">Algemeen</string>
+
+    <string name="pref_verification_method_to_use">Verificatie methode om te gebruiken</string>
+
+    <!-- Profile Settings -->
+    <string name="pref_header_profile">Profiel informatie</string>
+
+    <string name="display_name">Publieke naam</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
 </resources>

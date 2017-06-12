@@ -22,6 +22,7 @@ import java.util.Arrays;
 // A logical consequence of using an EventBus. No problem, because it are just (empty) POJO's.
 @SuppressWarnings("checkstyle:classdataabstractioncoupling")
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
     private static final long serialVersionUID = -6465987636766819498L;
 
@@ -52,7 +53,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ensureClassInvariant();
+        this.ensureClassInvariant();
     }
 
     /**
@@ -67,7 +68,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     /**
      * Ensure that the instance meets its class invariant
      *
-     * @throws InvalidObjectException Thrown when the state of the class is unstbale
+     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
     private void ensureClassInvariant() throws InvalidObjectException {
         // No checks to perform
@@ -110,4 +111,5 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     private IBluetoothHandlerService getService() {
         return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
     }
+
 }
