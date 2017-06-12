@@ -5,8 +5,10 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Helper method for the logical functionality of the {@link CreateProfileActivity}.
@@ -37,15 +39,20 @@ class CreateProfileHelper {
      * @param keyType The type of key to generate.
      * @return a {@link KeyPair} with the key type selected
      */
-    KeyPair generateKeyPair(final IKey.Types keyType) {
+    Collection<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+        final Collection<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
-                return this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
+                keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                break;
             case Ed25519:
-                return this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
+                keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                break;
             default:
                 throw new IllegalArgumentException("The selected key is not implemented");
         }
+
+        return keyPairs;
     }
 
     /**
