@@ -36,3 +36,8 @@ Feature: Main Activity
         When I click open buttons with the plus
         And I click the button with the QR text label
         Then I should go to the QR activity from main
+
+  Scenario: Clicking the settings button
+      Given I am viewing the main activity
+      When I click the three dots in the main activity
+      Then I should go to the settings screen

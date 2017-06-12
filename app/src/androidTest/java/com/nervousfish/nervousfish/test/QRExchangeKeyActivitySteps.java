@@ -75,7 +75,7 @@ public class QRExchangeKeyActivitySteps {
     }
 
 
-    private class EspressoTestsMatchers {
+    private static class EspressoTestsMatchers {
 
         public Matcher<View> withDrawable(final Bitmap resource) {
             return new DrawableMatcher(resource);
