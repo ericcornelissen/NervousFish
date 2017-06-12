@@ -138,7 +138,6 @@ public final class EncryptedSaver {
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
         random.nextBytes(ivSpec);
-        final byte[] decodedValue = Base64.decode(toEncrypt, Base64.DEFAULT);
 
         final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
         final Cipher cipher = getCipher(key, ivSpec, mode);
@@ -149,6 +148,7 @@ public final class EncryptedSaver {
                 final byte[] secretString = Base64.encode(cipherText, Base64.DEFAULT);
                 return new String(secretString, UTF_8);
             } else {
+                final byte[] decodedValue = Base64.decode(toEncrypt, Base64.DEFAULT);
                 final byte[] plaintext = cipher.doFinal(decodedValue);
                 return new String(plaintext, UTF_8);
             }

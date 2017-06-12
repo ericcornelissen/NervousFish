@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
  */
-final class GsonKeyAdapter extends TypeAdapter<IKey> {
+public final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
     /**
      * Constructor for the {@code GsonKeyAdapter} class.
