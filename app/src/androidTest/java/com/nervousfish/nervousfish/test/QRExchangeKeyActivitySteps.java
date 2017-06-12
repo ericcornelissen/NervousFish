@@ -74,8 +74,7 @@ public class QRExchangeKeyActivitySteps {
         assertTrue(mActivityRule.getActivity().isDestroyed());
     }
 
-
-    private static class EspressoTestsMatchers {
+    private static final class EspressoTestsMatchers {
 
         public Matcher<View> withDrawable(final Bitmap resource) {
             return new DrawableMatcher(resource);

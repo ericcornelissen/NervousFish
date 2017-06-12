@@ -21,67 +21,102 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  * with a device. It runs straight through; the connection either
  * succeeds or fails.
  */
-class AndroidBluetoothConnectThread extends Thread {
+final class AndroidBluetoothConnectThread implements IBluetoothThread {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectThread");
     private final BluetoothSocket socket;
-    private final IServiceLocator serviceLocator;
+    private final Thread thread;
 
     /**
      * Constructs the thread that initiates a new connection with another user
+     *
      * @param serviceLocator The servicelocator that can be used
-     * @param device The device to connect to
+     * @param device         The device to connect to
      */
     AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
-        super();
-
-        this.serviceLocator = serviceLocator;
         BluetoothSocket tmp = null;
 
-        // Get a BluetoothSocket for a connection with the
-        // given BluetoothDevice
+        // Get a BluetoothSocket for a connection with the given BluetoothDevice
         try {
             tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
         } catch (final IOException e) {
             LOGGER.error("Connection failed", e);
         }
-        socket = tmp;
+
+        this.socket = tmp;
+
         serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
+        this.thread = new Thread(new AndroidBluetoothConnectThread.ConnectThread(serviceLocator, this.socket));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void run() {
-        LOGGER.info("Connect Bluetooth thread started");
-        setName("AndroidBluetoothConnectThread thread");
-
-        // Always cancel discovery because it will slow down a connection
-        BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-
-        // Make a connection to the BluetoothSocket
-        try {
-            // This is a blocking call and will only return on a
-            // successful connection or an exception
-            socket.connect();
-        } catch (final IOException e) {
-            LOGGER.warn("Exception while connecting over Bluetooth", e);
-            try {
-                socket.close();
-            } catch (final IOException esocketCloseException) {
-                LOGGER.error("Connection failed/couldn't close the socket", esocketCloseException);
-            }
-            serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
-            return;
-        }
-
-        serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
+    public void start() {
+        this.thread.start();
     }
 
     /**
-     * Cancels the connect thread and closes the socket
+     * {@inheritDoc}
      */
-    void cancel() {
+    @Override
+    public void cancel() {
         LOGGER.warn("Cancelled!");
+        try {
+            this.socket.close();
+            LOGGER.warn("Socket closed!");
+        } catch (final IOException e) {
+            LOGGER.error("Closing socket", e);
+        }
     }
+
+    private static final class ConnectThread implements Runnable {
+
+        private final IServiceLocator serviceLocator;
+        private final BluetoothSocket socket;
+
+        /**
+         * Simple constructor for the {@link ConnectThread}.
+         *
+         * @param serviceLocator An {@link IServiceLocator}.
+         * @param socket The {@link BluetoothSocket}.
+         */
+        ConnectThread(final IServiceLocator serviceLocator, final BluetoothSocket socket) {
+            super();
+
+            this.serviceLocator = serviceLocator;
+            this.socket = socket;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            LOGGER.info("Connect Bluetooth thread started");
+            // Always cancel discovery because it will slow down a connection
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+
+            // Make a connection to the BluetoothSocket
+            try {
+                // This is a blocking call and will only return on a
+                // successful connection or an exception
+                this.socket.connect();
+            } catch (final IOException e) {
+                LOGGER.warn("Exception while connecting over Bluetooth", e);
+                try {
+                    this.socket.close();
+                } catch (final IOException e2) {
+                    LOGGER.error("Connection failed, couldn't close the socket", e2);
+                }
+                this.serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
+                return;
+            }
+
+            this.serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(this.socket));
+        }
+
+    }
+
 }
