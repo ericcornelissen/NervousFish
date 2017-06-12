@@ -106,4 +106,21 @@
     <string name="popup_enable_nfc_title">Enable NFC?</string>
     <string name="popup_enable_nfc_settings">Please activate NFC and press Back to return to the application!</string>
 
+
+    <!-- Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="content_description_settings_button">Settings button three dots</string>
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_verification_method_to_use">Verification method to use</string>
+
+    <!-- Profile Settings -->
+    <string name="pref_header_profile">Profile information</string>
+
+    <string name="display_name">Display name</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
 </resources>

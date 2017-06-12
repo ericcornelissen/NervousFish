@@ -107,4 +107,20 @@
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
 
+    <!-- Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="content_description_settings_button">Settings knop drie punten</string>
+
+    <!-- General settings -->
+    <string name="pref_header_general">Algemeen</string>
+
+    <string name="pref_verification_method_to_use">Verificatie methode om te gebruiken</string>
+
+    <!-- Profile Settings -->
+    <string name="pref_header_profile">Profiel informatie</string>
+
+    <string name="display_name">Publieke naam</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
 </resources>
