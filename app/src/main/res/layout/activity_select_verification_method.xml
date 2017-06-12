@@ -61,7 +61,7 @@
             android:contentDescription="@string/select_rhythm_verification"
             android:hapticFeedbackEnabled="true"
             android:onClick="onVerificationMethodClick"
-            app:srcCompat="@drawable/sea_at_night"
+            app:srcCompat="@drawable/rhythm_pairing"
             tools:targetApi="lollipop" />
 
         <TextView

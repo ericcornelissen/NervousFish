@@ -99,4 +99,6 @@
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
+    <string name="by_tapping_a_rhythm">By tapping a rhythm</string>
+    <string name="by_tapping_on_an_image">By tapping on an image</string>
 </resources>
