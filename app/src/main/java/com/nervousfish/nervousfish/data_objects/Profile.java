@@ -75,7 +75,7 @@ public class Profile implements Serializable {
         }
 
         final Profile that = (Profile) o;
-        if (this.keyPairs != that.keyPairs) {
+        if (this.keyPairs.size() != that.keyPairs.size()) {
             return false;
         }
         for (final KeyPair kp : this.keyPairs) {

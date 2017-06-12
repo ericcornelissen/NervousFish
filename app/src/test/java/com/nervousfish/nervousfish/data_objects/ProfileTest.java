@@ -33,9 +33,9 @@ public class ProfileTest {
         Contact contactA = new Contact("name", new ArrayList<IKey>());
         Profile profileA = new Profile(contactA, new ArrayList<KeyPair>());
         profileA.addKeyPair(this.keyPair);
-        assertEquals("foo", profileA.getName());
+        assertEquals("name", profileA.getName());
 
-        Contact contactB = new Contact("name", new ArrayList<IKey>());
+        Contact contactB = new Contact("bar", new ArrayList<IKey>());
         Profile profileB = new Profile(contactB, new ArrayList<KeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertEquals("bar", profileB.getName());

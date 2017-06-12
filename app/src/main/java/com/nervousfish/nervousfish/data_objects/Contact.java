@@ -59,8 +59,14 @@ public final class Contact implements Serializable {
         }
 
         final Contact that = (Contact) o;
-        return this.name.equals(that.name)
-                && this.keys.equals(that.keys);
+        for(IKey key: this.keys) {
+            for(IKey key2: that.keys) {
+                if(!key.equals(key2)) {
+                    return false;
+                }
+            }
+        }
+        return this.name.equals(that.name);
     }
 
     /**
