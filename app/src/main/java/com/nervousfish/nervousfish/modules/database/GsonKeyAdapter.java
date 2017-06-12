@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 
 import java.io.IOException;
 import java.util.Map;
@@ -69,7 +69,7 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
                 key = new RSAKey(map);
                 break;
             case ConstantKeywords.SIMPLE_KEY:
-                key = new SimpleKey(map);
+                key = new Ed25519Key(map);
                 break;
             default:
                 throw new IOException("Could not read key");

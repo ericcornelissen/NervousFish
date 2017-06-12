@@ -9,7 +9,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -79,7 +79,7 @@ public final class VisualVerificationActivity extends Activity {
             LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
                     + myProfile.getPublicKey().toString());
 
-            final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
+            final Contact myProfileAsContact = new Contact(myProfile.getName(), new Ed25519Key("simplekey", "73890ien"));
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());

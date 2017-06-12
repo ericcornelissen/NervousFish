@@ -5,7 +5,7 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
 /**
@@ -42,8 +42,8 @@ class CreateProfileHelper {
             case RSA:
                 return this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
             case Simple:
-                final IKey publicKey = new SimpleKey("public", "foo");
-                final IKey privateKey = new SimpleKey("private", "bar");
+                final IKey publicKey = new Ed25519Key("public", "foo");
+                final IKey privateKey = new Ed25519Key("private", "bar");
                 return new KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME, publicKey, privateKey);
             default:
                 throw new IllegalArgumentException("The selected key is not implemented");

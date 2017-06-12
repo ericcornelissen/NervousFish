@@ -1,11 +1,8 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.google.gson.stream.JsonWriter;
-import com.nervousfish.nervousfish.modules.cryptography.KeyGenerationException;
 
 import org.junit.Test;
-import org.mockito.AdditionalMatchers;
-import org.mockito.ArgumentCaptor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,17 +20,15 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SimpleKeyTest {
+public class Ed25519KeyTest {
 
     @Test
     public void testCanBeInstantiatedWithArbitraryValues() {
-        IKey key = new SimpleKey("Webmail", "foobar");
+        IKey key = new Ed25519Key("Webmail", "foobar");
         assertNotNull(key);
     }
 
@@ -42,83 +37,83 @@ public class SimpleKeyTest {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("name", "name");
         map.put("key", "key");
-        IKey key = new SimpleKey(map);
+        IKey key = new Ed25519Key(map);
         assertNotNull(key);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCanBeInstantiatedWithMapMustHaveAllFields() {
         Map<String, String> map = new ConcurrentHashMap<>();
-        new SimpleKey(map);
+        new Ed25519Key(map);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testKeyNull() {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("name", "foo");
-        new SimpleKey(map);
+        new Ed25519Key(map);
     }
 
     @Test
     public void testGetNameReturnsProvidedName() {
-        IKey key = new SimpleKey("Webserver", "foobar");
+        IKey key = new Ed25519Key("Webserver", "foobar");
         assertEquals("Webserver", key.getName());
     }
 
     @Test
     public void testGetKeyReturnsNonEmptyString() {
-        IKey key = new SimpleKey("Webmail", "foobar");
+        IKey key = new Ed25519Key("Webmail", "foobar");
         assertNotEquals("", key.getKey());
     }
 
     @Test
     public void testGetTypeReturnsSimple() {
-        IKey key = new SimpleKey("Webserver", "foobar");
+        IKey key = new Ed25519Key("Webserver", "foobar");
         assertEquals("simple", key.getType());
     }
 
     @Test
     public void testEqualsWorksWithNull() {
-        IKey key = new SimpleKey("Webmail", "foobar");
+        IKey key = new Ed25519Key("Webmail", "foobar");
         assertFalse(key.equals(null));
     }
 
     @Test
     public void testEqualsWorksWithArbitraryObject() {
-        IKey key = new SimpleKey("FTP", "foobar");
+        IKey key = new Ed25519Key("FTP", "foobar");
         assertFalse(key.equals("foobar"));
     }
 
     @Test
     public void testEqualsReturnsFalseForDifferentKeyTypes() {
-        IKey keyA = new SimpleKey("Webserver", "Hello world!");
+        IKey keyA = new Ed25519Key("Webserver", "Hello world!");
         IKey keyB = new RSAKey("Webmail", "foo", "bar");
         assertFalse(keyA.equals(keyB));
     }
 
     @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
-        IKey keyA = new SimpleKey("FTP", "foobar");
-        IKey keyB = new SimpleKey("Zoidberg", "Hello world!");
+        IKey keyA = new Ed25519Key("FTP", "foobar");
+        IKey keyB = new Ed25519Key("Zoidberg", "Hello world!");
         assertFalse(keyA.equals(keyB));
     }
 
     @Test
     public void testEqualsReturnsTrueForEqualKeys() {
-        IKey keyA = new SimpleKey("Webmail", "foobar");
-        IKey keyB = new SimpleKey("Webmail", "foobar");
+        IKey keyA = new Ed25519Key("Webmail", "foobar");
+        IKey keyB = new Ed25519Key("Webmail", "foobar");
         assertTrue(keyA.equals(keyB));
     }
 
     @Test
     public void testHashCodeNotNull() {
-        IKey key = new SimpleKey("Webmail", "foobar");
+        IKey key = new Ed25519Key("Webmail", "foobar");
         assertNotNull(key.hashCode());
     }
 
     @Test
     public void testToJson() throws IOException {
-        IKey key = new SimpleKey("foo", "bar");
+        IKey key = new Ed25519Key("foo", "bar");
         JsonWriter writer = mock(JsonWriter.class);
         when(writer.name(anyString())).thenReturn(writer);
         key.toJson(writer);
@@ -130,7 +125,7 @@ public class SimpleKeyTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final IKey key = new SimpleKey("foo", "bar");
+        final IKey key = new Ed25519Key("foo", "bar");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
