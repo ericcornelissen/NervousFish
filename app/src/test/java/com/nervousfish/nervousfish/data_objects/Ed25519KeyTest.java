@@ -69,7 +69,7 @@ public class Ed25519KeyTest {
     @Test
     public void testGetTypeReturnsSimple() {
         IKey key = new Ed25519Key("Webserver", "foobar");
-        assertEquals("simple", key.getType());
+        assertEquals("ed25519", key.getType());
     }
 
     @Test
