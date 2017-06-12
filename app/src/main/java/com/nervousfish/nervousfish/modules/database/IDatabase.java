@@ -100,4 +100,8 @@ public interface IDatabase extends IModule {
      */
     boolean checkFirstUse();
 
+    /**
+     * Deletes the database.
+     */
+    void deleteDatabase();
 }

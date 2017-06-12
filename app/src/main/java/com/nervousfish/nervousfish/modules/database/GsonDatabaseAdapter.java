@@ -320,6 +320,20 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return filePass.exists() && fileDb.exists();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteDatabase() {
+        LOGGER.info("Deleting database");
+        if(checkFirstUse()) {
+            final File filePass = new File(passwordPath);
+            final File fileDb = new File(databasePath);
+            filePass.delete();
+            fileDb.delete();
+        }
+    }
+
 
     /**
      * Initialize the main database. Does nothing when file is present.
