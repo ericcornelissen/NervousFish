@@ -61,7 +61,6 @@ public class RhythmCreateActivitySteps {
     @Given("^I am viewing the create rhythm activity$")
     public void iAmViewingTheCreateRhythmActivity() throws IOException {
         final Intent intent = new Intent();
-        intent.putExtra(ConstantKeywords.SERVICE_LOCATOR, this.serviceLocator);
         mActivityRule.launchActivity(intent);
     }
 
