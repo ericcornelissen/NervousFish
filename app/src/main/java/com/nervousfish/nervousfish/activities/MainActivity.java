@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -38,7 +40,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * public keys from other people
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods", "PMD.CyclomaticComplexity"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -48,6 +50,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //      to be extended when necessary to more sorting Types.
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
+//  6)  There are a lot of if checks involved in determining which pairing button was clicked and when
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
@@ -214,9 +217,17 @@ public final class MainActivity extends AppCompatActivity {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
             }
-        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(this.getResources().getString(R.string.nfc))) {
-            intent.setComponent(new ComponentName(this, NFCActivity.class));
-        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(this.getResources().getString(R.string.qr))) {
+        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
+            final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+            if (nfcAdapter.isEnabled()) {
+                intent.setComponent(new ComponentName(this, NFCActivity.class));
+                this.startActivity(intent);
+            } else {
+                this.enableNFC();
+                return; // Prevent `this.startActivity()`
+            }
+
+        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
             intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
         } else {
             LOGGER.error("Unknown pairing button clicked: {}", view.getId());
@@ -312,6 +323,33 @@ public final class MainActivity extends AppCompatActivity {
                                 MainActivity.this.startActivityForResult(intent, ENABLE_BLUETOOTH_ON_START);
                             }
                             LOGGER.info("Request to enable Bluetooth sent");
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void enableNFC() {
+        final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if (nfcAdapter.isEnabled()) {
+            final Intent intent = new Intent(this, NFCActivity.class);
+            this.startActivity(intent);
+        } else {
+            final String description;
+            description = this.getString(R.string.popup_enable_nfc_settings);
+            LOGGER.info("Requesting to enable NFC");
+            new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                    .setTitleText(this.getString(R.string.popup_enable_nfc_title))
+                    .setContentText(description)
+                    .setCancelText(this.getString(R.string.no))
+                    .setConfirmText(this.getString(R.string.yes))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(final SweetAlertDialog dialog) {
+                            dialog.dismiss();
+                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                            LOGGER.info("Request to enable NFC sent, forwarded to settings");
                         }
                     })
                     .show();
