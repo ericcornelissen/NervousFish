@@ -125,6 +125,11 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             final Contact contact = new Contact(name, key);
             this.serviceLocator.getDatabase().addContact(contact);
 
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             final Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
             this.startActivity(intent);
@@ -132,6 +137,12 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(this.getString(R.string.contact_already_exists_popup))
                     .setContentText(this.getString(R.string.contact_already_exists_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .show();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(this.getString(R.string.something_went_wrong))
+                    .setContentText(this.getString(R.string.something_went_wrong_QR_popup_explanation))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
         } catch (IOException e) {
