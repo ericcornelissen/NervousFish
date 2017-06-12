@@ -36,7 +36,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * public keys from other people
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods"})
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods",
+        "PMD.AvoidCatchingGenericException", "PMD.AvoidCatchingNPE"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -46,6 +47,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //      to be extended when necessary to more sorting Types.
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
+//  6 and 7)  Because the Service is sometimes null after scanning the QR code, we want to give a nice popup for it.
 public final class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");

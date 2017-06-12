@@ -103,7 +103,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult == null) {
             LOGGER.error("No scan result in QR Scanner");
-        } else if (resultCode == RESULT_OK){
+        } else if (resultCode == RESULT_OK) {
             final String result = scanResult.getContents();
             addNewContact(result);
         }
@@ -125,11 +125,6 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
             final Contact contact = new Contact(name, key);
             this.serviceLocator.getDatabase().addContact(contact);
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             final Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
             this.startActivity(intent);
@@ -139,7 +134,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                     .setContentText(this.getString(R.string.contact_already_exists_explanation))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(this.getString(R.string.something_went_wrong))
                     .setContentText(this.getString(R.string.something_went_wrong_QR_popup_explanation))
