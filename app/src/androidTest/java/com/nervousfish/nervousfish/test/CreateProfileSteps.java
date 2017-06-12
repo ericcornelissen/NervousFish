@@ -48,6 +48,7 @@ import static junit.framework.Assert.assertTrue;
 public class CreateProfileSteps {
 
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private InputMethodManager inputMethodManager;
 
     @Rule
     public ActivityTestRule<CreateProfileActivity> mActivityRule =
@@ -57,6 +58,7 @@ public class CreateProfileSteps {
     public void iAmViewingTheCreateProfileActivity() throws IOException {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
+        this.inputMethodManager = (InputMethodManager) this.mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Given("^there are no profiles in the database$")
@@ -70,49 +72,64 @@ public class CreateProfileSteps {
 
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.submitProfile)).perform(scrollTo()).perform(click());
     }
 
-    @When("^I click ok on the popup with a warning about creating an profile$")
+    @When("^I click ok on the popup with the success message about creating a profile$")
+    public void iClickOkOnThePopupWithTheSuccessMessage() {
+        onView(withId(R.id.confirm_button)).perform(click());
+    }
+
+    @When("^I click ok on the popup with a warning about creating a profile$")
     public void iClickOkOnPopup() {
         onView(withId(R.id.confirm_button)).perform(click());
     }
 
     @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_enter_name)).perform(scrollTo()).perform(replaceText(name));
     }
 
     @When("^I enter a valid (.*?) as password$")
     public void iEnterValidPassword(final String password) {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_enter_password)).perform(scrollTo()).perform(typeText(password));
     }
 
     @When("^I enter a valid repeat (.*?) as repeat password$")
     public void iEnterValidRepeatPassword(final String password) {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_repeat_password)).perform(scrollTo()).perform(typeText(password));
     }
 
     @When("^I enter a (.*?) with a length smaller than 6 characters$")
     public void enterPasswordSmallerThanSix(final String password) {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a different (.*?) than the password field$")
     public void iEnterDifferentRepeatPassword(final String password) {
-        InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
+    }
+
+    @When("^I (true|false) a RSA keypair$")
+    public void iSelectARSAKeyPair(final Boolean select) {
+        if (select) {
+            inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+            onView(withId(R.id.checkbox_ed25519_key)).perform(scrollTo()).perform(click());
+        }
+    }
+
+    @When("^I (true|false) a Ed25519 keypair$")
+    public void iSelectAEd25519KeyPair(final Boolean select) {
+        if (select) {
+            inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+            onView(withId(R.id.checkbox_rsa_key)).perform(scrollTo()).perform(click());
+        }
     }
 
     @Then("^I should stay on the create profile activity$")
