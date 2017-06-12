@@ -10,7 +10,6 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -38,11 +37,10 @@ import static android.nfc.NdefRecord.createMime;
 public final class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
-    private TextView descriptionText;
     private IServiceLocator serviceLocator;
     private byte[] bytes;
     private NfcAdapter nfcAdapter;
-    private Object dataReceived;
+    private IDatabase database;
 
     /**
      * {@inheritDoc}
@@ -53,9 +51,8 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         this.setContentView(R.layout.activity_nfc);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        final IDatabase database = this.serviceLocator.getDatabase();
+        this.database = this.serviceLocator.getDatabase();
 
-        this.descriptionText = (TextView) this.findViewById(R.id.nfc_instruction);
         // Check for available NFC Adapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         LOGGER.info("Start creating an NDEF message to beam");
@@ -102,7 +99,8 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     public void onResume() {
         super.onResume();
         LOGGER.info("NFC onResume");
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
         // Check to see that the Activity started due to an Android Beam
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(this.getIntent().getAction())) {
@@ -127,7 +125,6 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
      */
     void processIntent(final Intent intent) {
         LOGGER.info("Started processing intent");
-        this.descriptionText = (TextView) this.findViewById(R.id.textView);
         final Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
                 NfcAdapter.EXTRA_NDEF_MESSAGES);
         // only one message sent during the beam
@@ -170,12 +167,10 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
             final Contact contact = (Contact) event.getData();
             try {
                 LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
+                this.database.addContact(contact);
             } catch (IOException | IllegalArgumentException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
             this.goToMainActivity();
         }
     }
