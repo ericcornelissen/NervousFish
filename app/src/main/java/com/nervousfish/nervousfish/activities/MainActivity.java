@@ -76,7 +76,6 @@ public final class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        // Fill database with demo data
         try {
             this.contacts = this.serviceLocator.getDatabase().getAllContacts();
         } catch (final IOException e) {
