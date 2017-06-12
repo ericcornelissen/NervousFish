@@ -174,6 +174,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_CODE_ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         }
     }
@@ -208,6 +209,7 @@ public final class MainActivity extends AppCompatActivity {
             final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 this.startActivity(intent);
             } else {
                 this.enableBluetooth(true);
@@ -295,6 +297,7 @@ public final class MainActivity extends AppCompatActivity {
 
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
             final String description;

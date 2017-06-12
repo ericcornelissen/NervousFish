@@ -50,6 +50,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.BluetoothConnectionActivity"
+            android:launchMode = "singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.WelcomeActivity"
