@@ -96,6 +96,13 @@
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
 
+    <!-- NFC -->
+    <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>
+    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
+    <string name="popup_enable_nfc_title">Enable NFC?</string>
+    <string name="popup_enable_nfc_settings">Please activate NFC and press Back to return to the application!</string>
+
+
     <!-- Settings -->
     <string name="title_activity_settings">Settings</string>
     <string name="content_description_settings_button">Settings button three dots</string>
