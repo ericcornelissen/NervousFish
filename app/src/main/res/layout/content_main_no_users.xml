@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="500dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.nervousfish.nervousfish.activities.MainActivity"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_main">
+
+    <ImageView
+        android:id="@+id/no_users_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/users_icon"
+        android:layout_gravity="center"
+        android:contentDescription="@string/users_image"/>
+
+    <TextView
+        android:id="@+id/no_users_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/color_accent"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Your contacts list is empty"
+        />
+</LinearLayout>
