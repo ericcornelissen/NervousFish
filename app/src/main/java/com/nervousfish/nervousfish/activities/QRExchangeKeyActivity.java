@@ -139,7 +139,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
                     .setContentText(this.getString(R.string.contact_already_exists_explanation))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(this.getString(R.string.something_went_wrong))
                     .setContentText(this.getString(R.string.something_went_wrong_QR_popup_explanation))

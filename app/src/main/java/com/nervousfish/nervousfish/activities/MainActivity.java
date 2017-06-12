@@ -90,6 +90,13 @@ public final class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled");
             this.enableBluetooth(false);
+        } catch (NullPointerException e) {
+            LOGGER.error("Could not start the Bluetooth service", e);
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(this.getString(R.string.something_went_wrong))
+                    .setContentText(this.getString(R.string.something_went_wrong_QR_popup_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .show();
         }
 
         // Bluetooth exchange result
