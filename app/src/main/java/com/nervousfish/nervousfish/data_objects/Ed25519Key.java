@@ -70,7 +70,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getType() {
-        return ConstantKeywords.SIMPLE_KEY;
+        return ConstantKeywords.ED25519_KEY;
     }
 
     /**

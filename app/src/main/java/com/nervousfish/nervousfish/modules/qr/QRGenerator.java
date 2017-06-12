@@ -82,7 +82,7 @@ public final class QRGenerator {
             case ConstantKeywords.RSA_KEY:
                 return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
                         messageComponents[COMPONENT_RSA_EXPONENT]);
-            case ConstantKeywords.SIMPLE_KEY:
+            case ConstantKeywords.ED25519_KEY:
                 return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
