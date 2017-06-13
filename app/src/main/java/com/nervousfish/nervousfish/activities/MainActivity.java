@@ -17,6 +17,7 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
@@ -355,6 +356,22 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     List<Contact> getContacts() {
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
+        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
         return contacts;
     }
 

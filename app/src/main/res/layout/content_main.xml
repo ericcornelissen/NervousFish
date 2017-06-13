@@ -10,8 +10,10 @@
 
     <ListView
         android:id="@+id/list_view_main"
-        android:divider="@color/color_accent"
-        android:dividerHeight="0.5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:divider="?attr/colorButtonNormal"
+        android:dividerHeight="1px"
+        android:paddingBottom="90dp" />
 </merge>
