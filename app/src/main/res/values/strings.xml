@@ -27,7 +27,6 @@
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
-    <string name="contact_already_exists">Contact already exists</string>
     <string name="discovered_devices">Discovered devices</string>
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
@@ -53,8 +52,8 @@
     <string name="profile_not_created_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
 
     <!-- Main activity -->
-    <string name="contact_added_popup_title">Pairing was successful!</string>
-    <string name="contact_added_popup_explanation">The pairing over Bluetooth was successful and the new contact is added to the list.</string>
+    <string name="contact_added_popup_title">Successfully received!</string>
+    <string name="contact_added_popup_explanation">The exchange was successful and the new contact is added to the list.</string>
     <string name="popup_log_out_title">Log out?</string>
     <string name="popup_log_out_description">Are you sure you want to log out?</string>
     <string name="popup_enable_bluetooth_title">Enable Bluetooth?</string>
@@ -94,13 +93,17 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="show_qr_code">Show QR code</string>
-    <string name="contact_set_name">Give contact a name</string>
-    <string name="contact_exists_message">Contact already exists, please give a unique value</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
+
+    <!-- NFC -->
+    <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>
+    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
+    <string name="popup_enable_nfc_title">Enable NFC?</string>
+    <string name="popup_enable_nfc_settings">Please activate NFC and press Back to return to the application!</string>
+
 
     <!-- Settings -->
     <string name="title_activity_settings">Settings</string>
