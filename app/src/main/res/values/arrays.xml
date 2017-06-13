@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="verification_methods">
+        <item>Visual verification</item>
+        <item>Rhythm verification</item>
+        <item>Choose when pairing</item>
+    </string-array>
+</resources>

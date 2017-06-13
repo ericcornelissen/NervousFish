@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.nervousfish.nervousfish"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 25 //noinspection
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -58,6 +58,7 @@ dependencies {
     compile 'com.wang.avi:library:2.1.3'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
     compile 'junit:junit:4.12'
     compile 'com.google.code.findbugs:annotations:2.0.1'
 
@@ -74,4 +75,6 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-android:2.7.22'
     androidTestCompile 'info.cukes:cucumber-android:1.2.2@jar'
     androidTestCompile 'info.cukes:cucumber-picocontainer:1.2.2'
+
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }

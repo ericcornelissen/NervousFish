@@ -95,7 +95,7 @@ public class ChangeContactSteps {
 
     @Then("^I should go to the activity I visited before the change contact activity$")
     public void iShouldGoToTheActivityIVisitedBeforeTheChangeContactActivity() {
-        intended(toPackage("com.nervousfish.nervousfish"));
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
     @Then("^I should stay in the contact activity$")
