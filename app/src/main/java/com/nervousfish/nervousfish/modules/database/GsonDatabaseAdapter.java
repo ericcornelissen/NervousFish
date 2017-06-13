@@ -105,7 +105,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
-        this.updateContacts(contacts);
+        this.updateDatabase();
     }
 
     /**
@@ -127,7 +127,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
-        this.updateContacts(contacts);
+        this.updateDatabase();
     }
 
     /**
@@ -181,15 +181,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return getContactWithName(name) != null;
     }
 
-    /**
-     * Update the contact contents of the database.
-     *
-     * @param contacts The list of contacts to write.
-     */
-    private void updateContacts(final List<Contact> contacts) throws IOException {
-        getDatabase().setContacts(contacts);
-        updateDatabase();
-    }
+
 
     /**
      * {@inheritDoc}
