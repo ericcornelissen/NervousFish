@@ -56,28 +56,8 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object) {
-        LOGGER.info("Begin writing object");
-        final byte[] bytes = objectToBytes(object);
-        this.send(bytes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final void send(final Serializable object, final int key) {
-        LOGGER.info("Begin writing object with encryption");
-        final byte[] bytes = objectToBytes(object);
-        // TODO encrypt the bytes
-        this.send(bytes);
-    }
-
-    protected final IServiceLocator getServiceLocator() {
-        return this.serviceLocator;
-    }
-
-    private static byte[] objectToBytes(final Serializable object) {
+    public final byte[] objectToBytes(final Serializable object) throws IOException {
+        LOGGER.info("Begin serializing object:" + object);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(new DataWrapper(object));
@@ -87,6 +67,24 @@ abstract class APairingHandler implements IPairingHandler {
             LOGGER.error("Couldn't serialize object", e);
             throw new SerializationException(e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void send(final Serializable object) throws IOException {
+        LOGGER.info("Begin writing object: {}", object);
+        send(objectToBytes(object));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void send(final Serializable object, final int key) throws IOException {
+        LOGGER.info("Begin writing object encoded with key: {}", key);
+        send(objectToBytes(object));
     }
 
     /**

@@ -28,7 +28,6 @@
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
-    <string name="contact_already_exists">Contact bestaat al</string>
     <string name="discovered_devices">Gevonden apparaten</string>
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
@@ -54,8 +53,8 @@
     <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
 
     <!-- Hoofdscherm -->
-    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
-    <string name="contact_added_popup_explanation">De uitwisseling via Bluetooth was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
+    <string name="contact_added_popup_title">Succesvol ontvangen!</string>
+    <string name="contact_added_popup_explanation">De uitwisseling was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
 
     <string name="popup_log_out_title">Uitloggen?</string>
     <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
@@ -95,9 +94,12 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="show_qr_code">Toon QR code</string>
-    <string name="contact_set_name">Geef contact een naam</string>
-    <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
+
+    <!-- NFC -->
+    <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>
+    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om contacten uit te wisselen.</string>
+    <string name="popup_enable_nfc_title">NFC aanzetten?</string>
+    <string name="popup_enable_nfc_settings">Activeer a.u.b. NFC in de instellingen en click de terug knop om terug te gaan naar de app</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
