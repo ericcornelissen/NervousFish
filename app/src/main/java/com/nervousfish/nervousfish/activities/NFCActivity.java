@@ -185,7 +185,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     private void goToMainActivity() {
         LOGGER.info("Going to Main Activity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         this.startActivity(intent);
     }
 }
