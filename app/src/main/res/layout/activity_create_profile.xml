@@ -13,8 +13,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center"
+            android:gravity="center"
             android:text="@string/create_profile_message"
             android:textSize="@dimen/create_profile_message_size" />
 
@@ -99,17 +99,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/field_margin_top"
             android:layout_marginEnd="@dimen/field_margin_right"
             android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top"
             android:text="@string/keys_to_generate" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginEnd="@dimen/field_margin_right"
-            android:layout_marginStart="@dimen/field_margin_left">
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:orientation="vertical">
 
             <CheckBox android:id="@+id/checkbox_rsa_key"
                 android:layout_width="wrap_content"
