@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ enum ContactReceivedHelper {
     private static void handleExistingContact(final IDatabase database, final Activity activity, final Contact contact) {
         new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
-                .setContentText(String.format(activity.getString(R.string.contact_exists), contact.getName()))
+                .setContentText(String.format(activity.getString(R.string.contact_already_exists_with_name), contact.getName()))
                 .setConfirmText(activity.getString(R.string.add_public_key_to_contact))
                 .setCancelText(activity.getString(R.string.create_new_contact))
                 .showCancelButton(true)
@@ -126,6 +127,7 @@ enum ContactReceivedHelper {
         private final Activity activity;
         private final IDatabase database;
         private final Contact contact;
+        private EditText edit_newContactName;
 
         CreateNewContactClickListener(final Activity activity, final IDatabase database, final Contact contact) {
             this.activity = activity;
@@ -135,12 +137,17 @@ enum ContactReceivedHelper {
 
         @Override
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
+            LOGGER.info("New contact button clicked");
+            this.askForNewName();
+        }
+
+        private void askForNewName() {
             final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity.getApplicationContext());
-            final EditText editText = new EditText(this.activity.getApplicationContext());
+            this.edit_newContactName = new EditText(this.activity.getApplicationContext());
 
             alert.setTitle(this.activity.getString(R.string.create_new_contact));
             alert.setMessage(this.activity.getString(R.string.enter_name_contact));
-            alert.setView(editText);
+            alert.setView(this.edit_newContactName);
 
             alert.setNeutralButton(this.activity.getString(R.string.confirm), this.confirmNewNameListener);
         }
@@ -148,8 +155,35 @@ enum ContactReceivedHelper {
         // Suppressed because we only want the OnSweetClickListener to have access to this class
         @SuppressWarnings({"InnerClassTooDeeplyNested", "NonStaticInnerClassInSecureContext"})
         final class ConfirmNewNameClickListener implements DialogInterface.OnClickListener {
+            // Suppressed, because we otherwise have to add ContactReceivedHelper.CreateNewContactClickListener.this. for each variable
+            @SuppressWarnings("UnqualifiedFieldAccess")
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
+                LOGGER.info("Confirmation button new contact name clicked");
+                final String newName = edit_newContactName.getText().toString();
+                LOGGER.info("New contact name entered is \"{}\"", newName);
+                try {
+                    if (database.contactExists(newName)) {
+                        new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(activity.getString(R.string.contact_already_exists))
+                                .setContentText(String.format(
+                                        activity.getString(R.string.contact_already_exists_with_name),
+                                        contact.getName()))
+                                .setConfirmText(activity.getString(R.string.add_public_key_to_contact))
+                                .setCancelText(activity.getString(R.string.create_new_contact))
+                                .showCancelButton(true)
+                                .setCancelClickListener(
+                                        new ContactReceivedHelper.CreateNewContactClickListener(
+                                                activity,
+                                                database,
+                                                contact))
+                                .setConfirmClickListener(ContactReceivedHelper.CreateNewContactClickListener.this)
+                                .show();
+                    }
+                } catch (final IOException e) {
+                    LOGGER.error("Could not check if contact exists in database", e);
+                    throw new DatabaseException(e);
+                }
                 LOGGER.info("Adding contact to database");
                 try {
                     ContactReceivedHelper.CreateNewContactClickListener.this.database.addContact(

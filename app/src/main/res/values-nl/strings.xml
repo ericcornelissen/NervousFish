@@ -28,7 +28,6 @@
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
-    <string name="contact_already_exists">Contact bestaat al</string>
     <string name="discovered_devices">Gevonden apparaten</string>
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
@@ -54,8 +53,8 @@
     <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
 
     <!-- Hoofdscherm -->
-    <string name="contact_added_popup_title">De uitwisseling was succesvol!</string>
-    <string name="contact_added_popup_explanation">De uitwisseling via Bluetooth was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
+    <string name="contact_added_popup_title">Succesvol ontvangen!</string>
+    <string name="contact_added_popup_explanation">De uitwisseling was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
 
     <string name="popup_log_out_title">Uitloggen?</string>
     <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
@@ -83,7 +82,8 @@
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
     <string name="yes_delete">Ja, verwijder het!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
-    <string name="contact_exists">Er bestaat al een contact met de naam "%1$s"</string>
+    <string name="contact_already_exists">Dit contact bestaat al</string>
+    <string name="contact_already_exists_with_name">Er bestaat al een contact met de naam "%1$s"</string>
     <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
     <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
     <string name="create_new_contact">Creëer een nieuw contact</string>
@@ -99,10 +99,6 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="show_qr_code">Toon QR code</string>
-    <string name="contact_set_name">Geef contact een naam</string>
-    <string name="contact_exists_message">Contact bestaat al, geef aub een unieke naam</string>
-    <string name="contact_exists_give_unique_name">Het contact bestaat al. Voer alstublieft een nieuwe naam in.</string>
 
     <!-- NFC -->
     <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>

@@ -64,7 +64,7 @@ public final class WaitActivity extends Activity {
     private void goToMainActivity() {
         LOGGER.info("Going to the main activity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
     }
