@@ -16,5 +16,7 @@
         android:cacheColorHint="@color/white"
         android:divider="@drawable/list_divider"
         android:dividerHeight="1dp"
+        android:scrollbarStyle="outsideInset"
+        android:overScrollFooter="@android:color/transparent"
         android:paddingBottom="90dp" />
 </merge>
