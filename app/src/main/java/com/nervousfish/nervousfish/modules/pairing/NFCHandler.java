@@ -9,17 +9,17 @@ import org.slf4j.LoggerFactory;
 /**
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
-public final class DummyNFCHandler extends APairingHandler implements INfcHandler {
+public final class NFCHandler extends APairingHandler implements INfcHandler {
 
     private static final long serialVersionUID = -6465987636766819498L;
-    private static final Logger LOGGER = LoggerFactory.getLogger("DummyNFCHandler");
+    private static final Logger LOGGER = LoggerFactory.getLogger("NFCHandler");
 
     /**
      * Prevents construction from outside the class.
      *
      * @param serviceLocator Can be used to get access to other modules
      */
-    private DummyNFCHandler(final IServiceLocator serviceLocator) {
+    private NFCHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
         LOGGER.info("Initialized");
     }
@@ -31,8 +31,8 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      * @param serviceLocator The new service locator
      * @return A wrapper around a newly created instance of this class
      */
-    public static ModuleWrapper<DummyNFCHandler> newInstance(final IServiceLocator serviceLocator) {
-        return new ModuleWrapper<>(new DummyNFCHandler(serviceLocator));
+    public static ModuleWrapper<NFCHandler> newInstance(final IServiceLocator serviceLocator) {
+        return new ModuleWrapper<>(new NFCHandler(serviceLocator));
     }
 
     /**
@@ -40,7 +40,16 @@ public final class DummyNFCHandler extends APairingHandler implements INfcHandle
      */
     @Override
     public void send(final byte[] buffer) {
-        throw new UnsupportedOperationException("Sending data with NFC is not implemented yet");
+        // The NFC Handler handles the exchange of bytes in the activity
+        LOGGER.error("NFC Handler's send method has been called!!!");
+        throw new UnsupportedOperationException("Shouldn't be used");
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dataReceived(final byte[] bytes) {
+        getDataReceiver().get().dataReceived(bytes);
+    }
 }
