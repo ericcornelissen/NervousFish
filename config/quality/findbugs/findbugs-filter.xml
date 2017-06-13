@@ -11,6 +11,9 @@
     <Match>
         <Class name="~.*\.*Test" />
     </Match>
+    <Match>
+        <Class name="~.*\.*Steps" />
+    </Match>
 
     <!-- Suppressed because Android enforces that the onCreate method is only called once -->
     <Match>
