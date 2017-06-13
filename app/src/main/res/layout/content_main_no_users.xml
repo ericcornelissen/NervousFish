@@ -7,6 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.nervousfish.nervousfish.activities.MainActivity"
     android:orientation="vertical"
+    android:gravity="center_vertical"
     android:background="@color/default_android_background"
     tools:showIn="@layout/activity_main">
 
@@ -14,7 +15,7 @@
         android:id="@+id/no_users_icon"
         android:layout_width="@dimen/no_users_icon_size"
         android:layout_height="@dimen/no_users_icon_size"
-        android:layout_marginTop="@dimen/no_users_icon_margin_top"
+        android:layout_marginBottom="@dimen/no_users_icon_margin_bottom"
         android:src="@drawable/users_icon"
         android:layout_gravity="center"
         android:contentDescription="@string/users_image"/>
@@ -26,7 +27,7 @@
         android:layout_gravity="center"
         android:textColor="@color/color_accent"
         android:textSize="@dimen/no_users_text_size"
-        android:layout_marginTop="@dimen/no_users_text_margin_top"
+        android:layout_marginBottom="@dimen/no_users_text_margin_bottom"
         android:text="@string/your_contacts_list_is_empty"
         />
 </LinearLayout>
