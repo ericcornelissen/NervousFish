@@ -116,17 +116,7 @@ public class SimpleKeyTest {
         assertNotNull(key.hashCode());
     }
 
-    @Test
-    public void testToJson() throws IOException {
-        IKey key = new SimpleKey("foo", "bar");
-        JsonWriter writer = mock(JsonWriter.class);
-        when(writer.name(anyString())).thenReturn(writer);
-        key.toJson(writer);
-        verify(writer).name("name");
-        verify(writer).name("key");
-        verify(writer).value("foo");
-        verify(writer).value("bar");
-    }
+
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {

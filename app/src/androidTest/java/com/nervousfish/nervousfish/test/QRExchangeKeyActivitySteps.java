@@ -43,73 +43,13 @@ public class QRExchangeKeyActivitySteps {
         this.mActivityRule.launchActivity(intent);
     }
 
-    @When("^I press the generate button$")
-    public void iPressTheGenerateButton(){
-        onView(withId(R.id.generate_QR_button)).perform(click());
-    }
-
     @When("^I press the back button$")
     public void iPressTheBackButton(){
         onView(withId(R.id.back_button_QR_exchange)).perform(click());
     }
 
-
-
-    @Then("^I should see a popup with my qr code$")
-    public void iShouldSeeAPopupWithMyQRCode() {
-        AlertDialog dialog = (AlertDialog) BaseTest.getField(mActivityRule.getActivity(), "lastDialog");
-        assertTrue(dialog.isShowing());
-
-        QRExchangeKeyActivity QRExchangeActivity = mActivityRule.getActivity();
-        IKey publicKey = (IKey) BaseTest.getField(QRExchangeActivity, "publicKey");
-        Bitmap qrTest = QRGenerator.encode(publicKey.getType() + " "
-                + publicKey.getName() + " " + publicKey.getKey());
-
-        EspressoTestsMatchers etMatchers = new EspressoTestsMatchers();
-        onView(withId(R.id.QR_code_image)).check(matches(etMatchers.withDrawable(qrTest)));
-    }
-
     @Then("^I should return from the QRExchangeKeyActivity$")
     public void iShouldReturnFromTheQRExchangeKeyActivity() {
         assertTrue(mActivityRule.getActivity().isDestroyed());
-    }
-
-
-    private class EspressoTestsMatchers {
-
-        public Matcher<View> withDrawable(final Bitmap resource) {
-            return new DrawableMatcher(resource);
-        }
-
-    }
-
-    private static class DrawableMatcher extends TypeSafeMatcher<View> {
-
-
-        private final Bitmap expected;
-
-        public DrawableMatcher(Bitmap expected) {
-            super(View.class);
-            this.expected = expected;
-        }
-
-        @Override
-        protected boolean matchesSafely(View target) {
-            if (!(target instanceof ImageView)){
-                return false;
-            }
-            ImageView imageView = (ImageView) target;
-
-
-            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
-            return bitmap.sameAs(expected);
-        }
-
-
-        @Override
-        public void describeTo(Description description) {
-
-        }
     }
 }

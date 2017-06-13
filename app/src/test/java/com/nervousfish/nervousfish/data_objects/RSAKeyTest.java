@@ -151,19 +151,6 @@ public class RSAKeyTest {
         assertNotNull(key.hashCode());
     }
 
-    @Test
-    public void testToJson() throws IOException {
-        IKey key = new RSAKey("foo", "bar", "baz");
-        JsonWriter writer = mock(JsonWriter.class);
-        when(writer.name(anyString())).thenReturn(writer);
-        key.toJson(writer);
-        verify(writer).name("name");
-        verify(writer).name("modulus");
-        verify(writer).name("exponent");
-        verify(writer).value("foo");
-        verify(writer).value("bar");
-        verify(writer).value("baz");
-    }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
