@@ -356,22 +356,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     List<Contact> getContacts() {
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
-        contacts.add(new Contact("foo", new SimpleKey("bar", "baz")));
         return contacts;
     }
 
