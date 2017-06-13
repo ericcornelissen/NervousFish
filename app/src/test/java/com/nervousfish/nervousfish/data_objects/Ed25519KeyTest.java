@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.google.gson.stream.JsonWriter;
+import com.nervousfish.nervousfish.ConstantKeywords;
 
 import org.junit.Test;
 
@@ -69,7 +70,7 @@ public class Ed25519KeyTest {
     @Test
     public void testGetTypeReturnsSimple() {
         IKey key = new Ed25519Key("Webserver", "foobar");
-        assertEquals("ed25519", key.getType());
+        assertEquals(ConstantKeywords.ED25519_KEY, key.getType());
     }
 
     @Test

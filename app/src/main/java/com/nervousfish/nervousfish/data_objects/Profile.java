@@ -37,7 +37,7 @@ public class Profile {
     /**
      * Get the name of the {@link Profile}.
      *
-     * @return The name.
+     * @return The name of the {@link Profile}.
      */
     public String getName() {
         return this.name;
