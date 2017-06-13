@@ -10,4 +10,6 @@
 
     <color name="ok_green">#009900</color>
     <color name="red_alert">#9A3334</color>
+
+    <color name="default_android_background">#FAFAFA</color>
 </resources>

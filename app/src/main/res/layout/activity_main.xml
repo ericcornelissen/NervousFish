@@ -48,16 +48,17 @@
         <ViewFlipper
             android:id="@+id/view_flipper_sorter_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:layout_height="wrap_content">
 
             <include layout="@layout/content_main" />
 
             <include layout="@layout/content_main_keytypes" />
         </ViewFlipper>
 
-        <include layout="@layout/content_main_no_users"
-            android:visibility="visible"/>
+        <include
+            android:id="@+id/no_users_screen"
+            layout="@layout/content_main_no_users"
+            android:visibility="gone"/>
 
     </android.support.design.widget.AppBarLayout>
 

@@ -105,6 +105,13 @@ class MainActivitySorter {
 
         });
 
+        if (contactsByNameListAdapter.isEmpty()) {
+            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
+            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+        } else {
+            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
+            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -126,6 +133,14 @@ class MainActivitySorter {
             }
 
         });
+
+        if (contactsByKeyTypeListAdapter.isEmpty()) {
+            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
+            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+        } else {
+            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
+            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
+        }
     }
 
 }

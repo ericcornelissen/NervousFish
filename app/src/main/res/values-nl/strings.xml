@@ -62,6 +62,7 @@
     <string name="popup_enable_bluetooth_title">Bluetooth aanzetten?</string>
     <string name="popup_enable_bluetooth_findable">Zet Bluetooth aan zodat andere je apparaat kunnen vinden</string>
     <string name="popup_enable_bluetooth_exchange">Je moet Bluetooth aanzetten voordat je verder kunt</string>
+    <string name="your_contacts_list_is_empty">Je contactenlijst is leeg</string>
 
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>

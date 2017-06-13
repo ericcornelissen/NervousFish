@@ -61,6 +61,7 @@
     <string name="popup_enable_bluetooth_findable">Enable Bluetooth so others can find your device</string>
     <string name="popup_enable_bluetooth_exchange">You must enable Bluetooth before continuing</string>
     <string name="users_image">Users icon</string>
+    <string name="your_contacts_list_is_empty">Your contacts list is empty</string>
 
     <!-- Login -->
     <string name="login_message">Enter your password below</string>
