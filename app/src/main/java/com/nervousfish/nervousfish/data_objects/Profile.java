@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An Profile POJO to store a name, public key and private key.
+ * A Profile POJO to store a contact representing the user and the user's keypairs.
  */
 public class Profile implements Serializable {
 
@@ -56,6 +56,7 @@ public class Profile implements Serializable {
     /**
      * Returns the (first) public key of the profile.
      * @return the (first) public key.
+     * TODO: Let the user decide which public key is active.
      */
     public IKey getPublicKey() { return keyPairs.get(0).getPublicKey(); }
 
@@ -75,17 +76,8 @@ public class Profile implements Serializable {
         }
 
         final Profile that = (Profile) o;
-        if (this.keyPairs.size() != that.keyPairs.size()) {
-            return false;
-        }
-        for (final KeyPair kp : this.keyPairs) {
-            for (final KeyPair kp2 : that.keyPairs) {
-                if (!kp.equals(kp2)) {
-                    return false;
-                }
-            }
-        }
-        return this.contact.equals(that.contact);
+       
+        return this.contact.equals(that.contact) && this.keyPairs.equals(that.keyPairs);
     }
 
     /**

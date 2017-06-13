@@ -58,8 +58,8 @@ public class ServiceLocator implements IServiceLocator {
         this.constants = initConstants();
         this.fileSystem = initFileSystem();
         this.keyGenerator = initKeyGenerator();
-        this.database = initDatabase();
         this.encryptor = initEncryptor();
+        this.database = initDatabase();
         this.bluetoothHandler = initBluetoothHandler();
         this.nfcHandler = initNfcHandler();
         this.qrHandler = initQrHandler();

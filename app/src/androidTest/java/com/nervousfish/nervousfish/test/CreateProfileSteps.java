@@ -87,15 +87,6 @@ public class CreateProfileSteps {
         this.mActivityRule.launchActivity(intent);
     }
 
-    @Given("^there are no profiles in the database$")
-    public void thereAreNoProfilesInDatabase() throws IOException {
-        //final List<Profile> profiles = serviceLocator.getDatabase().getProfiles();
-        //for (final Profile profile : profiles) {
-        //    serviceLocator.getDatabase().deleteProfile(profile);
-        //}
-       // assertTrue(serviceLocator.getDatabase().getProfiles().isEmpty());
-    }
-
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
         InputMethodManager imm = (InputMethodManager)mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -173,8 +164,8 @@ public class CreateProfileSteps {
 
     @Then("^the profile with (.*?) should be saved in the database$")
     public void profileWithNameShouldBeInDatabase(final String name) throws IOException {
-        //final List<Profile> profiles = serviceLocator.getDatabase().getProfiles();
-//        assertEquals(name, profiles.get(0).getName());
+        final Profile profile = NervousFish.getServiceLocator().getDatabase().getProfile();
+        assertEquals(name, profile.getName());
     }
 
     /**

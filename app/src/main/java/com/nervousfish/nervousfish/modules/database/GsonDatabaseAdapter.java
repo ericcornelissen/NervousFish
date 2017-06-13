@@ -2,13 +2,12 @@ package com.nervousfish.nervousfish.modules.database;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Database;
-import com.nervousfish.nervousfish.data_objects.DatabasePass;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.modules.cryptography.EncryptedSaver;
+import com.nervousfish.nervousfish.exceptions.DatabaseAdapterException;
+import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -16,10 +15,8 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +48,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     //  Strings for saving database related objects in the map
     private static final String DATABASE = "database";
-    private static final String DATABASE_PASS = "database pass";
+    private static final String ENCRYPTED_PASSWORD = "encrypted password";
     private static final String ENCRYPTION_KEY = "encryption key";
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
-    private static final Type TYPE_DATABASE = new TypeToken<Database>() {
-    }.getType();
 
     private final String databasePath;
     private final String passwordPath;
@@ -63,8 +58,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     private final Map<String, Object> databaseMap;
 
     private final IFileSystem fileSystem;
-    private final GsonDatabaseAdapterHelper helper;
-
+    private final GsonDatabaseAdapterLoader helper;
+    private final IEncryptor encryptor;
 
     /**
      * Prevents construction from outside the class.
@@ -73,10 +68,11 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
         this.fileSystem = serviceLocator.getFileSystem();
+        this.encryptor = serviceLocator.getEncryptor();
         this.databaseMap = new HashMap<>();
         this.databasePath = serviceLocator.getConstants().getDatabasePath();
         this.passwordPath = serviceLocator.getConstants().getPasswordPath();
-        this.helper = new GsonDatabaseAdapterHelper(serviceLocator);
+        this.helper = new GsonDatabaseAdapterLoader(serviceLocator);
         LOGGER.info("Initialized");
     }
 
@@ -210,10 +206,10 @@ public final class GsonDatabaseAdapter implements IDatabase {
             final Gson gsonParser = gsonBuilder.create();
 
             final String databaseJson = gsonParser.toJson(getDatabase());
-            final String encryptedDatabase = EncryptedSaver.encryptOrDecryptWithPassword(databaseJson, getEncryptionKey(), true);
-            final Writer writer = this.fileSystem.getWriter(databasePath);
-            writer.write(encryptedDatabase);
-            writer.close();
+            final String encryptedDatabase = encryptor.encryptOrDecryptWithPassword(databaseJson, getEncryptionKey(), true);
+            try (Writer writer = this.fileSystem.getWriter(databasePath)) {
+                writer.write(encryptedDatabase);
+            }
         } catch (IllegalBlockSizeException e) {
             LOGGER.error("Wrong size of password", e);
             throw new IOException("Password is wrong size", e);
@@ -228,25 +224,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public void loadDatabase(final String password) throws IOException, RuntimeException {
         LOGGER.info("Started loading database");
-        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-        helper.checkPassword(password);
-
         try {
-
-            final String databaseFileString = helper.readDatabaseToString();
-            final SecretKey key = EncryptedSaver.makeKey(password);
+            final SecretKey key = helper.loadKey(password);
             databaseMap.put(ENCRYPTION_KEY, key);
-            final String databaseJson = EncryptedSaver.encryptOrDecryptWithPassword(databaseFileString, key, false);
-            final Database database = gsonParser.fromJson(databaseJson, TYPE_DATABASE);
+            final Database database = helper.loadDatabase(key);
             databaseMap.put(DATABASE, database);
         } catch (InvalidKeySpecException e) {
             throw new IOException(BAD_KEY_SPEC, e);
-        } catch (IllegalBlockSizeException e) {
-            throw new IOException(DATABASE_WRONG_SIZE, e);
-        } catch (BadPaddingException e) {
-            LOGGER.error(BAD_PADDING, e);
         }
+
     }
 
 
@@ -267,24 +253,20 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public boolean checkFirstUse() {
-        final File filePass = new File(passwordPath);
-        final File fileDb = new File(databasePath);
-        return filePass.exists() && fileDb.exists();
+        LOGGER.info("Checking first use of the database");
+        return fileSystem.checkFileExists(passwordPath) && fileSystem.checkFileExists(databasePath);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void deleteDatabase() {
+    public boolean deleteDatabase() {
         LOGGER.info("Deleting database");
         if (checkFirstUse()) {
-            final File filePass = new File(passwordPath);
-            final File fileDb = new File(databasePath);
-            if (!(filePass.delete() && fileDb.delete())) {
-                deleteDatabase();
-                LOGGER.info("Something went wrong");
-            }
+            return fileSystem.deleteFile(passwordPath) && fileSystem.deleteFile(databasePath);
+        } else {
+            return true;
         }
     }
 
@@ -300,9 +282,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         databaseMap.put(DATABASE, new Database(new ArrayList<Contact>(), profile));
 
-
-        final Writer writer = this.fileSystem.getWriter(databasePath);
-
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
@@ -310,11 +289,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
         LOGGER.info("Database translated to json: " + databaseJson);
 
         try {
-            final SecretKey key = EncryptedSaver.makeKey(password);
-            final String databaseEncrypted = EncryptedSaver.encryptOrDecryptWithPassword(databaseJson, key, true);
+            final SecretKey key = encryptor.makeKey(password);
+            final String databaseEncrypted = encryptor.encryptOrDecryptWithPassword(databaseJson, key, true);
 
-            writer.write(databaseEncrypted);
-            writer.close();
+            try (Writer writer = this.fileSystem.getWriter(databasePath)) {
+                writer.write(databaseEncrypted);
+            }
             LOGGER.info("Created the database: %s", this.databasePath);
         } catch (InvalidKeySpecException e) {
             throw new IOException(BAD_KEY_SPEC, e);
@@ -333,35 +313,32 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private void initializePassword(final String password) throws IOException {
         LOGGER.info("Initializing password");
-        databaseMap.put(DATABASE_PASS, new DatabasePass(password));
+        databaseMap.put(ENCRYPTED_PASSWORD, encryptor.hashWithoutSalt(password));
 
 
-        final DatabasePass databasePass = getDatabasePass();
-        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-        final String databasePassJson = gsonParser.toJson(databasePass);
-        LOGGER.info("Database pass: " + databasePassJson);
+        final String encryptedPassword = getEncryptedPassword();
 
-        final Writer writer = this.fileSystem.getWriter(passwordPath);
+        LOGGER.info("Encrypted password: " + encryptedPassword);
 
-        writer.write(databasePassJson);
-        writer.close();
+        try (Writer writer = this.fileSystem.getWriter(passwordPath)) {
+            writer.write(encryptedPassword);
+        }
         LOGGER.info("Created the password file: %s", this.passwordPath);
 
     }
 
 
     /**
-     * Gets the databasePass from the databaseMap
+     * Gets the encrypted password from the databaseMap
      *
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private DatabasePass getDatabasePass() throws IOException {
-        final Object object = databaseMap.get(DATABASE_PASS);
-        if (object instanceof DatabasePass) {
-            return (DatabasePass) object;
+    private String getEncryptedPassword() throws DatabaseAdapterException {
+        final Object object = databaseMap.get(ENCRYPTED_PASSWORD);
+        if (object instanceof String) {
+            return (String) object;
         } else {
-            throw new IOException(DATABASE_NOT_CREATED);
+            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
         }
     }
 
@@ -370,12 +347,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private Database getDatabase() throws IOException {
+    private Database getDatabase() throws DatabaseAdapterException {
         final Object object = databaseMap.get(DATABASE);
         if (object instanceof Database) {
             return (Database) object;
         } else {
-            throw new IOException(DATABASE_NOT_CREATED);
+            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
         }
     }
 
@@ -384,14 +361,13 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private SecretKey getEncryptionKey() throws IOException {
+    private SecretKey getEncryptionKey() throws DatabaseAdapterException {
         final Object object = databaseMap.get(ENCRYPTION_KEY);
         if (object instanceof SecretKey) {
             return (SecretKey) object;
         } else {
-            throw new IOException(DATABASE_NOT_CREATED);
+            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
         }
     }
-
 
 }

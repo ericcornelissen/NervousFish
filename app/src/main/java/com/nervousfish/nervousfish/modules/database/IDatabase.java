@@ -102,6 +102,7 @@ public interface IDatabase extends IModule {
 
     /**
      * Deletes the database.
+     * @return Whether the database was successfully deleted.
      */
-    void deleteDatabase();
+    boolean deleteDatabase();
 }

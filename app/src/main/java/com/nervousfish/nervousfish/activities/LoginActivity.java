@@ -34,7 +34,7 @@ public final class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        serviceLocator = NervousFish.getServiceLocator();
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         LOGGER.info("LoginActivity created");
     }

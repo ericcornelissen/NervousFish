@@ -6,6 +6,7 @@ import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public final class Database implements Serializable {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new Database.SerializationProxy(this);
     }
 
     /**
@@ -98,9 +99,7 @@ public final class Database implements Serializable {
          */
         private Object readResolve() {
             final List<Contact> contactsList = new ArrayList<>();
-            for (final Contact contact : contacts) {
-                contactsList.add(contact);
-            }
+            Collections.addAll(contactsList, this.contacts);
             return new Database(contactsList, this.profile);
         }
     }

@@ -12,7 +12,6 @@ Feature: Create a profile
 
   Scenario Outline: Clicking submit with valid input
       Given I am viewing the create profile activity
-      And there are no profiles in the database
       When I enter a valid <name> as name
       And I enter a valid <password> as password
       And I enter a valid repeat <password> as repeat password
