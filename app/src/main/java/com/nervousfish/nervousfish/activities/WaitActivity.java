@@ -159,7 +159,7 @@ public final class WaitActivity extends Activity {
     private void goToMainActivity() {
         LOGGER.info("Going to MainActivity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         this.startActivity(intent);
     }
 
