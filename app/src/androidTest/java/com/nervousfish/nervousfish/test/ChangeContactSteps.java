@@ -29,6 +29,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertNotNull;
@@ -94,7 +95,7 @@ public class ChangeContactSteps {
 
     @Then("^I should go to the activity I visited before the change contact activity$")
     public void iShouldGoToTheActivityIVisitedBeforeTheChangeContactActivity() {
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        intended(toPackage("com.nervousfish.nervousfish"));
     }
 
     @Then("^I should stay in the contact activity$")
