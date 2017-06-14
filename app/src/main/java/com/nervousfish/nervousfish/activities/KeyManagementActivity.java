@@ -36,7 +36,6 @@ public final class KeyManagementActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyManagementActivity");
 
     private Profile myProfile;
-    private String[] key;
 
     /**
      * Creates the new activity, should only be called by Android
@@ -50,10 +49,11 @@ public final class KeyManagementActivity extends Activity {
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
         String title = "";
+        String[] key = {};
         try {
             this.myProfile = database.getProfiles().get(0);
             title = this.myProfile.getKeyPairs().get(0).getName();
-            this.key = this.myProfile.getKeyPairs().get(0).getPublicKey().getKey().split(" ");
+            key = this.myProfile.getKeyPairs().get(0).getPublicKey().getKey().split(" ");
 
         } catch (IOException e) {
             LOGGER.error("Could not get my public key from the database ", e);
@@ -70,7 +70,7 @@ public final class KeyManagementActivity extends Activity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
-        builder.setMessage(String.format("Exponent: %s %nModulus: %s ", this.key[0], this.key[1]));
+        builder.setMessage(String.format("Exponent: %s %nModulus: %s ", key[0], key[1]));
 
         builder.setPositiveButton("Copy", new DialogInterface.OnClickListener() {
             @Override
