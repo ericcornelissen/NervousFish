@@ -41,7 +41,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_change_contact);
         this.serviceLocator = NervousFish.getServiceLocator();
 
-        if (getSupportActionBar() != null) {
+        if (this.getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
