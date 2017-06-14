@@ -11,7 +11,7 @@
     <application
         android:name=".service_locator.NervousFish"
         android:allowBackup="true"
-        android:fullBackupContent="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@mipmap/app_logo_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_logo_round"

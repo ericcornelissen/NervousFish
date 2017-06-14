@@ -39,15 +39,15 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
     public ContactsByKeyTypeListAdapter(final Activity context, final List<String> types, final List<Contact> contacts) {
         super();
         this.context = context;
-        this.types = types;
-        groupedContacts = new HashMap<>();
+        this.types = new ArrayList<>(types);
+        this.groupedContacts = new HashMap<>();
         for (final String type : types) {
-            groupedContacts.put(type, new ArrayList<Contact>());
+            this.groupedContacts.put(type, new ArrayList<Contact>());
         }
         for (final Contact contact : contacts) {
             for (final String type : types) {
-                if (!groupedContacts.get(type).contains(contact)) {
-                    groupedContacts.get(type).add(contact);
+                if (!this.groupedContacts.get(type).contains(contact)) {
+                    this.groupedContacts.get(type).add(contact);
                 }
             }
         }
@@ -61,7 +61,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
     @Override
     public Object getChild(final int groupPosition, final int childPosition) {
 
-        return groupedContacts.get(types.get(groupPosition)).get(childPosition);
+        return this.groupedContacts.get(this.types.get(groupPosition)).get(childPosition);
     }
 
     /**
@@ -78,11 +78,11 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
     @Override
     public View getChildView(final int groupPosition, final int childPosition,
                              final boolean isLastChild, final View convertView, final ViewGroup parent) {
-        final Contact contact = (Contact) getChild(groupPosition, childPosition);
+        final Contact contact = (Contact) this.getChild(groupPosition, childPosition);
         final View v;
 
         if (convertView == null) {
-            final LayoutInflater vi = context.getLayoutInflater();
+            final LayoutInflater vi = this.context.getLayoutInflater();
             v = vi.inflate(R.layout.contact_list_entry, parent);
         } else {
             v = convertView;
@@ -105,7 +105,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
      */
     @Override
     public int getChildrenCount(final int groupPosition) {
-        return groupedContacts.get(types.get(groupPosition)).size();
+        return this.groupedContacts.get(this.types.get(groupPosition)).size();
     }
 
     /**
@@ -113,7 +113,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
      */
     @Override
     public Object getGroup(final int groupPosition) {
-        return types.get(groupPosition);
+        return this.types.get(groupPosition);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
      */
     @Override
     public int getGroupCount() {
-        return types.size();
+        return this.types.size();
     }
 
     /**
@@ -138,10 +138,10 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
     @Override
     public View getGroupView(final int groupPosition, final boolean isExpanded,
                              final View convertView, final ViewGroup parent) {
-        final String type = (String) getGroup(groupPosition);
+        final String type = (String) this.getGroup(groupPosition);
         final View view;
         if (convertView == null) {
-            final LayoutInflater vi = context.getLayoutInflater();
+            final LayoutInflater vi = this.context.getLayoutInflater();
             view = vi.inflate(R.layout.key_type, parent);
         } else {
             view = convertView;

@@ -11,7 +11,7 @@ import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
@@ -38,7 +38,7 @@ import static junit.framework.Assert.assertTrue;
 public class ContactSteps {
 
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
-    private final IKey key = new SimpleKey("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
+    private final IKey key = new Ed25519Key("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
     private final Contact contact = new Contact("Yashuo", this.key);
 
     @Rule

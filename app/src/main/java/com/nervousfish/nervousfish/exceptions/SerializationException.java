@@ -5,26 +5,30 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Simple {@link RuntimeException} that is used to notify usage of Bluetooth is not avaiable.
+ * Thrown when there is an issue with serialization.
  */
-public class NoBluetoothException extends RuntimeException {
+public final class SerializationException extends RuntimeException {
 
-    private static final long serialVersionUID = -7030163248191198652L;
+    private static final long serialVersionUID = 1698338992687134510L;
 
     /**
-     * Default constructor for a new NoBluetoothException
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
+     *
+     * @param msg A string describing the event
      */
-    public NoBluetoothException() {
-        super();
+    public SerializationException(final String msg) {
+        super(msg);
     }
 
     /**
-     * Constructor for a new NoBluetoothException with a message.
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
      *
-     * @param msg A string describing the exception
+     * @param throwable The exception that occurred the layer above
      */
-    public NoBluetoothException(final String msg) {
-        super(msg);
+    public SerializationException(final Throwable throwable) {
+        super(throwable);
     }
 
     /**
@@ -52,5 +56,4 @@ public class NoBluetoothException extends RuntimeException {
     private void ensureClassInvariant() {
         // No checks to perform
     }
-
 }
