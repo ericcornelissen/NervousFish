@@ -24,7 +24,7 @@ public class EncryptionException extends IOException {
      * encrypting.
      *
      * @param msg A string describing the event
-     * @param e The original exception.
+     * @param e   The original exception.
      */
     public EncryptionException(final String msg, final Exception e) {
         super(msg, e);

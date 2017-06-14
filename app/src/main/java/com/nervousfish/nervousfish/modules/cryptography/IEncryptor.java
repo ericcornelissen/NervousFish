@@ -17,13 +17,15 @@ public interface IEncryptor extends IModule {
 
     /**
      * Hashes a given pass to an encrypted string that can't be decrypted.
-     * @param pass  THe string to encrypt
-     * @return  The encrypted string.
+     *
+     * @param pass THe string to encrypt
+     * @return The encrypted string.
      */
     String hashWithoutSalt(String pass) throws EncryptionException;
 
     /**
      * Make a key for encryption based on a password.
+     *
      * @param password The password to make the key with
      * @return The SecretKey based on the password.
      */
@@ -31,12 +33,23 @@ public interface IEncryptor extends IModule {
 
 
     /**
-     * Encrypts or decrypts a string with a password to
-     * @param toEncrypt The string to be encrypted/decrypted
-     * @param key  The secret key made from the password.
-     * @param encrypt   whether we're encrypting or decrypting.
-     * @return  The encrypted/decrypted bytearray.
+     * Encrypts a string with a secretkey in bytearray from a password
+     *
+     * @param toEncrypt The string to be encrypted
+     * @param key       The secret key made from the password.
+     * @return The encrypted bytearray.
      */
-    String encryptOrDecryptWithPassword(String toEncrypt, SecretKey key, boolean encrypt)
+    String encryptWithPassword(String toEncrypt, byte[] key)
             throws IllegalBlockSizeException, BadPaddingException, EncryptionException;
+
+    /**
+     * Decrypts a string with a secretkey in bytearray from a password
+     *
+     * @param toDecrypt The string to be decrypted
+     * @param key       The secret key made from the password.
+     * @return The decrypted bytearray.
+     */
+    String decryptWithPassword(String toDecrypt, byte[] key) throws EncryptionException, IllegalBlockSizeException, BadPaddingException;
+
+
 }

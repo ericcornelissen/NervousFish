@@ -26,6 +26,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * An adapter to the default Java class for encrypting messages
@@ -34,6 +35,8 @@ public final class EncryptorAdapter implements IEncryptor {
     private static final long serialVersionUID = 5930930748980177440L;
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
+    private static final String UTF_8_NO_LONGER_SUPPORTED = "UTF-8 is no longer an encoding algorithm";
+    private static final String CANNOT_HAPPEN_UTF_8 = "Cannot happen, no encodign algorithm like UTF-8";
     private static final int SEED = 1234569;
     private static final int IV_SPEC_SIZE = 8;
     private static final String UTF_8 = "UTF-8";
@@ -64,22 +67,6 @@ public final class EncryptorAdapter implements IEncryptor {
 
 
     /**
-     * Generates a salt bytearray based on a seed and with a given length.
-     * @param seed  The seed to keep the salt consistent.
-     * @param length The length the salt should be.
-     * @return  The salt bytearray.
-     */
-    /*
-    public static byte[] generateSalt(int seed, int length) {
-        final Random random = new Random(seed);
-        byte bytes[] = new byte[length];
-        random.nextBytes(bytes);
-        LOGGER.info("Generated salt bytestring");
-        return bytes;
-    }
-    */
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -100,30 +87,6 @@ public final class EncryptorAdapter implements IEncryptor {
     }
 
     /**
-     * Hashes a pass to an encrypted string with a salt bytestring.
-     * @param salt The salt bytestring to encrypt the pass with.
-     * @param pass  The string to encrypt
-     * @return The encrypted string.
-     */
-    /*
-    public static String hashUsingSalt(byte[] salt, String pass){
-        try {
-            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            digest.reset();
-            digest.update(salt);
-            final byte[] hash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
-            LOGGER.info("Hashed the pass using the salt");
-            return new String(hash, "UTF-8");
-        } catch (NoSuchAlgorithmException e){
-            LOGGER.error("SHA-256 is not a valid encryptionalgorithm", e);
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.error("UTF-8 is not a valid encoding method", e);
-        }
-        return null;
-    }
-    */
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -141,49 +104,70 @@ public final class EncryptorAdapter implements IEncryptor {
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public String encryptOrDecryptWithPassword(final String toEncrypt, final SecretKey key, final boolean encrypt)
-            throws IllegalBlockSizeException, BadPaddingException, EncryptionException {
-        LOGGER.info("Started encrypting with password");
+    public String decryptWithPassword(final String toDecrypt, final byte[] key) throws EncryptionException,
+            IllegalBlockSizeException, BadPaddingException {
+        LOGGER.info("Started decrypting with password");
+
+        final SecretKey secretKey = new SecretKeySpec(key, 0, key.length, PBE_WITH_MD5_AND_DES);
 
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
         random.nextBytes(ivSpec);
 
-        final int mode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
-        final Cipher cipher = getCipher(key, ivSpec, mode);
+        final int mode = Cipher.DECRYPT_MODE;
+        final Cipher cipher = getCipher(secretKey, ivSpec, mode);
 
         try {
-            if (encrypt) {
-                final byte[] cipherText = cipher.doFinal(toEncrypt.getBytes(UTF_8));
-                final byte[] secretString = Base64.encode(cipherText, Base64.DEFAULT);
-                return new String(secretString, UTF_8);
-            } else {
-                final byte[] decodedValue = Base64.decode(toEncrypt, Base64.DEFAULT);
-                final byte[] plaintext = cipher.doFinal(decodedValue);
-                return new String(plaintext, UTF_8);
-            }
+            final byte[] decodedValue = Base64.decode(toDecrypt, Base64.DEFAULT);
+            final byte[] plaintext = cipher.doFinal(decodedValue);
+            return new String(plaintext, UTF_8);
         } catch (final UnsupportedEncodingException e) {
-            LOGGER.error("UTF-8 is no longer an encoding algorithm", e);
-            throw new EncryptionException("Cannot happen, no encodign algorithm like UTF-8", e);
+            LOGGER.error(UTF_8_NO_LONGER_SUPPORTED, e);
+            throw new EncryptionException(CANNOT_HAPPEN_UTF_8, e);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String encryptWithPassword(final String toEncrypt, final byte[] key) throws EncryptionException,
+            IllegalBlockSizeException, BadPaddingException {
+        LOGGER.info("Started encrypting with password");
 
+        final SecretKey secretKey = new SecretKeySpec(key, 0, key.length, PBE_WITH_MD5_AND_DES);
 
+        final byte[] ivSpec = new byte[IV_SPEC_SIZE];
+        final Random random = new Random(SEED);
+        random.nextBytes(ivSpec);
+
+        final int mode = Cipher.ENCRYPT_MODE;
+        final Cipher cipher = getCipher(secretKey, ivSpec, mode);
+
+        try {
+            final byte[] cipherText = cipher.doFinal(toEncrypt.getBytes(UTF_8));
+            final byte[] secretString = Base64.encode(cipherText, Base64.DEFAULT);
+            return new String(secretString, UTF_8);
+        } catch (final UnsupportedEncodingException e) {
+            LOGGER.error(UTF_8_NO_LONGER_SUPPORTED, e);
+            throw new EncryptionException(CANNOT_HAPPEN_UTF_8, e);
+        }
+    }
 
     /**
      * Method that return a configured {@link Cipher}.<br>
      * It set the ivSpec and the encryption to
      * PBEWithMD5AndDES
      *
-     * @param key   The SecretKey used to encrypt
-     * @param ivSpec    The initializations vector for the encryption
-     * @param mode  Whether we're encrypting or decrypting
-     * @return  the configured Cipher.
+     * @param key    The SecretKey used to encrypt
+     * @param ivSpec The initializations vector for the encryption
+     * @param mode   Whether we're encrypting or decrypting
+     * @return the configured Cipher.
      */
     private Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) throws EncryptionException {
         LOGGER.info("Getting cipher for decrypting");
@@ -210,75 +194,5 @@ public final class EncryptorAdapter implements IEncryptor {
             throw new EncryptionException("The algorithm paramater was invalid while initializing the cipher", e);
         }
     }
-
-    /**
-     * Encrypt data using a public key.
-     * @param text  -   The data to encrypt
-     * @param publicKey -   The public key to encrypt the data with
-     * @return  The encrypted data in String.
-     * @throws IOException  -   Throws an IOException when the key can't be split up correctly
-     */
-    /*
-    public static String encryptUsingRSA(final String text, final IKey publicKey) throws IOException, InvalidKeySpecException,
-            InvalidKeyException, IllegalBlockSizeException {
-        final String[] keyComponents = publicKey.getKey().split(" ");
-        if (keyComponents.length > 2) {
-            throw new IOException("Public key can't be split up correctly");
-        }
-        try {
-            final RSAPublicKeySpec spec = new RSAPublicKeySpec(new BigInteger(keyComponents[0]), new BigInteger(keyComponents[1]));
-
-            final KeyFactory factory = KeyFactory.getInstance("RSA");
-            final PublicKey pub = factory.generatePublic(spec);
-
-            final Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, pub);
-            final byte[] cipherText = cipher.doFinal(text.getBytes());
-            return new String(cipherText);
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("Error in generating rsa key factory from components", e);
-        } catch (NoSuchPaddingException e) {
-            LOGGER.error(NO_SUCH_PADDING, e);
-        } catch (BadPaddingException e) {
-            LOGGER.error(BAD_PADDING);
-        }
-        return null;
-
-    }
-    */
-
-    /**
-     * Decrypts data using a private key.
-     * @param text  -   The data to decrypt.
-     * @param privateKey    -   The private key to decrypt the data with.
-     * @return  The decrypted data in String
-     * @throws IOException  -   Throws an IOException when the key can't be split up correctly
-     */
-    /*
-    public static String decryptUsingRSA(final String text, final IKey privateKey) throws IOException, InvalidKeySpecException,
-            InvalidKeyException, IllegalBlockSizeException {
-        final String[] keyComponents = privateKey.getKey().split(" ");
-        if (keyComponents.length > 2) {
-            throw new IOException("Private key can't be split up correctly");
-        }
-        try {
-            final RSAPrivateKeySpec spec = new RSAPrivateKeySpec(new BigInteger(keyComponents[0]), new BigInteger(keyComponents[1]));
-            final KeyFactory factory = KeyFactory.getInstance("RSA");
-            final PrivateKey priv = factory.generatePrivate(spec);
-            final Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.DECRYPT_MODE, priv);
-            final byte[] decryptedData = cipher.doFinal(text.getBytes());
-            return new String(decryptedData);
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("Error in generating rsa key factory from components", e);
-        } catch (NoSuchPaddingException e) {
-            LOGGER.error("Error in padding encryption", e);
-        } catch (BadPaddingException e) {
-            LOGGER.error("Error in the padding of the string");
-        }
-        return null;
-    }
-    */
-
 
 }
