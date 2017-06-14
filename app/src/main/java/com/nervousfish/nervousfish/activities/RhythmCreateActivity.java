@@ -10,8 +10,9 @@ import android.widget.Button;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -122,11 +123,13 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            final Profile myProfile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            final Profile profile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: " + myProfile.getName() + ", public key: "
-                    + myProfile.getPublicKey().toString());
-            final Contact myProfileAsContact = new Contact(myProfile.getName(), new SimpleKey("simplekey", "73890ien"));
+            LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
+                    + keyPair.getPublicKey().toString());
+
+            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());

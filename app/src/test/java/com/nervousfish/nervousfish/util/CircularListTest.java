@@ -1,8 +1,5 @@
 package com.nervousfish.nervousfish.util;
 
-import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
-
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

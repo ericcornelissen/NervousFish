@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -67,7 +68,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     public void onSubmitClick(final View view) {
         if (this.validateInputFields()) {
             final String name = this.nameInput.getText().toString();
-            final KeyPair keyPair = this.helper.generateKeyPair(IKey.Types.RSA);
+            final Collection<KeyPair> keyPair = this.helper.generateKeyPairs(IKey.Types.RSA);
 
             try {
                 final IDatabase database = this.serviceLocator.getDatabase();
