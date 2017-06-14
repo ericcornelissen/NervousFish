@@ -89,7 +89,7 @@
     <string name="unknown_verification_method_title">Oops…</string>
     <string name="unknown_verification_method_description">Something went wrong, please try again</string>
     <string name="by_tapping_a_rhythm">By tapping a rhythm</string>
-    <string name="by_tapping_on_an_image">By tapping on an image</string>
+    <string name="by_tapping_on_an_image">By tapping on a few images</string>
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
