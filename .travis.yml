@@ -46,10 +46,8 @@ cache:
 
 env:
   matrix:
-    - COMPONENT=checkstyle
-    - COMPONENT=lint
-    - COMPONENT=pmd
-    - COMPONENT=findbugs
+    - COMPONENT=quality
+    - COMPONENT=build
 
 git:
   depth: 3 # Clone the last 3 commits
