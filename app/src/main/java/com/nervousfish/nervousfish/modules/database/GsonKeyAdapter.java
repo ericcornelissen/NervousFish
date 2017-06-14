@@ -18,29 +18,24 @@ import java.util.concurrent.ConcurrentHashMap;
 final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
     /**
-     * Constructor for the {@code GsonKeyAdapter} class.
-     */
-    GsonKeyAdapter() {
-        super();
-    }
-
-    /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
+    // 1) Suppressed because key is a lot more descripte than t (the parameter name of the superclass)
     @Override
-    public void write(final JsonWriter writer, final IKey key) throws IOException {
-        writer.beginArray();
+    public void write(final JsonWriter jsonWriter, final IKey key) throws IOException {
+        jsonWriter.beginArray();
 
         // First write the key type
         final String keyType = key.getType();
-        writer.value(keyType);
+        jsonWriter.value(keyType);
 
         // Then write the rest of the key
-        writer.beginObject();
-        key.toJson(writer);
-        writer.endObject();
+        jsonWriter.beginObject();
+        key.toJson(jsonWriter);
+        jsonWriter.endObject();
 
-        writer.endArray();
+        jsonWriter.endArray();
     }
 
     /**
@@ -48,20 +43,20 @@ final class GsonKeyAdapter extends TypeAdapter<IKey> {
      */
     @Override
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")  // final IKey key is actually useful here
-    public IKey read(final JsonReader reader) throws IOException {
-        reader.beginArray();
-        final String type = reader.nextString();
+    public IKey read(final JsonReader jsonReader) throws IOException {
+        jsonReader.beginArray();
+        final String type = jsonReader.nextString();
 
-        reader.beginObject();
+        jsonReader.beginObject();
         final Map<String, String> map = new ConcurrentHashMap<>();
-        while (reader.hasNext()) {
-            final String name = reader.nextName();
-            final String value = reader.nextString();
+        while (jsonReader.hasNext()) {
+            final String name = jsonReader.nextName();
+            final String value = jsonReader.nextString();
             map.put(name, value);
         }
-        reader.endObject();
+        jsonReader.endObject();
 
-        reader.endArray();
+        jsonReader.endArray();
 
         final IKey key;
         switch (type) {

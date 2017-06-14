@@ -29,10 +29,8 @@ import java.io.IOException;
 //  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
 //  3)  Uses many utility imports.
-public class QRExchangeKeyActivity extends AppCompatActivity {
+public final class QRExchangeKeyActivity extends AppCompatActivity {
 
-    private static final String SPACE = " ";
-    private static final String SEMICOLON = ";";
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
 
     private Profile profile;
@@ -47,12 +45,12 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
 
         try {
-            profile = serviceLocator.getDatabase().getProfiles().get(0);
-        } catch (IOException e) {
+            this.profile = serviceLocator.getDatabase().getProfiles().get(0);
+        } catch (final IOException e) {
             LOGGER.error("Loading the public key went wrong", e);
         }
 
-        drawQRCode();
+        this.drawQRCode();
     }
 
     /**
@@ -61,7 +59,7 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onBackButtonClick(final View view) {
         LOGGER.info("Return to previous screen");
-        finish();
+        this.finish();
     }
 
     /**
@@ -79,9 +77,9 @@ public class QRExchangeKeyActivity extends AppCompatActivity {
      */
     @SuppressLint("InflateParams")
     private void drawQRCode() {
-        final IKey publicKey = profile.getPublicKey();
-        final Bitmap qrCode = QRGenerator.encode(profile.getName() + SEMICOLON + publicKey.getType()
-                + SPACE + publicKey.getName() + SPACE + publicKey.getKey());
+        final IKey publicKey = this.profile.getPublicKey();
+        final Bitmap qrCode = QRGenerator.encode(String.format("%s;%s %s %s",
+                this.profile.getName(), publicKey.getType(), publicKey.getName(), publicKey.getKey()));
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
