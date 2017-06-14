@@ -125,7 +125,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
                     + keyPair.getPublicKey().toString());
 
-            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
+            final Contact myProfileAsContact = new Contact(profile.getName(), keyPair.getPublicKey());
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
