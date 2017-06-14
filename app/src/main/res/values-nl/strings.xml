@@ -119,4 +119,9 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
+    <string name="create_proflie_too_short_password">Het paswoord is te kort, het moet op z\'n minst 6 tekens bevatten</string>
+    <string name="create_profile_empty_password">Het paswoord mag niet leeg zijn</string>
+    <string name="create_profile_empty_name">Naam mag niet leeg zijn</string>
+    <string name="create_profile_error_adding_to_database">Error bij het proberen van het profiel aan de database toe te voegen</string>
+    <string name="create_profile_passwords_not_equal">De paswoorden zijn niet hetzelfde, typ aub hetzelfde paswoord twee keer.</string>
 </resources>

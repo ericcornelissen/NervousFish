@@ -31,6 +31,15 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
 
+    private static final int GOOD_FIELD = 100;
+    private static final int EMPTY_FIELD = 101;
+    private static final int TOO_SHORT_FIELD = 102;
+    private static final int PASSWORD_TOO_SHORT = 103;
+    private static final int PASSWORD_EMPTY = 104;
+    private static final int NAME_EMPTY = 105;
+    private static final int PASSWORDS_NOT_EQUAL = 106;
+
+
     private IServiceLocator serviceLocator;
     private CreateProfileHelper helper;
     private EditText nameInput;
@@ -65,20 +74,35 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @param view The {@link View} clicked
      */
     public void onSubmitClick(final View view) {
-        if (this.validateInputFields()) {
-            final String name = this.nameInput.getText().toString();
-            final KeyPair keyPair = this.helper.generateKeyPair(IKey.Types.RSA);
+        switch (this.validateInputFields()) {
+            case GOOD_FIELD:
+                final String name = this.nameInput.getText().toString();
+                final KeyPair keyPair = this.helper.generateKeyPair(IKey.Types.RSA);
 
-            try {
-                final IDatabase database = this.serviceLocator.getDatabase();
-                final Profile profile = new Profile(name, keyPair);
-                database.addProfile(profile);
-                this.showProfileCreatedDialog();
-            } catch (IOException e) {
-                this.showProfileNotCreatedDialog();
-            }
-        } else {
-            this.showProfileNotCreatedDialog();
+                try {
+                    final IDatabase database = this.serviceLocator.getDatabase();
+                    final Profile profile = new Profile(name, keyPair);
+                    database.addProfile(profile);
+                    this.showProfileCreatedDialog();
+                } catch (IOException e) {
+                    this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+                }
+                break;
+            case PASSWORD_EMPTY:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_password));
+                break;
+            case PASSWORD_TOO_SHORT:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_proflie_too_short_password));
+                break;
+            case NAME_EMPTY:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_name));
+                break;
+            case PASSWORDS_NOT_EQUAL:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
+                break;
+            default:
+                break;
+
         }
     }
 
@@ -87,13 +111,22 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * This also means that the password and the repeat password should be the same,
      * and the password length is larger or equal to 6.
      *
-     * @return a {@link boolean} which is true if all fields are valid
+     * @return a {@link int} which is the result code of the various input validations
      */
-    private boolean validateInputFields() {
-        return this.helper.validateName(this.nameInput)
-                & this.helper.validatePassword(this.passwordInput)
-                & this.helper.validatePassword(this.repeatPasswordInput)
-                & this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput);
+    private int validateInputFields() {
+        if (this.helper.validateName(this.nameInput) == EMPTY_FIELD) {
+            return NAME_EMPTY;
+        }
+        final int passwordValidation = this.helper.validatePassword(this.passwordInput);
+        if (passwordValidation == EMPTY_FIELD) {
+            return PASSWORD_EMPTY;
+        } else if (passwordValidation == TOO_SHORT_FIELD) {
+            return PASSWORD_TOO_SHORT;
+        }
+        if (!this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
+            return PASSWORDS_NOT_EQUAL;
+        }
+        return GOOD_FIELD;
     }
 
     /**
@@ -109,26 +142,26 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void showProfileCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(this.getString(R.string.profile_created_title))
-            .setContentText(this.getString(R.string.profile_created_explanation))
-            .setConfirmText(this.getString(R.string.dialog_ok))
-            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(final SweetAlertDialog dialog) {
-                    dialog.dismiss();
-                    nextActivity();
-                }
-            })
-            .show();
+                .setTitleText(this.getString(R.string.profile_created_title))
+                .setContentText(this.getString(R.string.profile_created_explanation))
+                .setConfirmText(this.getString(R.string.dialog_ok))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog dialog) {
+                        dialog.dismiss();
+                        nextActivity();
+                    }
+                })
+                .show();
     }
 
     /**
      * Show the dialog for when the profile couldn't be created.
      */
-    private void showProfileNotCreatedDialog() {
+    private void showProfileNotCreatedDialog(final String message) {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(this.getString(R.string.profile_not_created_title))
-                .setContentText(this.getString(R.string.profile_not_created_explanation))
+                .setContentText(message)
                 .setConfirmText(this.getString(R.string.dialog_ok))
                 .show();
     }
