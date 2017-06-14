@@ -13,7 +13,7 @@ public interface IKey extends Serializable {
     /**
      * A list of {@link IKey} implementations known to the system.
      */
-    enum Types { RSA, Simple }
+    enum Types { RSA, Ed25519 }
 
     /**
      * Get a string representation of a key.

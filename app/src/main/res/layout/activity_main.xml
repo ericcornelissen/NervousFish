@@ -1,100 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.nervousfish.nervousfish.activities.MainActivity">
+    android:layout_height="wrap_content"
+    android:backgroundTint="@android:color/background_light"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    tools:targetApi="lollipop">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:backgroundTint="@android:color/background_light"
-        tools:targetApi="lollipop">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/holo_blue_dark"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/holo_blue_dark"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+        <TextView
+            android:id="@+id/toolbar_title_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/app_name"
+            android:textSize="@dimen/toolbar_title_size"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/toolbar_title_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/app_name"
-                android:textSize="@dimen/toolbar_title_size"
-                android:textStyle="bold" />
-        </android.support.v7.widget.Toolbar>
+        <ImageButton
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/color_primary"
+            android:contentDescription="@string/content_description_settings_button"
+            android:onClick="onClickDotsButton"
+            android:padding="@dimen/image_button_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/show_more_dots" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ViewFlipper
             android:id="@+id/view_flipper_sorter_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <include layout="@layout/content_main" />
+
             <include layout="@layout/content_main_keytypes" />
         </ViewFlipper>
-    </android.support.design.widget.AppBarLayout>
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/pairing_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        fab:menu_labels_style="@style/MenuLabelsStyle"
-        fab:menu_labels_showAnimation="@anim/jump_from_down"
-        fab:menu_labels_hideAnimation="@anim/jump_to_down"
-        fab:menu_animationDelayPerItem="0"
-        fab:menu_shadowColor="#444"
-        fab:menu_colorNormal="@color/color_primary"
-        fab:menu_colorPressed="@color/color_primary_dark"
-        fab:menu_colorRipple="@color/color_primary_dark">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/pairing_menu_bluetooth"
-            style="@style/MenuButtonsStyle"
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/pairing_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/stat_sys_data_bluetooth"
-            android:onClick="onPairingButtonClicked"
-            fab:fab_label="@string/bluetooth" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:paddingBottom="@dimen/fab_margin"
+            android:paddingEnd="@dimen/fab_margin"
+            android:paddingStart="@dimen/fab_margin"
+            fab:menu_animationDelayPerItem="0"
+            fab:menu_colorNormal="@color/color_primary"
+            fab:menu_colorPressed="@color/color_primary_dark"
+            fab:menu_colorRipple="@color/color_primary_dark"
+            fab:menu_labels_hideAnimation="@anim/jump_to_down"
+            fab:menu_labels_showAnimation="@anim/jump_from_down"
+            fab:menu_labels_style="@style/MenuLabelsStyle"
+            fab:menu_shadowColor="#444">
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/pairing_menu_nfc"
-            style="@style/MenuButtonsStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/nfc"
-            android:onClick="onPairingButtonClicked"
-            fab:fab_label="@string/nfc" />
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/pairing_menu_bluetooth"
+                style="@style/MenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/stat_sys_data_bluetooth"
+                fab:fab_label="@string/bluetooth" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/pairing_menu_qr"
-            style="@style/MenuButtonsStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onPairingButtonClicked"
-            android:src="@drawable/qr"
-            fab:fab_label="@string/qr" />
-    </com.github.clans.fab.FloatingActionMenu>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/pairing_menu_nfc"
+                style="@style/MenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/nfc"
+                fab:fab_label="@string/nfc" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/sort_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:clickable="true"
-        android:layout_marginBottom="@dimen/sorting_fab_margin"
-        android:layout_marginStart="@dimen/sorting_fab_margin"
-        android:onClick="onSortButtonClicked"
-        app:borderWidth="0dp"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
-</merge>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/pairing_menu_qr"
+                style="@style/MenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/qr"
+                fab:fab_label="@string/qr" />
+        </com.github.clans.fab.FloatingActionMenu>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/sort_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|bottom"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:onClick="onSortButtonClicked"
+                android:layout_marginBottom="@dimen/fab_margin"
+                app:borderWidth="0dp"
+                app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.design.widget.AppBarLayout>

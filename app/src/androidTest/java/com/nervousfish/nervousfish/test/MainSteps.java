@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
+import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -30,9 +31,9 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
@@ -80,6 +81,10 @@ public class MainSteps {
         onView(withText(R.string.no)).perform(click());
     }
 
+    @When("^I click the three dots in the main activity$")
+    public void iClickThreeDotsButton() {
+        onView(withId(R.id.settings_button)).perform(click());
+    }
     @When("^I click open buttons with the plus$")
     public void clickPlusButton() {
         onView(allOf(withParent(withId(R.id.pairing_button)), withClassName(endsWith("ImageView")), isDisplayed()))
@@ -111,6 +116,10 @@ public class MainSteps {
         intended(hasComponent(LoginActivity.class.getName()));
     }
 
+    @Then("^I should go to the settings screen$")
+    public void iShouldGoToSettingsScreen() {
+        intended(hasComponent(SettingsActivity.class.getName()));
+    }
     @Then("^I should go to the QR activity from main$")
     public void iShouldGoToTheQRActivity() {
         intended(hasComponent(QRExchangeKeyActivity.class.getName()));

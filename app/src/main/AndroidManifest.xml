@@ -6,18 +6,18 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
+        android:name=".service_locator.NervousFish"
         android:allowBackup="true"
-        android:fullBackupContent="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@mipmap/app_logo_round"
         android:label="@string/app_name"
-        android:name=".service_locator.NervousFish"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
-
         <activity
             android:name=".service_locator.EntryActivity"
             android:noHistory="true">
@@ -43,8 +43,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.WaitActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.RhythmCreateActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -53,22 +53,30 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"/>
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.CreateProfileActivity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:noHistory="true"/>
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.SelectVerificationMethodActivity" />
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        <activity android:name=".activities.SelectVerificationMethodActivity" />
         <activity
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".activities.KeyManagementActivity" />
         <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
 </manifest>

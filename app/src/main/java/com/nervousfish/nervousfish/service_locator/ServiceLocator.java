@@ -13,11 +13,11 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.DummyNFCHandler;
 import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
+import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
@@ -55,14 +55,14 @@ public class ServiceLocator implements IServiceLocator {
      */
     ServiceLocator(final String androidFilesDir) {
         this.androidFilesDir = androidFilesDir;
-        this.constants = initConstants();
-        this.fileSystem = initFileSystem();
-        this.database = initDatabase();
-        this.keyGenerator = initKeyGenerator();
-        this.encryptor = initEncryptor();
-        this.bluetoothHandler = initBluetoothHandler();
-        this.nfcHandler = initNfcHandler();
-        this.qrHandler = initQrHandler();
+        this.constants = this.initConstants();
+        this.fileSystem = this.initFileSystem();
+        this.database = this.initDatabase();
+        this.keyGenerator = this.initKeyGenerator();
+        this.encryptor = this.initEncryptor();
+        this.bluetoothHandler = this.initBluetoothHandler();
+        this.nfcHandler = this.initNfcHandler();
+        this.qrHandler = this.initQrHandler();
     }
 
     /**
@@ -72,7 +72,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     // We suppress parameternumber and javadocmethod, because this method isn't meant to be used outside
     // this class and it's needed for the serialization proxy
-    @SuppressWarnings({"checkstyle:parameternumber", "checkstyle:javadocmethod"})
+    @SuppressWarnings({"checkstyle:parameternumber", "checkstyle:javadocmethod", "ConstructorWithTooManyParameters"})
     ServiceLocator(final String androidFilesDir,
                    final IDatabase database,
                    final IKeyGenerator keyGenerator,
@@ -146,7 +146,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @DesignedForExtension
     INfcHandler initNfcHandler() {
-        return DummyNFCHandler.newInstance(this).getModule();
+        return NFCHandler.newInstance(this).getModule();
     }
 
     /**
@@ -271,14 +271,14 @@ public class ServiceLocator implements IServiceLocator {
     private void assertExists(final Object object, final String name) {
         if (object == null) {
             LOGGER.error("The module \"%s\" is used before it is defined", name);
-            throw new ModuleNotFoundException("The module \"" + name + "\" is used before it is defined");
+            throw new ServiceLocator.ModuleNotFoundException("The module \"" + name + "\" is used before it is defined");
         }
     }
 
     /**
      * Thrown when a module was called before it was initialized.
      */
-    static class ModuleNotFoundException extends RuntimeException {
+    static final class ModuleNotFoundException extends RuntimeException {
 
         private static final long serialVersionUID = -2889621076876351934L;
 
@@ -292,21 +292,21 @@ public class ServiceLocator implements IServiceLocator {
         }
 
         /**
-         * Serialize the created proxy instead of the {@link ModuleNotFoundException} instance.
+         * Serialize the created proxy instead of the {@link ServiceLocator.ModuleNotFoundException} instance.
          */
         private Object writeReplace() {
-            return new SerializationProxy(this);
+            return new ServiceLocator.ModuleNotFoundException.SerializationProxy(this);
         }
 
         /**
-         * Ensure no instance of {@link ModuleNotFoundException} is created when present in the stream.
+         * Ensure no instance of {@link ServiceLocator.ModuleNotFoundException} is created when present in the stream.
          */
         private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
             throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
         }
 
         /**
-         * A proxy representing the logical state of {@link ModuleNotFoundException}. Copies the data
+         * A proxy representing the logical state of {@link ServiceLocator.ModuleNotFoundException}. Copies the data
          * from that class without any consistency checking or defensive copying.
          */
         private static final class SerializationProxy implements Serializable {
@@ -321,7 +321,7 @@ public class ServiceLocator implements IServiceLocator {
              *
              * @param exception The current instance of the proxy
              */
-            SerializationProxy(final ModuleNotFoundException exception) {
+            SerializationProxy(final ServiceLocator.ModuleNotFoundException exception) {
                 this.message = exception.getMessage();
                 this.throwable = exception.getCause();
             }
@@ -332,7 +332,7 @@ public class ServiceLocator implements IServiceLocator {
              * @return The object resolved by this proxy
              */
             private Object readResolve() {
-                return new ModuleNotFoundException(this.message).initCause(this.throwable);
+                return new ServiceLocator.ModuleNotFoundException(this.message).initCause(this.throwable);
             }
         }
 

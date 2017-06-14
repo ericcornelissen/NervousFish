@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:summary="Display name and password information"
+        android:title="Profile general information" >
+        <EditTextPreference
+            android:capitalize="words"
+            android:inputType="textCapWords"
+            android:key="display_name"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/display_name" />
+
+        <EditTextPreference
+            android:key="password"
+            android:summary="Enter your password"
+            android:password="true"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/password"/>
+    </PreferenceCategory>
+</PreferenceScreen>
