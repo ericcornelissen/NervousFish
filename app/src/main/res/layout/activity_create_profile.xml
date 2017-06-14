@@ -116,10 +116,10 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/rsa_key" />
-            <CheckBox android:id="@+id/checkbox_dsa_key"
+            <CheckBox android:id="@+id/checkbox_ed25519_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/dsa_key" />
+                android:text="@string/ed25519_key" />
         </LinearLayout>
 
         <Button

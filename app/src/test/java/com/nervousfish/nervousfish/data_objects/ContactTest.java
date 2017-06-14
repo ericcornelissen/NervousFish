@@ -108,7 +108,7 @@ public class ContactTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final IKey key = new SimpleKey("bar", "baz");
+        final IKey key = new Ed25519Key("bar", "baz");
         Contact contact = new Contact("foo", key);
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();

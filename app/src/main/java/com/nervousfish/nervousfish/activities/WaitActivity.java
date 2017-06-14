@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -59,14 +60,6 @@ public final class WaitActivity extends Activity {
         waitingMessage.setText(message);
 
         LOGGER.info("WaitActivity created");
-    }
-
-    private void goToMainActivity() {
-        LOGGER.info("Going to the main activity");
-        final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        this.startActivity(intent);
     }
 
     /**
@@ -153,5 +146,13 @@ public final class WaitActivity extends Activity {
     public void cancelWaiting(final View view) {
         this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
         this.finish();
+    }
+
+    private void goToMainActivity() {
+        LOGGER.info("Going to the main activity");
+        final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(intent);
     }
 }

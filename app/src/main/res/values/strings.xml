@@ -6,7 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
-    <string name="dsa_key">DSA key</string>
+    <string name="ed25519_key">Ed25519 key</string>
     <string name="edit">Edit</string>
     <string name="logo">Logo</string>
     <string name="more">More</string>
@@ -79,7 +79,8 @@
     <string name="tap_me">Tap me!</string>
     <string name="stop_recording">Stop recording</string>
     <string name="start_recording">Start recording</string>
-
+    <string name="too_few_taps_title">Too few taps</string>
+    <string name="too_few_taps_description">You have to tap at least 3 times</string>
     <string name="contact_image">Contact image</string>
     <string name="contact_already_exists">Contact already exists</string>
     <string name="contact_already_exists_with_name">A contact with the name "%1$s" exists already</string>

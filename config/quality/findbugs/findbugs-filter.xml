@@ -28,4 +28,10 @@
         <Method name="validateInputFields" />
         <Bug pattern="NS_DANGEROUS_NON_SHORT_CIRCUIT" />
     </Match>
+
+    <!-- Suppressed because lambda's are implemented with retrolambda, which doesn't support Findbugs -->
+    <Match>
+        <Bug code="UPM" />
+        <Class name="~.*\$\$Lambda\$.*"/>
+    </Match>
 </FindBugsFilter>
