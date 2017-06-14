@@ -6,6 +6,7 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * An {@link Activity} that draws the screen that is used to login by entering a password.
@@ -137,50 +139,57 @@ public final class LoginActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    private class MyOnKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
+    private final class MyOnKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
         @Override
-        public void onPress(int primaryCode) {
-
+        public void onPress(final int primaryCode) {
+            // Unused
         }
 
         @Override
-        public void onRelease(int primaryCode) {
-
+        public void onRelease(final int primaryCode) {
+            // Unused
         }
 
         @Override
-        public void onKey(int primaryCode, int[] keyCodes) {
+        public void onKey(final int primaryCode, final int[] keyCodes) {
             final View focusCurrent = LoginActivity.this.getWindow().getCurrentFocus();
-            if (focusCurrent == null || focusCurrent.getClass() != EditText.class) return;
-            EditText edittext = (EditText) focusCurrent;
-            Editable editable = edittext.getText();
-            int start = edittext.getSelectionStart();
+            if (focusCurrent == null) {
+                return;
+            }
+            final Class<?> focusClass = focusCurrent.getClass();
+            if (!Objects.equals(focusClass, EditText.class) && !Objects.equals(focusCurrent.getClass(), AppCompatEditText.class)) {
+                return;
+            }
+
+            final EditText edittext = (EditText) focusCurrent;
+            final Editable editable = edittext.getText();
+            final int start = edittext.getSelectionStart();
             editable.insert(start, Character.toString((char) primaryCode));
         }
 
         @Override
         public void onText(final CharSequence text) {
-
+            // Unused
         }
 
         @Override
         public void swipeLeft() {
-
+            // Unused
         }
 
         @Override
         public void swipeRight() {
-
+            // Unused
         }
 
         @Override
         public void swipeDown() {
-
+            // Unused
         }
 
         @Override
         public void swipeUp() {
-
+            // Unused
         }
     }
 }
