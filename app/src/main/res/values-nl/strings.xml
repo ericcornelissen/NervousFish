@@ -84,7 +84,7 @@
     <string name="yes_go_back">Ja, ga terug!</string>
 
     <!-- Kies verificatie methode -->
-    <string name="select_verification_method">Hoe wil je verbinden?</string>
+    <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
     <string name="select_visual_verification">Visueel patroon</string>
     <string name="select_rhythm_verification">Tap een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
