@@ -20,7 +20,7 @@ public class Profile implements Serializable {
     /**
      * The constructor for the {@link Profile} class.
      *
-     * @param contact The contact belonging to the user.
+     * @param contact  The contact belonging to the user.
      * @param keyPairs the public/private key-pairs of the user.
      */
     public Profile(final Contact contact, final List<KeyPair> keyPairs) {
@@ -30,6 +30,7 @@ public class Profile implements Serializable {
 
     /**
      * Adds a new keyPair to the profile
+     *
      * @param keyPair the keyPair to add.
      */
     public void addKeyPair(final KeyPair keyPair) {
@@ -39,6 +40,7 @@ public class Profile implements Serializable {
 
     /**
      * Returns the contact Object of the user
+     *
      * @return - The Contact POJO.
      */
     public Contact getContact() {
@@ -47,6 +49,7 @@ public class Profile implements Serializable {
 
     /**
      * Returns the Keypairs of the user.
+     *
      * @return The list of keypairs of the user.
      */
     public List<KeyPair> getKeyPairs() {
@@ -55,16 +58,22 @@ public class Profile implements Serializable {
 
     /**
      * Returns the (first) public key of the profile.
+     *
      * @return the (first) public key.
-     * TODO: Let the user decide which public key is active.
      */
-    public IKey getPublicKey() { return keyPairs.get(0).getPublicKey(); }
+    public IKey getPublicKey() {
+        //TODO: Let the user decide which public key is active.
+        return keyPairs.get(0).getPublicKey();
+    }
 
     /**
      * Returns the name of the profile.
+     *
      * @return Name of the profile.
      */
-    public String getName() { return contact.getName(); }
+    public String getName() {
+        return contact.getName();
+    }
 
     /**
      * {@inheritDoc}
@@ -76,7 +85,7 @@ public class Profile implements Serializable {
         }
 
         final Profile that = (Profile) o;
-       
+
         return this.contact.equals(that.contact) && this.keyPairs.equals(that.keyPairs);
     }
 
@@ -114,6 +123,7 @@ public class Profile implements Serializable {
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param profile The current instance of the proxy
          */
         SerializationProxy(final Profile profile) {
@@ -123,6 +133,7 @@ public class Profile implements Serializable {
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
