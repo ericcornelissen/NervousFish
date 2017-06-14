@@ -39,7 +39,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
-    private static final String SEMICOLON = ";";
+    private static final String LINE = " /n ";
 
     private IServiceLocator serviceLocator;
     private Profile profile;
@@ -88,7 +88,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
     private void drawQRCode() {
         final KeyPair keyPair = this.profile.getKeyPairs().get(0);
         final IKey publicKey = keyPair.getPublicKey();
-        final Bitmap qrCode = QRGenerator.encode(String.format("%s;%s %s %s",
+        final Bitmap qrCode = QRGenerator.encode(String.format("%s /n %s, %s, %s",
                 this.profile.getName(), publicKey.getType(), publicKey.getName(), publicKey.getKey()));
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
@@ -119,9 +119,11 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
         try {
             LOGGER.info("Adding new contact to database");
             //Name is the first part
-            final String name = qrMessage.split(SEMICOLON)[0];
+            final String name = qrMessage.split(LINE)[0];
+            System.out.println(qrMessage);
+            System.out.println("---" + name);
             //Key is the second part
-            final IKey key = QRGenerator.deconstructToKey(qrMessage.split(SEMICOLON)[1]);
+            final IKey key = QRGenerator.deconstructToKey(qrMessage.split(LINE)[1]);
 
             final Contact contact = new Contact(name, key);
             this.serviceLocator.getDatabase().addContact(contact);
@@ -130,12 +132,14 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
             this.startActivity(intent);
         } catch (IllegalArgumentException e) {
+            LOGGER.error("IllegalArgumentException in addNewContact", e);
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(this.getString(R.string.contact_already_exists_popup))
                     .setContentText(this.getString(R.string.contact_already_exists_explanation))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
         } catch (ArrayIndexOutOfBoundsException e) {
+            LOGGER.error("ArrayIndexOutOfBoundsException in addNewContact", e);
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(this.getString(R.string.something_went_wrong))
                     .setContentText(this.getString(R.string.something_went_wrong_QR_popup_explanation))

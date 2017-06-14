@@ -16,6 +16,8 @@ import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 
 /**
  * Class that can be used to generate QR codes.
@@ -27,9 +29,7 @@ public final class QRGenerator {
     private static final int QRCODE_IMAGE_WIDTH = 400;
     private static final int COMPONENT_KEYTYPE = 0;
     private static final int COMPONENT_KEYNAME = 1;
-    private static final int COMPONENT_SIMPLE_KEY = 2;
-    private static final int COMPONENT_RSA_MODULUS = 2;
-    private static final int COMPONENT_RSA_EXPONENT = 3;
+    private static final int COMPONENT_KEY = 2;
 
     private static final int RESIZE_QR_CODE = 4;
 
@@ -77,13 +77,14 @@ public final class QRGenerator {
      * @return The key it corresponds to.
      */
     public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
-        final String[] messageComponents = qrMessage.split(" ");
+        final String[] messageComponents = qrMessage.split(", ");
+        System.out.println(Arrays.toString(messageComponents));
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
-                        messageComponents[COMPONENT_RSA_EXPONENT]);
+                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(" ")[0],
+                        messageComponents[COMPONENT_KEY].split(" ")[1]);
             case ConstantKeywords.ED25519_KEY:
-                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
+                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }
