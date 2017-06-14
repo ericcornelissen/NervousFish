@@ -122,9 +122,8 @@ public final class Contact implements Serializable {
          * @param contact The current instance of the proxy
          */
         SerializationProxy(final Contact contact) {
-            this.name = contact.getName();
-            final List<IKey> keysList = contact.getKeys();
-            this.keys = keysList.toArray(new IKey[keysList.size()]);
+            this.name = contact.name;
+            this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
         }
 
         /**
