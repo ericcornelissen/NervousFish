@@ -10,9 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,17 +48,13 @@ public class MultiContactTest {
 
     @Test
     public void testGetContactsReturnsTheContacts() {
-        final Map<String, String> map = new HashMap<>();
-        map.put("name", "foo");
-        map.put("key", "bar");
-        final IKey simpleKey = new SimpleKey(map);
         List<Contact> contactsA = new ArrayList<>();
-        contactsA.add(new Contact("name", simpleKey));
+        contactsA.add(new Contact("name", this.key));
         MultiContact multiContact = new MultiContact(contactsA);
         assertEquals(contactsA, multiContact.getContacts());
 
         List<Contact> contactsB = contactsA;
-        contactsB.add(new Contact("test", simpleKey));
+        contactsB.add(new Contact("test", this.key));
         MultiContact multiContact2 = new MultiContact(contactsB);
         assertEquals(contactsB, multiContact2.getContacts());
     }
@@ -94,12 +88,8 @@ public class MultiContactTest {
 
     @Test
     public void testEqualsReturnsTrueForEqualLists() {
-        final Map<String, String> map = new HashMap<>();
-        map.put("name", "foo");
-        map.put("key", "bar");
-        final IKey simpleKey = new SimpleKey(map);
         List<Contact> contactsA = new ArrayList<>();
-        contactsA.add(new Contact("name", simpleKey));
+        contactsA.add(new Contact("name", this.key));
         MultiContact multiContact = new MultiContact(contactsA);
 
         MultiContact multiContact2 = new MultiContact(contactsA);
