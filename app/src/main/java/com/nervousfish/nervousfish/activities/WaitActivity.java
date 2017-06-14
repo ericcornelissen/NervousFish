@@ -148,6 +148,9 @@ public final class WaitActivity extends Activity {
         this.finish();
     }
 
+    /**
+     * Launch the mainActivity at the top.
+     */
     private void goToMainActivity() {
         LOGGER.info("Going to the main activity");
         final Intent intent = new Intent(this, MainActivity.class);
