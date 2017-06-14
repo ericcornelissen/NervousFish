@@ -77,6 +77,6 @@
         android:visibility="gone"
         android:keyBackground="@drawable/key_background"
         android:keyTextColor="#333"
-        android:background="@color/color_primary_dark"
+        android:background="@color/color_primary"
         android:keyTextSize="22sp"/>
 </RelativeLayout>
