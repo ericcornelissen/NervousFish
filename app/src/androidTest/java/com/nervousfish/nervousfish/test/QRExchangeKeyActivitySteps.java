@@ -50,6 +50,6 @@ public class QRExchangeKeyActivitySteps {
 
     @Then("^I should return from the QRExchangeKeyActivity$")
     public void iShouldReturnFromTheQRExchangeKeyActivity() {
-        assertTrue(mActivityRule.getActivity().isDestroyed());
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 }

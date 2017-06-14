@@ -40,13 +40,13 @@ public final class ContactsByNameListAdapter extends ArrayAdapter<Contact> {
         final View v;
 
         if (convertView == null) {
-            final LayoutInflater inflater = LayoutInflater.from(getContext());
+            final LayoutInflater inflater = LayoutInflater.from(this.getContext());
             v = inflater.inflate(R.layout.contact_list_entry, null);
         } else {
             v = convertView;
         }
 
-        final Contact contact = getItem(position);
+        final Contact contact = this.getItem(position);
 
         if (contact != null) {
             final TextView name = (TextView) v.findViewById(R.id.contact_name_list_entry);
