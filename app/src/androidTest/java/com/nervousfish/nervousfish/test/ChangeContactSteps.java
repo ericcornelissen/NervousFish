@@ -11,8 +11,8 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -36,6 +36,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
@@ -45,7 +46,8 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ChangeContactSteps {
 
-    private final IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
+    private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
 
     private String newName;
@@ -94,7 +96,7 @@ public class ChangeContactSteps {
 
     @When("^I press OK on the change contact error popup$")
     public void iPressOKOnTheChangeContactErrorPopup() {
-        onView(withText(R.string.dialog_ok)).perform(scrollTo()).perform(click());
+        onView(withText(R.string.dialog_ok)).perform(click());
     }
 
     @When("^I remove all text from the name$")

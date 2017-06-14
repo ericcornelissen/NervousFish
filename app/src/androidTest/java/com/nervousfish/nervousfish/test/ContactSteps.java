@@ -13,7 +13,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -45,7 +45,9 @@ import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
 public class ContactSteps {
-    private final IKey key = new SimpleKey("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
+
+    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
+    private final IKey key = new Ed25519Key("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
     private final Contact contact = new Contact("Yashuo", this.key);
 
     @Rule
@@ -119,7 +121,6 @@ public class ContactSteps {
     public void iShouldGoToTheActivityIVisitedBeforeTheContactActivity() {
         final Activity activity = this.mActivityRule.getActivity();
         assertTrue(activity.isFinishing());
-
     }
 
     @Then("^the contact should be deleted$")
@@ -128,8 +129,6 @@ public class ContactSteps {
         assertFalse(database.contactExists(this.contact.getName()));
         database.deleteDatabase();
     }
-
-
 
     /**
      * Initialize the database for the ContactSteps.

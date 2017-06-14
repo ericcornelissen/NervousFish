@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Class containing global constants for the application. These constants are definied in this file, because
@@ -31,6 +31,8 @@ public final class Constants implements IConstants {
     // Name for the SDP record when creating server socket
     private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
     private transient String androidFilesDir;
+    private transient String databaseContactsPath;
+    private transient String databaseUserPath;
 
     /**
      * Prevents construction from outside the class.
@@ -39,6 +41,7 @@ public final class Constants implements IConstants {
      */
     private Constants(final IServiceLocator serviceLocator) {
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
+        this.initializePaths();
         LOGGER.info("Initialized");
     }
 
@@ -75,7 +78,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseContactsPath() {
-        return this.androidFilesDir + Constants.DB_CONTACTS_PATH;
+        return this.databaseContactsPath;
     }
 
     /**
@@ -83,7 +86,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseUserdataPath() {
-        return this.androidFilesDir + Constants.DB_USERDATA_PATH;
+        return this.databaseUserPath;
     }
 
     /**
@@ -110,7 +113,8 @@ public final class Constants implements IConstants {
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         this.androidFilesDir = stream.readUTF();
-        ensureClassInvariant();
+        this.initializePaths();
+        this.ensureClassInvariant();
     }
 
     /**
@@ -125,10 +129,17 @@ public final class Constants implements IConstants {
 
     /**
      * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        assertNotNull(this.androidFilesDir);
+    private void ensureClassInvariant() {
+        assertThat(this.androidFilesDir, notNullValue());
+        assertThat(this.databaseContactsPath, notNullValue());
+        assertThat(this.databaseUserPath, notNullValue());
+    }
+
+    private void initializePaths() {
+        //noinspection StringConcatenationMissingWhitespace because this is a file path
+        this.databaseContactsPath = this.androidFilesDir + Constants.DB_CONTACTS_PATH;
+        //noinspection StringConcatenationMissingWhitespace because this is a file path
+        this.databaseUserPath = this.androidFilesDir + Constants.DB_USERDATA_PATH;
     }
 }

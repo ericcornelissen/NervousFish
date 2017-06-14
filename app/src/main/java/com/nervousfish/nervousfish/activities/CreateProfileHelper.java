@@ -5,13 +5,15 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helper method for the logical functionality of the {@link CreateProfileActivity}.
  */
-class CreateProfileHelper {
+final class CreateProfileHelper {
 
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
@@ -24,11 +26,38 @@ class CreateProfileHelper {
      * containing its logical functionality.
      *
      * @param keyGenerator A {@link IKeyGenerator} to generate keys.
-     * @param alertColor The {@link Color} to set as alert for incorrect values.
+     * @param alertColor   The {@link Color} to set as alert for incorrect values.
      */
     CreateProfileHelper(final IKeyGenerator keyGenerator, final int alertColor) {
         this.keyGenerator = keyGenerator;
         this.alertColor = alertColor;
+    }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 1 ASCII character.
+     *
+     * @param name The name that has been entered.
+     * @return a {@link boolean} indicating whether or not the name is valid.
+     */
+    private static boolean isValidName(final String name) {
+        return name != null
+                && !name.isEmpty()
+                && !name.trim().isEmpty();
+    }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 6 ASCII character.
+     *
+     * @param password The password that has been entered.
+     * @return a {@link boolean} indicating whether or not the password is valid.
+     */
+    private static boolean isValidPassword(final String password) {
+        return password != null
+                && !password.isEmpty()
+                && !password.trim().isEmpty()
+                && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
     /**
@@ -37,17 +66,20 @@ class CreateProfileHelper {
      * @param keyType The type of key to generate.
      * @return a {@link KeyPair} with the key type selected
      */
-    KeyPair generateKeyPair(final IKey.Types keyType) {
+    List<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+        final List<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
-                return this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
-            case Simple:
-                final IKey publicKey = new SimpleKey("public", "foo");
-                final IKey privateKey = new SimpleKey("private", "bar");
-                return new KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME, publicKey, privateKey);
+                keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                break;
+            case Ed25519:
+                keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                break;
             default:
                 throw new IllegalArgumentException("The selected key is not implemented");
         }
+
+        return keyPairs;
     }
 
     /**
@@ -56,7 +88,7 @@ class CreateProfileHelper {
      */
     boolean validateName(final EditText input) {
         final String name = input.getText().toString();
-        if (this.isValidName(name)) {
+        if (isValidName(name)) {
             input.setBackgroundColor(Color.TRANSPARENT);
         } else {
             input.setBackgroundColor(this.alertColor);
@@ -72,7 +104,7 @@ class CreateProfileHelper {
      */
     boolean validatePassword(final EditText input) {
         final String password = input.getText().toString();
-        if (this.isValidPassword(password)) {
+        if (isValidPassword(password)) {
             input.setBackgroundColor(Color.TRANSPARENT);
         } else {
             input.setBackgroundColor(this.alertColor);
@@ -84,7 +116,7 @@ class CreateProfileHelper {
 
     /**
      * @param passwordInput The {@link EditText} of the original password.
-     * @param repeatInput The {@link EditText} of the repeat password.
+     * @param repeatInput   The {@link EditText} of the repeat password.
      * @return True when the password matches the repeated password.
      */
     boolean passwordsEqual(final EditText passwordInput, final EditText repeatInput) {
@@ -97,33 +129,6 @@ class CreateProfileHelper {
         }
 
         return true;
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 1 ASCII character.
-     *
-     * @param name The name that has been entered.
-     * @return a {@link boolean} indicating whether or not the name is valid.
-     */
-    private boolean isValidName(final String name) {
-        return name != null
-                && !name.isEmpty()
-                && !name.trim().isEmpty();
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 6 ASCII character.
-     *
-     * @param password The password that has been entered.
-     * @return a {@link boolean} indicating whether or not the password is valid.
-     */
-    private boolean isValidPassword(final String password) {
-        return password != null
-                && !password.isEmpty()
-                && !password.trim().isEmpty()
-                && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
 }

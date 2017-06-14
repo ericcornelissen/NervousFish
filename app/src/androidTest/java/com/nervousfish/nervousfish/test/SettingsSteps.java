@@ -40,8 +40,6 @@ import static org.hamcrest.core.AllOf.allOf;
 @CucumberOptions(features = "features")
 public class SettingsSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-
     @Rule
     public ActivityTestRule<SettingsActivity> mActivityRule =
             new ActivityTestRule<>(SettingsActivity.class, true, false);

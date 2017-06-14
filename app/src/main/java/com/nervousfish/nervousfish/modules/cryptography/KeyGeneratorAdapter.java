@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -21,7 +22,9 @@ import java.security.spec.RSAPublicKeySpec;
 public final class KeyGeneratorAdapter implements IKeyGenerator {
 
     private static final long serialVersionUID = -5933759426888012276L;
+
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
+
     private static final String RSA_KEY_ALGORITHM = "RSA";
     private static final int RSA_KEY_SIZE = 2048;
 
@@ -48,15 +51,12 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     }
 
     /**
-     * Generates a random KeyPair with the RSA algorithm.
-     *
-     * @param name The name of the key
-     * @return a randomly generated KeyPair
+     * {@inheritDoc}
      */
+    @Override
     public KeyPair generateRSAKeyPair(final String name) {
-        final KeyPairGenerator keyPairGenerator;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
+            final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
             keyPairGenerator.initialize(RSA_KEY_SIZE);
 
             final java.security.KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -73,6 +73,17 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new KeyGenerationException(e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public KeyPair generateEd25519KeyPair(final String name) throws KeyGenerationException {
+        final Ed25519 keyPairGenerator = Ed25519.generatePair();
+        final Ed25519Key publicKey = new Ed25519Key(name, keyPairGenerator.getPublicKey());
+        final Ed25519Key privateKey = new Ed25519Key(name, keyPairGenerator.getPrivateKey());
+        return new KeyPair(name, publicKey, privateKey);
     }
 
 }

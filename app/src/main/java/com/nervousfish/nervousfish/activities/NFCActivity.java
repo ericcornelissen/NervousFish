@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
@@ -58,10 +59,13 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         LOGGER.info("Start creating an NDEF message to beam");
         Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) this.findViewById(R.id.nfc_gif));
         try {
-            final Profile myProfile = database.getProfile();
-            LOGGER.info("Sending my profile with name: {} , public key: {} ", myProfile.getName(),
-                    myProfile.getPublicKey());
-            final Contact contact = new Contact(myProfile.getName(), myProfile.getPublicKey());
+            final Profile profile = this.database.getProfile();
+            final KeyPair keyPair = profile.getKeyPairs().get(0);
+
+            LOGGER.info("Sending my profile with name: {} , public key: {} ", profile.getName(),
+                    keyPair.getPublicKey());
+
+            final Contact contact = new Contact(profile.getName(), keyPair.getPublicKey());
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
             this.bytes = nfcHandler.objectToBytes(contact);
         } catch (IOException e) {
