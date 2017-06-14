@@ -46,11 +46,10 @@ cache:
 
 env:
   matrix:
-    - COMPONENT=unit
-    - COMPONENT=instrumentation-provider
-    - COMPONENT=instrumentation-sdk
-    - COMPONENT=sample
-    - COMPONENT=build
+    - COMPONENT=checkstyle
+    - COMPONENT=lint
+    - COMPONENT=pmd
+    - COMPONENT=findbugs
 
 git:
   depth: 3 # Clone the last 3 commits
