@@ -103,7 +103,7 @@
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
     <string name="by_tapping_a_rhythm">Door een ritme te tikken</string>
-    <string name="by_tapping_on_an_image">Door op een plaatje te drukken</string>
+    <string name="by_tapping_on_an_image">Door op een aantal plaatjes te drukken</string>
 
     <!-- Settings -->
     <string name="title_activity_settings">Settings</string>
