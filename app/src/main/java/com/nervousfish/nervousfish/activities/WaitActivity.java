@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -141,6 +140,7 @@ public final class WaitActivity extends Activity {
 
     /**
      * Can be called by a button to cancel the pairing
+     *
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
