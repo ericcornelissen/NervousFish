@@ -223,6 +223,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             // Prevent instantiation from outside the package
         }
 
+        /**
+         * Get a list of the time between the taps (= intervals)
+         * @param taps The taps that have obviously intervals in between
+         * @return A list containing the time between the taps
+         */
         private static List<Long> getIntervals(final List<SingleTap> taps) {
             final List<Long> intervals = new ArrayList<>(taps.size() - 1);
             for (int i = 0; i < taps.size() - 1; i++) {
@@ -260,18 +265,29 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return this.generateKey(breakpoint);
         }
 
+        /**
+         * @return The mean length of the intervals in the "Short" cluster
+         */
         private long makeAndReturnFirstClusterMean() {
             this.clusterCenter1.add(this.intervals.get(0));
             this.intervals.remove(0);
             return this.clusterCenter1.get(0);
         }
 
+        /**
+         * @return The mean length of the intervals in the "Long" cluster
+         */
         private long makeAndReturnSecondClusterMean() {
             this.clusterCenter2.add(this.intervals.get(this.intervals.size() - 1));
             this.intervals.remove(this.intervals.size() - 1);
             return this.clusterCenter2.get(0);
         }
 
+        /**
+         * Adds the intervals whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         * @param centerMean1 The mean of the length of the intervals in the "Short" cluster
+         * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
+         */
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
             final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
             if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
@@ -285,6 +301,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             this.intervals.remove(closestPoint.getRight());
         }
 
+        /**
+         *  Returns the interval whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         * @param centerMean1 The mean of the length of the intervals in the "Short" cluster
+         * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
+         * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
+         */
         private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
@@ -306,6 +328,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return new ImmutablePair<>(targetCluster, closestPoint);
         }
 
+        /**
+         * @return A tuple of which the left value is the mean length of the intervals of the "Short" cluster
+         * and the right value is the mean length of the intervals of the "Long" cluster
+         */
         private ImmutablePair<Long, Long> recalculateClusterCenters() {
             long clusterCenterMean1 = 0L;
             for (final Long interval : this.clusterCenter1) {
@@ -323,6 +349,15 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return new ImmutablePair<>(clusterCenterMean1, clusterCenterMean2);
         }
 
+        /**
+         * Generates a key based on the rhythm that was tapped by using powers of 2.
+         * Short = 0
+         * Short, Long = 2
+         * Short, Long, Long = 6
+         * Long, Long, Long = 7
+         * @param breakpoint The boundary between a short and long interval
+         * @return The key as an integer
+         */
         private int generateKey(final long breakpoint) {
             int key = 0;
             int counter = 0;
@@ -337,6 +372,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return key;
         }
 
+        /**
+         * Determines a breakpoint to determine which intervals are short and which are long
+         * @return The breakpoint
+         */
         private long getBreakpoint() {
             final long lastShortInterval = this.clusterCenter1.get(this.clusterCenter1.size() - 1);
             final long firstLongInterval = this.clusterCenter2.get(0);
