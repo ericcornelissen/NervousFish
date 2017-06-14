@@ -65,8 +65,8 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
             return false;
         }
 
-        final CircularList<?> that = (CircularList<?>) o;
-        return this.maxSize == that.maxSize && Arrays.equals(this.data, that.data);
+        final CircularList<?> otherList = (CircularList<?>) o;
+        return this.maxSize == otherList.maxSize && Arrays.equals(this.data, otherList.data);
     }
 
     /**
@@ -88,7 +88,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
         if (index < 0) {
             throw new IllegalArgumentException("Illegal Index: " + index);
         }
-        return this.elementData((index + head) % this.maxSize);
+        return this.elementData((index + this.head) % this.maxSize);
     }
 
     /**
@@ -106,7 +106,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     public boolean add(final E e) {
         this.data[this.lastElementLocation] = e;
         this.lastElementLocation++;
-        if (this.lastElementLocation == maxSize) {
+        if (this.lastElementLocation == this.maxSize) {
             this.lastElementLocation = 0;
         }
         if (this.currentSize == this.maxSize) {
@@ -121,10 +121,10 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
      *
      * @return All elements in order
      */
-    public List<E> getElements() {
+    List<E> getElements() {
         final List<E> array = new ArrayList<>(this.maxSize);
         for (int i = 0; i < this.maxSize; i++) {
-            array.add(get(i));
+            array.add(this.get(i));
         }
         return array;
     }
@@ -158,9 +158,9 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
     /**
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
-     *
+     * <p>
      * Used for the Serialization Proxy Pattern.
-     *
+     * <p>
      * We suppress the AccessorClassGeneration warning because the only alternative to this pattern
      * - ordinary serialization - is far more dangerous.
      */
@@ -175,6 +175,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param list The current instance of the proxy
          */
         SerializationProxy(final CircularList list) {
@@ -187,6 +188,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
