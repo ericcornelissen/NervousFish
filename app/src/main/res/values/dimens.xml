@@ -3,7 +3,6 @@
     <dimen name="icon_size">24dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="sorting_fab_margin">22dp</dimen>
     <dimen name="contact_picture_width">100dp</dimen>
     <dimen name="contact_picture_height">100dp</dimen>
     <dimen name="contact_name_size">21sp</dimen>

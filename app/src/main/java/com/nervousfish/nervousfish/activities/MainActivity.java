@@ -17,7 +17,6 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -114,21 +113,22 @@ public final class MainActivity extends AppCompatActivity {
         // Initialize sorter
         this.sorter = new MainActivitySorter(this);
 
-        ((FloatingActionButton) findViewById(R.id.pairing_menu_bluetooth)).setOnClickListener(new View.OnClickListener() {
+        // Fab button listeners, inserted programmatically to support older devices
+        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onPairingButtonClicked(v);
             }
         });
-        ((FloatingActionButton) findViewById(R.id.pairing_menu_nfc)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onPairingButtonClicked(v);
             }
         });
-        ((FloatingActionButton) findViewById(R.id.pairing_menu_qr)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onPairingButtonClicked(v);
             }
         });
