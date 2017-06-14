@@ -173,7 +173,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("Stop Recording clicked");
         this.startButton.setVisibility(View.VISIBLE);
         this.stopButton.setVisibility(View.GONE);
-        this.doneButton.setVisibility(View.VISIBLE);
         if (this.taps.size() < MINIMUM_TAPS) {
             this.taps.clear();
             this.doneButton.setVisibility(View.GONE);
@@ -182,6 +181,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                     .setContentText(this.getString(R.string.too_few_taps_description))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
+        } else {
+            this.doneButton.setVisibility(View.VISIBLE);
         }
     }
 
