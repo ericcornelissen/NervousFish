@@ -14,6 +14,9 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 class CreateProfileHelper {
 
     private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int PASSWORD_TOO_SHORT = 100;
+    private static final int PASSWORD_EMPTY = 101;
+    private static final int PASSWORD_GOOD = 102;
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
 
     private final IKeyGenerator keyGenerator;
@@ -117,13 +120,16 @@ class CreateProfileHelper {
      * that it has at least 6 ASCII character.
      *
      * @param password The password that has been entered.
-     * @return a {@link boolean} indicating whether or not the password is valid.
+     * @return a {@link int} indicating why the password is invalid or if it's valid.
      */
-    private boolean isValidPassword(final String password) {
-        return password != null
-                && !password.isEmpty()
-                && !password.trim().isEmpty()
-                && password.length() >= MIN_PASSWORD_LENGTH;
+    private int isValidPassword(final String password) {
+        if (password.isEmpty() || password.trim().isEmpty() || password == null) {
+            return PASSWORD_EMPTY;
+        } else if (password.length() >= MIN_PASSWORD_LENGTH) {
+            return PASSWORD_TOO_SHORT;
+        } else {
+            return PASSWORD_GOOD;
+        }
     }
 
 }
