@@ -7,8 +7,6 @@ Feature: Create a profile
     And I click ok on the popup with a warning about creating a profile
     Then I should stay on the create profile activity
     And the name input field should become red
-    And the password input field should become red
-    And the repeat password input field should become red
 
   Scenario Outline: Clicking submit with valid input
       Given I am viewing the create profile activity
