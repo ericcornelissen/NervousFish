@@ -2,9 +2,15 @@ package com.nervousfish.nervousfish.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
@@ -25,6 +31,7 @@ public final class LoginActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
 
     private String actualPassword;
+    private KeyboardView keyboardView;
 
     /**
      * {@inheritDoc}
@@ -42,7 +49,39 @@ public final class LoginActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve password from database", e);
         }
 
+        final Keyboard keyboard = new Keyboard(this, R.xml.qwerty);
+        this.keyboardView = (KeyboardView) this.findViewById(R.id.keyboardview);
+        this.keyboardView.setKeyboard(keyboard);
+        this.keyboardView.setPreviewEnabled(false);
+        this.keyboardView.setOnKeyboardActionListener(new MyOnKeyboardActionListener());
+
+        this.findViewById(R.id.login_password_input).setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                this.showCustomKeyboard(v);
+            } else {
+                this.hideCustomKeyboard();
+            }
+        });
+        this.findViewById(R.id.login_password_input).setOnClickListener(this::showCustomKeyboard);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         LOGGER.info("Activity created");
+    }
+
+    public void hideCustomKeyboard() {
+        this.keyboardView.setVisibility(View.GONE);
+        this.keyboardView.setEnabled(false);
+    }
+
+    public void showCustomKeyboard(final View view) {
+        this.keyboardView.setVisibility(View.VISIBLE);
+        this.keyboardView.setEnabled(true);
+        ((InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public boolean isCustomKeyboardVisible() {
+        return this.keyboardView.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -50,10 +89,14 @@ public final class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
+        if (this.isCustomKeyboardVisible()) {
+            this.hideCustomKeyboard();
+        } else {
+            final Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        }
     }
 
     /**
@@ -92,5 +135,52 @@ public final class LoginActivity extends AppCompatActivity {
     private void toMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
+    }
+
+    private class MyOnKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
+        @Override
+        public void onPress(int primaryCode) {
+
+        }
+
+        @Override
+        public void onRelease(int primaryCode) {
+
+        }
+
+        @Override
+        public void onKey(int primaryCode, int[] keyCodes) {
+            final View focusCurrent = LoginActivity.this.getWindow().getCurrentFocus();
+            if (focusCurrent == null || focusCurrent.getClass() != EditText.class) return;
+            EditText edittext = (EditText) focusCurrent;
+            Editable editable = edittext.getText();
+            int start = edittext.getSelectionStart();
+            editable.insert(start, Character.toString((char) primaryCode));
+        }
+
+        @Override
+        public void onText(final CharSequence text) {
+
+        }
+
+        @Override
+        public void swipeLeft() {
+
+        }
+
+        @Override
+        public void swipeRight() {
+
+        }
+
+        @Override
+        public void swipeDown() {
+
+        }
+
+        @Override
+        public void swipeUp() {
+
+        }
     }
 }
