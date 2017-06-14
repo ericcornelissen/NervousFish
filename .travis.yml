@@ -1,15 +1,13 @@
 language: android
 jdk: oraclejdk8
 
+
 script:
   - ./travis_script.sh
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-after_success:
-  - ./gradlew jacocoTestReport coveralls
 
 
 android:
@@ -42,8 +40,10 @@ cache:
 
 env:
   matrix:
-    - COMPONENT=quality
     - COMPONENT=build
+    - COMPONENT=coverage
+    - COMPONENT=quality
+    - COMPONENT=unittest
 
 git:
   depth: 3 # Clone the last 3 commits
