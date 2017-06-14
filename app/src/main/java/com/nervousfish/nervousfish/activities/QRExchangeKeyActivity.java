@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -77,11 +78,13 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
      */
     @SuppressLint("InflateParams")
     private void drawQRCode() {
-        final IKey publicKey = this.profile.getPublicKey();
+        final KeyPair keyPair = this.profile.getKeyPairs().get(0);
+        final IKey publicKey = keyPair.getPublicKey();
         final Bitmap qrCode = QRGenerator.encode(String.format("%s;%s %s %s",
                 this.profile.getName(), publicKey.getType(), publicKey.getName(), publicKey.getKey()));
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
     }
+
 }

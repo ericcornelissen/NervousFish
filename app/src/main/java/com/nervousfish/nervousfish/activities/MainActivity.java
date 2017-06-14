@@ -113,6 +113,26 @@ public final class MainActivity extends AppCompatActivity {
         // Initialize sorter
         this.sorter = new MainActivitySorter(this);
 
+        // Fab button listeners, inserted programmatically to support older devices
+        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                onPairingButtonClicked(v);
+            }
+        });
+        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                onPairingButtonClicked(v);
+            }
+        });
+        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                onPairingButtonClicked(v);
+            }
+        });
+
         LOGGER.info("Activity created");
     }
 

@@ -18,7 +18,7 @@
         android:layout_marginBottom="@dimen/no_users_icon_margin_bottom"
         android:src="@drawable/users_icon"
         android:layout_gravity="center"
-        android:contentDescription="@string/users_image"/>
+        android:contentDescription="@string/your_contacts_list_is_empty"/>
 
     <TextView
         android:id="@+id/no_users_text"

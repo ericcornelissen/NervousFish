@@ -6,7 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
-    <string name="dsa_key">DSA key</string>
+    <string name="ed25519_key">Ed25519 key</string>
     <string name="edit">Edit</string>
     <string name="logo">Logo</string>
     <string name="more">More</string>
@@ -59,7 +59,6 @@
     <string name="popup_enable_bluetooth_title">Enable Bluetooth?</string>
     <string name="popup_enable_bluetooth_findable">Enable Bluetooth so others can find your device</string>
     <string name="popup_enable_bluetooth_exchange">You must enable Bluetooth before continuing</string>
-    <string name="users_image">Users icon</string>
     <string name="your_contacts_list_is_empty">Your contacts list is empty</string>
 
     <!-- Login -->
@@ -81,7 +80,8 @@
     <string name="tap_me">Tap me!</string>
     <string name="stop_recording">Stop recording</string>
     <string name="start_recording">Start recording</string>
-
+    <string name="too_few_taps_title">Too few taps</string>
+    <string name="too_few_taps_description">You have to tap at least 3 times</string>
     <string name="contact_image">Contact image</string>
 
     <!-- Select verification method -->

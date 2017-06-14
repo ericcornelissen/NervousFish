@@ -7,7 +7,7 @@
     <string name="cancel">Annuleren</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
-    <string name="dsa_key">DSA sleutel</string>
+    <string name="ed25519_key">Ed25519 sleutel</string>
     <string name="edit">Bewerken</string>
     <string name="logo">Logo</string>
     <string name="more">Meer</string>
@@ -55,7 +55,6 @@
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
     <string name="contact_added_popup_explanation">De uitwisseling was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
-
     <string name="popup_log_out_title">Uitloggen?</string>
     <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
     <string name="popup_enable_bluetooth_title">Bluetooth aanzetten?</string>
@@ -71,6 +70,8 @@
     <string name="tap_me">Tik hier!</string>
     <string name="stop_recording">Stop met opnemen</string>
     <string name="start_recording">Start met opnemen</string>
+    <string name="too_few_taps_title">Te weinig getikt</string>
+    <string name="too_few_taps_description">Je moet minimaal 3 keer tikken</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
