@@ -20,6 +20,6 @@ public final class BluetoothConnectedEvent {
     }
 
     public IBluetoothThread getThread() {
-        return thread;
+        return this.thread;
     }
 }

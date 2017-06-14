@@ -113,7 +113,7 @@ public class RSAKeyTest {
     @Test
     public void testEqualsReturnsFalseForDifferentKeyTypes() {
         IKey keyA = new RSAKey("Personal", "foo", "bar");
-        IKey keyB = new SimpleKey("Computer", "Hello world!");
+        IKey keyB = new Ed25519Key("Computer", "Hello world!");
         assertFalse(keyA.equals(keyB));
     }
 
