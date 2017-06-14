@@ -71,6 +71,7 @@ public final class LoginActivity extends AppCompatActivity {
         editPassword.setOnClickListener(this::showCustomKeyboard);
         editPassword.setCustomSelectionActionModeCallback(new LoginActivity.EditPasswordSelectionCallback());
 
+        // Disable the default keyboard
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         LOGGER.info("Activity created");
