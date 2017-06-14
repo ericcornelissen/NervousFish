@@ -70,6 +70,8 @@
     <string name="tap_me">Tik hier!</string>
     <string name="stop_recording">Stop met opnemen</string>
     <string name="start_recording">Start met opnemen</string>
+    <string name="too_few_taps_title">Te weinig getikt</string>
+    <string name="too_few_taps_description">Je moet minimaal 3 keer tikken</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
