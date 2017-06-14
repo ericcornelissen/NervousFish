@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
-import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -55,16 +57,19 @@ public final class LoginActivity extends AppCompatActivity {
         this.keyboardView = (KeyboardView) this.findViewById(R.id.keyboardview);
         this.keyboardView.setKeyboard(keyboard);
         this.keyboardView.setPreviewEnabled(false);
-        this.keyboardView.setOnKeyboardActionListener(new MyOnKeyboardActionListener());
+        this.keyboardView.setOnKeyboardActionListener(new OnCustomKeyboardActionListener());
 
-        this.findViewById(R.id.login_password_input).setOnFocusChangeListener((v, hasFocus) -> {
+        final EditText editPassword = (EditText) this.findViewById(R.id.login_password_input);
+
+        editPassword.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 this.showCustomKeyboard(v);
             } else {
                 this.hideCustomKeyboard();
             }
         });
-        this.findViewById(R.id.login_password_input).setOnClickListener(this::showCustomKeyboard);
+        editPassword.setOnClickListener(this::showCustomKeyboard);
+        editPassword.setCustomSelectionActionModeCallback(new LoginActivity.EditPasswordSelectionCallback());
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -139,7 +144,29 @@ public final class LoginActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    private final class MyOnKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
+    private static final class EditPasswordSelectionCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(final ActionMode mode) {
+            // Unused
+        }
+    }
+
+    private final class OnCustomKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
         @Override
         public void onPress(final int primaryCode) {
             // Unused
