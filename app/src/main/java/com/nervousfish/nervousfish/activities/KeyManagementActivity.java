@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
@@ -43,16 +46,22 @@ public class KeyManagementActivity extends Activity {
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
         String title = "";
+        Profile myProfile = null;
         try {
-            final Profile myProfile = database.getProfiles().get(0);
-            title = myProfile.getPublicKey().getName();
-            key = myProfile.getPublicKey().getKey().split(" ");
+            myProfile = database.getProfiles().get(0);
+            title = myProfile.getKeyPairs().get(0).getName();
+            key = myProfile.getKeyPairs().get(0).getPublicKey().getKey().split(" ");
 
         } catch (IOException e) {
             LOGGER.error("Could not get my public key from the database ", e);
         }
 
-        ListviewActivityHelper.setKeys(this, this.myProfile.getKeys(), R.id.list_view_contact);
+        final ArrayList<IKey> list = new ArrayList<>();
+        for (KeyPair kp : myProfile.getKeyPairs()) {
+            list.add(kp.getPublicKey());
+        }
+
+        ListviewActivityHelper.setKeys(this, list, R.id.list_view_contact);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
