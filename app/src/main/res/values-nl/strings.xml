@@ -50,7 +50,6 @@
     <string name="profile_created_title">Profiel gemaakt</string>
     <string name="profile_created_explanation">Je profiel is succesvol aangemaakt.</string>
     <string name="profile_not_created_title">Kon geen profiel maken</string>
-    <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
