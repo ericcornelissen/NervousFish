@@ -94,8 +94,6 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="contact_already_exists_popup">Het contact bestaat al</string>
-    <string name="contact_already_exists_explanation">Het contact dat je wilde toevoegen staat al in je contacten lijst.</string>
     <string name="something_went_wrong_QR_popup_explanation">Er ging iets verkeerd bij het scannen van de QR code, probeer het opnieuw.</string>
 
     <!-- NFC -->

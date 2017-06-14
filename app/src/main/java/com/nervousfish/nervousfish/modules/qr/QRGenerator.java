@@ -77,12 +77,13 @@ public final class QRGenerator {
      * @return The key it corresponds to.
      */
     public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
+        final String spaceBar = " ";
         final String[] messageComponents = qrMessage.split(", ");
         System.out.println(Arrays.toString(messageComponents));
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(" ")[0],
-                        messageComponents[COMPONENT_KEY].split(" ")[1]);
+                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
+                        messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
             case ConstantKeywords.ED25519_KEY:
                 return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
             default:

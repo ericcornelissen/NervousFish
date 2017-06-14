@@ -92,8 +92,6 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="contact_already_exists_popup">Contact already exists</string>
-    <string name="contact_already_exists_explanation">The contact you tried to add is already in the contact list.</string>
     <string name="something_went_wrong_QR_popup_explanation">Something went wrong while scanning the QR code, please try again.</string>
 
     <!-- WaitActivity -->
