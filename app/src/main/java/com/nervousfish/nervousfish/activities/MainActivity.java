@@ -97,7 +97,7 @@ public final class MainActivity extends AppCompatActivity {
 
         // Bluetooth exchange result
         final Intent intent = this.getIntent();
-        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH);
+        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE);
         this.showSuccessfulBluetoothPopup(successfulBluetooth);
 
         // Initialize sorter
