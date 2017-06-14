@@ -156,7 +156,7 @@ public final class WaitActivity extends Activity {
     private void evaluateData() {
         LOGGER.info("Evaluating data");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         this.startActivity(intent);
     }
 
