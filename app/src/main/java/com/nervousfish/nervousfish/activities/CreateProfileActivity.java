@@ -74,7 +74,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 final Profile profile = new Profile(name, keyPair);
                 database.addProfile(profile);
                 this.showProfileCreatedDialog();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 this.showProfileNotCreatedDialog();
             }
         } else {

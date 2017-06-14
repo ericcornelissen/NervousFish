@@ -11,7 +11,7 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 /**
  * Helper method for the logical functionality of the {@link CreateProfileActivity}.
  */
-class CreateProfileHelper {
+final class CreateProfileHelper {
 
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
@@ -40,11 +40,11 @@ class CreateProfileHelper {
     KeyPair generateKeyPair(final IKey.Types keyType) {
         switch (keyType) {
             case RSA:
-                return this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME);
+                return this.keyGenerator.generateRSAKeyPair(DEFAULT_KEY_NAME);
             case Simple:
                 final IKey publicKey = new SimpleKey("public", "foo");
                 final IKey privateKey = new SimpleKey("private", "bar");
-                return new KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME, publicKey, privateKey);
+                return new KeyPair(DEFAULT_KEY_NAME, publicKey, privateKey);
             default:
                 throw new IllegalArgumentException("The selected key is not implemented");
         }
@@ -56,7 +56,7 @@ class CreateProfileHelper {
      */
     boolean validateName(final EditText input) {
         final String name = input.getText().toString();
-        if (this.isValidName(name)) {
+        if (isValidName(name)) {
             input.setBackgroundColor(Color.TRANSPARENT);
         } else {
             input.setBackgroundColor(this.alertColor);
@@ -72,7 +72,7 @@ class CreateProfileHelper {
      */
     boolean validatePassword(final EditText input) {
         final String password = input.getText().toString();
-        if (this.isValidPassword(password)) {
+        if (isValidPassword(password)) {
             input.setBackgroundColor(Color.TRANSPARENT);
         } else {
             input.setBackgroundColor(this.alertColor);
@@ -106,7 +106,7 @@ class CreateProfileHelper {
      * @param name The name that has been entered.
      * @return a {@link boolean} indicating whether or not the name is valid.
      */
-    private boolean isValidName(final String name) {
+    private static boolean isValidName(final String name) {
         return name != null
                 && !name.isEmpty()
                 && !name.trim().isEmpty();
@@ -119,7 +119,7 @@ class CreateProfileHelper {
      * @param password The password that has been entered.
      * @return a {@link boolean} indicating whether or not the password is valid.
      */
-    private boolean isValidPassword(final String password) {
+    private static boolean isValidPassword(final String password) {
         return password != null
                 && !password.isEmpty()
                 && !password.trim().isEmpty()
