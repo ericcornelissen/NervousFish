@@ -51,7 +51,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-        serviceLocator = NervousFish.getServiceLocator();
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         try {
             this.profile = serviceLocator.getDatabase().getProfiles().get(0);
@@ -131,13 +131,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             final Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
             this.startActivity(intent);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("IllegalArgumentException in addNewContact", e);
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(this.getString(R.string.contact_already_exists_popup))
-                    .setContentText(this.getString(R.string.contact_already_exists_explanation))
-                    .setConfirmText(this.getString(R.string.dialog_ok))
-                    .show();
         } catch (ArrayIndexOutOfBoundsException e) {
             LOGGER.error("ArrayIndexOutOfBoundsException in addNewContact", e);
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
