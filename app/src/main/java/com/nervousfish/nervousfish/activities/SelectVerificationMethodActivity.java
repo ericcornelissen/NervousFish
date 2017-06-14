@@ -10,6 +10,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -25,11 +26,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * Activity used to select a verification method.
  */
-public class SelectVerificationMethodActivity extends AppCompatActivity {
+public final class SelectVerificationMethodActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SelectVerificationMethodActivity");
 
     private IServiceLocator serviceLocator;
+    private IBluetoothHandler bluetoothHandler;
 
     /**
      * {@inheritDoc}
@@ -38,7 +40,9 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_select_verification_method);
+
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.bluetoothHandler = serviceLocator.getBluetoothHandler();
 
         LOGGER.info("Activity created");
     }
@@ -54,8 +58,8 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
             case R.id.select_visual_verification:
                 LOGGER.info("Selected visual verification method, opening activity");
                 try {
-                    this.serviceLocator.getBluetoothHandler().send(new VerificationMethod(VerificationMethodEnum.VISUAL));
-                } catch (IOException e) {
+                    this.bluetoothHandler.send(new VerificationMethod(VerificationMethodEnum.VISUAL));
+                } catch (final IOException e) {
                     LOGGER.error("Sending the Verification VISUAL went wrong: ", e);
                 }
                 intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
@@ -63,14 +67,14 @@ public class SelectVerificationMethodActivity extends AppCompatActivity {
             case R.id.select_rhythm_verification:
                 LOGGER.info("Selected rhythm verification method, opening activity");
                 try {
-                    this.serviceLocator.getBluetoothHandler().send(new VerificationMethod(VerificationMethodEnum.RHYTHM));
-                } catch (IOException e) {
+                    this.bluetoothHandler.send(new VerificationMethod(VerificationMethodEnum.RHYTHM));
+                } catch (final IOException e) {
                     LOGGER.error("Sending the Verification RHYTHM went wrong: ", e);
                 }
                 intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
                 break;
             default:
-                LOGGER.warn("unknown verification method selected, view: " + view);
+                LOGGER.warn("unknown verification method selected, view: {}", view);
                 this.showUnknownVerificationMethodPopup();
                 return;
         }

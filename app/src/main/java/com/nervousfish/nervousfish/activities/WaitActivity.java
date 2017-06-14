@@ -12,6 +12,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -33,6 +34,7 @@ public final class WaitActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
+    private IDatabase database;
     private Object dataReceived;
     private Object tapCombination;
 
@@ -44,6 +46,7 @@ public final class WaitActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.database = this.serviceLocator.getDatabase();
 
         final Intent intent = this.getIntent();
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
@@ -68,7 +71,7 @@ public final class WaitActivity extends Activity {
         this.serviceLocator.registerToEventBus(this);
 
         if (this.dataReceived != null && this.tapCombination != null) {
-            this.evaluateData();
+            this.goToMainActivity();
         }
 
         LOGGER.info("Activity started");
@@ -107,7 +110,7 @@ public final class WaitActivity extends Activity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called, type is " + event.getClazz());
+        LOGGER.info("onNewDataReceivedEvent called, type is {}", event.getClazz());
         if (event.getClazz().equals(VerificationMethod.class)) {
             final VerificationMethodEnum verificationMethod = ((VerificationMethod) event.getData()).getVerificationMethod();
 
@@ -130,14 +133,14 @@ public final class WaitActivity extends Activity {
             final Contact contact = (Contact) event.getData();
             try {
                 LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
+                this.database.addContact(contact);
             } catch (IOException | IllegalArgumentException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
 
             //This needs to be outside of the try catch block
             this.dataReceived = contact;
-            this.evaluateData();
+            this.goToMainActivity();
         }
     }
 
@@ -153,10 +156,10 @@ public final class WaitActivity extends Activity {
     /**
      * Evaluate the data received for Bluetooth.
      */
-    private void evaluateData() {
-        LOGGER.info("Evaluating data");
+    private void goToMainActivity() {
+        LOGGER.info("Going to MainActivity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         this.startActivity(intent);
     }
 
