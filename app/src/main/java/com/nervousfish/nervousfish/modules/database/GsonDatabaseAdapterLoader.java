@@ -122,7 +122,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
         final Gson gsonParser = gsonBuilder.create();
         try {
             final String databaseFileString = readDatabaseToString();
-            final String databaseJson = encryptor.decryptWithPassword(databaseFileString, key.getEncoded());
+            final String databaseJson = encryptor.decryptWithPassword(databaseFileString, key);
             return gsonParser.fromJson(databaseJson, TYPE_DATABASE);
         } catch (IllegalBlockSizeException e) {
             throw new IOException(DATABASE_WRONG_SIZE, e);

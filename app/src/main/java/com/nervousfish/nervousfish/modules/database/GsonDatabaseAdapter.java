@@ -206,7 +206,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
             final Gson gsonParser = gsonBuilder.create();
 
             final String databaseJson = gsonParser.toJson(getDatabase());
-            final String encryptedDatabase = encryptor.encryptWithPassword(databaseJson, getEncryptionKey().getEncoded());
+            final String encryptedDatabase = encryptor.encryptWithPassword(databaseJson, getEncryptionKey());
             try (Writer writer = this.fileSystem.getWriter(databasePath)) {
                 writer.write(encryptedDatabase);
             }
@@ -290,7 +290,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
         try {
             final SecretKey key = encryptor.makeKey(password);
-            final String databaseEncrypted = encryptor.encryptWithPassword(databaseJson, key.getEncoded());
+            final String databaseEncrypted = encryptor.encryptWithPassword(databaseJson, key);
 
             try (Writer writer = this.fileSystem.getWriter(databasePath)) {
                 writer.write(databaseEncrypted);

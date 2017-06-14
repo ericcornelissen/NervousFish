@@ -39,7 +39,7 @@ public interface IEncryptor extends IModule {
      * @param key       The secret key made from the password.
      * @return The encrypted bytearray.
      */
-    String encryptWithPassword(String toEncrypt, byte[] key)
+    String encryptWithPassword(String toEncrypt, SecretKey key)
             throws IllegalBlockSizeException, BadPaddingException, EncryptionException;
 
     /**
@@ -49,7 +49,7 @@ public interface IEncryptor extends IModule {
      * @param key       The secret key made from the password.
      * @return The decrypted bytearray.
      */
-    String decryptWithPassword(String toDecrypt, byte[] key) throws EncryptionException, IllegalBlockSizeException, BadPaddingException;
+    String decryptWithPassword(String toDecrypt, SecretKey key) throws EncryptionException, IllegalBlockSizeException, BadPaddingException;
 
 
 }

@@ -109,18 +109,17 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
-    public String decryptWithPassword(final String toDecrypt, final byte[] key) throws EncryptionException,
+    public String decryptWithPassword(final String toDecrypt, final SecretKey key) throws EncryptionException,
             IllegalBlockSizeException, BadPaddingException {
         LOGGER.info("Started decrypting with password");
 
-        final SecretKey secretKey = new SecretKeySpec(key, 0, key.length, PBE_WITH_MD5_AND_DES);
 
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.DECRYPT_MODE;
-        final Cipher cipher = getCipher(secretKey, ivSpec, mode);
+        final Cipher cipher = getCipher(key, ivSpec, mode);
 
         try {
             final byte[] decodedValue = Base64.decode(toDecrypt, Base64.DEFAULT);
@@ -136,18 +135,17 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
-    public String encryptWithPassword(final String toEncrypt, final byte[] key) throws EncryptionException,
+    public String encryptWithPassword(final String toEncrypt, final SecretKey key) throws EncryptionException,
             IllegalBlockSizeException, BadPaddingException {
         LOGGER.info("Started encrypting with password");
 
-        final SecretKey secretKey = new SecretKeySpec(key, 0, key.length, PBE_WITH_MD5_AND_DES);
 
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.ENCRYPT_MODE;
-        final Cipher cipher = getCipher(secretKey, ivSpec, mode);
+        final Cipher cipher = getCipher(key, ivSpec, mode);
 
         try {
             final byte[] cipherText = cipher.doFinal(toEncrypt.getBytes(UTF_8));
