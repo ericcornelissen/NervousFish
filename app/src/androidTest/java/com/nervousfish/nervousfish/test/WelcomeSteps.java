@@ -28,8 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class WelcomeSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<>(WelcomeActivity.class, true, false);
