@@ -1,7 +1,21 @@
 language: android
 jdk: oraclejdk8
 
-# Android details
+
+before_script:
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a # Create emulator
+  - emulator -avd test -no-audio -no-window & # Start emulator
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+after_success:
+  - ./gradlew jacocoTestReport coveralls
+
+
 android:
   components:
     - tools
@@ -15,7 +29,7 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
     - addon-google_apis-google-19
-    
+
     # The SDK version used to compile your project
     - android-22
     - android-25
@@ -24,7 +38,12 @@ android:
     - sys-img-armeabi-v7a-android-22
     - sys-img-armeabi-v7a-android-25
 
-# Enable parallelisation
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+
 env:
   matrix:
     - COMPONENT=unit
@@ -33,28 +52,10 @@ env:
     - COMPONENT=sample
     - COMPONENT=build
 
-# Start emulators
-before_script:
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+git:
+  depth: 3 # Clone the last 3 commits
+  lfs_skip_smudge: true # Skip LFS (Large File Storage) objects
 
-# Upload test report to coveralls
-after_success:
-  - ./gradlew jacocoTestReport coveralls
-
-# Manage caching
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.android/build-cache
-
-# Manage notifications
 notifications:
   email:
     on_success: never
