@@ -1,6 +1,8 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
 
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionLostEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -20,6 +22,9 @@ import java.util.Arrays;
 public final class AndroidBluetoothConnectedThread extends Thread implements IBluetoothThread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectedThread");
     private static final int BUFFER_SIZE = 4096;
+    private static final int RECEIVED_DATA_BUFFER_SIZE = 1024 * 1024;
+
+    private final byte[] receivedData = new byte[RECEIVED_DATA_BUFFER_SIZE];
 
     private final BluetoothSocket socket;
     private final InputStream inStream;
@@ -63,18 +68,18 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
         setName("AndroidBluetoothConnectedThread thread");
 
         final byte[] buffer = new byte[BUFFER_SIZE];
-        try {
-            // Read from the InputStream
-            while (true) {
-                final int bytes = inStream.read(buffer);
-                LOGGER.info("Read {} bytes", bytes);
+        // Read from the InputStream
+            try {
+                while (true) {
+                    final int bytes = inStream.read(buffer);
+                    LOGGER.info("Read {} bytes", bytes);
 
-                this.dataReceiver.dataReceived(buffer);
+                    this.dataReceiver.dataReceived(buffer);
+                }
+            } catch (final IOException e) {
+                LOGGER.warn("Disconnected from the paired device", e);
+                this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
             }
-        } catch (final IOException e) {
-            LOGGER.warn("Disconnected from the paired device", e);
-            this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
-        }
     }
 
     /**
@@ -86,6 +91,7 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
         LOGGER.info("Writing the bytes {} to the outputstream", Arrays.toString(buffer));
         try {
             outStream.write(buffer);
+            outStream.flush();
         } catch (final IOException e) {
             LOGGER.error("Exception during writing", e);
         }

@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
+import java.util.Arrays;
 
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
@@ -24,6 +27,7 @@ abstract class APairingHandler implements IPairingHandler {
     private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
+    private byte[] readBuffer = new byte[0];
 
     /**
      * Prevent instantiation by other classes outside it's package
@@ -43,15 +47,43 @@ abstract class APairingHandler implements IPairingHandler {
         return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
             @Override
             public void dataReceived(final byte[] bytes) {
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                byte[] newBuffer = trim(bytes);
+                newBuffer = new byte[readBuffer.length + bytes.length];
+                System.arraycopy(readBuffer, 0, newBuffer, 0, readBuffer.length);
+                System.arraycopy(bytes, 0, newBuffer, readBuffer.length, bytes.length);
+
+                System.out.println(newBuffer);
+                System.out.println(newBuffer.length);
+                try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
                      ObjectInputStream ois = new ObjectInputStream(bis)) {
+
                     final DataWrapper object = (DataWrapper) ois.readObject();
                     APairingHandler.this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+
+                    readBuffer = new byte[0];
                 } catch (final ClassNotFoundException | IOException e) {
-                    LOGGER.error(" Couldn't start deserialization!", e);
+                    if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
+                        final byte[] newReadBuffer = new byte[readBuffer.length + bytes.length];
+                        System.arraycopy(readBuffer, 0, newReadBuffer, 0, readBuffer.length);
+                        System.arraycopy(bytes, 0, newReadBuffer, readBuffer.length, bytes.length);
+                        readBuffer = newReadBuffer;
+                    } else {
+                        LOGGER.error(" Couldn't start deserialization!", e);
+                    }
                 }
             }
         });
+    }
+
+    static byte[] trim(byte[] bytes)
+    {
+        int i = bytes.length - 1;
+        while (i >= 0 && bytes[i] == 0)
+        {
+            --i;
+        }
+
+        return Arrays.copyOf(bytes, i + 1);
     }
 
     /**
