@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -37,15 +38,15 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
+    @DesignedForExtension
     public PairingWrapper<IDataReceiver> getDataReceiver() {
         return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
             @Override
             public void dataReceived(final byte[] bytes) {
-                final DataWrapper object;
                 try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                      ObjectInputStream ois = new ObjectInputStream(bis)) {
-                    object = (DataWrapper) ois.readObject();
-                    serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                    final DataWrapper object = (DataWrapper) ois.readObject();
+                    APairingHandler.this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 } catch (final ClassNotFoundException | IOException e) {
                     LOGGER.error(" Couldn't start deserialization!", e);
                 }
@@ -58,7 +59,7 @@ abstract class APairingHandler implements IPairingHandler {
      */
     @Override
     public final byte[] objectToBytes(final Serializable object) throws IOException {
-        LOGGER.info("Begin serializing object:" + object);
+        LOGGER.info("Begin serializing object: {}", object);
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
@@ -73,12 +74,12 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public void send(final Serializable object) throws IOException {
-        LOGGER.info("Begin writing object:" + object);
-        send(objectToBytes(object));
+    public final void send(final Serializable object) throws IOException {
+        LOGGER.info("Begin writing object: {}", object);
+        this.send(this.objectToBytes(object));
     }
 
-    protected IServiceLocator getServiceLocator() {
+    protected final IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }
 }

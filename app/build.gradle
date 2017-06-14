@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.nervousfish.nervousfish"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 25 //noinspection
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -61,6 +61,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
     compile 'junit:junit:4.12'
     compile 'com.google.code.findbugs:annotations:2.0.1'
+    compile 'net.i2p.crypto:eddsa:0.1.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.8.9'

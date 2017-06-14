@@ -94,7 +94,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 try {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfiles().get(0);
-                    serviceLocator.getDatabase().updateProfile(profile, new Profile(stringValue, profile.getKeyPair()));
+                    serviceLocator.getDatabase().updateProfile(profile, new Profile(stringValue, profile.getKeyPairs()));
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }

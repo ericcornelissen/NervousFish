@@ -21,7 +21,7 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  * with a device. It runs straight through; the connection either
  * succeeds or fails.
  */
-class AndroidBluetoothConnectThread extends Thread {
+class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectThread");
     private final BluetoothSocket socket;
     private final IServiceLocator serviceLocator;
@@ -81,7 +81,12 @@ class AndroidBluetoothConnectThread extends Thread {
     /**
      * Cancels the connect thread and closes the socket
      */
-    void cancel() {
+    public void cancel() {
         LOGGER.warn("Cancelled!");
+        try {
+            socket.close();
+        } catch (final IOException e) {
+            LOGGER.error("Closing socket", e);
+        }
     }
 }
