@@ -77,7 +77,6 @@
                 style="@style/MenuButtonsStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onPairingButtonClicked"
                 android:src="@android:drawable/stat_sys_data_bluetooth"
                 fab:fab_label="@string/bluetooth" />
 
@@ -86,7 +85,6 @@
                 style="@style/MenuButtonsStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onPairingButtonClicked"
                 android:src="@drawable/nfc"
                 fab:fab_label="@string/nfc" />
 
@@ -95,7 +93,6 @@
                 style="@style/MenuButtonsStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onPairingButtonClicked"
                 android:src="@drawable/qr"
                 fab:fab_label="@string/qr" />
         </com.github.clans.fab.FloatingActionMenu>
