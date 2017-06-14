@@ -129,4 +129,8 @@
             android:keyEdgeFlags="right"
             android:keyLabel="m" />
     </Row>
+    <Row>
+        <!-- Needed because people are used to having their fingers at certain places for certain keys.
+        Without this empty row they would have to move their fingers to an awkwardly low placed key bar -->
+    </Row>
 </Keyboard>
