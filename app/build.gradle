@@ -14,6 +14,7 @@ android {
     defaultConfig {
         applicationId "com.nervousfish.nervousfish"
         minSdkVersion minSdk
+        //noinspection OldTargetApi
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
