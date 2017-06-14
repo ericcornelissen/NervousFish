@@ -49,7 +49,6 @@
     <string name="profile_created_title">Profile created</string>
     <string name="profile_created_explanation">Your profile is successfully created.</string>
     <string name="profile_not_created_title">Can\'t create profile</string>
-    <string name="profile_not_created_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
 
 
     <!-- Main activity -->
