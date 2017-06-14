@@ -126,6 +126,7 @@ public final class LoginActivity extends AppCompatActivity {
             final String providedPassword = passwordInput.getText().toString();
             final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
             if (wrongPassword) {
+
                 LOGGER.warn("Password incorrect!");
                 mError.setVisibility(View.VISIBLE);
             } else {
@@ -144,6 +145,9 @@ public final class LoginActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
+    /**
+     * Lets all its methods return false so that the copy/paste menu won't appear / work
+     */
     private static final class EditPasswordSelectionCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
