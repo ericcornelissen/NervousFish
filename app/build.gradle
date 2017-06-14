@@ -70,6 +70,7 @@ dependencies {
     compile 'junit:junit:4.12'
     compile 'com.google.code.findbugs:annotations:2.0.1'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'net.i2p.crypto:eddsa:0.1.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.8.9'

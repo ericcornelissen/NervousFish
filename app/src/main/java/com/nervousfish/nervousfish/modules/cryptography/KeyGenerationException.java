@@ -33,7 +33,7 @@ public final class KeyGenerationException extends RuntimeException {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new KeyGenerationException.SerializationProxy(this);
     }
 
     /**

@@ -28,15 +28,15 @@ final class DataWrapper implements Serializable {
     /**
      * @return The data object {@link DataWrapper} wraps
      */
-    public Serializable getData() {
-        return new DataWrapper(this.data).data;
+    Serializable getData() {
+        return this.data;
     }
 
     /**
      * @return The class of the thing the {@link DataWrapper} wraps
      */
-    public Class<?> getClazz() {
-        return clazz;
+    Class<?> getClazz() {
+        return this.clazz;
     }
 
     /**
@@ -61,8 +61,9 @@ final class DataWrapper implements Serializable {
      * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
      * ordinary serialization - is far more dangerous
      */
-    // A private constructor is safer than a hidden constructor
-    @SuppressWarnings("PMD.AccessorClassGeneration")
+    @SuppressWarnings({"PMD.AccessorClassGeneration", "SerializableHasSerializationMethods"})
+    // 1) A private constructor is safer than a hidden constructor
+    // 2) SerializationProxy doesn't need the write method, because it creates the class by calling the contstructor in readResolve
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
         private final Serializable data;
@@ -72,7 +73,7 @@ final class DataWrapper implements Serializable {
          * @param wrapper The current instance of the proxy
          */
         SerializationProxy(final DataWrapper wrapper) {
-            this.data = wrapper.data;
+            this.data = wrapper.getData();
         }
 
         /**
@@ -80,7 +81,7 @@ final class DataWrapper implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new DataWrapper(data);
+            return new DataWrapper(this.data);
         }
     }
 }

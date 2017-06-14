@@ -14,7 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
@@ -56,8 +57,8 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final byte[] objectToBytes(final Serializable object) throws IOException {
-        LOGGER.info("Begin serializing object:" + object);
+    public final byte[] objectToBytes(final Serializable object) {
+        LOGGER.info("Begin serializing object: {}", object);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(new DataWrapper(object));
@@ -73,18 +74,22 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public void send(final Serializable object) throws IOException {
+    public final void send(final Serializable object) {
         LOGGER.info("Begin writing object: {}", object);
-        send(objectToBytes(object));
+        this.send(this.objectToBytes(object));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void send(final Serializable object, final int key) throws IOException {
+    public final void send(final Serializable object, final int key) {
         LOGGER.info("Begin writing object encoded with key: {}", key);
-        send(objectToBytes(object));
+        this.send(this.objectToBytes(object));
+    }
+
+    protected final IServiceLocator getServiceLocator() {
+        return this.serviceLocator;
     }
 
     /**
@@ -110,6 +115,6 @@ abstract class APairingHandler implements IPairingHandler {
      * Ensure that the instance meets its class invariant
      */
     private void ensureClassInvariant() {
-        assertNotNull(this.serviceLocator);
+        assertThat(this.serviceLocator, notNullValue());
     }
 }
