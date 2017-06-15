@@ -77,18 +77,18 @@ public final class LoginActivity extends AppCompatActivity {
         LOGGER.info("Activity created");
     }
 
-    public void hideCustomKeyboard() {
+    private void hideCustomKeyboard() {
         this.keyboardView.setVisibility(View.GONE);
         this.keyboardView.setEnabled(false);
     }
 
-    public void showCustomKeyboard(final View view) {
+    private void showCustomKeyboard(final View view) {
         this.keyboardView.setVisibility(View.VISIBLE);
         this.keyboardView.setEnabled(true);
         ((InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public boolean isCustomKeyboardVisible() {
+    private boolean isCustomKeyboardVisible() {
         return this.keyboardView.getVisibility() == View.VISIBLE;
     }
 
@@ -151,39 +151,39 @@ public final class LoginActivity extends AppCompatActivity {
      */
     private static final class EditPasswordSelectionCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+        public boolean onCreateActionMode(final ActionMode actionMode, final Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+        public boolean onPrepareActionMode(final ActionMode actionMode, final Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+        public boolean onActionItemClicked(final ActionMode actionMode, final MenuItem menuItem) {
             return false;
         }
 
         @Override
-        public void onDestroyActionMode(final ActionMode mode) {
+        public void onDestroyActionMode(final ActionMode actionMode) {
             // Unused
         }
     }
 
     private final class OnCustomKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
         @Override
-        public void onPress(final int primaryCode) {
+        public void onPress(final int i) {
             // Unused
         }
 
         @Override
-        public void onRelease(final int primaryCode) {
+        public void onRelease(final int i) {
             // Unused
         }
 
         @Override
-        public void onKey(final int primaryCode, final int[] keyCodes) {
+        public void onKey(final int i, final int[] ints) {
             final View focusCurrent = LoginActivity.this.getWindow().getCurrentFocus();
             if (focusCurrent == null) {
                 return;
@@ -196,11 +196,11 @@ public final class LoginActivity extends AppCompatActivity {
             final EditText edittext = (EditText) focusCurrent;
             final Editable editable = edittext.getText();
             final int start = edittext.getSelectionStart();
-            editable.insert(start, Character.toString((char) primaryCode));
+            editable.insert(start, Character.toString((char) i));
         }
 
         @Override
-        public void onText(final CharSequence text) {
+        public void onText(final CharSequence charSequence) {
             // Unused
         }
 
