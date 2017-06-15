@@ -19,6 +19,7 @@ import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,16 @@ public class ServiceLocator implements IServiceLocator {
                    final IBluetoothHandler bluetoothHandler,
                    final INfcHandler nfcHandler,
                    final IQRHandler qrHandler) {
+        Validate.notBlank(androidFilesDir);
+        Validate.notNull(database);
+        Validate.notNull(keyGenerator);
+        Validate.notNull(encryptor);
+        Validate.notNull(fileSystem);
+        Validate.notNull(constants);
+        Validate.notNull(bluetoothHandler);
+        Validate.notNull(nfcHandler);
+        Validate.notNull(qrHandler);
+
         this.androidFilesDir = androidFilesDir;
         this.database = database;
         this.keyGenerator = keyGenerator;
@@ -162,7 +173,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final String getAndroidFilesDir() {
-        this.assertExists(this.androidFilesDir, "androidFilesDir");
+        ServiceLocator.assertExists(this.androidFilesDir, "androidFilesDir");
         return this.androidFilesDir;
     }
 
@@ -171,7 +182,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IDatabase getDatabase() {
-        this.assertExists(this.database, "database");
+        ServiceLocator.assertExists(this.database, "database");
         return this.database;
     }
 
@@ -180,7 +191,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IKeyGenerator getKeyGenerator() {
-        this.assertExists(this.keyGenerator, "keyGenerator");
+        ServiceLocator.assertExists(this.keyGenerator, "keyGenerator");
         return this.keyGenerator;
     }
 
@@ -189,7 +200,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IEncryptor getEncryptor() {
-        this.assertExists(this.encryptor, "encryptor");
+        ServiceLocator.assertExists(this.encryptor, "encryptor");
         return this.encryptor;
     }
 
@@ -198,7 +209,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IFileSystem getFileSystem() {
-        this.assertExists(this.fileSystem, "fileSystem");
+        ServiceLocator.assertExists(this.fileSystem, "fileSystem");
         return this.fileSystem;
     }
 
@@ -207,7 +218,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IConstants getConstants() {
-        this.assertExists(this.constants, "constants");
+        ServiceLocator.assertExists(this.constants, "constants");
         return this.constants;
     }
 
@@ -216,7 +227,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IBluetoothHandler getBluetoothHandler() {
-        this.assertExists(this.bluetoothHandler, "bluetoothHandler");
+        ServiceLocator.assertExists(this.bluetoothHandler, "bluetoothHandler");
         return this.bluetoothHandler;
     }
 
@@ -225,7 +236,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final INfcHandler getNFCHandler() {
-        this.assertExists(this.nfcHandler, "nfcHandler");
+        ServiceLocator.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }
 
@@ -234,7 +245,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IQRHandler getQRHandler() {
-        this.assertExists(this.qrHandler, "qrHandler");
+        ServiceLocator.assertExists(this.qrHandler, "qrHandler");
         return this.qrHandler;
     }
 
@@ -243,6 +254,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public void registerToEventBus(final Object object) {
+        Validate.notNull(object);
         EventBus.getDefault().register(object);
     }
 
@@ -251,6 +263,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public void unregisterFromEventBus(final Object object) {
+        Validate.notNull(object);
         EventBus.getDefault().unregister(object);
     }
 
@@ -258,8 +271,9 @@ public class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public void postOnEventBus(final Object object) {
-        EventBus.getDefault().post(object);
+    public void postOnEventBus(final Object message) {
+        Validate.notNull(message);
+        EventBus.getDefault().post(message);
     }
 
     /**
@@ -268,9 +282,9 @@ public class ServiceLocator implements IServiceLocator {
      * @param object The object to check
      * @param name   The name of the object
      */
-    private void assertExists(final Object object, final String name) {
+    private static void assertExists(final Object object, final String name) {
         if (object == null) {
-            LOGGER.error("The module \"%s\" is used before it is defined", name);
+            LOGGER.error("The module \"{}\" is used before it is defined", name);
             throw new ServiceLocator.ModuleNotFoundException("The module \"" + name + "\" is used before it is defined");
         }
     }
