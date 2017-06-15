@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
@@ -48,18 +49,15 @@ public final class KeyManagementActivity extends Activity {
         this.setContentView(R.layout.activity_key_management);
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
-        String title = "";
-        String[] key = {};
         try {
             this.myProfile = database.getProfiles().get(0);
-            title = this.myProfile.getKeyPairs().get(0).getName();
-            key = this.myProfile.getKeyPairs().get(0).getPublicKey().getKey().split(" ");
-
         } catch (IOException e) {
             LOGGER.error("Could not get my public key from the database ", e);
         }
+        final String title = this.myProfile.getKeyPairs().get(0).getName();
+        final String[] key = this.myProfile.getKeyPairs().get(0).getPublicKey().getKey().split(" ");
 
-        final ArrayList<IKey> list = new ArrayList<>();
+        final List<IKey> list = new ArrayList<>();
         for (final KeyPair kp : this.myProfile.getKeyPairs()) {
             list.add(kp.getPublicKey());
         }
@@ -72,17 +70,7 @@ public final class KeyManagementActivity extends Activity {
         builder.setTitle(title);
         builder.setMessage(String.format("Exponent: %s %nModulus: %s ", key[0], key[1]));
 
-        builder.setPositiveButton("Copy", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                final ClipboardManager clipboard = (ClipboardManager) KeyManagementActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN,
-                        KeyManagementActivity.this.myProfile.getKeyPairs().get(0).getPublicKey().getKey());
-                clipboard.setPrimaryClip(clip);
-            }
-        });
-
-        lv.setOnItemClickListener(new KeyManagementActivity.MyOnItemClickListener(builder));
+        lv.setOnItemClickListener(new KeyListClickListener(builder));
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_key_management);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -95,16 +83,35 @@ public final class KeyManagementActivity extends Activity {
         LOGGER.info("Activity created");
     }
 
-    private static class MyOnItemClickListener implements AdapterView.OnItemClickListener {
+    /**
+     * An {@link android.widget.AdapterView.OnItemClickListener}
+     * which listents to the clicks on keys in  the list view of {@link KeyManagementActivity}
+     */
+    private class KeyListClickListener implements AdapterView.OnItemClickListener {
         private final AlertDialog.Builder builder;
 
-        MyOnItemClickListener(final AlertDialog.Builder builder) {
+        /**
+         * A Constructor for {@link android.widget.AdapterView.OnItemClickListener} where we pass an
+         * Alertdialog builder
+         *
+         * @param builder An {@link android.support.v7.app.AlertDialog.Builder}
+         */
+        KeyListClickListener(final AlertDialog.Builder builder) {
             this.builder = builder;
         }
 
         @Override
         public final void onItemClick(final AdapterView<?> parent, final View view, final int position,
                                       final long id) {
+            builder.setPositiveButton("Copy", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    final ClipboardManager clipboard = (ClipboardManager) KeyManagementActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                    final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN,
+                            KeyManagementActivity.this.myProfile.getKeyPairs().get(0).getPublicKey().getKey());
+                    clipboard.setPrimaryClip(clip);
+                }
+            });
             this.builder.show();
         }
     }
