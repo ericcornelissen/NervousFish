@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -24,23 +25,24 @@ import java.util.Collection;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.GOOD_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.NAME_EMPTY;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
+
+
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
- * used.
+ * used. Suppresses return count to allow multiple returncodes while checking input fields.
  */
+@SuppressWarnings("checkstyle:ReturnCount")
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
-
-    private static final int GOOD_FIELD = 100;
-    private static final int EMPTY_FIELD = 101;
-    private static final int TOO_SHORT_FIELD = 102;
-    private static final int PASSWORD_TOO_SHORT = 103;
-    private static final int PASSWORD_EMPTY = 104;
-    private static final int NAME_EMPTY = 105;
-    private static final int PASSWORDS_NOT_EQUAL = 106;
-
-
     private IServiceLocator serviceLocator;
     private CreateProfileHelper helper;
     private EditText nameInput;
@@ -75,7 +77,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @param view The {@link View} clicked
      */
     public void onSubmitClick(final View view) {
-        switch (this.validateInputFields()) {
+        final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
+        switch (result) {
             case GOOD_FIELD:
                 final String name = this.nameInput.getText().toString();
                 final Collection<KeyPair> keyPair = this.helper.generateKeyPairs(IKey.Types.RSA);
@@ -101,6 +104,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
                 break;
+            case ALl_FIELDS_EMPTY:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
+                break;
             default:
                 break;
 
@@ -112,13 +118,20 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * This also means that the password and the repeat password should be the same,
      * and the password length is larger or equal to 6.
      *
-     * @return a {@link int} which is the result code of the various input validations
+     * @return a ExplicitFieldResultCodes which is the result code of the various input validations
      */
-    private int validateInputFields() {
-        if (this.helper.validateName(this.nameInput) == EMPTY_FIELD) {
+    private Constants.ExplicitFieldResultCodes validateInputFields() {
+        final Constants.InputFieldResultCodes nameValidation = this.helper.validateName(this.nameInput);
+        final Constants.InputFieldResultCodes passwordValidation = this.helper.validatePassword(this.passwordInput);
+        final Constants.InputFieldResultCodes repeatPasswordValidation = this.helper.validatePassword(this.repeatPasswordInput);
+
+        if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
+                && repeatPasswordValidation == EMPTY_FIELD) {
+            return ALl_FIELDS_EMPTY;
+        }
+        if (nameValidation == EMPTY_FIELD) {
             return NAME_EMPTY;
         }
-        final int passwordValidation = this.helper.validatePassword(this.passwordInput);
         if (passwordValidation == EMPTY_FIELD) {
             return PASSWORD_EMPTY;
         } else if (passwordValidation == TOO_SHORT_FIELD) {

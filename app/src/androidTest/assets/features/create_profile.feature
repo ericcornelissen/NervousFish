@@ -7,6 +7,8 @@ Feature: Create a profile
     And I click ok on the popup with a warning about creating a profile
     Then I should stay on the create profile activity
     And the name input field should become red
+    And the password input field should become red
+    And the repeat password input field should become red
 
   Scenario Outline: Clicking submit with valid input
       Given I am viewing the create profile activity
@@ -54,9 +56,9 @@ Feature: Create a profile
 
     Examples:
      | name         | password  | repeatpassword    |
-     | Drake        | a         | b                 |
-     | CJ           | ^&*)(     | NetAnders         |
-     | Darth Vader  | 6782      | 4578              |
+     | Drake        | abcdefg   | bcdefgh           |
+     | CJ           | ^&*)(8999 | NetAnders         |
+     | Darth Vader  | 67824444  | 4578              |
 
   Scenario Outline: Generating different key pairs
     Given I am viewing the create profile activity

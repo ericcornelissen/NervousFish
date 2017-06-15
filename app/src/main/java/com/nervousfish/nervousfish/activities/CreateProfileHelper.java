@@ -5,10 +5,15 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.CORRECT_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
 /**
  * Helper method for the logical functionality of the {@link CreateProfileActivity}.
@@ -16,9 +21,6 @@ import java.util.Collection;
 final class CreateProfileHelper {
 
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private static final int GOOD_FIELD = 100;
-    private static final int EMPTY_FIELD = 101;
-    private static final int TOO_SHORT_FIELD = 102;
 
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
 
@@ -63,28 +65,28 @@ final class CreateProfileHelper {
      * @param input The {@link EditText} to evaluate.
      * @return The resultcode of isvalidname.
      */
-    int validateName(final EditText input) {
+    Constants.InputFieldResultCodes validateName(final EditText input) {
         final String name = input.getText().toString();
-        if (this.isValidName(name) == GOOD_FIELD) {
+        if (this.isValidName(name) == CORRECT_FIELD) {
             input.setBackgroundColor(Color.TRANSPARENT);
-            return GOOD_FIELD;
+            return CORRECT_FIELD;
         } else if (this.isValidName(name) == EMPTY_FIELD) {
             input.setBackgroundColor(this.alertColor);
             return EMPTY_FIELD;
         }
-        return GOOD_FIELD;
+        return CORRECT_FIELD;
     }
 
     /**
      * @param input The {@link EditText} to evaluate.
      * @return The result code of the password validation.
      */
-    int validatePassword(final EditText input) {
+    Constants.InputFieldResultCodes validatePassword(final EditText input) {
         final String password = input.getText().toString();
         switch (this.isValidPassword(password)) {
-            case GOOD_FIELD:
+            case CORRECT_FIELD:
                 input.setBackgroundColor(Color.TRANSPARENT);
-                return GOOD_FIELD;
+                return CORRECT_FIELD;
             case EMPTY_FIELD:
                 input.setBackgroundColor(this.alertColor);
                 return EMPTY_FIELD;
@@ -92,7 +94,7 @@ final class CreateProfileHelper {
                 input.setBackgroundColor(this.alertColor);
                 return TOO_SHORT_FIELD;
             default:
-                return GOOD_FIELD;
+                return CORRECT_FIELD;
         }
     }
 
@@ -122,10 +124,10 @@ final class CreateProfileHelper {
      * @param name The name that has been entered.
      * @return a {@link boolean} indicating whether or not the name is valid.
      */
-    private int isValidName(final String name) {
+    private Constants.InputFieldResultCodes isValidName(final String name) {
         if (name != null && !name.isEmpty()
                 && !name.trim().isEmpty()) {
-            return GOOD_FIELD;
+            return CORRECT_FIELD;
         }
         return EMPTY_FIELD;
 
@@ -138,13 +140,13 @@ final class CreateProfileHelper {
      * @param password The password that has been entered.
      * @return a {@link int} indicating why the password is invalid or if it's valid.
      */
-    private int isValidPassword(final String password) {
+    private Constants.InputFieldResultCodes isValidPassword(final String password) {
         if (password.isEmpty() || password.trim().isEmpty()) {
             return EMPTY_FIELD;
         } else if (password.length() < MIN_PASSWORD_LENGTH) {
             return TOO_SHORT_FIELD;
         } else {
-            return GOOD_FIELD;
+            return CORRECT_FIELD;
         }
     }
 
