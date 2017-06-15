@@ -20,9 +20,6 @@ import java.util.Arrays;
 public final class AndroidBluetoothConnectedThread extends Thread implements IBluetoothThread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectedThread");
     private static final int BUFFER_SIZE = 4096;
-    private static final int RECEIVED_DATA_BUFFER_SIZE = 1024 * 1024;
-
-    private final byte[] receivedData = new byte[RECEIVED_DATA_BUFFER_SIZE];
 
     private final BluetoothSocket socket;
     private final InputStream inStream;

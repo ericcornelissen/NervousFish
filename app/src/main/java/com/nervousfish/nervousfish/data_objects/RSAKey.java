@@ -131,7 +131,7 @@ public final class RSAKey implements IKey {
         private static final long serialVersionUID = -5286281533321045061L;
         private final String name;
         private final String modulus;
-//        private final String exponent;
+        private final String exponent;
 
         /**
          * Constructs a new SerializationProxy
@@ -140,7 +140,7 @@ public final class RSAKey implements IKey {
         SerializationProxy(final RSAKey key) {
             this.name = key.name;
             this.modulus = key.modulus;
-//            this.exponent = key.exponent;
+            this.exponent = key.exponent;
         }
 
         /**
@@ -148,7 +148,7 @@ public final class RSAKey implements IKey {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new RSAKey(this.name, "b", "a");
+            return new RSAKey(this.name, modulus, exponent);
         }
     }
 }

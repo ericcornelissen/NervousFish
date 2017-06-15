@@ -11,7 +11,6 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.CannotHappenException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;

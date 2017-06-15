@@ -82,7 +82,7 @@ abstract class APairingHandler implements IPairingHandler {
      * @param bytes The byte[] to be trimmed
      * @return the newly trimmed byte[]
      */
-    private static byte[] trim(byte[] bytes) {
+    private static byte[] trim(final byte[] bytes) {
         int i = bytes.length - 1;
         while (i >= 0 && bytes[i] == 0) {
             --i;
