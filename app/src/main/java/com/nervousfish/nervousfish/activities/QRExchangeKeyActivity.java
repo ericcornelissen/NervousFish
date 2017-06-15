@@ -64,6 +64,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Returns to the previous activity.
+     *
      * @param view - the imagebutton
      */
     public void onBackButtonClick(final View view) {
@@ -73,6 +74,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Starts the scan qr feature.
+     *
      * @param view - the imagebutton
      */
     public void onScanButtonClick(final View view) {
@@ -120,8 +122,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             LOGGER.info("Adding new contact to database");
             //Name is the first part
             final String name = qrMessage.split(LINE)[0];
-            System.out.println(qrMessage);
-            System.out.println("---" + name);
             //Key is the second part
             final IKey key = QRGenerator.deconstructToKey(qrMessage.split(LINE)[1]);
 

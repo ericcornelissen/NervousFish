@@ -9,6 +9,7 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Before;
@@ -25,12 +26,11 @@ public class QRGeneratorTest {
     private static final int QRCODE_IMAGE_WIDTH = 400;
     private IKey publicKey;
     private String publicKeyString;
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
 
     @Before
     public void setUp() throws Exception {
-        final IKeyGenerator keyGenerator = serviceLocator.getKeyGenerator();
+        final IKeyGenerator keyGenerator = NervousFish.getServiceLocator().getKeyGenerator();
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
         publicKey = pair.getPublicKey();
         final String space = " ";
