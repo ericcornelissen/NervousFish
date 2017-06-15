@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 /**
  * Thrown when there is an issue with the database
  */
-public final class  DatabaseException extends RuntimeException {
+public final class DatabaseException extends RuntimeException {
 
     private static final long serialVersionUID = -5464890114687852303L;
 
