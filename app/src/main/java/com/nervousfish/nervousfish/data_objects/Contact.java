@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.data_objects;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,18 +32,8 @@ public final class Contact implements Serializable {
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final IKey key) {
-        if (name == null) {
-            LOGGER.error("Name was null");
-            throw new IllegalArgumentException("Name cannot be null");
-        }
-        if (name.isEmpty()) {
-            LOGGER.error("Name had 0 characters");
-            throw new IllegalArgumentException("Name must have more than 0 characters");
-        }
-        if (key == null) {
-            LOGGER.error("Keys was null");
-            throw new IllegalArgumentException("Keys cannot be null");
-        }
+        Validate.notBlank(name);
+        Validate.notNull(key);
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
     }
@@ -54,18 +45,8 @@ public final class Contact implements Serializable {
      * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
      */
     public Contact(final String name, final Collection<IKey> keys) {
-        if (name == null) {
-            LOGGER.error("Name was null");
-            throw new IllegalArgumentException("Name cannot be null");
-        }
-        if (name.isEmpty()) {
-            LOGGER.error("Name had 0 characters");
-            throw new IllegalArgumentException("Name must have more than 0 characters");
-        }
-        if (keys == null) {
-            LOGGER.error("Keys was null");
-            throw new IllegalArgumentException("Keys cannot be null");
-        }
+        Validate.notBlank(name);
+        Validate.noNullElements(keys);
         this.name = name;
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));

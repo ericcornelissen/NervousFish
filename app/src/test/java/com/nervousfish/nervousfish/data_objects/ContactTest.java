@@ -29,7 +29,7 @@ public class ContactTest {
         this.key = new RSAKey("foo", "bar", "baz");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testInstantiateWithNullNameSingleKey() {
         new Contact(null, this.key);
     }
@@ -39,7 +39,7 @@ public class ContactTest {
         new Contact("", this.key);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testInstantiateWithNullNameSingleKeys() {
         final List<IKey> keys = new ArrayList<>();
         keys.add(this.key);
@@ -53,13 +53,13 @@ public class ContactTest {
         new Contact("", keys);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testInstantiateWithNullKey() {
         final IKey keyTmp = null;
         new Contact("foo", keyTmp);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testInstantiateWithNullKeys() {
         final List<IKey> keysTmp = null;
         new Contact("foo", keysTmp);
