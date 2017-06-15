@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.exceptions;
+package com.nervousfish.nervousfish.modules.pairing;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 /**
  * Thrown when there is an issue with deserialization.
  */
-public final class DeserializationException extends RuntimeException {
+final class DeserializationException extends RuntimeException {
 
     private static final long serialVersionUID = -1930461199728515311L;
 
@@ -17,8 +17,17 @@ public final class DeserializationException extends RuntimeException {
      *
      * @param msg A string describing the event
      */
-    public DeserializationException(final String msg) {
+    DeserializationException(final String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
+     * @param throwable The exception that occurred that caused this throwable to happen
+     */
+    DeserializationException(final Throwable throwable) {
+        super(throwable);
     }
 
     /**
