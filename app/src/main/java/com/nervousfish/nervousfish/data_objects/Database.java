@@ -13,7 +13,7 @@ import java.util.List;
  * A database object to write and encrypt to file
  */
 public final class Database implements Serializable {
-    private static final long serialVersionUID = -4715364587956219157L;
+    private static final long serialVersionUID = 6127044556316179233L;
     private final List<Contact> contacts;
     private Profile profile;
 
@@ -80,7 +80,7 @@ public final class Database implements Serializable {
      * any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -4715364587956219157L;
+        private static final long serialVersionUID = 6127044556316179233L;
         private final Contact[] contacts;
         private final Profile profile;
 

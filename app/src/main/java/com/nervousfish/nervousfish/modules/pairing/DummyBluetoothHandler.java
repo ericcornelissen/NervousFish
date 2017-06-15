@@ -60,11 +60,6 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
         // Do nothing
     }
 
-    @Override
-    public PairingWrapper getDataReceiver() {
-        return new PairingWrapper<>(new DataReceiver());
-    }
-
     /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
@@ -72,7 +67,7 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ensureClassInvariant();
+        this.ensureClassInvariant();
     }
 
     /**
@@ -89,12 +84,5 @@ public final class DummyBluetoothHandler extends APairingHandler implements IBlu
      */
     private void ensureClassInvariant() {
         // No checks to perform
-    }
-
-    private static class DataReceiver implements IDataReceiver {
-        @Override
-        public void dataReceived(final byte[] bytes) {
-            throw new UnsupportedOperationException("Sending data with Bluetooth is not implemented yet");
-        }
     }
 }
