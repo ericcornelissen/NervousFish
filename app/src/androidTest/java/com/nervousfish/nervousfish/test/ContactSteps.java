@@ -22,7 +22,6 @@ import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 

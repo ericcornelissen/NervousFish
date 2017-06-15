@@ -15,10 +15,8 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.NervousFish;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
-import org.junit.Before;
 import org.junit.Rule;
 
 import java.io.IOException;
@@ -26,6 +24,7 @@ import java.util.ArrayList;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -47,6 +46,12 @@ public class ChangeContactSteps {
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
     private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
+    private final Contact contact2 = new Contact("newname", this.key);
+    private final Contact contact3 = new Contact("OtherName", this.key);
+    private final Contact contact4 = new Contact("Peter", this.key);
+    private final Contact contact5 = new Contact("@&#%$)^(", this.key);
+
+
     private final String testpass = "Testpass";
 
     @Rule
@@ -142,6 +147,10 @@ public class ChangeContactSteps {
             database.deleteContact(contact.getName());
         }
         database.addContact(this.contact);
+        database.addContact(this.contact2);
+        database.addContact(this.contact3);
+        database.addContact(this.contact4);
+        database.addContact(this.contact5);
     }
 
 }
