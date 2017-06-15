@@ -83,8 +83,8 @@ public class CreateProfileSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
+        final IDatabase database = serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Contact contact = new Contact("name", new ArrayList<IKey>());
         Profile profile = new Profile(contact, new ArrayList<KeyPair>());
@@ -95,7 +95,7 @@ public class CreateProfileSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        final IDatabase database = serviceLocator.getDatabase();
 
         database.deleteDatabase();
     }
@@ -199,7 +199,7 @@ public class CreateProfileSteps {
 
     @Then("^the profile with (.*?) should be saved in the database$")
     public void profileWithNameShouldBeInDatabase(final String name) throws IOException {
-        final Profile profile = NervousFish.getServiceLocator().getDatabase().getProfile();
+        final Profile profile = serviceLocator.getDatabase().getProfile();
         assertEquals(name, profile.getName());
     }
 

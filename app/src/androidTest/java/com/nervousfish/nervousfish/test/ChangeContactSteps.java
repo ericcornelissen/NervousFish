@@ -56,8 +56,8 @@ public class ChangeContactSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
+        final IDatabase database = serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Contact contact = new Contact("name", new ArrayList<IKey>());
         Profile profile = new Profile(contact, new ArrayList<KeyPair>());
@@ -68,7 +68,7 @@ public class ChangeContactSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        final IDatabase database = serviceLocator.getDatabase();
         database.deleteDatabase();
     }
 
@@ -129,7 +129,7 @@ public class ChangeContactSteps {
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        final IDatabase database = serviceLocator.getDatabase();
         assertNotNull(database.getContactWithName(this.newName));
     }
 
@@ -137,7 +137,7 @@ public class ChangeContactSteps {
      * Initialize the database for the ChangeContactSteps.
      */
     private void initDatabase() throws IOException {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        final IDatabase database = serviceLocator.getDatabase();
         for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());
         }
