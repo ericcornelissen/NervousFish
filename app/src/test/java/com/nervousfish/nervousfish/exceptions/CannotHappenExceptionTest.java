@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.exceptions;
 
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
-
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -12,23 +10,17 @@ import java.io.ObjectOutputStream;
 
 import static org.junit.Assert.assertTrue;
 
-public class DatabaseExceptionTest {
+public class CannotHappenExceptionTest {
     @Test
     public void testStringConstructor() {
-        DatabaseException databaseException = new DatabaseException("foo");
-        assertTrue(databaseException.getMessage().equals("foo"));
-    }
-
-    @Test
-    public void testThrowableConstructor() {
-        final Throwable throwable = new Throwable();
-        DatabaseException databaseException = new DatabaseException(throwable);
-        assertTrue(databaseException.getCause().equals(throwable));
+        final Exception exception = new Exception();
+        CannotHappenException cannotHappenException = new CannotHappenException("foo");
+        assertTrue(cannotHappenException.getMessage().equals("foo"));
     }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final DatabaseException exception = new DatabaseException(new Exception());
+        final CannotHappenException exception = new CannotHappenException("foo");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -38,7 +30,7 @@ public class DatabaseExceptionTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(DatabaseException.class));
+                assertTrue(exception1.getClass().equals(CannotHappenException.class));
             }
         }
     }
