@@ -26,12 +26,7 @@ final class MainActivitySorter {
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
     private static final int NUMBER_OF_SORTING_MODES = 2;
-    private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
-        @Override
-        public int compare(final Contact o1, final Contact o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
+    private static final Comparator<Contact> NAME_SORTER = (o1, o2) -> o1.getName().compareTo(o2.getName());
 
     private final MainActivity mainActivity;
     private int currentSorting;

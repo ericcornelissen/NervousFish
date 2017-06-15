@@ -23,6 +23,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         this.database = this.serviceLocator.getDatabase();
 
         // Check for available NFC Adapter
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        this.nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         LOGGER.info("Start creating an NDEF message to beam");
         Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) this.findViewById(R.id.nfc_gif));
         try {
@@ -68,11 +69,11 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
             final Contact contact = new Contact(profile.getName(), keyPair.getPublicKey());
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
             this.bytes = nfcHandler.objectToBytes(contact);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not serialize my contact to other device ", e);
         }
         // Register callback
-        nfcAdapter.setNdefPushMessageCallback(this, this);
+        this.nfcAdapter.setNdefPushMessageCallback(this, this);
     }
 
     /**
@@ -104,8 +105,8 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         super.onResume();
         LOGGER.info("NFC onResume");
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+                new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        this.nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
         // Check to see that the Activity started due to an Android Beam
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(this.getIntent().getAction())) {
             this.processIntent(this.getIntent());
@@ -167,6 +168,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             try {
