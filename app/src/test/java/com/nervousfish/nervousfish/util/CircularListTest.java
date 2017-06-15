@@ -81,7 +81,7 @@ public class CircularListTest {
         list1.add(12);
         assertTrue(list3.equals(list4));
         assertTrue(list3.hashCode() == list4.hashCode());
-        assertFalse(list3.equals(null));
+        assertNotEquals(list3, null);
     }
 
     @Test
