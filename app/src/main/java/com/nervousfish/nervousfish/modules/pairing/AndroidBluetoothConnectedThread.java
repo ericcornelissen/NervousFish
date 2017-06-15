@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothSocket;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionLostEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,9 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     AndroidBluetoothConnectedThread(final IServiceLocator serviceLocator, final BluetoothSocket socket) {
         super();
 
+        Validate.notNull(serviceLocator);
+        Validate.notNull(socket);
+
         LOGGER.info("Connected Bluetooth thread created");
         this.socket = socket;
         InputStream tmpIn = null;
@@ -60,13 +64,13 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     @Override
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
-        setName("AndroidBluetoothConnectedThread thread");
+        this.setName("AndroidBluetoothConnectedThread thread");
 
-        final byte[] buffer = new byte[BUFFER_SIZE];
         try {
             // Read from the InputStream
+            final byte[] buffer = new byte[BUFFER_SIZE];
             while (true) {
-                final int bytes = inStream.read(buffer);
+                final int bytes = this.inStream.read(buffer);
                 LOGGER.info("Read {} bytes", bytes);
 
                 this.dataReceiver.dataReceived(buffer);
@@ -80,12 +84,13 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     /**
      * Write to the connected OutStream.
      *
-     * @param buffer The bytes to write
+     * @param buffer The bytes to write. At least one byte is required
      */
     public void write(final byte[] buffer) {
         LOGGER.info("Writing the bytes {} to the outputstream", Arrays.toString(buffer));
+        Validate.isTrue(buffer.length > 0);
         try {
-            outStream.write(buffer);
+            this.outStream.write(buffer);
         } catch (final IOException e) {
             LOGGER.error("Exception during writing", e);
         }
@@ -94,10 +99,11 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     /**
      * Cancels the connected thread and closes the socket
      */
+    @Override
     public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
-            socket.close();
+            this.socket.close();
         } catch (final IOException e) {
             LOGGER.error("Closing socket", e);
         }
