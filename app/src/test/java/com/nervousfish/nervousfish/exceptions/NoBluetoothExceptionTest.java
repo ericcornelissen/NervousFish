@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.exceptions;
 
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
 
 import org.junit.Test;
 
@@ -12,24 +11,24 @@ import java.io.ObjectOutputStream;
 
 import static org.junit.Assert.assertTrue;
 
-public class DatabaseExceptionTest {
+public class NoBluetoothExceptionTest {
     @Test
     public void testExceptionConstructor() {
         final Exception exception = new Exception();
-        DatabaseException databaseException = new DatabaseException(exception);
-        assertTrue(databaseException.getCause().equals(exception));
+        NoBluetoothException noBluetoothException = new NoBluetoothException(exception);
+        assertTrue(noBluetoothException.getCause().equals(exception));
     }
 
     @Test
     public void testThrowableConstructor() {
         final Throwable throwable = new Throwable();
-        DatabaseException databaseException = new DatabaseException(throwable);
-        assertTrue(databaseException.getCause().equals(throwable));
+        NoBluetoothException noBluetoothException = new NoBluetoothException(throwable);
+        assertTrue(noBluetoothException.getCause().equals(throwable));
     }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final DatabaseException exception = new DatabaseException(new Exception());
+        final NoBluetoothException exception = new NoBluetoothException(new Exception());
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -39,7 +38,7 @@ public class DatabaseExceptionTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(DatabaseException.class));
+                assertTrue(exception1.getClass().equals(NoBluetoothException.class));
             }
         }
     }

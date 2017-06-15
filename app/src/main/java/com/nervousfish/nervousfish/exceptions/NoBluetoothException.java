@@ -28,6 +28,16 @@ public class NoBluetoothException extends RuntimeException {
     }
 
     /**
+     * Constructs a new NoBluetoothException that's thrown when there is an issue with
+     * deserialization.
+     *
+     * @param throwable The exception that occurred the layer above
+     */
+    public NoBluetoothException(final Throwable throwable) {
+        super(throwable);
+    }
+
+    /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
      * @param stream The serialized object to be deserialized
