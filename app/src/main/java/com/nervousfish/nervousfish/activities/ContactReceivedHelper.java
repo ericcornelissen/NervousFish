@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,9 @@ enum ContactReceivedHelper {
      * @param contact  The newly received {@link Contact}
      */
     static void newContactReceived(final IDatabase database, final Activity activity, final Contact contact) {
+        Validate.notNull(database);
+        Validate.notNull(activity);
+        Validate.notNull(contact);
         switch (checkExists(database, contact)) {
             case NOT:
                 LOGGER.info("Adding contact to database...");
@@ -65,6 +69,8 @@ enum ContactReceivedHelper {
     }
 
     private static void handleExistingContact(final IDatabase database, final Activity activity, final Contact contact) {
+        assert database != null;
+        assert contact != null;
         new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
                 .setContentText(String.format(activity.getString(R.string.contact_already_exists_with_name), contact.getName()))
@@ -77,6 +83,8 @@ enum ContactReceivedHelper {
     }
 
     private static void handleDuplicateContact(final Activity activity, final Contact contact) {
+        assert activity != null;
+        assert contact != null;
         new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
                 .setContentText(String.format(activity.getString(R.string.contact_exists_nothing_done), contact.getName()))
@@ -91,6 +99,8 @@ enum ContactReceivedHelper {
      * @return true when a contact with the same exists in the database
      */
     private static ContactReceivedHelper.ContactExists checkExists(final IDatabase database, final Contact contact) {
+        assert database != null;
+        assert contact != null;
         final String name = contact.getName();
         try {
             final List<Contact> list = database.getAllContacts();
@@ -109,6 +119,8 @@ enum ContactReceivedHelper {
     }
 
     private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
+        Validate.notNull(keys1);
+        Validate.notNull(keys2);
         final Set<IKey> keysSet1 = new HashSet<>(keys1);
         for (final IKey key : keys2) {
             if (!keysSet1.contains(key)) {
@@ -130,6 +142,9 @@ enum ContactReceivedHelper {
         private EditText edit_newContactName;
 
         CreateNewContactClickListener(final Activity activity, final IDatabase database, final Contact contact) {
+            Validate.notNull(activity);
+            Validate.notNull(database);
+            Validate.notNull(contact);
             this.activity = activity;
             this.database = database;
             this.contact = contact;
@@ -200,6 +215,8 @@ enum ContactReceivedHelper {
         private final Contact contact;
 
         AddPublicKeyToContactsClickListener(final IDatabase database, final Contact contact) {
+            Validate.notNull(database);
+            Validate.notNull(contact);
             this.database = database;
             this.contact = contact;
         }

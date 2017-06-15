@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,11 +31,14 @@ final class ContactActivityHelper {
     /**
      * Set the name of the {@link Contact} to the {@link ContactActivity}.
      *
-     * @param activity The where the name has to be set.
-     * @param name The name.
+     * @param activity The {@link Activity} where the name has to be set
+     * @param name The name, cannot be blank
      * @param id the {@code R.id} of the target {@link TextView}.
      */
     static void setName(final Activity activity, final String name, final int id) {
+        Validate.notNull(activity);
+        Validate.notBlank(name);
+        Validate.isTrue(id > 0);
         final TextView tv = (TextView) activity.findViewById(id);
         tv.setText(name);
     }
@@ -46,6 +51,9 @@ final class ContactActivityHelper {
      * @param id the {@code R.id} of the target {@link ListView}.
      */
     static void setKeys(final Activity activity, final Collection<IKey> keys, final int id) {
+        Validate.notNull(activity);
+        Validate.notNull(keys);
+        Validate.isTrue(id > 0);
         final List<String> keyNames = new ArrayList<>();
         for (final IKey key : keys) {
             keyNames.add(key.getName());
