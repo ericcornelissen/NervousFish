@@ -43,8 +43,6 @@ public final class Constants implements IConstants {
         LOGGER.info("Initialized");
     }
 
-    ;
-
     /**
      * Creates a new instance of itself and wraps it in a {@link ModuleWrapper} so that only an
      * {@link IServiceLocator}

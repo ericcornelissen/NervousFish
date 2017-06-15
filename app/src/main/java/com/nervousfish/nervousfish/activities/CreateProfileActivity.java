@@ -128,19 +128,17 @@ public final class CreateProfileActivity extends AppCompatActivity {
         if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
                 && repeatPasswordValidation == EMPTY_FIELD) {
             return ALl_FIELDS_EMPTY;
-        }
-        if (nameValidation == EMPTY_FIELD) {
+        } else if (nameValidation == EMPTY_FIELD) {
             return NAME_EMPTY;
-        }
-        if (passwordValidation == EMPTY_FIELD) {
+        } else if (passwordValidation == EMPTY_FIELD) {
             return PASSWORD_EMPTY;
         } else if (passwordValidation == TOO_SHORT_FIELD) {
             return PASSWORD_TOO_SHORT;
-        }
-        if (!this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
+        } else if (!this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
             return PASSWORDS_NOT_EQUAL;
+        } else {
+            return GOOD_FIELD;
         }
-        return GOOD_FIELD;
     }
 
     /**
@@ -159,12 +157,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .setTitleText(this.getString(R.string.profile_created_title))
                 .setContentText(this.getString(R.string.profile_created_explanation))
                 .setConfirmText(this.getString(R.string.dialog_ok))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog dialog) {
-                        dialog.dismiss();
-                        nextActivity();
-                    }
+                .setConfirmClickListener(dialog -> {
+                    dialog.dismiss();
+                    this.nextActivity();
                 })
                 .show();
     }
