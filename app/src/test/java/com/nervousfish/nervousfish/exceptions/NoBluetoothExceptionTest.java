@@ -13,10 +13,9 @@ import static org.junit.Assert.assertTrue;
 
 public class NoBluetoothExceptionTest {
     @Test
-    public void testExceptionConstructor() {
-        final Exception exception = new Exception();
-        NoBluetoothException noBluetoothException = new NoBluetoothException(exception);
-        assertTrue(noBluetoothException.getCause().equals(exception));
+    public void testStringConstructor() {
+        NoBluetoothException noBluetoothException = new NoBluetoothException("foo");
+        assertTrue(noBluetoothException.getMessage().equals("foo"));
     }
 
     @Test
