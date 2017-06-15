@@ -31,7 +31,7 @@
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
-    <string name="key_type" formatted="false">Key type: %s</string>
+    <string name="key_type">Key type: %1$s</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
     <string name="repeat_password">Repeat password</string>
@@ -79,8 +79,16 @@
     <string name="tap_me">Tap me!</string>
     <string name="stop_recording">Stop recording</string>
     <string name="start_recording">Start recording</string>
-
+    <string name="too_few_taps_title">Too few taps</string>
+    <string name="too_few_taps_description">You have to tap at least 3 times</string>
     <string name="contact_image">Contact image</string>
+    <string name="contact_already_exists">Contact already exists</string>
+    <string name="contact_already_exists_with_name">A contact with the name "%1$s" exists already</string>
+    <string name="contact_exists_nothing_done">A contact with the same name and keys exists already, so adding the same contact "%1$s" again was not needed</string>
+    <string name="add_public_key_to_contact">Add public key to contact</string>
+    <string name="create_new_contact">Create a new contact</string>
+    <string name="enter_name_contact">Enter the name of the new contact</string>
+    <string name="confirm">Confirm</string>
 
     <!-- Select verification method -->
     <string name="select_verification_method">Select a verification method</string>

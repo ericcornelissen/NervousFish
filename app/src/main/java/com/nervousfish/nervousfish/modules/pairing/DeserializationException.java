@@ -1,30 +1,33 @@
-package com.nervousfish.nervousfish.exceptions;
+package com.nervousfish.nervousfish.modules.pairing;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Simple {@link RuntimeException} that is used to notify usage of Bluetooth is not avaiable.
+ * Thrown when there is an issue with deserialization.
  */
-public class NoBluetoothException extends RuntimeException {
+final class DeserializationException extends RuntimeException {
 
-    private static final long serialVersionUID = -7030163248191198652L;
+    private static final long serialVersionUID = -1930461199728515311L;
 
     /**
-     * Default constructor for a new NoBluetoothException
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
+     *
+     * @param msg A string describing the event
      */
-    public NoBluetoothException() {
-        super();
+    DeserializationException(final String msg) {
+        super(msg);
     }
 
     /**
-     * Constructor for a new NoBluetoothException with a message.
-     *
-     * @param msg A string describing the exception
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
+     * @param throwable The exception that occurred that caused this throwable to happen
      */
-    public NoBluetoothException(final String msg) {
-        super(msg);
+    DeserializationException(final Throwable throwable) {
+        super(throwable);
     }
 
     /**
@@ -52,5 +55,4 @@ public class NoBluetoothException extends RuntimeException {
     private void ensureClassInvariant() {
         // No checks to perform
     }
-
 }

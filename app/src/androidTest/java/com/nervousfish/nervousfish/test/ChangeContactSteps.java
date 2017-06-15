@@ -29,6 +29,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertNotNull;
@@ -68,7 +69,7 @@ public class ChangeContactSteps {
 
     @When("^I press OK on the change contact error popup$")
     public void iPressOKOnTheChangeContactErrorPopup() {
-        onView(withText(R.string.dialog_ok)).perform(scrollTo()).perform(click());
+        onView(withText(R.string.dialog_ok)).perform(click());
     }
 
     @When("^I remove all text from the name$")
