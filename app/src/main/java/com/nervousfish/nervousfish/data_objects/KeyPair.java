@@ -79,20 +79,6 @@ public final class KeyPair implements Serializable {
         return this.name.hashCode() + this.publicKey.hashCode() + this.privateKey.hashCode();
     }
 
-    /**
-     * Serialize the created proxy instead of this instance.
-     */
-    private Object writeReplace() {
-        return new KeyPair.SerializationProxy(this);
-    }
-
-    /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
-     */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
-    }
 
     /**
      * Represents the logical state of this class and copies the data from that class without

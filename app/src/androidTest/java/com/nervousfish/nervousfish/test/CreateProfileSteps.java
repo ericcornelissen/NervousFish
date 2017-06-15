@@ -54,7 +54,7 @@ import static junit.framework.Assert.assertEquals;
 @CucumberOptions(features = "features")
 public class CreateProfileSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
     @Rule
     public ActivityTestRule<CreateProfileActivity> mActivityRule =
             new ActivityTestRule<>(CreateProfileActivity.class, true, false);

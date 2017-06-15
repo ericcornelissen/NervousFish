@@ -131,11 +131,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
-        final Database database = getDatabase();
-        final List<Contact> contacts = database.getContacts();
+        final List<Contact> contacts = getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(oldContact);
-
         // Throw if the contact to update is not found
         if (contacts.size() == lengthBefore) {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
@@ -289,7 +287,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         LOGGER.info("Database translated to json: " + databaseJson);
 
         try {
-            final SecretKey key = encryptor.makeKey(password);
+            final SecretKey key = encryptor.makeKeyFromPassword(password);
             final String databaseEncrypted = encryptor.encryptWithPassword(databaseJson, key);
 
             try (Writer writer = this.fileSystem.getWriter(databasePath)) {

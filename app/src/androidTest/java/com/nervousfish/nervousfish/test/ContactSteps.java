@@ -18,6 +18,7 @@ import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
+import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
@@ -45,7 +46,7 @@ import static junit.framework.Assert.assertTrue;
 @CucumberOptions(features = "features")
 public class ContactSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
+    private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
     private final IKey key = new Ed25519Key("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
     private final Contact contact = new Contact("Yashuo", this.key);
 

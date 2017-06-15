@@ -107,7 +107,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
      */
     public SecretKey loadKey(final String password) throws IOException, InvalidKeySpecException {
         checkPassword(password);
-        return encryptor.makeKey(password);
+        return encryptor.makeKeyFromPassword(password);
     }
 
     /**

@@ -89,7 +89,7 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
-    public SecretKey makeKey(final String password) throws InvalidKeySpecException, EncryptionException {
+    public SecretKey makeKeyFromPassword(final String password) throws InvalidKeySpecException, EncryptionException {
         LOGGER.info("Making key for encryption");
         try {
             final PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
