@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.service_locator;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -35,12 +36,12 @@ public final class EntryActivity extends Activity {
         super.onResume();
 
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-        final Intent intent;
+        final Intent intent = new Intent();
 
         if (serviceLocator.getDatabase().checkFirstUse()) {
-            intent = new Intent(this, LoginActivity.class);
+            intent.setComponent(new ComponentName(this, LoginActivity.class));
         } else {
-            intent = new Intent(this, WelcomeActivity.class);
+            intent.setComponent(new ComponentName(this, WelcomeActivity.class));
         }
 
         this.startActivity(intent);

@@ -18,7 +18,7 @@ public interface IEncryptor extends IModule {
     /**
      * Hashes a given pass to an encrypted string that can't be decrypted.
      *
-     * @param pass THe string to encrypt
+     * @param pass The string to encrypt
      * @return The encrypted string.
      */
     String hashWithoutSalt(String pass) throws EncryptionException;

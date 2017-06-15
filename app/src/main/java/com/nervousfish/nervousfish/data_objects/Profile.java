@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Profile implements Serializable {
 
-    private static final long serialVersionUID = -4715364587956219157L;
+    private static final long serialVersionUID = 8191245914949893284L;
     private final Contact contact;
     private final List<KeyPair> keyPairs;
 
@@ -117,7 +117,7 @@ public class Profile implements Serializable {
      * any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -4715364587956219157L;
+        private static final long serialVersionUID = 8191245914949893284L;
         private final Contact contact;
         private final KeyPair[] keyPairs;
 

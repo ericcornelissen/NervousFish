@@ -26,8 +26,7 @@ public interface IDatabase extends IModule {
      * @param contactName The {@link String} with the name of the contact to remove from the database.
      */
     void deleteContact(String contactName) throws IOException;
-
-
+    
     /**
      * Update an existing contact in the database.
      *

@@ -32,7 +32,6 @@ import org.junit.Rule;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.After;
@@ -49,28 +48,46 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
 public class CreateProfileSteps {
 
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-    private InputMethodManager inputMethodManager;
-
     @Rule
     public ActivityTestRule<CreateProfileActivity> mActivityRule =
             new ActivityTestRule<>(CreateProfileActivity.class, true, false);
+    private InputMethodManager inputMethodManager;
+
+    /**
+     * Checks if an element has a certain background color.
+     *
+     * @param color - the color that has to be checked
+     * @return a {@link Matcher}
+     */
+    private static Matcher<View> withBackgroundColor(final int color) {
+        Checks.checkNotNull(color);
+        return new BoundedMatcher<View, EditText>(EditText.class) {
+            @Override
+            public boolean matchesSafely(EditText warning) {
+                return color == ((ColorDrawable) warning.getBackground()).getColor();
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with text color: ");
+            }
+        };
+    }
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database =  NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class,  NervousFish.getServiceLocator());
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Contact contactu = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contactu, new ArrayList<KeyPair>());
+        Contact contact = new Contact("name", new ArrayList<IKey>());
+        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");
@@ -78,7 +95,7 @@ public class CreateProfileSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database =  NervousFish.getServiceLocator().getDatabase();
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
 
         database.deleteDatabase();
     }
@@ -89,7 +106,6 @@ public class CreateProfileSteps {
         this.mActivityRule.launchActivity(intent);
         this.inputMethodManager = (InputMethodManager) this.mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
-
 
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
@@ -185,27 +201,6 @@ public class CreateProfileSteps {
     public void profileWithNameShouldBeInDatabase(final String name) throws IOException {
         final Profile profile = NervousFish.getServiceLocator().getDatabase().getProfile();
         assertEquals(name, profile.getName());
-    }
-
-    /**
-     * Checks if an element has a certain background color.
-     *
-     * @param color - the color that has to be checked
-     * @return a {@link Matcher}
-     */
-    private static Matcher<View> withBackgroundColor(final int color) {
-        Checks.checkNotNull(color);
-        return new BoundedMatcher<View, EditText>(EditText.class) {
-            @Override
-            public boolean matchesSafely(EditText warning) {
-
-                return color == ((ColorDrawable) warning.getBackground()).getColor();
-            }
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with text color: ");
-            }
-        };
     }
 
 }

@@ -69,8 +69,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     public void onSubmitClick(final View view) {
         if (this.validateInputFields()) {
-            final EditText nameInputField = (EditText) this.findViewById(R.id.profile_enter_name);
-            final String name = nameInputField.getText().toString();
+            final String name = nameInput.getText().toString();
             final String password = passwordInput.getText().toString();
             final IDatabase database = this.serviceLocator.getDatabase();
 

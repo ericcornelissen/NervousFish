@@ -59,8 +59,8 @@ public class ContactSteps {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Contact contactu = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contactu, new ArrayList<KeyPair>());
+        Contact contact = new Contact("name", new ArrayList<IKey>());
+        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");
@@ -75,8 +75,6 @@ public class ContactSteps {
     @Given("^I am viewing the contact activity$")
     public void iAmViewingTheContactActivity() throws IOException {
         this.initDatabase();
-
-
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.CONTACT, this.contact);
         this.mActivityRule.launchActivity(intent);

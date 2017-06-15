@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.WelcomeActivity;
@@ -13,9 +12,7 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,11 +43,11 @@ public class WelcomeSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database =  NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class,  NervousFish.getServiceLocator());
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Contact contactu = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contactu, new ArrayList<KeyPair>());
+        Contact contact = new Contact("name", new ArrayList<IKey>());
+        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");
@@ -58,7 +55,7 @@ public class WelcomeSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database =  NervousFish.getServiceLocator().getDatabase();
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
 
         database.deleteDatabase();
     }

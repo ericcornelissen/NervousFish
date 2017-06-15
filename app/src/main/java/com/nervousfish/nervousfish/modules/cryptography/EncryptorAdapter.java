@@ -157,14 +157,14 @@ public final class EncryptorAdapter implements IEncryptor {
     }
 
     /**
-     * Method that return a configured {@link Cipher}.<br>
-     * It set the ivSpec and the encryption to
+     * Method that returns a configured {@link Cipher}.<br>
+     * It sets the ivSpec and the encryption to
      * PBEWithMD5AndDES
      *
      * @param key    The SecretKey used to encrypt
      * @param ivSpec The initializations vector for the encryption
      * @param mode   Whether we're encrypting or decrypting
-     * @return the configured Cipher.
+     * @return the configured {@link Cipher}.
      */
     private Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) throws EncryptionException {
         LOGGER.info("Getting cipher for decrypting");

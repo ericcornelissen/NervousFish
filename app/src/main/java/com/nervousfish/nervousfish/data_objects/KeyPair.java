@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public final class KeyPair implements Serializable {
 
-    private static final long serialVersionUID = -4715364587956219157L;
+    private static final long serialVersionUID = -9078691377598696344L;
     private final String name;
     private final IKey publicKey;
     private final IKey privateKey;
@@ -99,7 +99,7 @@ public final class KeyPair implements Serializable {
      * any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -4715364587956219157L;
+        private static final long serialVersionUID = -9078691377598696344L;
         private final String name;
         private final IKey publicKey;
         private final IKey privateKey;
