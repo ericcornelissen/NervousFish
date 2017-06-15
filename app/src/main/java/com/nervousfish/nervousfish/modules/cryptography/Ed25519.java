@@ -7,6 +7,8 @@ import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
+import org.apache.commons.lang3.Validate;
+
 import java.security.SecureRandom;
 
 /**
@@ -28,6 +30,8 @@ final class Ed25519 {
      * @param privateKey The generated private key.
      */
     private Ed25519(final EdDSAPublicKey publicKey, final EdDSAPrivateKey privateKey) {
+        Validate.notNull(publicKey);
+        Validate.notNull(privateKey);
         this.publicKey = publicKey;
         this.privateKey = privateKey;
     }
