@@ -3,6 +3,8 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -31,6 +33,8 @@ public final class Ed25519Key implements IKey {
      * @param key  The key string.
      */
     public Ed25519Key(final String name, final String key) {
+        Validate.notBlank(name);
+        Validate.notBlank(key);
         this.name = name;
         this.key = key;
     }
@@ -40,13 +44,13 @@ public final class Ed25519Key implements IKey {
      *
      * @param map A {@link Map} mapping {@link Ed25519Key} attribute names to values.
      */
-    public Ed25519Key(final Map<String, String> map) throws IllegalArgumentException {
+    public Ed25519Key(final Map<String, String> map) {
+        Validate.notNull(map);
         this.name = map.get(KEYWORD_NAME);
         this.key = map.get(KEYWORD_KEY);
 
-        if (this.name == null || this.key == null) {
-            throw new IllegalArgumentException("Name or key could not be found in the map");
-        }
+        Validate.notBlank(this.name);
+        Validate.notBlank(this.key);
     }
 
     /**

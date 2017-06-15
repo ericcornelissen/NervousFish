@@ -4,8 +4,6 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -20,7 +18,6 @@ import java.util.List;
  */
 public final class Contact implements Serializable {
     private static final long serialVersionUID = -4715364587956219157L;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Contact.class);
 
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
