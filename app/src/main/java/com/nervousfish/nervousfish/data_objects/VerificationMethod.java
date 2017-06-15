@@ -9,20 +9,20 @@ import java.io.Serializable;
 /**
  * Carries the verification method to use.
  */
-public class VerificationMethod implements Serializable {
+public final class VerificationMethod implements Serializable {
     private static final long serialVersionUID = 6711854169751606007L;
-    private final VerificationMethodEnum verificationMethodEnum;
+    private final VerificationMethodEnum verificationMethod;
 
     /**
      * Creates and initializes a VerificationMethod.
      *
-     * @param verificationMethodEnum The verification method this object should represent.
+     * @param verificationMethod The verification method this object should represent.
      */
-    public VerificationMethod(final VerificationMethodEnum verificationMethodEnum) {
-        if (verificationMethodEnum == null) {
+    public VerificationMethod(final VerificationMethodEnum verificationMethod) {
+        if (verificationMethod == null) {
             throw new IllegalArgumentException("The verification method may not be null");
         }
-        this.verificationMethodEnum = verificationMethodEnum;
+        this.verificationMethod = verificationMethod;
     }
 
     /**
@@ -30,14 +30,14 @@ public class VerificationMethod implements Serializable {
      * @return The {@link VerificationMethodEnum}
      */
     public VerificationMethodEnum getVerificationMethod() {
-        return verificationMethodEnum;
+        return this.verificationMethod;
     }
 
     /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new VerificationMethod.SerializationProxy(this);
     }
 
     /**
@@ -69,7 +69,7 @@ public class VerificationMethod implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new VerificationMethod(verificationMethod);
+            return new VerificationMethod(this.verificationMethod);
         }
     }
 }
