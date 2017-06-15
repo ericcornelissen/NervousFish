@@ -66,7 +66,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
 
     private static String getDeviceDescription(final BluetoothDevice device) {
-        return String.format("%s\n%s", device.getName(), device.getAddress());
+        return String.format("%s%n%s", device.getName(), device.getAddress());
     }
 
     /**

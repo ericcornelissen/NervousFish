@@ -49,7 +49,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static final Preference.OnPreferenceChangeListener BindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
+            new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object newValue) {
             LOGGER.info("Preference changed");
@@ -137,16 +138,16 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
-     * @see #BindPreferenceSummaryToValueListener
+     * @see #BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER
      */
     private static void bindPreferenceSummaryToValue(final Preference preference) {
         assert preference != null;
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(BindPreferenceSummaryToValueListener);
+        preference.setOnPreferenceChangeListener(BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        BindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+        BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
