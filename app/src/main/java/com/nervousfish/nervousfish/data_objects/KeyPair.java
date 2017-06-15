@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * KeyPair POJO which keeps a public and private key.
  */
@@ -17,6 +19,9 @@ public final class KeyPair {
      * @param privateKey The privateKey of the {@link KeyPair}.
      */
     public KeyPair(final String name, final IKey publicKey, final IKey privateKey) {
+        Validate.notBlank(name);
+        Validate.notNull(publicKey);
+        Validate.notNull(privateKey);
         this.name = name;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
