@@ -1,9 +1,5 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
-
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
@@ -92,6 +88,7 @@ public final class KeyPair implements Serializable {
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param keyPair The current instance of the proxy
          */
         SerializationProxy(final KeyPair keyPair) {
@@ -102,6 +99,7 @@ public final class KeyPair implements Serializable {
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {

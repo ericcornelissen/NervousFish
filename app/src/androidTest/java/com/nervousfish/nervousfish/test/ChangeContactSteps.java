@@ -49,7 +49,7 @@ public class ChangeContactSteps {
     private final Contact contact = new Contact("Illio", this.key);
 
 
-    private final String testpass = "Testpass";
+    private static final String testpass = "Testpass";
 
     @Rule
     public ActivityTestRule<ChangeContactActivity> mActivityRule =
