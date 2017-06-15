@@ -47,13 +47,12 @@ abstract class APairingHandler implements IPairingHandler {
         return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
             @Override
             public void dataReceived(final byte[] bytes) {
-                byte[] newBuffer = trim(bytes);
-                newBuffer = new byte[readBuffer.length + bytes.length];
+                final byte[] srcBytes = trim(bytes);
+                
+                byte[] newBuffer = new byte[readBuffer.length + srcBytes.length];
                 System.arraycopy(readBuffer, 0, newBuffer, 0, readBuffer.length);
-                System.arraycopy(bytes, 0, newBuffer, readBuffer.length, bytes.length);
+                System.arraycopy(srcBytes, 0, newBuffer, readBuffer.length, srcBytes.length);
 
-                System.out.println(newBuffer);
-                System.out.println(newBuffer.length);
                 try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
                      ObjectInputStream ois = new ObjectInputStream(bis)) {
 
@@ -63,10 +62,7 @@ abstract class APairingHandler implements IPairingHandler {
                     readBuffer = new byte[0];
                 } catch (final ClassNotFoundException | IOException e) {
                     if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
-                        final byte[] newReadBuffer = new byte[readBuffer.length + bytes.length];
-                        System.arraycopy(readBuffer, 0, newReadBuffer, 0, readBuffer.length);
-                        System.arraycopy(bytes, 0, newReadBuffer, readBuffer.length, bytes.length);
-                        readBuffer = newReadBuffer;
+                        readBuffer = newBuffer;
                     } else {
                         LOGGER.error(" Couldn't start deserialization!", e);
                     }
@@ -75,11 +71,9 @@ abstract class APairingHandler implements IPairingHandler {
         });
     }
 
-    static byte[] trim(byte[] bytes)
-    {
+    static byte[] trim(byte[] bytes) {
         int i = bytes.length - 1;
-        while (i >= 0 && bytes[i] == 0)
-        {
+        while (i >= 0 && bytes[i] == 0) {
             --i;
         }
 
