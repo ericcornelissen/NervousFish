@@ -12,7 +12,7 @@ public final class SerializationException extends RuntimeException {
     private static final long serialVersionUID = 1698338992687134510L;
 
     /**
-     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * Constructs a new SerializationException that's thrown when there is an issue with
      * deserialization.
      *
      * @param msg A string describing the event
@@ -22,7 +22,7 @@ public final class SerializationException extends RuntimeException {
     }
 
     /**
-     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * Constructs a new SerializationException that's thrown when there is an issue with
      * deserialization.
      *
      * @param throwable The exception that occurred the layer above
