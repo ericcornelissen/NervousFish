@@ -1,5 +1,8 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,7 +10,7 @@ import java.util.List;
 /**
  * A Profile POJO to store a name, public key and private key.
  */
-public class Profile {
+public final class Profile {
 
     private final String name;
     private final List<KeyPair> keyPairs = new ArrayList<>();
@@ -19,6 +22,8 @@ public class Profile {
      * @param keyPair the public/private key-pair.
      */
     public Profile(final String name, final KeyPair keyPair) {
+        Validate.notBlank(name);
+        Validate.notNull(keyPair);
         this.name = name;
         this.keyPairs.add(keyPair);
     }
@@ -30,6 +35,8 @@ public class Profile {
      * @param keyPairs the public/private key-pairs.
      */
     public Profile(final String name, final Collection<KeyPair> keyPairs) {
+        Validate.notBlank(name);
+        Validate.noNullElements(keyPairs);
         this.name = name;
         this.keyPairs.addAll(keyPairs);
     }
@@ -48,20 +55,20 @@ public class Profile {
      *
      * @return The {@link KeyPair}.
      */
-    public List<KeyPair> getKeyPairs() { return this.keyPairs; }
+    public List<KeyPair> getKeyPairs() { return new ArrayList<>(this.keyPairs); }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object o) {
-        if (o == null || this.getClass() != o.getClass()) {
+    public boolean equals(final Object obj) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
 
-        final Profile that = (Profile) o;
-        return this.name.equals(that.name)
-            && this.keyPairs.equals(that.keyPairs);
+        final Profile other = (Profile) obj;
+        return this.name.equals(other.getName())
+            && this.keyPairs.equals(other.getKeyPairs());
     }
 
     /**
