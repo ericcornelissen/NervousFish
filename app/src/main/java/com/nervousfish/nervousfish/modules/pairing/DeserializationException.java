@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.exceptions;
+package com.nervousfish.nervousfish.modules.pairing;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,6 +19,15 @@ public final class DeserializationException extends RuntimeException {
      */
     public DeserializationException(final String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
+     * @param e The exception that occurred that caused this throwable to happen
+     */
+    public DeserializationException(final Exception e) {
+        super(e);
     }
 
     /**
