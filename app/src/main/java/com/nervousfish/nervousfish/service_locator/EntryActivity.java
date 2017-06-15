@@ -46,7 +46,7 @@ public final class EntryActivity extends Activity {
         try {
             final IDatabase database = serviceLocator.getDatabase();
             profiles.addAll(database.getProfiles());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("IOException while getting profiles", e);
         }
 
