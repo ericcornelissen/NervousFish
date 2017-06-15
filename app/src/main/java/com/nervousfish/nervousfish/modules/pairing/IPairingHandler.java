@@ -31,7 +31,7 @@ interface IPairingHandler extends IModule, Serializable {
     /**
      * Write the buffer to the world
      *
-     * @param buffer The bytes to send
+     * @param buffer The bytes to send. Must be at least a single byte
      */
     void send(byte[] buffer);
 
