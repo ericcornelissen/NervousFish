@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 /**
  * Thrown when there is an issue with deserialization.
  */
-public final class DeserializationException extends RuntimeException {
+final class DeserializationException extends RuntimeException {
 
     private static final long serialVersionUID = -1930461199728515311L;
 
@@ -17,17 +17,17 @@ public final class DeserializationException extends RuntimeException {
      *
      * @param msg A string describing the event
      */
-    public DeserializationException(final String msg) {
+    DeserializationException(final String msg) {
         super(msg);
     }
 
     /**
      * Constructs a new DeserializationException that's thrown when there is an issue with
      * deserialization.
-     * @param e The exception that occurred that caused this throwable to happen
+     * @param throwable The exception that occurred that caused this throwable to happen
      */
-    public DeserializationException(final Exception e) {
-        super(e);
+    DeserializationException(final Throwable throwable) {
+        super(throwable);
     }
 
     /**
