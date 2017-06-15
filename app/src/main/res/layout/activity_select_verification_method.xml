@@ -61,6 +61,7 @@
             android:contentDescription="@string/select_rhythm_verification"
             android:hapticFeedbackEnabled="true"
             android:onClick="onVerificationMethodClick"
+            android:scaleType="fitXY"
             app:srcCompat="@drawable/rhythm_pairing"
             tools:targetApi="lollipop" />
 
@@ -71,7 +72,9 @@
             android:padding="@dimen/select_verification_method_description_padding"
             android:text="@string/by_tapping_a_rhythm"
             android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
     <CheckBox
