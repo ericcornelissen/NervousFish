@@ -16,6 +16,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +67,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @param view The {@link View} clicked
      */
     public void onSubmitClick(final View view) {
+        Validate.notNull(view);
         if (this.validateInputFields()) {
             final String name = this.nameInput.getText().toString();
             final Collection<KeyPair> keyPair = this.helper.generateKeyPairs(IKey.Types.RSA);
@@ -76,6 +78,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 database.addProfile(profile);
                 this.showProfileCreatedDialog();
             } catch (final IOException e) {
+                LOGGER.error("Couldn't create a new profile", e);
                 this.showProfileNotCreatedDialog();
             }
         } else {
