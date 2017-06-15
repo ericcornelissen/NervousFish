@@ -19,6 +19,9 @@ public class VerificationMethod implements Serializable {
      * @param verificationMethodEnum The verification method this object should represent.
      */
     public VerificationMethod(final VerificationMethodEnum verificationMethodEnum) {
+        if (verificationMethodEnum == null) {
+            throw new IllegalArgumentException("The verification method may not be null");
+        }
         this.verificationMethodEnum = verificationMethodEnum;
     }
 
