@@ -5,25 +5,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Simple {@link RuntimeException} that is used to notify usage of Bluetooth is not avaiable.
+ * Simple {@link RuntimeException} that is used on places that cannot be reached unless something is really, really wrong.
  */
-public class NoBluetoothException extends RuntimeException {
+public class CannotHappenException extends RuntimeException {
 
     private static final long serialVersionUID = -7030163248191198652L;
-
-    /**
-     * Default constructor for a new NoBluetoothException
-     */
-    public NoBluetoothException() {
-        super();
-    }
 
     /**
      * Constructor for a new NoBluetoothException with a message.
      *
      * @param msg A string describing the exception
      */
-    public NoBluetoothException(final String msg) {
+    public CannotHappenException(final String msg) {
         super(msg);
     }
 
@@ -52,5 +45,4 @@ public class NoBluetoothException extends RuntimeException {
     private void ensureClassInvariant() {
         // No checks to perform
     }
-
 }

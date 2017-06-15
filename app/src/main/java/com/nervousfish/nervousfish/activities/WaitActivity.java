@@ -22,8 +22,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
  * to complete the pairing session. Via this Activity the verification method
@@ -49,17 +47,33 @@ public final class WaitActivity extends Activity {
         this.database = this.serviceLocator.getDatabase();
 
         final Intent intent = this.getIntent();
+
+
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
-        LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
-                + " tapCombination is not null: " + (this.tapCombination != null));
+        LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.dataReceived != null, this.tapCombination != null);
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
         waitingMessage.setText(message);
 
-        LOGGER.info("Activity created");
+        LOGGER.info("WaitActivity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
+            this.finish();
+        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
+            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+            this.finish();
+        }
     }
 
     /**
@@ -86,21 +100,6 @@ public final class WaitActivity extends Activity {
 
         LOGGER.info("Activity stopped");
         super.onStop();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {
-            this.setResult(ConstantKeywords.DONE_PAIRING_RESULT_CODE);
-            this.finish();
-        } else if (resultCode == ConstantKeywords.CANCEL_PAIRING_RESULT_CODE) {
-            this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-            this.finish();
-        }
     }
 
     /**
@@ -131,12 +130,7 @@ public final class WaitActivity extends Activity {
             this.startActivityForResult(intent, 0);
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.database.addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
 
             //This needs to be outside of the try catch block
             this.dataReceived = contact;
@@ -146,6 +140,7 @@ public final class WaitActivity extends Activity {
 
     /**
      * Can be called by a button to cancel the pairing
+     *
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
@@ -154,13 +149,13 @@ public final class WaitActivity extends Activity {
     }
 
     /**
-     * Evaluate the data received for Bluetooth.
+     * Launch the mainActivity at the top.
      */
     private void goToMainActivity() {
-        LOGGER.info("Going to MainActivity");
+        LOGGER.info("Going to the main activity");
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
     }
-
 }

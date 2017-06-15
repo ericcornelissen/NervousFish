@@ -1,8 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
-import android.os.Message;
 
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionLostEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -69,17 +67,17 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
 
         final byte[] buffer = new byte[BUFFER_SIZE];
         // Read from the InputStream
-            try {
-                while (true) {
-                    final int bytes = inStream.read(buffer);
-                    LOGGER.info("Read {} bytes", bytes);
+        try {
+            while (true) {
+                final int bytes = inStream.read(buffer);
+                LOGGER.info("Read {} bytes", bytes);
 
-                    this.dataReceiver.dataReceived(buffer);
-                }
-            } catch (final IOException e) {
-                LOGGER.warn("Disconnected from the paired device", e);
-                this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
+                this.dataReceiver.dataReceived(buffer);
             }
+        } catch (final IOException e) {
+            LOGGER.warn("Disconnected from the paired device", e);
+            this.serviceLocator.postOnEventBus(new BluetoothConnectionLostEvent());
+        }
     }
 
     /**

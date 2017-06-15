@@ -24,7 +24,8 @@ public class MultiContactTest {
 
     @Before
     public void setup() {
-        this.key = mock(IKey.class);
+        // We don't use a mock here, because the equals function does not work correctly otherwise
+        this.key = new RSAKey("foo", "bar", "baz");
     }
 
     @Test

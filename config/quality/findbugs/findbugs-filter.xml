@@ -11,6 +11,9 @@
     <Match>
         <Class name="~.*\.*Test" />
     </Match>
+    <Match>
+        <Class name="~.*\.*Steps" />
+    </Match>
 
     <!-- Suppressed because Android enforces that the onCreate method is only called once -->
     <Match>
@@ -24,5 +27,11 @@
         <Class name="com.nervousfish.nervousfish.activities.CreateProfileActivity" />
         <Method name="validateInputFields" />
         <Bug pattern="NS_DANGEROUS_NON_SHORT_CIRCUIT" />
+    </Match>
+
+    <!-- Suppressed because lambda's are implemented with retrolambda, which doesn't support Findbugs -->
+    <Match>
+        <Bug code="UPM" />
+        <Class name="~.*\$\$Lambda\$.*"/>
     </Match>
 </FindBugsFilter>
