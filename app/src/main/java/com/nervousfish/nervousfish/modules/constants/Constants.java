@@ -12,9 +12,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 /**
  * Class containing global constants for the application. These constants are definied in this file, because
  * they're used by multiple files and don't logically belong to any one of them.

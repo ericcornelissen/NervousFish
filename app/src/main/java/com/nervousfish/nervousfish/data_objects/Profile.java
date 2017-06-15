@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public final class Profile {
     /**
      * The constructor for a {@link Profile} with a single {@link KeyPair}.
      *
-     * @param name the name belonging to the Profile.
+     * @param name    the name belonging to the Profile.
      * @param keyPair the public/private key-pair.
      */
     public Profile(final String name, final KeyPair keyPair) {
@@ -31,7 +30,7 @@ public final class Profile {
     /**
      * The constructor for a {@link Profile} with multiple {@link KeyPair}s.
      *
-     * @param name the name belonging to the Profile.
+     * @param name     the name belonging to the Profile.
      * @param keyPairs the public/private key-pairs.
      */
     public Profile(final String name, final Collection<KeyPair> keyPairs) {
@@ -55,7 +54,9 @@ public final class Profile {
      *
      * @return The {@link KeyPair}.
      */
-    public List<KeyPair> getKeyPairs() { return new ArrayList<>(this.keyPairs); }
+    public List<KeyPair> getKeyPairs() {
+        return new ArrayList<>(this.keyPairs);
+    }
 
     /**
      * {@inheritDoc}
@@ -68,7 +69,7 @@ public final class Profile {
 
         final Profile other = (Profile) obj;
         return this.name.equals(other.getName())
-            && this.keyPairs.equals(other.getKeyPairs());
+                && this.keyPairs.equals(other.getKeyPairs());
     }
 
     /**

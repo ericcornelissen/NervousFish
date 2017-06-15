@@ -24,9 +24,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 /**
  * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
  * DatabaseHandler has a lot of methods by nature and refactoring it to multiple classes or single

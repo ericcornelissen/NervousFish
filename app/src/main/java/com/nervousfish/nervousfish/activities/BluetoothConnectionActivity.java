@@ -45,6 +45,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectionActivity");
     private static final int DISCOVERABLE_DURATION = 300; // Device discoverable for 300 seconds
+    private static final int MINIMUM_MAC_LENGTH = 48; // The minimum length of a MAC address
 
     private final Set<BluetoothDevice> newDevices = new HashSet<>();
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -54,12 +55,19 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> pairedDevices;
     private boolean isMaster;
-    // Used to fill the listview of newly discovered Bluetooth devices
+    /*
+     * Used to fill the listview of newly discovered Bluetooth devices
+     */
     private ArrayAdapter<String> newDevicesArrayAdapter;
     /**
      * Used to fill the listview of paired Bluetooth devices
      */
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
+
+
+    private static String getDeviceDescription(final BluetoothDevice device) {
+        return String.format("%s\n%s", device.getName(), device.getAddress());
+    }
 
     /**
      * {@inheritDoc}
@@ -160,7 +168,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
         this.pairedDevices = this.bluetoothAdapter.getBondedDevices();
         for (final BluetoothDevice device : this.pairedDevices) {
-            this.pairedDevicesArrayAdapter.add(String.format("%s\n%s", device.getName(), device.getAddress()));
+            this.pairedDevicesArrayAdapter.add(getDeviceDescription(device));
         }
 
         LOGGER.info("Pairing query done");
@@ -225,7 +233,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         // Skip paired devices and devices without a valid name.
         if (this.isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED) {
             this.newDevices.add(device);
-            this.newDevicesArrayAdapter.add(String.format("%s\n%s", device.getName(), device.getAddress()));
+            this.newDevicesArrayAdapter.add(getDeviceDescription(device));
         }
     }
 
@@ -273,7 +281,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
          */
         private BluetoothDevice getDevice(final String address) {
             assert address != null;
-            assert address.length() >= 48;  // 48 is the minimum length of a MAC address
+            assert address.length() >= MINIMUM_MAC_LENGTH;
             for (final BluetoothDevice device : BluetoothConnectionActivity.this.pairedDevices) {
                 if (device.getAddress().equals(address)) {
                     return device;
