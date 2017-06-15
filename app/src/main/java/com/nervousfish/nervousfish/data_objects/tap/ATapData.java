@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.data_objects.tap;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -20,9 +22,12 @@ public abstract class ATapData implements Serializable {
     /**
      * <b>Should only be used for testing purposes!</b>
      *
-     * @param timestamp The timestamp of the tap data
+     * @param timestamp The timestamp of the tap data (NonNull)
      */
     public ATapData(final Timestamp timestamp) {
+        if (timestamp == null) {
+            throw new IllegalArgumentException("Null is not allowed");
+        }
         this.timestamp = new Timestamp(timestamp.getTime());
     }
 
@@ -47,7 +52,7 @@ public abstract class ATapData implements Serializable {
         }
 
         final ATapData that = (ATapData) o;
-        return this.timestamp == null ? that.timestamp == null : this.timestamp.equals(that.timestamp);
+        return this.timestamp.equals(that.timestamp);
     }
 
     /**
@@ -55,6 +60,6 @@ public abstract class ATapData implements Serializable {
      */
     @Override
     public int hashCode() {
-        return timestamp == null ? 0 : timestamp.hashCode();
+        return timestamp.hashCode();
     }
 }
