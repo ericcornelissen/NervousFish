@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -26,6 +27,42 @@ public class ContactTest {
     public void setup() {
         // We don't use a mock here, because the equals function does not work correctly otherwise
         this.key = new RSAKey("foo", "bar", "baz");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateWithNullNameSingleKey() {
+        new Contact(null, this.key);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateWithEmptyNameSingleKey() {
+        new Contact("", this.key);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateWithNullNameSingleKeys() {
+        final List<IKey> keys = new ArrayList<>();
+        keys.add(this.key);
+        new Contact(null, keys);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateWithEmptyNameSingleKeys() {
+        final List<IKey> keys = new ArrayList<>();
+        keys.add(this.key);
+        new Contact("", keys);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateWithNullKey() {
+        final IKey keyTmp = null;
+        new Contact("foo", keyTmp);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateWithNullKeys() {
+        final List<IKey> keysTmp = null;
+        new Contact("foo", keysTmp);
     }
 
     @Test
@@ -89,6 +126,22 @@ public class ContactTest {
         Contact contactA = new Contact("Stas", this.key);
         Contact contactB = new Contact("Stas", this.key);
         assertTrue(contactA.equals(contactB));
+    }
+
+    @Test
+    public void testAddKeys() {
+        Contact contact = new Contact("Kilian", this.key);
+        IKey key2 = new RSAKey("1", "2", "3");
+        IKey key3 = new RSAKey("4", "5", "6");
+        List<IKey> newKeys = new ArrayList<>();
+        newKeys.add(key2);
+        newKeys.add(key3);
+        contact.addKeys(newKeys);
+        List<IKey> expectedKeys = new ArrayList<>();
+        expectedKeys.add(this.key);
+        expectedKeys.add(key2);
+        expectedKeys.add(key3);
+        assertTrue(contact.getKeys().equals(expectedKeys));
     }
 
     @Test

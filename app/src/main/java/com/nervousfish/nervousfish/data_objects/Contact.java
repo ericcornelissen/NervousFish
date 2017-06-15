@@ -3,6 +3,8 @@ package com.nervousfish.nervousfish.data_objects;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -16,8 +18,9 @@ import java.util.List;
  * A Java object representation (POJO) of a contact.
  */
 public final class Contact implements Serializable {
-
     private static final long serialVersionUID = -4715364587956219157L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Contact.class);
+
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
 
@@ -28,6 +31,18 @@ public final class Contact implements Serializable {
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final IKey key) {
+        if (name == null) {
+            LOGGER.error("Name was null");
+            throw new IllegalArgumentException("Name cannot be null");
+        }
+        if (name.isEmpty()) {
+            LOGGER.error("Name had 0 characters");
+            throw new IllegalArgumentException("Name must have more than 0 characters");
+        }
+        if (key == null) {
+            LOGGER.error("Keys was null");
+            throw new IllegalArgumentException("Keys cannot be null");
+        }
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
     }
@@ -39,6 +54,18 @@ public final class Contact implements Serializable {
      * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
      */
     public Contact(final String name, final Collection<IKey> keys) {
+        if (name == null) {
+            LOGGER.error("Name was null");
+            throw new IllegalArgumentException("Name cannot be null");
+        }
+        if (name.isEmpty()) {
+            LOGGER.error("Name had 0 characters");
+            throw new IllegalArgumentException("Name must have more than 0 characters");
+        }
+        if (keys == null) {
+            LOGGER.error("Keys was null");
+            throw new IllegalArgumentException("Keys cannot be null");
+        }
         this.name = name;
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));
