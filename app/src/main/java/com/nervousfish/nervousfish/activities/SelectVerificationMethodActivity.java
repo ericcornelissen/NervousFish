@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
      * @param view The view on which the click was performed
      */
     public void openVerificationMethod(final View view) {
+        Validate.notNull(view);
         final Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.select_visual_verification:
