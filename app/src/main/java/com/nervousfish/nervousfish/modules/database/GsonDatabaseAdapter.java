@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocator Can be used to get access to other modules
      */
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         final IConstants constants = serviceLocator.getConstants();
         this.fileSystem = serviceLocator.getFileSystem();
 
@@ -76,6 +78,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<GsonDatabaseAdapter> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocator));
     }
 
@@ -84,6 +87,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
+        Validate.notNull(contact);
         LOGGER.info("Adding new contact with name: {}", contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
@@ -101,6 +105,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void deleteContact(final String contactName) throws IOException {
+        Validate.notBlank(contactName);
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         for (final Contact contact : contacts) {
@@ -123,6 +128,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateContact(final Contact oldContact, final Contact newContact) throws IOException {
+        Validate.notNull(oldContact);
+        Validate.notNull(newContact);
         // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
@@ -166,6 +173,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public Contact getContactWithName(final String contactName) throws IOException {
+        Validate.notBlank(contactName);
         final List<Contact> contacts = this.getAllContacts();
         for (final Contact contact : contacts) {
             if (contact.getName().equals(contactName)) {
@@ -181,6 +189,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public boolean contactExists(final String name) throws IOException {
+        Validate.notBlank(name);
         return this.getContactWithName(name) != null;
     }
 
@@ -205,6 +214,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addProfile(final Profile profile) throws IOException {
+        Validate.notNull(profile);
         // Get the list of profiles and add the new profile
         final List<Profile> profiles = this.getProfiles();
         profiles.add(profile);
@@ -224,6 +234,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void deleteProfile(final Profile profile) throws IOException {
+        Validate.notNull(profile);
         // Get the list of contacts
         final List<Profile> profiles = this.getProfiles();
         final int lengthBefore = profiles.size();
@@ -248,6 +259,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateProfile(final Profile oldProfile, final Profile newProfile) throws IOException {
+        Validate.notNull(oldProfile);
+        Validate.notNull(newProfile);
         // Get the list of contacts
         final List<Profile> profiles = this.getProfiles();
         final int lengthBefore = profiles.size();
@@ -282,6 +295,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param contacts The list of contacts to write.
      */
     private void updateContacts(final List<Contact> contacts) throws IOException {
+        Validate.noNullElements(contacts);
         final GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
@@ -338,8 +352,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * Ensure that the instance meets its class invariant
      */
     private void ensureClassInvariant() {
-        assertThat(this.contactsPath, notNullValue());
-        assertThat(this.profilesPath, notNullValue());
-        assertThat(this.fileSystem, notNullValue());
+        Validate.notNull(this.contactsPath);
+        Validate.notNull(this.profilesPath);
+        Validate.notNull(this.fileSystem);
     }
 }
