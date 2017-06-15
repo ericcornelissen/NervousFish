@@ -106,12 +106,26 @@ final class MainActivitySorter {
         });
 
         if (contactsByNameListAdapter.isEmpty()) {
-            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
-            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+            showNoContactsContent();
         } else {
-            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
-            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
+            hideNoContactsContent();
         }
+    }
+
+    /**
+     * Shows the message that the user has no contacts yet.
+     */
+    private void showNoContactsContent() {
+        mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
+        mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Hides the message that the user has no contacts yet.
+     */
+    private void hideNoContactsContent() {
+        mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
+        mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -135,11 +149,9 @@ final class MainActivitySorter {
         });
 
         if (contactsByKeyTypeListAdapter.isEmpty()) {
-            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
-            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+            showNoContactsContent();
         } else {
-            mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
-            mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
+            hideNoContactsContent();
         }
     }
 
