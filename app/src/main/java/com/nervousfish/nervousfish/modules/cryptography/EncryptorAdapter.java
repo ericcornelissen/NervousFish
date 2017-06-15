@@ -69,11 +69,11 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
-    public String hashWithoutSalt(final String pass) throws EncryptionException {
+    public String hashString(final String string) throws EncryptionException {
         try {
             final MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.reset();
-            final byte[] hash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+            final byte[] hash = digest.digest(string.getBytes(StandardCharsets.UTF_8));
             LOGGER.info("Hashed the pass with SHA-256, no salt");
             return new String(hash, UTF_8);
         } catch (final NoSuchAlgorithmException e) {

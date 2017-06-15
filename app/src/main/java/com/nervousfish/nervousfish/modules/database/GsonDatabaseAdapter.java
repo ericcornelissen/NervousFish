@@ -189,9 +189,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateProfile(final Profile newProfile) throws IOException {
-        getDatabase().setProfile(newProfile);
+        final Database newDatabase = new Database(getDatabase().getContacts(), newProfile );
+        databaseMap.put(DATABASE, newDatabase);
         updateDatabase();
-
     }
 
     /**
@@ -311,7 +311,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private void initializePassword(final String password) throws IOException {
         LOGGER.info("Initializing password");
-        databaseMap.put(ENCRYPTED_PASSWORD, encryptor.hashWithoutSalt(password));
+        databaseMap.put(ENCRYPTED_PASSWORD, encryptor.hashString(password));
 
 
         final String encryptedPassword = getEncryptedPassword();

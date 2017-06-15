@@ -5,6 +5,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,22 @@ public class Profile implements Serializable {
     public Profile(final Contact contact, final List<KeyPair> keyPairs) {
         this.contact = contact;
         this.keyPairs = keyPairs;
+    }
+
+    /**
+     * The constructor for the {@link Profile} class.
+     *
+     * @param name  The contact belonging to the user.
+     * @param keyPairs the public/private key-pairs of the user.
+     */
+    public Profile(final String name, final List<KeyPair> keyPairs) {
+        this.keyPairs = keyPairs;
+        final List<IKey> publicKeys = new ArrayList<IKey>();
+        for (final KeyPair pair: keyPairs) {
+            publicKeys.add(pair.getPublicKey());
+        }
+        this.contact = new Contact(name, publicKeys);
+
     }
 
     /**

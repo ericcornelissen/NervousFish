@@ -55,12 +55,6 @@ public final class Database implements Serializable {
     }
 
     /**
-     * Sets the user's profile to a new profile
-     * @param profile The new profile.
-     */
-    public void setProfile(final Profile profile) { this.profile = profile; }
-
-    /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {

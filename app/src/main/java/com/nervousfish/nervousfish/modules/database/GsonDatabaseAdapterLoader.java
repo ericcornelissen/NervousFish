@@ -80,8 +80,9 @@ class GsonDatabaseAdapterLoader implements Serializable {
      *
      * @param password -   The password to check.
      * @throws IOException Thrown when password is wrong.
+     * @return Whether the password is correct.
      */
-    private void checkPassword(final String password) throws IOException {
+    private boolean checkPassword(final String password) throws IOException {
 
         final BufferedReader passReader = (BufferedReader) this.fileSystem.getReader(passwordPath);
         final StringBuffer passwordFileStringBuffer = new StringBuffer();
@@ -92,22 +93,27 @@ class GsonDatabaseAdapterLoader implements Serializable {
             }
             passwordFileStringBuffer.append(line);
         }
-        final String encryptedPassword = passwordFileStringBuffer.toString();
-        if (!encryptedPassword.equals(encryptor.hashWithoutSalt(password))) {
-            throw new IOException("Password is wrong " + encryptedPassword + " " + encryptor.hashWithoutSalt(password));
-        }
         passReader.close();
+        final String encryptedPassword = passwordFileStringBuffer.toString();
+        if (!encryptedPassword.equals(encryptor.hashString(password))) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Loads the Secretkey from a given password.
      *
-     * @param password THe password to load a key from
+     * @param password The password to load a key from
      * @return The secretKey made from the password\
      */
     public SecretKey loadKey(final String password) throws IOException, InvalidKeySpecException {
         checkPassword(password);
-        return encryptor.makeKeyFromPassword(password);
+        if (checkPassword(password)) {
+            return encryptor.makeKeyFromPassword(password);
+        } else {
+            throw new IOException("Password is wrong");
+        }
     }
 
     /**

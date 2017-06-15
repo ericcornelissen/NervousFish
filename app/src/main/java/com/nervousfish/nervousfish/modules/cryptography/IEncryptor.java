@@ -21,7 +21,7 @@ public interface IEncryptor extends IModule {
      * @param pass The string to encrypt
      * @return The encrypted string.
      */
-    String hashWithoutSalt(String pass) throws EncryptionException;
+    String hashString(String string) throws EncryptionException;
 
     /**
      * Make a key for encryption based on a password.
