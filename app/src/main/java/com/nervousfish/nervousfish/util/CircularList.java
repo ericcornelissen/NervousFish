@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.util;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -34,9 +36,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
      */
     public CircularList(final int maxSize) {
         super();
-        if (maxSize <= 0) {
-            throw new IllegalArgumentException("Illegal capacity: " + maxSize);
-        }
+        Validate.isTrue(maxSize > 0);
         this.data = new Serializable[maxSize];
         this.maxSize = maxSize;
     }
@@ -49,6 +49,13 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
      */
     private CircularList(final int maxSize, final Serializable[] data, final int head, final int lastElementLocation, final int currentSize) {
         super();
+        assert maxSize > 0;
+        assert head >= 0;
+        assert lastElementLocation >= 0;
+        assert currentSize >= 0;
+        assert head < maxSize;
+        assert lastElementLocation < maxSize;
+        assert currentSize <= maxSize;
         this.maxSize = maxSize;
         this.data = data;
         this.head = head;
@@ -85,9 +92,7 @@ public final class CircularList<E extends Serializable> extends AbstractList<E> 
      */
     @Override
     public E get(final int index) {
-        if (index < 0) {
-            throw new IllegalArgumentException("Illegal Index: " + index);
-        }
+        Validate.isTrue(index >= 0);
         return this.elementData((index + this.head) % this.maxSize);
     }
 
