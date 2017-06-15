@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.constants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public final class Constants implements IConstants {
      * @param serviceLocator Can be used to get access to other modules
      */
     private Constants(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
         this.initializePaths();
         LOGGER.info("Initialized");
@@ -51,6 +53,7 @@ public final class Constants implements IConstants {
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<Constants> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new Constants(serviceLocator));
     }
 
@@ -112,9 +115,9 @@ public final class Constants implements IConstants {
      * Ensure that the instance meets its class invariant
      */
     private void ensureClassInvariant() {
-        assertThat(this.androidFilesDir, notNullValue());
-        assertThat(this.databaseContactsPath, notNullValue());
-        assertThat(this.databaseUserPath, notNullValue());
+        Validate.notBlank(this.androidFilesDir);
+        Validate.notBlank(this.androidFilesDir);
+        Validate.notBlank(this.databaseUserPath);
     }
 
     private void initializePaths() {
