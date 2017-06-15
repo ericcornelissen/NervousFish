@@ -9,11 +9,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-/**
- * ----------- NOTE ------------
- * We cannot test much more than just that the results are not null.
- * If we change the names of the
- */
+ // We cannot test much more than just that the results are not null.
+ // If we use serialization and change the names of the variables, then the tests don't compile anymore otherwise.
 public class ConstantsTest {
     Constants constants = (Constants) BaseTest.accessConstructor(Constants.class, mock(IServiceLocator.class));
 
