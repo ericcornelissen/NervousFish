@@ -13,7 +13,7 @@ public final class SerializationException extends RuntimeException {
 
     /**
      * Constructs a new SerializationException that's thrown when there is an issue with
-     * deserialization.
+     * serialization.
      *
      * @param msg A string describing the event
      */
@@ -23,7 +23,7 @@ public final class SerializationException extends RuntimeException {
 
     /**
      * Constructs a new SerializationException that's thrown when there is an issue with
-     * deserialization.
+     * serialization.
      *
      * @param throwable The exception that occurred the layer above
      */
