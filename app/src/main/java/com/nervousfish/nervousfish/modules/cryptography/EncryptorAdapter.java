@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.cryptography;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ public final class EncryptorAdapter implements IEncryptor {
     // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         LOGGER.info("Initialized");
     }
 

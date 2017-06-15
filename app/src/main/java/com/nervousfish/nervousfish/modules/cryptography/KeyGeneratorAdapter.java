@@ -6,6 +6,7 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private KeyGeneratorAdapter(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         LOGGER.info("Initialized");
     }
 
@@ -47,6 +49,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<KeyGeneratorAdapter> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new KeyGeneratorAdapter(serviceLocator));
     }
 
@@ -55,6 +58,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      */
     @Override
     public KeyPair generateRSAKeyPair(final String name) {
+        Validate.notBlank(name);
         try {
             final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
             keyPairGenerator.initialize(RSA_KEY_SIZE);
@@ -79,7 +83,8 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * {@inheritDoc}
      */
     @Override
-    public KeyPair generateEd25519KeyPair(final String name) throws KeyGenerationException {
+    public KeyPair generateEd25519KeyPair(final String name) {
+        Validate.notBlank(name);
         final Ed25519 keyPairGenerator = Ed25519.generatePair();
         final Ed25519Key publicKey = new Ed25519Key(name, keyPairGenerator.getPublicKey());
         final Ed25519Key privateKey = new Ed25519Key(name, keyPairGenerator.getPrivateKey());
