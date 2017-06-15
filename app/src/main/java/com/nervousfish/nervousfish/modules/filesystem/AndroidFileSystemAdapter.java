@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.filesystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         LOGGER.info("Initialized");
     }
 
@@ -50,6 +52,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<AndroidFileSystemAdapter> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new AndroidFileSystemAdapter(serviceLocator));
     }
 
@@ -58,6 +61,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     @Override
     public Writer getWriter(final String path) throws FileNotFoundException {
+        Validate.notBlank(path);
         final OutputStream outputStream = new FileOutputStream(path);
         final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
         return new BufferedWriter(outputStreamWriter);
@@ -68,6 +72,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      */
     @Override
     public Reader getReader(final String path) throws FileNotFoundException {
+        Validate.notBlank(path);
         final InputStream inputStream = new FileInputStream(path);
         final InputStreamReader outputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
         return new BufferedReader(outputStreamReader);
