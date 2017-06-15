@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -19,9 +21,7 @@ public final class VerificationMethod implements Serializable {
      * @param usedVerificationMethod The verification method this object should represent.
      */
     public VerificationMethod(final VerificationMethodEnum usedVerificationMethod) {
-        if (usedVerificationMethod == null) {
-            throw new IllegalArgumentException("The verification method may not be null");
-        }
+        Validate.notNull(usedVerificationMethod);
         this.usedVerificationMethod = usedVerificationMethod;
     }
 
