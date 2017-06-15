@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ public final class QRGenerator {
      * @return The bitmap being the QR code.
      */
     public static Bitmap encode(final String publicKey) {
+        Validate.notBlank(publicKey);
         final QRCodeWriter qrWriter = new QRCodeWriter();
         final Bitmap bitmap = Bitmap.createBitmap(QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT, Bitmap.Config.RGB_565);
 
@@ -76,7 +78,8 @@ public final class QRGenerator {
      * @param qrMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */
-    public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
+    public static IKey deconstructToKey(final String qrMessage) {
+        Validate.notBlank(qrMessage);
         final String[] messageComponents = qrMessage.split(" ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
