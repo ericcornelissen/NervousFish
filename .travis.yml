@@ -2,6 +2,9 @@ language: android
 jdk: oraclejdk8
 
 
+before_script:
+  - ./travis_before_script.sh
+
 script:
   - ./travis_script.sh
 
