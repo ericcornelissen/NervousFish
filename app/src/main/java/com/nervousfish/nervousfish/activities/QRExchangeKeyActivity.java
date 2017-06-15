@@ -56,6 +56,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Returns to the previous activity.
+     *
      * @param view - the imagebutton
      */
     public void onBackButtonClick(final View view) {
@@ -65,6 +66,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     /**
      * Starts the scan qr feature.
+     *
      * @param view - the imagebutton
      */
     public void onScanButtonClick(final View view) {
@@ -86,5 +88,4 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
     }
-
 }

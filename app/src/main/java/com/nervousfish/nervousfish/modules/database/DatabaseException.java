@@ -16,4 +16,13 @@ public final class DatabaseException extends RuntimeException {
         super(msg);
     }
 
+    /**
+     * Constructs a new Datbase Exception, thrown when there is an issue with the database
+     *
+     * @param throwable The root of th exception
+     */
+    public DatabaseException(final Throwable throwable) {
+        super(throwable);
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.annotations.DesignedForExtension;
+import com.nervousfish.nervousfish.exceptions.SerializationException;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
@@ -38,18 +41,14 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    @DesignedForExtension
-    public PairingWrapper<IDataReceiver> getDataReceiver() {
-        return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
-            @Override
-            public void dataReceived(final byte[] bytes) {
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                     ObjectInputStream ois = new ObjectInputStream(bis)) {
-                    final DataWrapper object = (DataWrapper) ois.readObject();
-                    APairingHandler.this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
-                } catch (final ClassNotFoundException | IOException e) {
-                    LOGGER.error(" Couldn't start deserialization!", e);
-                }
+    public final PairingWrapper<IDataReceiver> getDataReceiver() {
+        return new PairingWrapper<>(bytes -> {
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
+                final DataWrapper object = (DataWrapper) ois.readObject();
+                this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+            } catch (final ClassNotFoundException | IOException e) {
+                LOGGER.error(" Couldn't start deserialization!", e);
             }
         });
     }
@@ -58,28 +57,64 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final byte[] objectToBytes(final Serializable object) throws IOException {
+    public final byte[] objectToBytes(final Serializable object) {
         LOGGER.info("Begin serializing object: {}", object);
-        final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(new DataWrapper(object));
             oos.flush();
-            bytes = bos.toByteArray();
+            return bos.toByteArray();
+        } catch (final IOException e) {
+            LOGGER.error("Couldn't serialize object", e);
+            throw new SerializationException(e);
         }
-        return bytes;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object) throws IOException {
+    public final void send(final Serializable object) {
         LOGGER.info("Begin writing object: {}", object);
+        this.send(this.objectToBytes(object));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void send(final Serializable object, final int key) {
+        LOGGER.info("Begin writing object encoded with key: {}", key);
         this.send(this.objectToBytes(object));
     }
 
     protected final IServiceLocator getServiceLocator() {
         return this.serviceLocator;
+    }
+
+    /**
+     * Deserialize the instance using readObject to ensure invariants and security.
+     *
+     * @param stream The serialized object to be deserialized
+     */
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        this.ensureClassInvariant();
+    }
+
+    /**
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     */
+    private void ensureClassInvariant() {
+        assertThat(this.serviceLocator, notNullValue());
     }
 }
