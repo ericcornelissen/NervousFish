@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -22,12 +24,12 @@ public final class Contact implements Serializable {
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
      *
-     * @param name      The name of the {@link Contact}
-     * @param key       The {@link IKey} to initialize the {@link Contact} with
+     * @param name The name of the {@link Contact}
+     * @param key  The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final IKey key) {
         this.name = name;
-        this.keys.add(key);
+        this.keys.add(SerializationUtils.clone(key));
     }
 
     /**
@@ -38,28 +40,48 @@ public final class Contact implements Serializable {
      */
     public Contact(final String name, final Collection<IKey> keys) {
         this.name = name;
-        this.keys.addAll(keys);
+        for (final IKey key : keys) {
+            this.keys.add(SerializationUtils.clone(key));
+        }
     }
 
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return A list of all public keys of the contact
+     */
     public List<IKey> getKeys() {
-        return this.keys;
+        final ArrayList<IKey> keysCopy = new ArrayList<>();
+        for (final IKey key : this.keys) {
+            keysCopy.add(SerializationUtils.clone(key));
+        }
+        return keysCopy;
+    }
+
+    /**
+     * Adds a collection of keys to the public keys of the contact
+     *
+     * @param keys The public keys to add to the contact
+     */
+    public void addKeys(final Collection<IKey> keys) {
+        for (final IKey key : keys) {
+            this.keys.add(SerializationUtils.clone(key));
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object o) {
-        if (o == null || this.getClass() != o.getClass()) {
+    public boolean equals(final Object obj) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
 
-        final Contact that = (Contact) o;
-        return this.name.equals(that.name) && this.keys.equals(that.keys);
+        final Contact otherContact = (Contact) obj;
+        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys());
     }
 
     /**
@@ -74,7 +96,7 @@ public final class Contact implements Serializable {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new Contact.SerializationProxy(this);
     }
 
     /**
@@ -96,6 +118,7 @@ public final class Contact implements Serializable {
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param contact The current instance of the proxy
          */
         SerializationProxy(final Contact contact) {
@@ -105,6 +128,7 @@ public final class Contact implements Serializable {
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
