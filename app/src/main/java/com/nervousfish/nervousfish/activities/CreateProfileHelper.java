@@ -7,6 +7,8 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,6 +31,8 @@ final class CreateProfileHelper {
      * @param alertColor The {@link Color} to set as alert for incorrect values.
      */
     CreateProfileHelper(final IKeyGenerator keyGenerator, final int alertColor) {
+        Validate.notNull(keyGenerator);
+        Validate.isTrue(alertColor > 0);
         this.keyGenerator = keyGenerator;
         this.alertColor = alertColor;
     }
@@ -40,6 +44,8 @@ final class CreateProfileHelper {
      * @return a {@link KeyPair} with the key type selected
      */
     Collection<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+        Validate.notNull(keyType);
+
         final Collection<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
@@ -60,6 +66,7 @@ final class CreateProfileHelper {
      * @return True when the name is valid.
      */
     boolean validateName(final EditText input) {
+        Validate.notNull(input);
         final String name = input.getText().toString();
         if (isValidName(name)) {
             input.setBackgroundColor(Color.TRANSPARENT);
@@ -76,6 +83,7 @@ final class CreateProfileHelper {
      * @return True when the password is valid.
      */
     boolean validatePassword(final EditText input) {
+        Validate.notNull(input);
         final String password = input.getText().toString();
         if (isValidPassword(password)) {
             input.setBackgroundColor(Color.TRANSPARENT);
@@ -93,6 +101,8 @@ final class CreateProfileHelper {
      * @return True when the password matches the repeated password.
      */
     boolean passwordsEqual(final EditText passwordInput, final EditText repeatInput) {
+        Validate.notNull(passwordInput);
+        Validate.notNull(repeatInput);
         final String initialPassword = passwordInput.getText().toString();
         final String repeatPassword = repeatInput.getText().toString();
         if (!initialPassword.equals(repeatPassword)) {

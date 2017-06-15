@@ -17,6 +17,6 @@ public class KeyManagementActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_key_management);
+        this.setContentView(R.layout.activity_key_management);
     }
 }
