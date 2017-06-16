@@ -14,13 +14,13 @@ public class UnsupportedKeyTypeExceptionTest {
     @Test
     public void testStringConstructor() {
         final Exception exception = new Exception();
-        CannotHappenException cannotHappenException = new CannotHappenException("foo");
-        assertTrue(cannotHappenException.getMessage().equals("foo"));
+        UnsupportedKeyTypeException UnsupportedKeyTypeException = new UnsupportedKeyTypeException("foo");
+        assertTrue(UnsupportedKeyTypeException.getMessage().equals("foo"));
     }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final CannotHappenException exception = new CannotHappenException("foo");
+        final UnsupportedKeyTypeException exception = new UnsupportedKeyTypeException("foo");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -30,7 +30,7 @@ public class UnsupportedKeyTypeExceptionTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(CannotHappenException.class));
+                assertTrue(exception1.getClass().equals(UnsupportedKeyTypeException.class));
             }
         }
     }
