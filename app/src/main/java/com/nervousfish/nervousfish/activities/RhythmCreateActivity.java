@@ -257,7 +257,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          */
         int getEncryptionKey(final List<SingleTap> taps) {
             Validate.notNull(taps);
-            Validate.isTrue(taps.size() > 2);
+            Validate.isTrue(taps.size() >= 2);
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
