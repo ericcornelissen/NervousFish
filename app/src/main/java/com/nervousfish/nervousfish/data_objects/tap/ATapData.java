@@ -20,7 +20,7 @@ public abstract class ATapData implements Serializable {
     /**
      * <b>Should only be used for testing purposes!</b>
      *
-     * @param timestamp The timestamp of the tap data (NonNull)
+     * @param timestamp The timestamp of the tap data
      * @throws IllegalArgumentException If the provided {@code timestamp} is {@code null}
      */
     ATapData(final Timestamp timestamp) {
