@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,8 +25,11 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * An adapter to the default Android file system
+ * An adapter to the default Android file system. Suppresses ClassDataAbstractionCoupling because
+ * it's just not possible to work without all the imports, they are small but necessairy for safe file
+ * writing and reading.
  */
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
 public final class AndroidFileSystemAdapter implements IFileSystem {
 
     private static final long serialVersionUID = 1937542180968231197L;
@@ -100,4 +104,24 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     private void ensureClassInvariant() throws InvalidObjectException {
         // No checks to perform
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean checkFileExists(final String path) {
+        final File file = new File(path);
+        return file.exists();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean deleteFile(final String path) {
+        final File file = new File(path);
+        return file.delete();
+    }
+
+
 }

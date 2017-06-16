@@ -24,4 +24,18 @@ public interface IFileSystem extends IModule {
      * @return A {@link Writer} that can be used to read from the file
      */
     Reader getReader(String path) throws IOException;
+
+    /**
+     * Checks whether a given file exists.
+     * @param path The file path to check.
+     * @return Whether the file exists.
+     */
+    boolean checkFileExists(String path);
+
+    /**
+     * Deletes a file at the given path.
+     * @param path The file path to delete.
+     * @return If the deletion was succesful.
+     */
+    boolean deleteFile(String path);
 }
