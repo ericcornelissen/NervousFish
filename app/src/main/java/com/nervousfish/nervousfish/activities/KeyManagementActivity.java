@@ -48,7 +48,7 @@ public final class KeyManagementActivity extends Activity {
         this.setContentView(R.layout.activity_key_management);
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
-        Profile myProfile;
+        final Profile myProfile;
         try {
             myProfile = database.getProfile();
         } catch (final IOException e) {
@@ -91,9 +91,9 @@ public final class KeyManagementActivity extends Activity {
          * Alertdialog builder
          *
          * @param activity {@link Activity} where this listener is located
-         * @param title Title of the dialog
-         * @param key The string which shoud be presented in the body of the dialog
-         * @param profile Your {@link Profile}
+         * @param title    Title of the dialog
+         * @param key      The string which shoud be presented in the body of the dialog
+         * @param profile  Your {@link Profile}
          */
         KeyListClickListener(final Activity activity, final String title, final String key, final Profile profile) {
             Validate.notNull(activity);
@@ -107,8 +107,8 @@ public final class KeyManagementActivity extends Activity {
         }
 
         @Override
-        public final void onItemClick(final AdapterView<?> parent, final View view, final int position,
-                                      final long id) {
+        public void onItemClick(final AdapterView<?> parent, final View view, final int position,
+                                final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(this.title);
             builder.setMessage(key);

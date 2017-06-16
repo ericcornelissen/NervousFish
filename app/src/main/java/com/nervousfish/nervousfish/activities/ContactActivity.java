@@ -61,10 +61,10 @@ public final class ContactActivity extends AppCompatActivity {
 
         final ListView lv = (ListView) this.findViewById(R.id.list_view_contact);
 
-        lv.setOnItemClickListener(new KeyListClickListener(this, this.contact.getKeys()));
+        lv.setOnItemClickListener(new ContactActivity.KeyListClickListener(this, this.contact.getKeys()));
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
-        backButton.setOnClickListener(v -> ContactActivity.this.finish());
+        backButton.setOnClickListener(v -> this.finish());
         LOGGER.info("Activity created");
     }
 
@@ -106,7 +106,7 @@ public final class ContactActivity extends AppCompatActivity {
          * Alertdialog builder
          *
          * @param activity {@link Activity} where this listener is located
-         * @param keys      A {@Link List} with all the keys of a {@link Contact}
+         * @param keys     A {@Link List} with all the keys of a {@link Contact}
          */
         KeyListClickListener(final Activity activity, final List<IKey> keys) {
             Validate.notNull(activity);
@@ -115,15 +115,15 @@ public final class ContactActivity extends AppCompatActivity {
         }
 
         @Override
-        public final void onItemClick(final AdapterView<?> parent, final View view, final int position,
-                                      final long id) {
+        public void onItemClick(final AdapterView<?> parent, final View view, final int position,
+                                final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
-            builder.setTitle(((IKey) keys.get(position)).getName());
-            builder.setMessage(((IKey) keys.get(position)).getFormattedKey());
+            builder.setTitle(((IKey) this.keys.get(position)).getName());
+            builder.setMessage(((IKey) this.keys.get(position)).getFormattedKey());
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, ((IKey) keys.get(position)).getKey());
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, ((IKey) this.keys.get(position)).getKey());
                 clipboard.setPrimaryClip(clip);
             });
             builder.show();
@@ -153,7 +153,7 @@ public final class ContactActivity extends AppCompatActivity {
                 return true;
             } else {
                 return false;
-        }
+            }
         }
 
     }
@@ -201,8 +201,8 @@ public final class ContactActivity extends AppCompatActivity {
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
             sweetAlertDialog.dismiss();
             ContactActivity.this.finish();
-    }
+        }
 
-}
+    }
 
 }
