@@ -1,48 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/select_verification_method_title_padding"
         android:text="@string/select_verification_method"
+        android:textAlignment="center"
         android:textSize="@dimen/select_verification_method_title_text_size" />
 
-    <Button
-        android:id="@+id/select_visual_verification"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="openVerificationMethod"
-        android:padding="@dimen/select_verification_method_button_padding"
-        android:text="@string/select_visual_verification"
-        android:textSize="@dimen/select_verification_method_button_text_size" />
-
-    <Button
-        android:id="@+id/select_rhythm_verification"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="openVerificationMethod"
-        android:padding="@dimen/select_verification_method_button_padding"
-        android:text="@string/select_rhythm_verification"
-        android:textSize="@dimen/select_verification_method_button_text_size" />
-
-    <LinearLayout
-        android:layout_height="0dp"
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/select_verification_method_button_margin"
         android:layout_weight="1"
-        android:padding="@dimen/select_verification_method_checkbox_padding"
-        android:gravity="center|bottom"
-        android:orientation="vertical" >
+        android:elevation="24dp"
+        tools:targetApi="lollipop">
 
-        <CheckBox
-            android:id="@+id/checkBox"
+        <ImageButton
+            android:id="@+id/btn_select_visual_verification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue_btn_bg_pressed_color"
+            android:contentDescription="@string/select_visual_verification"
+            android:hapticFeedbackEnabled="true"
+            android:onClick="onVerificationMethodClick"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/visualverification_farm"
+            tools:targetApi="lollipop" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/remember_my_choice" />
-    </LinearLayout>
+            android:background="@color/select_verification_method_description_background_color"
+            android:padding="@dimen/select_verification_method_description_padding"
+            android:text="@string/by_tapping_on_an_image"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_margin="@dimen/select_verification_method_button_margin"
+        android:layout_weight="1"
+        android:elevation="24dp"
+        tools:targetApi="lollipop">
+
+        <ImageButton
+            android:id="@+id/btn_select_rhythm_verification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue_btn_bg_pressed_color"
+            android:contentDescription="@string/select_rhythm_verification"
+            android:hapticFeedbackEnabled="true"
+            android:onClick="onVerificationMethodClick"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/rhythm_pairing"
+            tools:targetApi="lollipop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/select_verification_method_description_background_color"
+            android:padding="@dimen/select_verification_method_description_padding"
+            android:text="@string/by_tapping_a_rhythm"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="@string/remember_my_choice"
+        android:textAlignment="center" />
+
 </LinearLayout>

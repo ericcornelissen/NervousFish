@@ -142,4 +142,19 @@ public final class Constants implements IConstants {
         //noinspection StringConcatenationMissingWhitespace because this is a file path
         this.databaseUserPath = this.androidFilesDir + Constants.DB_USERDATA_PATH;
     }
+
+    /**
+     * The general result codes for inputfield checks.
+     */
+    public enum InputFieldResultCodes {
+        CORRECT_FIELD, EMPTY_FIELD, TOO_SHORT_FIELD
+    }
+
+    /**
+     * The more explicit result codes for inputfield checks.
+     */
+    public enum ExplicitFieldResultCodes {
+        INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
+        PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY
+    }
 }

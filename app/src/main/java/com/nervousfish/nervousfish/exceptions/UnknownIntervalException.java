@@ -5,30 +5,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Thrown when there is an issue with serialization.
+ * Simple {@link RuntimeException} that is used when an interval is neither short nor long
  */
-public final class SerializationException extends RuntimeException {
+public class UnknownIntervalException extends RuntimeException {
 
-    private static final long serialVersionUID = 1698338992687134510L;
+    private static final long serialVersionUID = -7030163248191198652L;
 
     /**
-     * Constructs a new SerializationException that's thrown when there is an issue with
-     * serialization.
+     * Constructor for a new UnknownIntervalException with a message.
      *
-     * @param msg A string describing the event
+     * @param msg A string describing the exception
      */
-    public SerializationException(final String msg) {
+    public UnknownIntervalException(final String msg) {
         super(msg);
-    }
-
-    /**
-     * Constructs a new SerializationException that's thrown when there is an issue with
-     * serialization.
-     *
-     * @param throwable The exception that occurred the layer above
-     */
-    public SerializationException(final Throwable throwable) {
-        super(throwable);
     }
 
     /**
