@@ -72,4 +72,9 @@
     <dimen name="qr_code_margin">20dp</dimen>
 
     <dimen name="image_button_padding">17dp</dimen>
+
+    <dimen name="no_users_text_size">20sp</dimen>
+    <dimen name="no_users_text_margin_bottom">40dp</dimen>
+    <dimen name="no_users_icon_size">150dp</dimen>
+    <dimen name="no_users_icon_margin_bottom">20dp</dimen>
 </resources>

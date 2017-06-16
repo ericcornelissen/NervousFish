@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -81,15 +81,21 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = this.nameInput.getText().toString();
-                final Collection<KeyPair> keyPair = this.helper.generateKeyPairs(IKey.Types.RSA);
+                final String name = nameInput.getText().toString();
+                final String password = passwordInput.getText().toString();
+                final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
-                    final IDatabase database = this.serviceLocator.getDatabase();
-                    final Profile profile = new Profile(name, keyPair);
-                    database.addProfile(profile);
+                    // Create the new profile
+                    final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
+                    final Profile userProfile = new Profile(name, keyPairs);
+
+                    database.createDatabase(userProfile, password);
+                    database.loadDatabase(password);
+
                     this.showProfileCreatedDialog();
                 } catch (final IOException e) {
+                    LOGGER.error("Something went wrong when creating a profile", e);
                     this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
                 }
                 break;

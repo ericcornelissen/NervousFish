@@ -9,7 +9,7 @@ import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.CORRECT_FIELD;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
@@ -45,8 +45,8 @@ final class CreateProfileHelper {
      * @param keyType The type of key to generate.
      * @return a {@link KeyPair} with the key type selected
      */
-    Collection<KeyPair> generateKeyPairs(final IKey.Types keyType) {
-        final Collection<KeyPair> keyPairs = new ArrayList<>();
+    List<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+        final List<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
                 keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
