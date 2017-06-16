@@ -61,8 +61,7 @@ public class ChangeContactSteps {
         final IDatabase database = serviceLocator.getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, testpass);
         database.loadDatabase(testpass);

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
@@ -77,9 +76,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 // Create the new profile
                 final List<IKey> publicKeys = new ArrayList<IKey>();
                 final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
-                publicKeys.add(keyPairs.get(0).getPublicKey());
-                final Contact userContact = new Contact(name, publicKeys);
-                final Profile userProfile = new Profile(userContact, keyPairs);
+                final Profile userProfile = new Profile(name, keyPairs);
 
                 database.createDatabase(userProfile, password);
                 database.loadDatabase(password);

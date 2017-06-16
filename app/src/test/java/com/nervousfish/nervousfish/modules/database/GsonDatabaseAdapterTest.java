@@ -59,8 +59,7 @@ public class GsonDatabaseAdapterTest {
 
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        profile = new Profile(contact, new ArrayList<KeyPair>());
+        profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         databaseObject = new Database(new ArrayList<Contact>(), profile);
 

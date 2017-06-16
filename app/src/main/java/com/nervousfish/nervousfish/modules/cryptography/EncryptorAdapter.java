@@ -35,7 +35,7 @@ public final class EncryptorAdapter implements IEncryptor {
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
     private static final String UTF_8_NO_LONGER_SUPPORTED = "UTF-8 is no longer an encoding algorithm";
-    private static final String CANNOT_HAPPEN_UTF_8 = "Cannot happen, no encodign algorithm like UTF-8";
+    private static final String CANNOT_HAPPEN_UTF_8 = "Cannot happen, no encoding algorithm like UTF-8";
     private static final int SEED = 1234569;
     private static final int IV_SPEC_SIZE = 8;
     private static final String UTF_8 = "UTF-8";
@@ -81,7 +81,7 @@ public final class EncryptorAdapter implements IEncryptor {
             throw new EncryptionException("Cannot happen, SHA-256 is not a valid encryption algorithm", e);
         } catch (final UnsupportedEncodingException e) {
             LOGGER.error("UTF-8 is not a valid encoding method", e);
-            throw new EncryptionException("Cannot happen, UTF-8 is not a valid encoding method", e);
+            throw new EncryptionException(CANNOT_HAPPEN_UTF_8, e);
         }
     }
 

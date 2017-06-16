@@ -22,29 +22,25 @@ public class ProfileTest {
 
     @Test
     public void testCanBeInstantiatedWithArbitraryValues() {
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         assertNotNull(profile);
     }
 
     @Test
     public void testGetNameReturnsTheName() {
-        Contact contactA = new Contact("name", new ArrayList<IKey>());
-        Profile profileA = new Profile(contactA, new ArrayList<KeyPair>());
+        Profile profileA = new Profile("name", new ArrayList<KeyPair>());
         profileA.addKeyPair(this.keyPair);
         assertEquals("name", profileA.getName());
 
-        Contact contactB = new Contact("bar", new ArrayList<IKey>());
-        Profile profileB = new Profile(contactB, new ArrayList<KeyPair>());
+        Profile profileB = new Profile("bar", new ArrayList<KeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertEquals("bar", profileB.getName());
     }
 
     @Test
     public void testGetKeyPairReturnsTheKeyPair() {
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         ArrayList<KeyPair> test = new ArrayList<>();
         test.add(this.keyPair);
@@ -55,63 +51,54 @@ public class ProfileTest {
 
     @Test
     public void testGetPublicKeyReturnsThePublicKey() {
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         assertEquals(this.keyPair.getPublicKey(), profile.getPublicKey());
     }
 
     @Test
     public void testGetPrivateKeyReturnsThePrivateKey() {
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         assertEquals(this.keyPair.getPrivateKey(), profile.getKeyPairs().get(0).getPrivateKey());
     }
 
     @Test
     public void testEqualsWorksWithNull() {
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         assertFalse(profile.equals(null));
     }
 
     @Test
     public void testEqualsWorksWithArbitraryObject() {
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         assertFalse(profile.equals("foobar"));
     }
 
     @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
-        Contact contactA = new Contact("Eric", new ArrayList<IKey>());
-        Profile profileA = new Profile(contactA, new ArrayList<KeyPair>());
+        Profile profileA = new Profile("Eric", new ArrayList<KeyPair>());
         profileA.addKeyPair(this.keyPair);
 
-        Contact contactB = new Contact("Kilian", new ArrayList<IKey>());
-        Profile profileB = new Profile(contactB, new ArrayList<KeyPair>());
+        Profile profileB = new Profile("Kilian", new ArrayList<KeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertFalse(profileA.equals(profileB));
     }
 
     @Test
     public void testEqualsReturnsTrueForEqualKeys() {
-        Contact contactA = new Contact("Cornel", new ArrayList<IKey>());
-        Profile profileA = new Profile(contactA, new ArrayList<KeyPair>());
+        Profile profileA = new Profile("Cornel", new ArrayList<KeyPair>());
         profileA.addKeyPair(this.keyPair);
-        Contact contactB = new Contact("Cornel", new ArrayList<IKey>());
-        Profile profileB = new Profile(contactB, new ArrayList<KeyPair>());
+        Profile profileB = new Profile("Cornel", new ArrayList<KeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertTrue(profileA.equals(profileB));
     }
 
     @Test
     public void testHashCodeNotNull() {
-        Contact contact = new Contact("Stas", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("Stas", new ArrayList<KeyPair>());
         profile.addKeyPair(this.keyPair);
         assertNotNull(profile.hashCode());
     }

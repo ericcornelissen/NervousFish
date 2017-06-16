@@ -46,8 +46,7 @@ public class WelcomeSteps {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Contact contact = new Contact("name", new ArrayList<IKey>());
-        Profile profile = new Profile(contact, new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");

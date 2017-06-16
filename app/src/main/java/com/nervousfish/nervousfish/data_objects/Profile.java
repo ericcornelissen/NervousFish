@@ -15,19 +15,9 @@ import java.util.List;
 public class Profile implements Serializable {
 
     private static final long serialVersionUID = 8191245914949893284L;
-    private final Contact contact;
+    private final String name;
     private final List<KeyPair> keyPairs;
 
-    /**
-     * The constructor for the {@link Profile} class.
-     *
-     * @param contact  The contact belonging to the user.
-     * @param keyPairs the public/private key-pairs of the user.
-     */
-    public Profile(final Contact contact, final List<KeyPair> keyPairs) {
-        this.contact = contact;
-        this.keyPairs = keyPairs;
-    }
 
     /**
      * The constructor for the {@link Profile} class.
@@ -37,12 +27,7 @@ public class Profile implements Serializable {
      */
     public Profile(final String name, final List<KeyPair> keyPairs) {
         this.keyPairs = keyPairs;
-        final List<IKey> publicKeys = new ArrayList<IKey>();
-        for (final KeyPair pair: keyPairs) {
-            publicKeys.add(pair.getPublicKey());
-        }
-        this.contact = new Contact(name, publicKeys);
-
+        this.name = name;
     }
 
     /**
@@ -52,7 +37,6 @@ public class Profile implements Serializable {
      */
     public void addKeyPair(final KeyPair keyPair) {
         keyPairs.add(keyPair);
-        contact.getKeys().add(keyPair.getPublicKey());
     }
 
     /**
@@ -61,6 +45,11 @@ public class Profile implements Serializable {
      * @return - The Contact POJO.
      */
     public Contact getContact() {
+        final List<IKey> publicKeys = new ArrayList<>();
+        for (final KeyPair pair: keyPairs) {
+            publicKeys.add(pair.getPublicKey());
+        }
+        final Contact contact = new Contact(name, publicKeys);
         return contact;
     }
 
@@ -89,8 +78,9 @@ public class Profile implements Serializable {
      * @return Name of the profile.
      */
     public String getName() {
-        return contact.getName();
+        return this.name;
     }
+
 
     /**
      * {@inheritDoc}
@@ -103,7 +93,7 @@ public class Profile implements Serializable {
 
         final Profile that = (Profile) o;
 
-        return this.contact.equals(that.contact) && this.keyPairs.equals(that.keyPairs);
+        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs);
     }
 
     /**
@@ -111,7 +101,7 @@ public class Profile implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.contact.hashCode() + this.keyPairs.hashCode();
+        return this.name.hashCode() + this.keyPairs.hashCode();
     }
 
     /**
@@ -135,7 +125,7 @@ public class Profile implements Serializable {
      */
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = 8191245914949893284L;
-        private final Contact contact;
+        private final String name;
         private final KeyPair[] keyPairs;
 
         /**
@@ -144,7 +134,7 @@ public class Profile implements Serializable {
          * @param profile The current instance of the proxy
          */
         SerializationProxy(final Profile profile) {
-            this.contact = profile.contact;
+            this.name = profile.name;
             this.keyPairs = profile.keyPairs.toArray(new KeyPair[profile.keyPairs.size()]);
         }
 
@@ -154,7 +144,7 @@ public class Profile implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Profile(this.contact, Arrays.asList(this.keyPairs));
+            return new Profile(this.name, Arrays.asList(this.keyPairs));
         }
     }
 

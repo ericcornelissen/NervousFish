@@ -9,14 +9,13 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -95,8 +94,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 try {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
-                    final Contact contact = new Contact(stringValue, profile.getContact().getKeys());
-                    serviceLocator.getDatabase().updateProfile(new Profile(contact, profile.getKeyPairs()));
+                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
