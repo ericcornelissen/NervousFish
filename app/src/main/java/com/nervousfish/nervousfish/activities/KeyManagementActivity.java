@@ -48,7 +48,7 @@ public final class KeyManagementActivity extends Activity {
         this.setContentView(R.layout.activity_key_management);
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
-        Profile myProfile = null;
+        Profile myProfile;
         try {
             myProfile = database.getProfiles().get(0);
         } catch (final IOException e) {
@@ -56,7 +56,7 @@ public final class KeyManagementActivity extends Activity {
             throw new DatabaseException(e);
         }
         final String title = myProfile.getKeyPairs().get(0).getName();
-        final String[] key = myProfile.getKeyPairs().get(0).getPublicKey().getKey().split(" ");
+        final String key = myProfile.getKeyPairs().get(0).getPublicKey().getFormattedKey();
 
         final List<IKey> list = new ArrayList<>();
         //noinspection Convert2streamapi Because if we want to refactor this to a stream, we have to use at least API 24
@@ -78,28 +78,32 @@ public final class KeyManagementActivity extends Activity {
 
     /**
      * An {@link AdapterView.OnItemClickListener}
-     * which listents to the clicks on keys in  the list view of {@link KeyManagementActivity}
+     * which listens to the clicks on keys in  the list view of {@link KeyManagementActivity}
      */
-    private static class KeyListClickListener implements AdapterView.OnItemClickListener {
+    private static final class KeyListClickListener implements AdapterView.OnItemClickListener {
         private final Activity activity;
         private final Profile profile;
         private final String title;
-        private final String[] key;
+        private final String key;
 
         /**
-         * A Constructor for {@link AdapterView.OnItemClickListener} where we pass an
+         * * A Constructor for {@link AdapterView.OnItemClickListener} where we pass an
          * Alertdialog builder
+         *
+         * @param activity {@link Activity} where this listener is located
+         * @param title Title of the dialog
+         * @param key The string which shoud be presented in the body of the dialog
+         * @param profile Your {@link Profile}
          */
-        KeyListClickListener(final Activity activity, final String title, final String[] key, final Profile profile) {
+        KeyListClickListener(final Activity activity, final String title, final String key, final Profile profile) {
             Validate.notNull(activity);
             Validate.notBlank(title);
-            Validate.isTrue(key.length == 2);
-            Validate.noNullElements(key);
+            Validate.notNull(key);
             Validate.notNull(profile);
             this.activity = activity;
             this.profile = profile;
             this.title = title;
-            this.key = new String[]{key[0], key[1]};
+            this.key = key;
         }
 
         @Override
@@ -107,7 +111,7 @@ public final class KeyManagementActivity extends Activity {
                                       final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(this.title);
-            builder.setMessage(String.format("Exponent: %s %nModulus: %s ", this.key[0], this.key[1]));
+            builder.setMessage(key);
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final Profile profile = this.profile;
