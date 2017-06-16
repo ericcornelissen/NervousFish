@@ -10,17 +10,17 @@ import java.io.ObjectOutputStream;
 
 import static org.junit.Assert.assertTrue;
 
-public class CannotHappenExceptionTest {
+public class UnknownIntervalExceptionTest {
     @Test
     public void testStringConstructor() {
         final Exception exception = new Exception();
-        CannotHappenException cannotHappenException = new CannotHappenException("foo");
-        assertTrue(cannotHappenException.getMessage().equals("foo"));
+        UnknownIntervalException unknownIntervalException = new UnknownIntervalException("foo");
+        assertTrue(unknownIntervalException.getMessage().equals("foo"));
     }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final CannotHappenException exception = new CannotHappenException("foo");
+        final UnknownIntervalException exception = new UnknownIntervalException("foo");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -30,7 +30,7 @@ public class CannotHappenExceptionTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(CannotHappenException.class));
+                assertTrue(exception1.getClass().equals(UnknownIntervalException.class));
             }
         }
     }

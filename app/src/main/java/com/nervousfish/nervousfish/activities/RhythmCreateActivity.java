@@ -14,7 +14,7 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
-import com.nervousfish.nervousfish.exceptions.CannotHappenException;
+import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -296,7 +296,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
                 LOGGER.error("A timestamp does neither belong to the short or long timestamp");
-                throw new CannotHappenException("This cannot happen");
+                throw new UnknownIntervalException("This cannot happen");
             }
             this.intervals.remove(closestPoint.getRight());
         }
