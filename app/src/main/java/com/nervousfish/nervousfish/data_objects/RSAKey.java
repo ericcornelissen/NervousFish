@@ -68,6 +68,14 @@ public final class RSAKey implements IKey {
      * {@inheritDoc}
      */
     @Override
+    public String getFormattedKey() {
+        return String.format("Exponent : %s %nModulus : %s", this.exponent, this.modulus);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getName() {
         return this.name;
     }
