@@ -54,8 +54,7 @@
     <string name="create_profile_empty_name">You must select a name.</string>
     <string name="create_profile_error_adding_to_database">Error while adding profile to database</string>
     <string name="create_profile_passwords_not_equal">Please make sure you typed the same password twice.</string>
-
-
+    <string name="create_profile_all_fields_empty">Please fill in the fields</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>
@@ -134,5 +133,4 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
-    <string name="create_profile_all_fields_empty">Please fill in the fields</string>
 </resources>

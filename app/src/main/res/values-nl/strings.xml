@@ -55,6 +55,7 @@
     <string name="create_profile_empty_name">Gelieve een naam te selecteren.</string>
     <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
+    <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
 
 
     <!-- Hoofdscherm -->
@@ -133,5 +134,4 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
-    <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
 </resources>
