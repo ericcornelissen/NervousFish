@@ -85,9 +85,9 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
+        this.popups = new MainActivityPopups(this);
         startUpBluetooth();
 
-        this.popups = new MainActivityPopups(this);
         // Bluetooth exchange result
         final Intent intent = this.getIntent();
         final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE);
