@@ -24,7 +24,7 @@ This feature can be added by ...
 ## Definition of ready
 <!-- Specify any issues that are still open that must be completed before people can start on this issue -->
 This features is not ready until the following issues are finished:
-- Placeholder
+- Waiting on other issues is not needed
 
 ## Definition of done
 <!-- Specify exactly what must be done before this issue can be considered done -->
