@@ -26,7 +26,7 @@ import java.util.Collection;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.GOOD_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.NAME_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
@@ -80,7 +80,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     public void onSubmitClick(final View view) {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
-            case GOOD_FIELD:
+            case INPUT_CORRECT:
                 final String name = this.nameInput.getText().toString();
                 final Collection<KeyPair> keyPair = this.helper.generateKeyPairs(IKey.Types.RSA);
 
@@ -136,10 +136,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
             return PASSWORD_EMPTY;
         } else if (passwordValidation == TOO_SHORT_FIELD) {
             return PASSWORD_TOO_SHORT;
-        } else if (!this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
-            return PASSWORDS_NOT_EQUAL;
+        } else if (this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
+            return INPUT_CORRECT;
         } else {
-            return GOOD_FIELD;
+            return PASSWORDS_NOT_EQUAL;
         }
     }
 
