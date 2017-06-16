@@ -33,8 +33,8 @@ import java.util.Objects;
 public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
+    private IServiceLocator serviceLocator;
 
-    private String actualPassword;
     private KeyboardView keyboardView;
 
     /**
@@ -45,19 +45,13 @@ public final class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-        final IDatabase database = serviceLocator.getDatabase();
-        try {
-            this.actualPassword = database.getUserPassword();
-        } catch (final IOException e) {
-            LOGGER.error("Failed to retrieve password from database", e);
-        }
+        this.serviceLocator = NervousFish.getServiceLocator();
 
         final Keyboard keyboard = new Keyboard(this, R.xml.qwerty);
         this.keyboardView = (KeyboardView) this.findViewById(R.id.keyboardview);
         this.keyboardView.setKeyboard(keyboard);
         this.keyboardView.setPreviewEnabled(false);
-        this.keyboardView.setOnKeyboardActionListener(new OnCustomKeyboardActionListener());
+        this.keyboardView.setOnKeyboardActionListener(new OnCustomKeyboardActionListener(this));
 
         final EditText editPassword = (EditText) this.findViewById(R.id.login_password_input);
 
@@ -74,7 +68,7 @@ public final class LoginActivity extends AppCompatActivity {
         // Disable the default keyboard
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        LOGGER.info("Activity created");
+        LOGGER.info("LoginActivity created");
     }
 
     private void hideCustomKeyboard() {
@@ -124,16 +118,16 @@ public final class LoginActivity extends AppCompatActivity {
             mError.setVisibility(View.GONE);
             this.toMainActivity();
         } else {
+            final IDatabase database = this.serviceLocator.getDatabase();
             final String providedPassword = passwordInput.getText().toString();
-            final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
-            if (wrongPassword) {
 
-                LOGGER.warn("Password incorrect!");
-                mError.setVisibility(View.VISIBLE);
-            } else {
-                LOGGER.info("Password correct");
+            try {
+                database.loadDatabase(providedPassword);
                 mError.setVisibility(View.GONE);
                 this.toMainActivity();
+            } catch (final IOException e) {
+                LOGGER.error("Something went wrong when loading the database", e);
+                mError.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -151,27 +145,33 @@ public final class LoginActivity extends AppCompatActivity {
      */
     private static final class EditPasswordSelectionCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(final ActionMode actionMode, final Menu menu) {
+        public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onPrepareActionMode(final ActionMode actionMode, final Menu menu) {
+        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(final ActionMode actionMode, final MenuItem menuItem) {
+        public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
             return false;
         }
 
         @Override
-        public void onDestroyActionMode(final ActionMode actionMode) {
+        public void onDestroyActionMode(final ActionMode mode) {
             // Unused
         }
     }
 
-    private final class OnCustomKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
+    private static final class OnCustomKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
+        private final Activity activity;
+
+        OnCustomKeyboardActionListener(final Activity activity) {
+            this.activity = activity;
+        }
+
         @Override
         public void onPress(final int primaryCode) {
             // Unused
@@ -184,7 +184,7 @@ public final class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onKey(final int primaryCode, final int[] keyCodes) {
-            final View focusCurrent = LoginActivity.this.getWindow().getCurrentFocus();
+            final View focusCurrent = this.activity.getWindow().getCurrentFocus();
             if (focusCurrent == null) {
                 return;
             }

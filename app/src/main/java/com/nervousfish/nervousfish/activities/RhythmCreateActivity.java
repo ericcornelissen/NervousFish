@@ -63,11 +63,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_rhythm_create);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
-        this.setSupportActionBar(toolbar);
-
         this.database = this.serviceLocator.getDatabase();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+
+        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
+        this.setSupportActionBar(toolbar);
 
         this.startButton = (Button) this.findViewById(R.id.start_recording_button);
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
@@ -133,14 +133,14 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            final Profile profile = this.database.getProfiles().get(0);
+            final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
             final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }
         final Intent intent = new Intent(this, WaitActivity.class);
@@ -173,7 +173,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("Stop Recording clicked");
         this.startButton.setVisibility(View.VISIBLE);
         this.stopButton.setVisibility(View.GONE);
-        this.doneButton.setVisibility(View.VISIBLE);
         if (this.taps.size() < MINIMUM_TAPS) {
             this.taps.clear();
             this.doneButton.setVisibility(View.GONE);
@@ -182,6 +181,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                     .setContentText(this.getString(R.string.too_few_taps_description))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
+        } else {
+            this.doneButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -195,12 +196,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.database.addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
 
             //This needs to be outside of the try catch block
             this.dataReceived = contact;
@@ -227,6 +223,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             // Prevent instantiation from outside the package
         }
 
+        /**
+         * Get a list of the time between the taps (= intervals)
+         * @param taps The taps that have obviously intervals in between
+         * @return A list containing the time between the taps
+         */
         private static List<Long> getIntervals(final List<SingleTap> taps) {
             final List<Long> intervals = new ArrayList<>(taps.size() - 1);
             for (int i = 0; i < taps.size() - 1; i++) {
@@ -264,18 +265,29 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return this.generateKey(breakpoint);
         }
 
+        /**
+         * @return The mean length of the intervals in the "Short" cluster
+         */
         private long makeAndReturnFirstClusterMean() {
             this.clusterCenter1.add(this.intervals.get(0));
             this.intervals.remove(0);
             return this.clusterCenter1.get(0);
         }
 
+        /**
+         * @return The mean length of the intervals in the "Long" cluster
+         */
         private long makeAndReturnSecondClusterMean() {
             this.clusterCenter2.add(this.intervals.get(this.intervals.size() - 1));
             this.intervals.remove(this.intervals.size() - 1);
             return this.clusterCenter2.get(0);
         }
 
+        /**
+         * Adds the intervals whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         * @param centerMean1 The mean of the length of the intervals in the "Short" cluster
+         * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
+         */
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
             final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
             if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
@@ -289,6 +301,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             this.intervals.remove(closestPoint.getRight());
         }
 
+        /**
+         *  Returns the interval whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         * @param centerMean1 The mean of the length of the intervals in the "Short" cluster
+         * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
+         * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
+         */
         private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
@@ -310,6 +328,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return new ImmutablePair<>(targetCluster, closestPoint);
         }
 
+        /**
+         * @return A tuple of which the left value is the mean length of the intervals of the "Short" cluster
+         * and the right value is the mean length of the intervals of the "Long" cluster
+         */
         private ImmutablePair<Long, Long> recalculateClusterCenters() {
             long clusterCenterMean1 = 0L;
             for (final Long interval : this.clusterCenter1) {
@@ -327,6 +349,15 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return new ImmutablePair<>(clusterCenterMean1, clusterCenterMean2);
         }
 
+        /**
+         * Generates a key based on the rhythm that was tapped by using powers of 2.
+         * Short = 0
+         * Short, Long = 2
+         * Short, Long, Long = 6
+         * Long, Long, Long = 7
+         * @param breakpoint The boundary between a short and long interval
+         * @return The key as an integer
+         */
         private int generateKey(final long breakpoint) {
             int key = 0;
             int counter = 0;
@@ -341,6 +372,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             return key;
         }
 
+        /**
+         * Determines a breakpoint to determine which intervals are short and which are long
+         * @return The breakpoint
+         */
         private long getBreakpoint() {
             final long lastShortInterval = this.clusterCenter1.get(this.clusterCenter1.size() - 1);
             final long firstLongInterval = this.clusterCenter2.get(0);

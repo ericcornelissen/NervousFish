@@ -34,12 +34,12 @@ public class SelectVerificationMethodSteps {
 
     @When("I press the tab a rhythm button")
     public void iPressTheTabARhythmButton() {
-        onView(withId(R.id.select_rhythm_verification)).perform(click());
+        onView(withId(R.id.btn_select_rhythm_verification)).perform(click());
     }
 
     @When("I press the visual pattern button")
     public void iPressTheVisualPatternButton() {
-        onView(withId(R.id.select_visual_verification)).perform(click());
+        onView(withId(R.id.btn_select_visual_verification)).perform(click());
     }
 
     @Then("I should go to the rhythm activity to provide a pattern")

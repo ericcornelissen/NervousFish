@@ -14,7 +14,7 @@
     <string name="name">Naam</string>
     <string name="nfc">NFC</string>
     <string name="no">Nee</string>
-    <string name="paired_devices">Gepaarde apparaten</string>
+    <string name="paired_devices">Gekoppelde apparaten</string>
     <string name="password">Wachtwoord</string>
     <string name="qr">QR</string>
     <string name="qr_code">QR code</string>
@@ -32,7 +32,7 @@
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
-    <string name="key_type" formatted="false">Type sleutel: %s</string>
+    <string name="key_type">Type sleutel: %1$s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
     <string name="repeat_password">Herhaal wachtwoord</string>
@@ -55,12 +55,12 @@
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
     <string name="contact_added_popup_explanation">De uitwisseling was succesvol en het nieuwe contact is aan de lijst toegevoegd.</string>
-
     <string name="popup_log_out_title">Uitloggen?</string>
     <string name="popup_log_out_description">Weet je zeker dat je uit wilt loggen?</string>
     <string name="popup_enable_bluetooth_title">Bluetooth aanzetten?</string>
     <string name="popup_enable_bluetooth_findable">Zet Bluetooth aan zodat andere je apparaat kunnen vinden</string>
     <string name="popup_enable_bluetooth_exchange">Je moet Bluetooth aanzetten voordat je verder kunt</string>
+    <string name="your_contacts_list_is_empty">Je contactenlijst is leeg</string>
 
     <!-- Login -->
     <string name="login_message">Vul hier je wachtwoord in</string>
@@ -84,9 +84,16 @@
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
     <string name="yes_delete">Ja, verwijder het!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
+    <string name="contact_already_exists">Dit contact bestaat al</string>
+    <string name="contact_already_exists_with_name">Er bestaat al een contact met de naam "%1$s"</string>
+    <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
+    <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
+    <string name="create_new_contact">Creëer een nieuw contact</string>
+    <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
+    <string name="confirm">Bevestigen</string>
 
     <!-- Kies verificatie methode -->
-    <string name="select_verification_method">Selecteer een verificatie methode</string>
+    <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
     <string name="select_visual_verification">Visueel patroon</string>
     <string name="select_rhythm_verification">Tap een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
@@ -104,6 +111,8 @@
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
+    <string name="by_tapping_a_rhythm">Door een ritme te tikken</string>
+    <string name="by_tapping_on_an_image">Door op een aantal plaatjes te drukken</string>
 
     <!-- Settings -->
     <string name="title_activity_settings">Settings</string>
