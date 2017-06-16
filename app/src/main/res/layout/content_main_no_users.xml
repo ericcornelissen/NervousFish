@@ -8,7 +8,6 @@
     tools:context="com.nervousfish.nervousfish.activities.MainActivity"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    android:background="@color/default_android_background"
     tools:showIn="@layout/activity_main">
 
     <ImageView
