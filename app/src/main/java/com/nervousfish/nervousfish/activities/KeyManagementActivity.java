@@ -19,6 +19,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public final class KeyManagementActivity extends Activity {
         final IDatabase database = serviceLocator.getDatabase();
         try {
             this.myProfile = database.getProfiles().get(0);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not get my public key from the database ", e);
         }
         final String title = this.myProfile.getKeyPairs().get(0).getName();
@@ -65,14 +66,10 @@ public final class KeyManagementActivity extends Activity {
 
         final ListView lv = (ListView) this.findViewById(R.id.list_view_edit_keys);
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(String.format("Exponent: %s %nModulus: %s ", key[0], key[1]));
-
-        lv.setOnItemClickListener(new KeyManagementActivity.KeyListClickListener(builder, this, myProfile));
+        lv.setOnItemClickListener(new KeyManagementActivity.KeyListClickListener(this, title, key, this.myProfile));
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_key_management);
-        backButton.setOnClickListener(v -> KeyManagementActivity.this.finish());
+        backButton.setOnClickListener(v -> this.finish());
 
         LOGGER.info("Activity created");
     }
@@ -82,33 +79,41 @@ public final class KeyManagementActivity extends Activity {
      * which listents to the clicks on keys in  the list view of {@link KeyManagementActivity}
      */
     private static class KeyListClickListener implements AdapterView.OnItemClickListener {
-        private final AlertDialog.Builder builder;
         private final Activity activity;
         private final Profile profile;
+        private final String title;
+        private final String[] key;
 
         /**
          * A Constructor for {@link AdapterView.OnItemClickListener} where we pass an
          * Alertdialog builder
-         *
-         * @param builder An {@link AlertDialog.Builder}
          */
-        KeyListClickListener(final AlertDialog.Builder builder, final Activity activity, final Profile profile) {
-            this.builder = builder;
+        KeyListClickListener(final Activity activity, final String title, final String[] key, final Profile profile) {
+            Validate.notNull(activity);
+            Validate.notBlank(title);
+            Validate.isTrue(key.length == 2);
+            Validate.noNullElements(key);
+            Validate.notNull(profile);
             this.activity = activity;
             this.profile = profile;
+            this.title = title;
+            this.key = new String[]{key[0], key[1]};
         }
 
         @Override
         public final void onItemClick(final AdapterView<?> parent, final View view, final int position,
                                       final long id) {
-            this.builder.setPositiveButton("Copy", (dialog, which) -> {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
+            builder.setTitle(this.title);
+            builder.setMessage(String.format("Exponent: %s %nModulus: %s ", this.key[0], this.key[1]));
+            builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final Profile profile = this.profile;
                 final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
                 final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, profile.getKeyPairs().get(0).getPublicKey().getKey());
                 clipboard.setPrimaryClip(clip);
             });
-            this.builder.show();
+            builder.show();
         }
     }
 }
