@@ -189,7 +189,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateProfile(final Profile newProfile) throws IOException {
-        final Database newDatabase = new Database(getDatabase().getContacts(), newProfile );
+        final Database newDatabase = new Database(getDatabase().getContacts(), newProfile);
         databaseMap.put(DATABASE, newDatabase);
         updateDatabase();
     }

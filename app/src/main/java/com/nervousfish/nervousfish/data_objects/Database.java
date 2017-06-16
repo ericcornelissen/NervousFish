@@ -15,13 +15,14 @@ import java.util.List;
 public final class Database implements Serializable {
     private static final long serialVersionUID = 6127044556316179233L;
     private final List<Contact> contacts;
-    private Profile profile;
+    private final Profile profile;
 
 
     /**
      * The constructor for the {@link Database} POJO
+     *
      * @param contacts The contacts the user has.
-     * @param profile The profile of the user.
+     * @param profile  The profile of the user.
      */
     public Database(final List<Contact> contacts, final Profile profile) {
         this.contacts = contacts;
@@ -31,6 +32,7 @@ public final class Database implements Serializable {
 
     /**
      * Getter for the contacts.
+     *
      * @return The contacts list.
      */
     public List<Contact> getContacts() {
@@ -39,7 +41,8 @@ public final class Database implements Serializable {
 
     /**
      * Sets the list of contacts to the given list of contacts.
-     * @param contacts  The new list of contacts.
+     *
+     * @param contacts The new list of contacts.
      */
     public void setContacts(final List<Contact> contacts) {
         this.contacts.clear();
@@ -48,7 +51,8 @@ public final class Database implements Serializable {
 
     /**
      * Getter for the user profile
-     * @return  The User profile.
+     *
+     * @return The User profile.
      */
     public Profile getProfile() {
         return this.profile;
@@ -80,6 +84,7 @@ public final class Database implements Serializable {
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param database The current instance of the proxy
          */
         SerializationProxy(final Database database) {
@@ -89,6 +94,7 @@ public final class Database implements Serializable {
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {

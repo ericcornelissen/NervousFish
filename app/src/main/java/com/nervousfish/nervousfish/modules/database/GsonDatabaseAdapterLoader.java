@@ -95,10 +95,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
         }
         passReader.close();
         final String encryptedPassword = passwordFileStringBuffer.toString();
-        if (!encryptedPassword.equals(encryptor.hashString(password))) {
-            return false;
-        }
-        return true;
+        return encryptedPassword.equals(encryptor.hashString(password));
     }
 
     /**
