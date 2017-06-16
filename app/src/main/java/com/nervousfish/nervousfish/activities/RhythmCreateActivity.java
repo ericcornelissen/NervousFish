@@ -295,8 +295,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             } else if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.LONG) {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
-                LOGGER.error("A timestamp does neither belong to the short or long timestamp");
-                throw new UnknownIntervalException("This cannot happen");
+                LOGGER.error("A timestamp does neither belong to the short or long interval");
+                throw new UnknownIntervalException("The timestamp does neither long to the short or long interval");
             }
             this.intervals.remove(closestPoint.getRight());
         }
