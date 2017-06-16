@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -70,47 +69,44 @@ public final class KeyManagementActivity extends Activity {
         builder.setTitle(title);
         builder.setMessage(String.format("Exponent: %s %nModulus: %s ", key[0], key[1]));
 
-        lv.setOnItemClickListener(new KeyListClickListener(builder));
+        lv.setOnItemClickListener(new KeyManagementActivity.KeyListClickListener(builder, this, myProfile));
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_key_management);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                KeyManagementActivity.this.finish();
-            }
-        });
+        backButton.setOnClickListener(v -> KeyManagementActivity.this.finish());
 
         LOGGER.info("Activity created");
     }
 
     /**
-     * An {@link android.widget.AdapterView.OnItemClickListener}
+     * An {@link AdapterView.OnItemClickListener}
      * which listents to the clicks on keys in  the list view of {@link KeyManagementActivity}
      */
-    private class KeyListClickListener implements AdapterView.OnItemClickListener {
+    private static class KeyListClickListener implements AdapterView.OnItemClickListener {
         private final AlertDialog.Builder builder;
+        private final Activity activity;
+        private final Profile profile;
 
         /**
-         * A Constructor for {@link android.widget.AdapterView.OnItemClickListener} where we pass an
+         * A Constructor for {@link AdapterView.OnItemClickListener} where we pass an
          * Alertdialog builder
          *
-         * @param builder An {@link android.support.v7.app.AlertDialog.Builder}
+         * @param builder An {@link AlertDialog.Builder}
          */
-        KeyListClickListener(final AlertDialog.Builder builder) {
+        KeyListClickListener(final AlertDialog.Builder builder, final Activity activity, final Profile profile) {
             this.builder = builder;
+            this.activity = activity;
+            this.profile = profile;
         }
 
         @Override
         public final void onItemClick(final AdapterView<?> parent, final View view, final int position,
                                       final long id) {
-            builder.setPositiveButton("Copy", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialog, final int which) {
-                    final ClipboardManager clipboard = (ClipboardManager) KeyManagementActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
-                    final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN,
-                            KeyManagementActivity.this.myProfile.getKeyPairs().get(0).getPublicKey().getKey());
-                    clipboard.setPrimaryClip(clip);
-                }
+            this.builder.setPositiveButton("Copy", (dialog, which) -> {
+                final Activity activity = this.activity;
+                final Profile profile = this.profile;
+                final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, profile.getKeyPairs().get(0).getPublicKey().getKey());
+                clipboard.setPrimaryClip(clip);
             });
             this.builder.show();
         }
