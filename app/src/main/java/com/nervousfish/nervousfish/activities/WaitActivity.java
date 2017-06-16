@@ -12,6 +12,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -20,8 +21,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -33,6 +32,7 @@ public final class WaitActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
+    private IDatabase database;
     private Object dataReceived;
     private Object tapCombination;
 
@@ -44,45 +44,21 @@ public final class WaitActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.database = this.serviceLocator.getDatabase();
 
         final Intent intent = this.getIntent();
+
+
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
-        LOGGER.info("dataReceived is not null: " + (this.dataReceived != null)
-                + " tapCombination is not null: " + (this.tapCombination != null));
+        LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.dataReceived != null, this.tapCombination != null);
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
         waitingMessage.setText(message);
 
-        LOGGER.info("Activity created");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        this.serviceLocator.registerToEventBus(this);
-
-        if (this.dataReceived != null && this.tapCombination != null) {
-            this.evaluateData();
-        }
-
-        LOGGER.info("Activity started");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onStop() {
-        this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Activity stopped");
-
-        super.onStop();
+        LOGGER.info("WaitActivity created");
     }
 
     /**
@@ -101,13 +77,39 @@ public final class WaitActivity extends Activity {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        if (this.dataReceived != null && this.tapCombination != null) {
+            this.goToMainActivity();
+        }
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+        LOGGER.info("Activity stopped");
+
+        super.onStop();
+    }
+
+    /**
      * Called when a new data is received.
      *
      * @param event Contains additional data about the event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called, type is " + event.getClazz());
+        LOGGER.info("onNewDataReceivedEvent called, type is {}", event.getClazz());
         if (event.getClazz().equals(VerificationMethod.class)) {
             final VerificationMethodEnum verificationMethod = ((VerificationMethod) event.getData()).getVerificationMethod();
 
@@ -128,21 +130,17 @@ public final class WaitActivity extends Activity {
             this.startActivityForResult(intent, 0);
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
 
             //This needs to be outside of the try catch block
             this.dataReceived = contact;
-            this.evaluateData();
+            this.goToMainActivity();
         }
     }
 
     /**
      * Can be called by a button to cancel the pairing
+     *
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
@@ -151,13 +149,13 @@ public final class WaitActivity extends Activity {
     }
 
     /**
-     * Evaluate the data received for Bluetooth.
+     * Launch the mainActivity at the top.
      */
-    private void evaluateData() {
-        LOGGER.info("Evaluating data");
+    private void goToMainActivity() {
+        LOGGER.info("Going to the main activity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_BLUETOOTH, true);
+        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
     }
-
 }

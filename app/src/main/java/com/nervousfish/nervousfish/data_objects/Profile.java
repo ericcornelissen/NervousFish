@@ -1,57 +1,75 @@
 package com.nervousfish.nervousfish.data_objects;
 
-/**
- * An Profile POJO to store a name, public key and private key.
- */
-public class Profile {
+import com.nervousfish.nervousfish.ConstantKeywords;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * A Profile POJO to store a contact representing the user and the user's keypairs.
+ */
+public class Profile implements Serializable {
+
+    private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
-    private final KeyPair keyPair;
+    private final List<KeyPair> keyPairs;
+
 
     /**
      * The constructor for the {@link Profile} class.
      *
-     * @param name the name belonging to the Profile
-     * @param keyPair the public/private key-pair
+     * @param name     The contact belonging to the user.
+     * @param keyPairs the public/private key-pairs of the user.
      */
-    public Profile(final String name, final KeyPair keyPair) {
+    public Profile(final String name, final List<KeyPair> keyPairs) {
+        this.keyPairs = keyPairs;
         this.name = name;
-        this.keyPair = keyPair;
     }
 
     /**
-     * Get the name of the {@link Profile}.
+     * Adds a new keyPair to the profile
      *
-     * @return The name.
+     * @param keyPair the keyPair to add.
+     */
+    public void addKeyPair(final KeyPair keyPair) {
+        keyPairs.add(keyPair);
+    }
+
+    /**
+     * Returns the contact Object of the user
+     *
+     * @return - The Contact POJO.
+     */
+    public Contact getContact() {
+        final List<IKey> publicKeys = new ArrayList<>();
+        for (final KeyPair pair : keyPairs) {
+            publicKeys.add(pair.getPublicKey());
+        }
+        return new Contact(name, publicKeys);
+    }
+
+    /**
+     * Returns the Keypairs of the user.
+     *
+     * @return The list of keypairs of the user.
+     */
+    public List<KeyPair> getKeyPairs() {
+        return keyPairs;
+    }
+
+    /**
+     * Returns the name of the profile.
+     *
+     * @return Name of the profile.
      */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * Get the {@link KeyPair} of the {@link Profile}.
-     *
-     * @return The {@link KeyPair}.
-     */
-    public KeyPair getKeyPair() { return this.keyPair; }
-
-    /**
-     * Get the public {@link IKey} of the {@link Profile}.
-     *
-     * @return The public {@link IKey}.
-     */
-    public IKey getPublicKey() {
-        return this.keyPair.getPublicKey();
-    }
-
-    /**
-     * Get the private {@link IKey} of the {@link Profile}.
-     *
-     * @return The private {@link IKey}.
-     */
-    public IKey getPrivateKey() {
-        return this.keyPair.getPrivateKey();
-    }
 
     /**
      * {@inheritDoc}
@@ -63,8 +81,8 @@ public class Profile {
         }
 
         final Profile that = (Profile) o;
-        return this.name.equals(that.name)
-            && this.keyPair.equals(that.keyPair);
+
+        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs);
     }
 
     /**
@@ -72,7 +90,51 @@ public class Profile {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keyPair.hashCode();
+        return this.name.hashCode() + this.keyPairs.hashCode();
+    }
+
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new Profile.SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
+    }
+
+    /**
+     * Represents the logical state of this class and copies the data from that class without
+     * any consistency checking or defensive copying.
+     */
+    private static final class SerializationProxy implements Serializable {
+        private static final long serialVersionUID = 8191245914949893284L;
+        private final String name;
+        private final KeyPair[] keyPairs;
+
+        /**
+         * Constructs a new SerializationProxy
+         *
+         * @param profile The current instance of the proxy
+         */
+        SerializationProxy(final Profile profile) {
+            this.name = profile.name;
+            this.keyPairs = profile.keyPairs.toArray(new KeyPair[profile.keyPairs.size()]);
+        }
+
+        /**
+         * Not to be called by the user - resolves a new object of this proxy
+         *
+         * @return The object resolved by this proxy
+         */
+        private Object readResolve() {
+            return new Profile(this.name, Arrays.asList(this.keyPairs));
+        }
     }
 
 }

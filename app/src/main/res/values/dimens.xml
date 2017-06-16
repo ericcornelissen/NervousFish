@@ -1,6 +1,8 @@
 <resources>
+    <!-- General dimesions -->
+    <dimen name="icon_size">24dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="sorting_fab_margin">22dp</dimen>
     <dimen name="contact_picture_width">100dp</dimen>
     <dimen name="contact_picture_height">100dp</dimen>
     <dimen name="contact_name_size">21sp</dimen>
@@ -15,7 +17,10 @@
     <dimen name="contacts_list_entry_icon_height">50dp</dimen>
     <dimen name="contacts_list_entry_text_layout_width">0dp</dimen>
     <dimen name="contacts_list_entry_text_layout_margin_start">5dp</dimen>
+    <dimen name="contacts_list_entry_text_layout_margin_end">10dp</dimen>
     <dimen name="contacts_list_entry_text_name_size">20sp</dimen>
+    <dimen name="contacts_list_divider_left_margin">60dp</dimen>
+    <dimen name="contacts_list_divider_right_margin">15dp</dimen>
 
     <dimen name="enter_password_padding_top">40dp</dimen>
     <dimen name="error_password_margin_top">10dp</dimen>
@@ -47,6 +52,8 @@
     <dimen name="welcome_message_padding_top">20dp</dimen>
     <dimen name="first_use_logo_height">175dp</dimen>
 
+    <dimen name="ten_padding">10dp</dimen>
+    <dimen name="twenty_padding">20dp</dimen>
     <dimen name="submit_text_size">18sp</dimen>
 
     <dimen name="field_margin_top">20dp</dimen>
@@ -55,7 +62,18 @@
 
     <dimen name="select_verification_method_title_padding">20dp</dimen>
     <dimen name="select_verification_method_title_text_size">22sp</dimen>
-    <dimen name="select_verification_method_button_padding">15dp</dimen>
-    <dimen name="select_verification_method_button_text_size">16sp</dimen>
-    <dimen name="select_verification_method_checkbox_padding">6dp</dimen>
+    <dimen name="select_verification_method_button_margin">4dp</dimen>
+    <dimen name="select_verification_method_description_padding">10dp</dimen>
+
+    <!-- QR activity dimensions -->
+    <dimen name="qr_code_wrapper_size">400dp</dimen>
+    <dimen name="qr_code_wrapper_padding">20dp</dimen>
+    <dimen name="qr_code_margin">20dp</dimen>
+
+    <dimen name="image_button_padding">17dp</dimen>
+
+    <dimen name="no_users_text_size">20sp</dimen>
+    <dimen name="no_users_text_margin_bottom">40dp</dimen>
+    <dimen name="no_users_icon_size">150dp</dimen>
+    <dimen name="no_users_icon_margin_bottom">20dp</dimen>
 </resources>

@@ -6,7 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
-    <string name="dsa_key">DSA key</string>
+    <string name="ed25519_key">Ed25519 key</string>
     <string name="edit">Edit</string>
     <string name="logo">Logo</string>
     <string name="more">More</string>
@@ -27,12 +27,11 @@
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
-    <string name="contact_already_exists">Contact already exists</string>
     <string name="discovered_devices">Discovered devices</string>
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
-    <string name="key_type" formatted="false">Key type: %s</string>
+    <string name="key_type">Key type: %1$s</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
     <string name="repeat_password">Repeat password</string>
@@ -50,16 +49,22 @@
     <string name="profile_created_title">Profile created</string>
     <string name="profile_created_explanation">Your profile is successfully created.</string>
     <string name="profile_not_created_title">Can\'t create profile</string>
-    <string name="profile_not_created_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
+    <string name="create_proflie_too_short_password">The password is too short, it should contain at least 6 characters</string>
+    <string name="create_profile_empty_password">You must select a password!</string>
+    <string name="create_profile_empty_name">You must select a name.</string>
+    <string name="create_profile_error_adding_to_database">Error while adding profile to database</string>
+    <string name="create_profile_passwords_not_equal">Please make sure you typed the same password twice.</string>
+    <string name="create_profile_all_fields_empty">Please fill in the fields</string>
 
     <!-- Main activity -->
-    <string name="contact_added_popup_title">Pairing was successful!</string>
-    <string name="contact_added_popup_explanation">The pairing over Bluetooth was successful and the new contact is added to the list.</string>
+    <string name="contact_added_popup_title">Successfully received!</string>
+    <string name="contact_added_popup_explanation">The exchange was successful and the new contact is added to the list.</string>
     <string name="popup_log_out_title">Log out?</string>
     <string name="popup_log_out_description">Are you sure you want to log out?</string>
     <string name="popup_enable_bluetooth_title">Enable Bluetooth?</string>
     <string name="popup_enable_bluetooth_findable">Enable Bluetooth so others can find your device</string>
     <string name="popup_enable_bluetooth_exchange">You must enable Bluetooth before continuing</string>
+    <string name="your_contacts_list_is_empty">Your contacts list is empty</string>
 
     <!-- Login -->
     <string name="login_message">Enter your password below</string>
@@ -80,23 +85,54 @@
     <string name="tap_me">Tap me!</string>
     <string name="stop_recording">Stop recording</string>
     <string name="start_recording">Start recording</string>
-
+    <string name="too_few_taps_title">Too few taps</string>
+    <string name="too_few_taps_description">You have to tap at least 3 times</string>
     <string name="contact_image">Contact image</string>
+    <string name="contact_already_exists">Contact already exists</string>
+    <string name="contact_already_exists_with_name">A contact with the name "%1$s" exists already</string>
+    <string name="contact_exists_nothing_done">A contact with the same name and keys exists already, so adding the same contact "%1$s" again was not needed</string>
+    <string name="add_public_key_to_contact">Add public key to contact</string>
+    <string name="create_new_contact">Create a new contact</string>
+    <string name="enter_name_contact">Enter the name of the new contact</string>
+    <string name="confirm">Confirm</string>
 
     <!-- Select verification method -->
-    <string name="select_verification_method">Select a verification method</string>
+    <string name="select_verification_method">How do you want to secure your connection?</string>
     <string name="select_visual_verification">Visual pattern</string>
     <string name="select_rhythm_verification">Tap a rhythm</string>
     <string name="unknown_verification_method_title">Oops…</string>
     <string name="unknown_verification_method_description">Something went wrong, please try again</string>
+    <string name="by_tapping_a_rhythm">By tapping a rhythm</string>
+    <string name="by_tapping_on_an_image">By tapping on a few images</string>
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
-    <string name="show_qr_code">Show QR code</string>
-    <string name="contact_set_name">Give contact a name</string>
-    <string name="contact_exists_message">Contact already exists, please give a unique value</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
     <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
+
+    <!-- NFC -->
+    <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>
+    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
+    <string name="popup_enable_nfc_title">Enable NFC?</string>
+    <string name="popup_enable_nfc_settings">Please activate NFC and press Back to return to the application!</string>
+
+
+    <!-- Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="content_description_settings_button">Settings button three dots</string>
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_verification_method_to_use">Verification method to use</string>
+
+    <!-- Profile Settings -->
+    <string name="pref_header_profile">Profile information</string>
+
+    <string name="display_name">Display name</string>
+
+    <!-- KeyManagementActivity -->
+    <string name="pref_key_management_header">Key management</string>
 </resources>

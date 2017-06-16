@@ -1,8 +1,5 @@
 package com.nervousfish.nervousfish.util;
 
-import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
-
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -84,6 +81,7 @@ public class CircularListTest {
         list1.add(12);
         assertTrue(list3.equals(list4));
         assertTrue(list3.hashCode() == list4.hashCode());
+        assertNotEquals(list3, null);
     }
 
     @Test

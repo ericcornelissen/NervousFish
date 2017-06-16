@@ -10,9 +10,12 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Simple variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
+ * Ed25519 variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
+ *
+ * For more info about Ed25519 see: https://ed25519.cr.yp.to/
  */
-public final class SimpleKey implements IKey {
+public final class Ed25519Key implements IKey {
+
     private static final long serialVersionUID = -3865050366412869804L;
 
     private static final String KEYWORD_NAME = "name";
@@ -22,22 +25,22 @@ public final class SimpleKey implements IKey {
     private final String name;
 
     /**
-     * Constructor for a simple key.
+     * Constructor for a Ed25519-based key.
      *
      * @param name The name for the key.
      * @param key  The key string.
      */
-    public SimpleKey(final String name, final String key) {
+    public Ed25519Key(final String name, final String key) {
         this.name = name;
         this.key = key;
     }
 
     /**
-     * Constructor for a simple key given a {@link Map} of its values.
+     * Constructor for a Ed25519-based key given a {@link Map} of its values.
      *
-     * @param map A {@link Map} mapping {@link SimpleKey} attribute names to values.
+     * @param map A {@link Map} mapping {@link Ed25519Key} attribute names to values.
      */
-    public SimpleKey(final Map<String, String> map) throws IllegalArgumentException {
+    public Ed25519Key(final Map<String, String> map) throws IllegalArgumentException {
         this.name = map.get(KEYWORD_NAME);
         this.key = map.get(KEYWORD_KEY);
 
@@ -58,6 +61,14 @@ public final class SimpleKey implements IKey {
      * {@inheritDoc}
      */
     @Override
+    public String getFormattedKey() {
+        return this.getKey();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getName() {
         return this.name;
     }
@@ -67,7 +78,7 @@ public final class SimpleKey implements IKey {
      */
     @Override
     public String getType() {
-        return ConstantKeywords.SIMPLE_KEY;
+        return ConstantKeywords.ED25519_KEY;
     }
 
     /**
@@ -88,7 +99,7 @@ public final class SimpleKey implements IKey {
             return false;
         }
 
-        final SimpleKey that = (SimpleKey) o;
+        final Ed25519Key that = (Ed25519Key) o;
         return this.name.equals(that.name)
                 && this.key.equals(that.key);
     }
@@ -106,12 +117,12 @@ public final class SimpleKey implements IKey {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new Ed25519Key.SerializationProxy(this);
     }
 
     /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
+     * Ensure that no instance of this class is created because it was present in the stream. A
+     * correct stream should only contain instances of the proxy.
      */
     private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
         throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
@@ -122,7 +133,9 @@ public final class SimpleKey implements IKey {
      * any consistency checking or defensive copying.
      */
     private static final class SerializationProxy implements Serializable {
+
         private static final long serialVersionUID = -3865050366412869804L;
+
         private final String key;
         private final String name;
 
@@ -130,7 +143,7 @@ public final class SimpleKey implements IKey {
          * Constructs a new SerializationProxy
          * @param key The current instance of the proxy
          */
-        SerializationProxy(final SimpleKey key) {
+        SerializationProxy(final Ed25519Key key) {
             this.key = key.key;
             this.name = key.name;
         }
@@ -140,8 +153,9 @@ public final class SimpleKey implements IKey {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new SimpleKey(this.name, this.key);
+            return new Ed25519Key(this.name, this.key);
         }
+
     }
 
 }

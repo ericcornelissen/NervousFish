@@ -24,7 +24,8 @@ public class MultiContactTest {
 
     @Before
     public void setup() {
-        this.key = mock(IKey.class);
+        // We don't use a mock here, because the equals function does not work correctly otherwise
+        this.key = new RSAKey("foo", "bar", "baz");
     }
 
     @Test
@@ -107,9 +108,9 @@ public class MultiContactTest {
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
         final List<Contact> contacts = new ArrayList<>();
-        final IKey key1 = new SimpleKey("bar", "baz");
+        final IKey key1 = new Ed25519Key("bar", "baz");
         final Contact contact1 = new Contact("foo", key1);
-        final IKey key2 = new SimpleKey("bar2", "baz2");
+        final IKey key2 = new Ed25519Key("bar2", "baz2");
         final Contact contact2 = new Contact("foo2", key2);
         contacts.add(contact1);
         contacts.add(contact2);

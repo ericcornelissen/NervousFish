@@ -41,14 +41,14 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_change_contact);
         this.serviceLocator = NervousFish.getServiceLocator();
 
-        if (getSupportActionBar() != null) {
+        if (this.getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        ContactActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
-        ContactActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
+        ListviewActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
+        ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());

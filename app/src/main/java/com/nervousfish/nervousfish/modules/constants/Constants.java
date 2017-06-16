@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Class containing global constants for the application. These constants are definied in this file, because
@@ -24,11 +24,15 @@ public final class Constants implements IConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private static final String DB_USERDATA_PATH = "accountInformation.json";
     private static final String DB_CONTACTS_PATH = "contacts.json";
+    private static final String DB_DATABASE_PATH = "database.txt";
+    private static final String DB_PASSWORD_PATH = "databaseKey.txt";
     // Unique secure uuid for this application
     private static final UUID MY_UUID = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
     private transient String androidFilesDir;
+    private transient String databaseContactsPath;
+    private transient String databaseUserPath;
 
     /**
      * Prevents construction from outside the class.
@@ -37,6 +41,7 @@ public final class Constants implements IConstants {
      */
     private Constants(final IServiceLocator serviceLocator) {
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
+        this.initializePaths();
         LOGGER.info("Initialized");
     }
 
@@ -51,12 +56,29 @@ public final class Constants implements IConstants {
         return new ModuleWrapper<>(new Constants(serviceLocator));
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPasswordPath() {
+        return this.androidFilesDir + Constants.DB_PASSWORD_PATH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDatabasePath() {
+        return this.androidFilesDir + Constants.DB_DATABASE_PATH;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public String getDatabaseContactsPath() {
-        return this.androidFilesDir + Constants.DB_CONTACTS_PATH;
+        return this.databaseContactsPath;
     }
 
     /**
@@ -64,7 +86,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabaseUserdataPath() {
-        return this.androidFilesDir + Constants.DB_USERDATA_PATH;
+        return this.databaseUserPath;
     }
 
     /**
@@ -91,7 +113,8 @@ public final class Constants implements IConstants {
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         this.androidFilesDir = stream.readUTF();
-        ensureClassInvariant();
+        this.initializePaths();
+        this.ensureClassInvariant();
     }
 
     /**
@@ -106,10 +129,32 @@ public final class Constants implements IConstants {
 
     /**
      * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        assertNotNull(this.androidFilesDir);
+    private void ensureClassInvariant() {
+        assertThat(this.androidFilesDir, notNullValue());
+        assertThat(this.databaseContactsPath, notNullValue());
+        assertThat(this.databaseUserPath, notNullValue());
+    }
+
+    private void initializePaths() {
+        //noinspection StringConcatenationMissingWhitespace because this is a file path
+        this.databaseContactsPath = this.androidFilesDir + Constants.DB_CONTACTS_PATH;
+        //noinspection StringConcatenationMissingWhitespace because this is a file path
+        this.databaseUserPath = this.androidFilesDir + Constants.DB_USERDATA_PATH;
+    }
+
+    /**
+     * The general result codes for inputfield checks.
+     */
+    public enum InputFieldResultCodes {
+        CORRECT_FIELD, EMPTY_FIELD, TOO_SHORT_FIELD
+    }
+
+    /**
+     * The more explicit result codes for inputfield checks.
+     */
+    public enum ExplicitFieldResultCodes {
+        INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
+        PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY
     }
 }

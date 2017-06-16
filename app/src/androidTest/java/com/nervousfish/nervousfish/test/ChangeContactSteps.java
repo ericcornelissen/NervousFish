@@ -8,17 +8,24 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.SimpleKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
+import com.nervousfish.nervousfish.service_locator.NervousFish;
 import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import cucumber.api.CucumberOptions;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -26,26 +33,45 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
 public class ChangeContactSteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocatorNoNetwork.class, Instrumentation.filesDir);
-    private final IKey key = new SimpleKey("FTP", "ajfoJKFoeiSDFLow");
+    private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+    private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
 
-    private String newName;
+
+    private static final String testpass = "Testpass";
 
     @Rule
     public ActivityTestRule<ChangeContactActivity> mActivityRule =
             new ActivityTestRule<>(ChangeContactActivity.class, true, false);
+    private String newName;
+
+    @Before
+    public void createDatabase() throws Exception {
+        final IDatabase database = serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
+        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        profile.addKeyPair(keyPair);
+        database.createDatabase(profile, testpass);
+        database.loadDatabase(testpass);
+    }
+
+    @After
+    public void deleteDatabase() {
+        final IDatabase database = serviceLocator.getDatabase();
+        database.deleteDatabase();
+    }
 
     @Given("^I am viewing the change contact activity$")
     public void iAmViewingChangeContactActivity() throws IOException {
@@ -68,7 +94,7 @@ public class ChangeContactSteps {
 
     @When("^I press OK on the change contact error popup$")
     public void iPressOKOnTheChangeContactErrorPopup() {
-        onView(withText(R.string.dialog_ok)).perform(scrollTo()).perform(click());
+        onView(withText(R.string.dialog_ok)).perform(click());
     }
 
     @When("^I remove all text from the name$")
@@ -104,7 +130,7 @@ public class ChangeContactSteps {
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
-        final IDatabase database = this.serviceLocator.getDatabase();
+        final IDatabase database = serviceLocator.getDatabase();
         assertNotNull(database.getContactWithName(this.newName));
     }
 
@@ -112,8 +138,8 @@ public class ChangeContactSteps {
      * Initialize the database for the ChangeContactSteps.
      */
     private void initDatabase() throws IOException {
-        final IDatabase database = this.serviceLocator.getDatabase();
-        for(Contact contact : database.getAllContacts()) {
+        final IDatabase database = serviceLocator.getDatabase();
+        for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());
         }
         database.addContact(this.contact);

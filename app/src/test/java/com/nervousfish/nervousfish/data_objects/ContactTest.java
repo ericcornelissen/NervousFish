@@ -24,7 +24,8 @@ public class ContactTest {
 
     @Before
     public void setup() {
-        this.key = mock(IKey.class);
+        // We don't use a mock here, because the equals function does not work correctly otherwise
+        this.key = new RSAKey("foo", "bar", "baz");
     }
 
     @Test
@@ -98,7 +99,7 @@ public class ContactTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final IKey key = new SimpleKey("bar", "baz");
+        final IKey key = new Ed25519Key("bar", "baz");
         Contact contact = new Contact("foo", key);
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
