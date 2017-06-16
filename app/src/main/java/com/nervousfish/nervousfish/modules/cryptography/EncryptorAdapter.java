@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -35,6 +34,8 @@ import javax.crypto.spec.PBEParameterSpec;
 /**
  * An adapter to the default Java class for encrypting messages
  */
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
+// 1) Suppressed because the java crypto and security libraries require a lot of objects to use correctly
 public final class EncryptorAdapter implements IEncryptor {
     private static final long serialVersionUID = 5930930748980177440L;
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
@@ -70,6 +71,47 @@ public final class EncryptorAdapter implements IEncryptor {
         return new ModuleWrapper<>(new EncryptorAdapter(serviceLocator));
     }
 
+    /**
+     * Method that returns a configured {@link Cipher}.<br>
+     * It sets the ivSpec and the encryption to
+     * PBEWithMD5AndDES
+     *
+     * @param key    The SecretKey used to encrypt
+     * @param ivSpec The initializations vector for the encryption
+     * @param mode   Whether we're encrypting or decrypting
+     * @return the configured {@link Cipher}.
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
+    // 1) Suppressed because only the numbers 1, 2, 3 and 4 are allowed as modes by Cipher
+    private static Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) throws EncryptionException {
+        LOGGER.info("Getting cipher for decrypting");
+        assert key != null;
+        assert ivSpec != null;
+        assert mode == 1 || mode == 2 || mode == 3 || mode == 4;
+
+        try {
+            //Create parameters from the salt and an arbitrary number of iterations:
+            final PBEParameterSpec pbeParamSpec = new PBEParameterSpec(ivSpec, 42);
+
+            //Set up the cipher:
+            final Cipher cipher = Cipher.getInstance(PBE_WITH_MD5_AND_DES);
+            cipher.init(mode, key, pbeParamSpec);
+            return cipher;
+        } catch (final NoSuchAlgorithmException e) {
+            LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
+            throw new EncryptionException("Cannot happen, no algorithm as PBEWithMD5AndDES", e);
+
+        } catch (final NoSuchPaddingException e) {
+            LOGGER.error("There isn't a padding as PBEWithMD5AndDES", e);
+            throw new EncryptionException("Cannot happen, no padding as PBEWithMD5AndDES", e);
+        } catch (final InvalidKeyException e) {
+            LOGGER.error("The key is invalid", e);
+            throw new EncryptionException("The key was invalid while getting the cipher", e);
+        } catch (final InvalidAlgorithmParameterException e) {
+            LOGGER.error("The algorithm parameter is invalid", e);
+            throw new EncryptionException("The algorithm paramater was invalid while initializing the cipher", e);
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -110,7 +152,6 @@ public final class EncryptorAdapter implements IEncryptor {
             throw new EncryptionException("Cannot happen, no algorithm like PBEWithMD5AndDES", e);
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -163,46 +204,6 @@ public final class EncryptorAdapter implements IEncryptor {
         } catch (final UnsupportedEncodingException e) {
             LOGGER.error(UTF_8_NO_LONGER_SUPPORTED, e);
             throw new EncryptionException(CANNOT_HAPPEN_UTF_8, e);
-        }
-    }
-
-    /**
-     * Method that returns a configured {@link Cipher}.<br>
-     * It sets the ivSpec and the encryption to
-     * PBEWithMD5AndDES
-     *
-     * @param key    The SecretKey used to encrypt
-     * @param ivSpec The initializations vector for the encryption
-     * @param mode   Whether we're encrypting or decrypting
-     * @return the configured {@link Cipher}.
-     */
-    private static Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) throws EncryptionException {
-        LOGGER.info("Getting cipher for decrypting");
-        assert key != null;
-        assert ivSpec != null;
-        assert mode == 1 || mode == 2 || mode == 3 || mode == 4;
-
-        try {
-            //Create parameters from the salt and an arbitrary number of iterations:
-            final PBEParameterSpec pbeParamSpec = new PBEParameterSpec(ivSpec, 42);
-
-            //Set up the cipher:
-            final Cipher cipher = Cipher.getInstance(PBE_WITH_MD5_AND_DES);
-            cipher.init(mode, key, pbeParamSpec);
-            return cipher;
-        } catch (final NoSuchAlgorithmException e) {
-            LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
-            throw new EncryptionException("Cannot happen, no algorithm as PBEWithMD5AndDES", e);
-
-        } catch (final NoSuchPaddingException e) {
-            LOGGER.error("There isn't a padding as PBEWithMD5AndDES", e);
-            throw new EncryptionException("Cannot happen, no padding as PBEWithMD5AndDES", e);
-        } catch (final InvalidKeyException e) {
-            LOGGER.error("The key is invalid", e);
-            throw new EncryptionException("The key was invalid while getting the cipher", e);
-        } catch (final InvalidAlgorithmParameterException e) {
-            LOGGER.error("The algorithm parameter is invalid", e);
-            throw new EncryptionException("The algorithm paramater was invalid while initializing the cipher", e);
         }
     }
 

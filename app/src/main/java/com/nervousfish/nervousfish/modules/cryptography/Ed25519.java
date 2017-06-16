@@ -7,8 +7,6 @@ import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
-import org.apache.commons.lang3.Validate;
-
 import java.security.SecureRandom;
 
 /**

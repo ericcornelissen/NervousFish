@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Writer;
@@ -32,13 +31,12 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 
 /**
- * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
- * DatabaseHandler has a lot of methods by nature and refactoring it to multiple classes or single
- * methods with more logic would make the class only less understandable. We also suppress
- * ClassDataAbstractionCoupling of checkstyle because of the by the pojo's created to write safely,
- * we have to import this much.
+ * An adapter class that adapter our {@link IDatabase} to the GSON serialization library, use for data storage
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "PMD.TooManyMethods"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.TooManyMethods"})
+//  1 / 3) Suppressed because a DatabaseHandler has a lot of methods by nature and refactoring it to multiple
+// classes or single methods with more logic would make the class only less understandable
+//  2) Suppressed because of the by the pojo's created to write safely, we have to import this much
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private static final long serialVersionUID = -4101015873770268925L;
