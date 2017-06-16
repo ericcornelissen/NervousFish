@@ -1,4 +1,4 @@
-<!-- Check if the title issue is descriptive! -->
+<!-- Check if the issue title is descriptive! -->
 - Parent issues: -
 - Relevant issues: -
 - Estimated effort: -

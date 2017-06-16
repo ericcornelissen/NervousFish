@@ -1,4 +1,4 @@
-<!-- Check if the title pull request is descriptive! -->
+<!-- Check if the pull request title is descriptive! -->
 - Relevant Issues: -
 - Related Pull Requests: -
 
