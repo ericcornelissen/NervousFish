@@ -119,8 +119,8 @@ enum ContactReceivedHelper {
     }
 
     private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
-        Validate.notNull(keys1);
-        Validate.notNull(keys2);
+        assert keys1 != null;
+        assert keys2 != null;
         final Set<IKey> keysSet1 = new HashSet<>(keys1);
         for (final IKey key : keys2) {
             if (!keysSet1.contains(key)) {
