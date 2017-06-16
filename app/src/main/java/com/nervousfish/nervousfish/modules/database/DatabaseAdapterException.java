@@ -1,6 +1,4 @@
-package com.nervousfish.nervousfish.exceptions;
-
-import com.nervousfish.nervousfish.modules.database.GsonDatabaseAdapter;
+package com.nervousfish.nervousfish.modules.database;
 
 /**
  * Thrown when there's an issue whith the {@link GsonDatabaseAdapter}.
