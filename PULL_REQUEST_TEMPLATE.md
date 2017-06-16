@@ -1,21 +1,25 @@
-<!-- Check if the title is descriptive! -->
-- Relevant Issues: #
+<!-- Check if the title pull request is descriptive! -->
+- Relevant Issues: -
 - Related Pull Requests: -
 
 * * *
 
 ## What
-This Pull Request adds to the repository 
+<!-- Specify what this pull request adds to the project -->
+This Pull Request adds to the repository...
 
 ## Why
-This Pull Request is needed because 
+<!-- Specify why this issue is needed in the project -->
+This Pull Request is needed because...
 
 ## How
-This feature can be viewed/tested within the project by 
+<!-- Specify how this feature can be viewed or tested -->
+This feature can be viewed/tested within the project by...
 
 ## Alternative implementation
-Other implementations that I've have considered are 
+<!-- Specify any alternative implementations you have considered -->
+Other implementations that I've have considered are...
 
 ## Notes
-<!-- Is there anything reviewers need to know about? Do they need to take something into account while
-reviewing? Is there something they should pay extra attention to? -->
+<!-- Is there anything important reviewers should know? Do they need to take something into account while reviewing? -->
+None
