@@ -108,7 +108,6 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             LOGGER.error("No scan result in QR Scanner");
         } else if (resultCode == RESULT_OK) {
             final String result = scanResult.getContents();
-            System.out.println(result);
             LOGGER.info("Adding new contact to database");
             //Name is the first part
             final String name = result.split(SEMI_COLON)[0];
