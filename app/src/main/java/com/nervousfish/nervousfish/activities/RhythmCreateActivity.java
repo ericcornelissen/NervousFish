@@ -137,7 +137,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("Done tapping button clicked");
         Validate.notNull(v);
         try {
-            final Profile profile = this.database.getProfiles().get(0);
+            final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());

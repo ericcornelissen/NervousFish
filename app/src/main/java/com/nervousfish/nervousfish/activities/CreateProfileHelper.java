@@ -10,7 +10,7 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Helper method for the logical functionality of the {@link CreateProfileActivity}.
@@ -28,7 +28,7 @@ final class CreateProfileHelper {
      * containing its logical functionality.
      *
      * @param keyGenerator A {@link IKeyGenerator} to generate keys.
-     * @param alertColor The {@link Color} to set as alert for incorrect values.
+     * @param alertColor   The {@link Color} to set as alert for incorrect values.
      */
     CreateProfileHelper(final IKeyGenerator keyGenerator, final int alertColor) {
         Validate.notNull(keyGenerator);
@@ -38,15 +38,41 @@ final class CreateProfileHelper {
     }
 
     /**
+     * Will return true if the name is valid. This means
+     * that it has at least 1 ASCII character.
+     *
+     * @param name The name that has been entered.
+     * @return a {@link boolean} indicating whether or not the name is valid.
+     */
+    private static boolean isValidName(final String name) {
+        return name != null
+                && !name.isEmpty()
+                && !name.trim().isEmpty();
+    }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 6 ASCII character.
+     *
+     * @param password The password that has been entered.
+     * @return a {@link boolean} indicating whether or not the password is valid.
+     */
+    private static boolean isValidPassword(final String password) {
+        return password != null
+                && !password.isEmpty()
+                && !password.trim().isEmpty()
+                && password.length() >= MIN_PASSWORD_LENGTH;
+    }
+
+    /**
      * Generates a KeyPair based on the type selected.
      *
      * @param keyType The type of key to generate.
      * @return a {@link KeyPair} with the key type selected
      */
-    Collection<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+    List<KeyPair> generateKeyPairs(final IKey.Types keyType) {
         Validate.notNull(keyType);
-
-        final Collection<KeyPair> keyPairs = new ArrayList<>();
+        final List<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
                 keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
@@ -97,7 +123,7 @@ final class CreateProfileHelper {
 
     /**
      * @param passwordInput The {@link EditText} of the original password.
-     * @param repeatInput The {@link EditText} of the repeat password.
+     * @param repeatInput   The {@link EditText} of the repeat password.
      * @return True when the password matches the repeated password.
      */
     boolean passwordsEqual(final EditText passwordInput, final EditText repeatInput) {
@@ -112,33 +138,6 @@ final class CreateProfileHelper {
         }
 
         return true;
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 1 ASCII character.
-     *
-     * @param name The name that has been entered.
-     * @return a {@link boolean} indicating whether or not the name is valid.
-     */
-    private static boolean isValidName(final String name) {
-        return name != null
-                && !name.isEmpty()
-                && !name.trim().isEmpty();
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 6 ASCII character.
-     *
-     * @param password The password that has been entered.
-     * @return a {@link boolean} indicating whether or not the password is valid.
-     */
-    private static boolean isValidPassword(final String password) {
-        return password != null
-                && !password.isEmpty()
-                && !password.trim().isEmpty()
-                && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
 }

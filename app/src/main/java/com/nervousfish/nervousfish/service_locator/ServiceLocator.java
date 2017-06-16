@@ -58,9 +58,9 @@ public class ServiceLocator implements IServiceLocator {
         this.androidFilesDir = androidFilesDir;
         this.constants = this.initConstants();
         this.fileSystem = this.initFileSystem();
-        this.database = this.initDatabase();
         this.keyGenerator = this.initKeyGenerator();
         this.encryptor = this.initEncryptor();
+        this.database = this.initDatabase();
         this.bluetoothHandler = this.initBluetoothHandler();
         this.nfcHandler = this.initNfcHandler();
         this.qrHandler = this.initQrHandler();

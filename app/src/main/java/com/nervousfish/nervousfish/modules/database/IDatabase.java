@@ -25,7 +25,7 @@ public interface IDatabase extends IModule {
      *
      * @param contactName The {@link String} with the name of the contact to remove from the database.
      */
-    void deleteContact(String contactName) throws IllegalArgumentException, IOException;
+    void deleteContact(String contactName) throws IOException;
 
     /**
      * Update an existing contact in the database.
@@ -35,6 +35,7 @@ public interface IDatabase extends IModule {
      * @throws IllegalArgumentException When {@code oldContact} is not in the database.
      */
     void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException;
+
 
     /**
      * Get a list of all contacts in the database.
@@ -60,41 +61,47 @@ public interface IDatabase extends IModule {
     boolean contactExists(String name) throws IOException;
 
     /**
-     * Get the Profile list with user information.
+     * Get the Profile with user information.
      *
-     * @return A {@link List} of {@link Profile Profiles}.
+     * @return A {@link Profile Profiles}.
      */
-    List<Profile> getProfiles() throws IOException;
+    Profile getProfile() throws IOException;
 
-    /**
-     * Add a new profile in the database.
-     *
-     * @param profile The {@link Profile} to add to the database.
-     */
-    void addProfile(Profile profile) throws IOException;
-
-    /**
-     * Delete an profile from the database.
-     *
-     * @param profile The {@link Profile} to remove from the database.
-     * @throws IllegalArgumentException When {@code profile} is not in the database.
-     */
-    void deleteProfile(Profile profile) throws IllegalArgumentException, IOException;
 
     /**
      * Update an existing profile in the database.
      *
-     * @param oldProfile The old {@link Profile} to be updated.
      * @param newProfile The new {@link Profile} details.
-     * @throws IllegalArgumentException When {@code oldProfile} is not in the database.
      */
-    void updateProfile(Profile oldProfile, Profile newProfile) throws IllegalArgumentException, IOException;
+    void updateProfile(Profile newProfile) throws IOException;
 
     /**
-     * Get the password of the user.
-     *
-     * @return The password of the user
-     * @throws IllegalArgumentException When user account is not in the database.
+     * Updates the database with the new information.
      */
-    String getUserPassword() throws IOException;
+    void updateDatabase() throws IOException;
+
+    /**
+     * Loads up the database in an object using the provided password.
+     * @param password The password of the database.
+     */
+    void loadDatabase(String password) throws IOException;
+
+    /**
+     * Creates a database for a new profile.
+     * @param profile   -   The user profile to create a database for.
+     * @param password - The password for the database
+     */
+    void createDatabase(Profile profile, String password) throws IOException;
+
+    /**
+     * Checks if there's already a databasefile created.
+     * @return  Whether or not it isn't the first time using the app.
+     */
+    boolean checkFirstUse();
+
+    /**
+     * Deletes the database.
+     * @return Whether the database was successfully deleted.
+     */
+    boolean deleteDatabase();
 }

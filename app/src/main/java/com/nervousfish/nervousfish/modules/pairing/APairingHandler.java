@@ -50,6 +50,7 @@ abstract class APairingHandler implements IPairingHandler {
                 this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
             } catch (final ClassNotFoundException | IOException e) {
                 LOGGER.error(" Couldn't start deserialization!", e);
+                throw new DeserializationException(e);
             }
         });
     }
