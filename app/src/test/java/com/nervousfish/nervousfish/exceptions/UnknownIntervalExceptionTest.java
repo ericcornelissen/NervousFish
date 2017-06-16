@@ -10,27 +10,27 @@ import java.io.ObjectOutputStream;
 
 import static org.junit.Assert.assertTrue;
 
-public class UnsupportedKeyTypeExceptionTest {
+public class UnknownIntervalExceptionTest {
     @Test
     public void testStringConstructor() {
         final Exception exception = new Exception();
-        UnsupportedKeyTypeException UnsupportedKeyTypeException = new UnsupportedKeyTypeException("foo");
-        assertTrue(UnsupportedKeyTypeException.getMessage().equals("foo"));
+        UnknownIntervalException unknownIntervalException = new UnknownIntervalException("foo");
+        assertTrue(unknownIntervalException.getMessage().equals("foo"));
     }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final UnsupportedKeyTypeException exception = new UnsupportedKeyTypeException("foo");
+        final UnknownIntervalException exception = new UnknownIntervalException("foo");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
-        ) {
+                ) {
             oos.writeObject(exception);
             byte[] bytes = bos.toByteArray();
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(UnsupportedKeyTypeException.class));
+                assertTrue(exception1.getClass().equals(UnknownIntervalException.class));
             }
         }
     }

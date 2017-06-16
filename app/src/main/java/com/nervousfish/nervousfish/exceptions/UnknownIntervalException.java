@@ -5,18 +5,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Simple {@link RuntimeException} that is used on places that cannot be reached unless something is really, really wrong.
+ * Simple {@link RuntimeException} that is used when an interval is neither short nor long
  */
-public class CannotHappenException extends RuntimeException {
+public class UnknownIntervalException extends RuntimeException {
 
     private static final long serialVersionUID = -7030163248191198652L;
 
     /**
-     * Constructor for a new NoBluetoothException with a message.
+     * Constructor for a new UnknownIntervalException with a message.
      *
      * @param msg A string describing the exception
      */
-    public CannotHappenException(final String msg) {
+    public UnknownIntervalException(final String msg) {
         super(msg);
     }
 
