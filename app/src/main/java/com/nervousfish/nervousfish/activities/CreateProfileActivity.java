@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -67,15 +67,21 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     public void onSubmitClick(final View view) {
         if (this.validateInputFields()) {
-            final String name = this.nameInput.getText().toString();
-            final Collection<KeyPair> keyPair = this.helper.generateKeyPairs(IKey.Types.RSA);
+            final String name = nameInput.getText().toString();
+            final String password = passwordInput.getText().toString();
+            final IDatabase database = this.serviceLocator.getDatabase();
 
             try {
-                final IDatabase database = this.serviceLocator.getDatabase();
-                final Profile profile = new Profile(name, keyPair);
-                database.addProfile(profile);
+                // Create the new profile
+                final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
+                final Profile userProfile = new Profile(name, keyPairs);
+
+                database.createDatabase(userProfile, password);
+                database.loadDatabase(password);
+
                 this.showProfileCreatedDialog();
             } catch (final IOException e) {
+                LOGGER.error("Something went wrong when creating a profile", e);
                 this.showProfileNotCreatedDialog();
             }
         } else {
@@ -110,17 +116,17 @@ public final class CreateProfileActivity extends AppCompatActivity {
      */
     private void showProfileCreatedDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-            .setTitleText(this.getString(R.string.profile_created_title))
-            .setContentText(this.getString(R.string.profile_created_explanation))
-            .setConfirmText(this.getString(R.string.dialog_ok))
-            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(final SweetAlertDialog dialog) {
-                    dialog.dismiss();
-                    nextActivity();
-                }
-            })
-            .show();
+                .setTitleText(this.getString(R.string.profile_created_title))
+                .setContentText(this.getString(R.string.profile_created_explanation))
+                .setConfirmText(this.getString(R.string.dialog_ok))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog dialog) {
+                        dialog.dismiss();
+                        nextActivity();
+                    }
+                })
+                .show();
     }
 
     /**
