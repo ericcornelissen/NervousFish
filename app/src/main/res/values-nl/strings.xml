@@ -50,7 +50,13 @@
     <string name="profile_created_title">Profiel gemaakt</string>
     <string name="profile_created_explanation">Je profiel is succesvol aangemaakt.</string>
     <string name="profile_not_created_title">Kon geen profiel maken</string>
-    <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
+    <string name="create_proflie_too_short_password">Het wachtwoord is te kort, het moet op z\'n minst 6 tekens bevatten</string>
+    <string name="create_profile_empty_password">Gelieve een wachtwoord te selecteren.</string>
+    <string name="create_profile_empty_name">Gelieve een naam te selecteren.</string>
+    <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
+    <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
+    <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
+
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
