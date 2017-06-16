@@ -49,7 +49,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
     private final Set<BluetoothDevice> newDevices = new HashSet<>();
     // Create a BroadcastReceiver for ACTION_FOUND.
-    private final BroadcastReceiver broadcastReceiver = new CustomBroadcastReceiver();
+    private final BroadcastReceiver broadcastReceiver = new BluetoothDiscoverBroadcastReceiver();
     private IServiceLocator serviceLocator;
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
@@ -296,7 +296,7 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         }
     }
 
-    private final class CustomBroadcastReceiver extends BroadcastReceiver {
+    private final class BluetoothDiscoverBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             Validate.notNull(context);
