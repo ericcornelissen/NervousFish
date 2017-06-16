@@ -6,6 +6,11 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,4 +38,20 @@ public class SingleTapTest {
         assertTrue(System.currentTimeMillis() < stamp.getTime() + 100);
     }
 
+    @Test
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        SingleTap singleTap = new SingleTap();
+        try (
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)
+        ) {
+            oos.writeObject(singleTap);
+            byte[] bytes = bos.toByteArray();
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
+                Object object = ois.readObject();
+                assertTrue(object.getClass().equals(SingleTap.class));
+            }
+        }
+    }
 }

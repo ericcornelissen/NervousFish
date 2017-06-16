@@ -49,7 +49,12 @@
     <string name="profile_created_title">Profile created</string>
     <string name="profile_created_explanation">Your profile is successfully created.</string>
     <string name="profile_not_created_title">Can\'t create profile</string>
-    <string name="profile_not_created_explanation">Please make sure that all the fields are filled in correctly, and that the passwords you entered are the same.</string>
+    <string name="create_proflie_too_short_password">The password is too short, it should contain at least 6 characters</string>
+    <string name="create_profile_empty_password">You must select a password!</string>
+    <string name="create_profile_empty_name">You must select a name.</string>
+    <string name="create_profile_error_adding_to_database">Error while adding profile to database</string>
+    <string name="create_profile_passwords_not_equal">Please make sure you typed the same password twice.</string>
+    <string name="create_profile_all_fields_empty">Please fill in the fields</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>

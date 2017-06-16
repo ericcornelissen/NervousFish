@@ -65,6 +65,14 @@ public final class Ed25519Key implements IKey {
      * {@inheritDoc}
      */
     @Override
+    public String getFormattedKey() {
+        return this.getKey();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getName() {
         return this.name;
     }
@@ -113,7 +121,7 @@ public final class Ed25519Key implements IKey {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new Ed25519Key.SerializationProxy(this);
     }
 
     /**

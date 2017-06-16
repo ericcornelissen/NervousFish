@@ -15,16 +15,16 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * The ContactActivityHelper has some static methods which are
+ * The ListviewActivityHelper has some static methods which are
  * used in the ContactActivity and the ChangeContactActivity.
  */
 
-final class ContactActivityHelper {
+final class ListviewActivityHelper {
 
     /**
      * Methods are static so this is not called.
      */
-    private ContactActivityHelper() {
+    private ListviewActivityHelper() {
         // Prevent instantiation
     }
 
@@ -44,7 +44,7 @@ final class ContactActivityHelper {
     }
 
     /**
-     * Set the keys of the {@link Contact} to the {@link ContactActivity}.
+     * Set the keys of the {@link Contact} to the {@link ContactActivity} or {@link KeyManagementActivity}.
      *
      * @param activity The where the name has to be set.
      * @param keys A {@link Collection} of {@link IKey}s.
