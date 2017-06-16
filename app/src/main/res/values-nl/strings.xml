@@ -50,7 +50,13 @@
     <string name="profile_created_title">Profiel gemaakt</string>
     <string name="profile_created_explanation">Je profiel is succesvol aangemaakt.</string>
     <string name="profile_not_created_title">Kon geen profiel maken</string>
-    <string name="profile_not_created_explanation">Zorg ervoor dat alle velden juist zijn ingevuld, en dat beide wachtwoorden hetzelfde zijn.</string>
+    <string name="create_proflie_too_short_password">Het wachtwoord is te kort, het moet op z\'n minst 6 tekens bevatten</string>
+    <string name="create_profile_empty_password">Gelieve een wachtwoord te selecteren.</string>
+    <string name="create_profile_empty_name">Gelieve een naam te selecteren.</string>
+    <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
+    <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
+    <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
+
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
@@ -93,7 +99,7 @@
     <string name="confirm">Bevestigen</string>
 
     <!-- Kies verificatie methode -->
-    <string name="select_verification_method">Selecteer een verificatie methode</string>
+    <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
     <string name="select_visual_verification">Visueel patroon</string>
     <string name="select_rhythm_verification">Tap een ritme</string>
     <string name="unknown_verification_method_title">Helaas…</string>
@@ -112,6 +118,8 @@
     <!-- WaitActivity -->
     <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
+    <string name="by_tapping_a_rhythm">Door een ritme te tikken</string>
+    <string name="by_tapping_on_an_image">Door op een aantal plaatjes te drukken</string>
 
     <!-- Settings -->
     <string name="title_activity_settings">Settings</string>

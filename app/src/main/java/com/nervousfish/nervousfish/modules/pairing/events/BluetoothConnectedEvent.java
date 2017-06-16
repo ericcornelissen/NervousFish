@@ -14,8 +14,12 @@ public final class BluetoothConnectedEvent {
      * Constructs a new BluetoothConnectedEvent
      *
      * @param thread The thread handling the Bluetooth connection
+     * @throws IllegalArgumentException when thread is null
      */
     public BluetoothConnectedEvent(final IBluetoothThread thread) {
+        if (thread == null) {
+            throw new IllegalArgumentException("Thread cannot be null");
+        }
         this.thread = thread;
     }
 
