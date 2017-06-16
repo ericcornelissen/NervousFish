@@ -50,7 +50,7 @@ public final class KeyManagementActivity extends Activity {
         final IDatabase database = serviceLocator.getDatabase();
         Profile myProfile;
         try {
-            myProfile = database.getProfiles().get(0);
+            myProfile = database.getProfile();
         } catch (final IOException e) {
             LOGGER.error("Could not get my public key from the database ", e);
             throw new DatabaseException(e);
