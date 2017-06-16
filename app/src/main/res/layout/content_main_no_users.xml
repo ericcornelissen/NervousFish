@@ -8,7 +8,8 @@
     tools:context="com.nervousfish.nervousfish.activities.MainActivity"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    tools:ignore = "UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/no_users_icon"
@@ -27,6 +28,5 @@
         android:textColor="@color/color_accent"
         android:textSize="@dimen/no_users_text_size"
         android:layout_marginBottom="@dimen/no_users_text_margin_bottom"
-        android:text="@string/your_contacts_list_is_empty"
-        />
+        android:text="@string/your_contacts_list_is_empty"/>
 </LinearLayout>
