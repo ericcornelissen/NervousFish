@@ -54,6 +54,12 @@
             <include layout="@layout/content_main_keytypes" />
         </ViewFlipper>
 
+        <include
+            android:id="@+id/no_users_screen"
+            layout="@layout/content_main_no_users"
+            android:visibility="gone"/>
+
+
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/pairing_button"
             android:layout_width="wrap_content"
@@ -113,5 +119,4 @@
                 app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
         </LinearLayout>
     </RelativeLayout>
-
 </android.support.design.widget.AppBarLayout>

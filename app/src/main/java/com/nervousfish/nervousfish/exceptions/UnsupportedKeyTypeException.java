@@ -5,19 +5,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Thrown when there is an issue with deserialization.
+ * Simple {@link RuntimeException} that is used on places that cannot be reached unless something is really, really wrong.
  */
-public final class DeserializationException extends RuntimeException {
+public class UnsupportedKeyTypeException extends RuntimeException {
 
-    private static final long serialVersionUID = -1930461199728515311L;
+    private static final long serialVersionUID = -7030163248191198652L;
 
     /**
-     * Constructs a new DeserializationException that's thrown when there is an issue with
-     * deserialization.
+     * Constructor for a new NoBluetoothException with a message.
      *
-     * @param msg A string describing the event
+     * @param msg A string describing the exception
      */
-    public DeserializationException(final String msg) {
+    public UnsupportedKeyTypeException(final String msg) {
         super(msg);
     }
 

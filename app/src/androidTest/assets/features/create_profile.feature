@@ -12,7 +12,6 @@ Feature: Create a profile
 
   Scenario Outline: Clicking submit with valid input
       Given I am viewing the create profile activity
-      And there are no profiles in the database
       When I enter a valid <name> as name
       And I enter a valid <password> as password
       And I enter a valid repeat <password> as repeat password
@@ -56,13 +55,12 @@ Feature: Create a profile
 
     Examples:
      | name         | password  | repeatpassword    |
-     | Drake        | a         | b                 |
-     | CJ           | ^&*)(     | NetAnders         |
-     | Darth Vader  | 6782      | 4578              |
+     | Drake        | abcdefg   | bcdefgh           |
+     | CJ           | ^&*)(8999 | NetAnders         |
+     | Darth Vader  | 67824444  | 4578              |
 
   Scenario Outline: Generating different key pairs
     Given I am viewing the create profile activity
-    And there are no profiles in the database
     When I enter a valid <name> as name
     And I enter a valid 123456 as password
     And I enter a different 123456 than the password field
