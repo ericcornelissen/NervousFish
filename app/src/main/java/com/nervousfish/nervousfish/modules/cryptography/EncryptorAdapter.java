@@ -54,7 +54,7 @@ public final class EncryptorAdapter implements IEncryptor {
     // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
-        Validate.notNull(serviceLocator);
+        assert serviceLocator != null;
         LOGGER.info("Initialized");
     }
 
