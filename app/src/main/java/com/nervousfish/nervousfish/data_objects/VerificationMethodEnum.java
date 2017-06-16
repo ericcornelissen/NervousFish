@@ -5,5 +5,5 @@ package com.nervousfish.nervousfish.data_objects;
  */
 public enum VerificationMethodEnum {
     RHYTHM,
-    VISUAL;
+    VISUAL
 }
