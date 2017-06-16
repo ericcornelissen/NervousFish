@@ -22,7 +22,7 @@ public class Profile implements Serializable {
     /**
      * The constructor for the {@link Profile} class.
      *
-     * @param name  The contact belonging to the user.
+     * @param name     The contact belonging to the user.
      * @param keyPairs the public/private key-pairs of the user.
      */
     public Profile(final String name, final List<KeyPair> keyPairs) {
@@ -46,11 +46,10 @@ public class Profile implements Serializable {
      */
     public Contact getContact() {
         final List<IKey> publicKeys = new ArrayList<>();
-        for (final KeyPair pair: keyPairs) {
+        for (final KeyPair pair : keyPairs) {
             publicKeys.add(pair.getPublicKey());
         }
-        final Contact contact = new Contact(name, publicKeys);
-        return contact;
+        return new Contact(name, publicKeys);
     }
 
     /**

@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -74,7 +73,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
             try {
                 // Create the new profile
-                final List<IKey> publicKeys = new ArrayList<IKey>();
                 final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
                 final Profile userProfile = new Profile(name, keyPairs);
 
