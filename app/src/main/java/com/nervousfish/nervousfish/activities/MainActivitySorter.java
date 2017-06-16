@@ -22,7 +22,6 @@ import java.util.Comparator;
  */
 
 final class MainActivitySorter {
-    private static final Logger LOGGER = LoggerFactory.getLogger("MainActivitySorter");
 
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
@@ -122,12 +121,6 @@ final class MainActivitySorter {
         final ExpandableListView ev = (ExpandableListView) this.mainActivity.findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter =
                 new ContactsByKeyTypeListAdapter(this.mainActivity, this.mainActivity.getContacts());
-        for(Contact c: this.mainActivity.getContacts()) {
-            LOGGER.info(c.getName());
-            for(IKey k: c.getKeys()) {
-                LOGGER.info(k.getType());
-            }
-        }
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             MainActivitySorter.this.mainActivity.openContact(childPosition);

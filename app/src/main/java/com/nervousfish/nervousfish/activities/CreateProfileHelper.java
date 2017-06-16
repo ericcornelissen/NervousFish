@@ -83,6 +83,30 @@ final class CreateProfileHelper {
     }
 
     /**
+     * Generates a KeyPair based on the type selected.
+     *
+     * @param keyTypes A list of the type of keys to generate.
+     * @return a list of {@link KeyPair} with the key type selected
+     */
+    List<KeyPair> generateKeyPairs(final List<IKey.Types> keyTypes) {
+        final List<KeyPair> keyPairs = new ArrayList<>();
+        for (final IKey.Types type: keyTypes) {
+            switch (type) {
+                case RSA:
+                    keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                    break;
+                case Ed25519:
+                    keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                    break;
+                default:
+                    throw new IllegalArgumentException("The selected key is not implemented");
+            }
+        }
+
+        return keyPairs;
+    }
+
+    /**
      * @param input The {@link EditText} to evaluate.
      * @return True when the name is valid.
      */

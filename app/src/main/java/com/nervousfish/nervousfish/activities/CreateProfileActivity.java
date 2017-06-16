@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -37,6 +39,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private CheckBox rsaCheckBox;
+    private CheckBox ed25519CheckBox;
 
     /**
      * {@inheritDoc}
@@ -56,6 +60,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
+        this.rsaCheckBox = (CheckBox) this.findViewById(R.id.checkbox_rsa_key);
+        this.ed25519CheckBox = (CheckBox) this.findViewById(R.id.checkbox_ed25519_key);
 
         LOGGER.info("Activity created");
     }
@@ -70,10 +76,17 @@ public final class CreateProfileActivity extends AppCompatActivity {
             final String name = nameInput.getText().toString();
             final String password = passwordInput.getText().toString();
             final IDatabase database = this.serviceLocator.getDatabase();
+            final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
+            if (rsaCheckBox.isChecked()) {
+                keytypesToGenerate.add(IKey.Types.RSA);
+            }
+            if (ed25519CheckBox.isChecked()) {
+                keytypesToGenerate.add(IKey.Types.Ed25519);
+            }
 
             try {
                 // Create the new profile
-                final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
+                final List<KeyPair> keyPairs = helper.generateKeyPairs(keytypesToGenerate);
                 final Profile userProfile = new Profile(name, keyPairs);
 
                 database.createDatabase(userProfile, password);
