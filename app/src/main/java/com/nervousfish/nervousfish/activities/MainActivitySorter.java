@@ -8,15 +8,10 @@ import android.widget.ViewFlipper;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Is used to sort the list in the MainActivity
@@ -69,20 +64,6 @@ final class MainActivitySorter {
         }
     }
 
-    /**
-     * Gets all Types of keys in the database
-     *
-     * @return a List with the Types of keys.
-     */
-    private List<String> getKeyTypes() {
-        final Set<String> typeSet = new HashSet<>();
-        for (final Contact contact : this.mainActivity.getContacts()) {
-            for (final IKey key : contact.getKeys()) {
-                typeSet.add(key.getType());
-            }
-        }
-        return new ArrayList<>(typeSet);
-    }
 
     /**
      * Sorts contacts by name
@@ -113,7 +94,7 @@ final class MainActivitySorter {
     private void sortOnKeyType() {
         final ExpandableListView ev = (ExpandableListView) this.mainActivity.findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter =
-                new ContactsByKeyTypeListAdapter(this.mainActivity, this.getKeyTypes(), this.mainActivity.getContacts());
+                new ContactsByKeyTypeListAdapter(this.mainActivity, this.mainActivity.getContacts());
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
