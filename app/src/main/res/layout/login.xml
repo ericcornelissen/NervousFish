@@ -76,7 +76,7 @@
         android:focusableInTouchMode="true"
         android:visibility="gone"
         android:keyBackground="@drawable/key_background"
-        android:keyTextColor="#333"
+        android:keyTextColor="#eee"
         android:background="@color/color_primary"
-        android:keyTextSize="22sp"/>
+        android:keyTextSize="30sp"/>
 </RelativeLayout>

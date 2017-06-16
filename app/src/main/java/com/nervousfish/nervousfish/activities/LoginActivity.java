@@ -173,17 +173,17 @@ public final class LoginActivity extends AppCompatActivity {
 
     private final class OnCustomKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
         @Override
-        public void onPress(final int i) {
+        public void onPress(final int primaryCode) {
             // Unused
         }
 
         @Override
-        public void onRelease(final int i) {
+        public void onRelease(final int primaryCode) {
             // Unused
         }
 
         @Override
-        public void onKey(final int i, final int[] ints) {
+        public void onKey(final int primaryCode, final int[] keyCodes) {
             final View focusCurrent = LoginActivity.this.getWindow().getCurrentFocus();
             if (focusCurrent == null) {
                 return;
@@ -196,11 +196,18 @@ public final class LoginActivity extends AppCompatActivity {
             final EditText edittext = (EditText) focusCurrent;
             final Editable editable = edittext.getText();
             final int start = edittext.getSelectionStart();
-            editable.insert(start, Character.toString((char) i));
+            if (primaryCode == Keyboard.KEYCODE_CANCEL) {
+                final int length = editable.length();
+                if (length > 0) {
+                    editable.delete(length - 1, length);
+                }
+            } else {
+                editable.insert(start, Character.toString((char) primaryCode));
+            }
         }
 
         @Override
-        public void onText(final CharSequence charSequence) {
+        public void onText(final CharSequence text) {
             // Unused
         }
 

@@ -107,7 +107,10 @@
         <Key
             android:codes="122"
             android:keyEdgeFlags="left"
-            android:horizontalGap="15%"
+            android:horizontalGap="5%"
+            android:keyLabel="," />
+        <Key
+            android:codes="122"
             android:keyLabel="z" />
         <Key
             android:codes="120"
@@ -126,11 +129,46 @@
             android:keyLabel="n" />
         <Key
             android:codes="109"
-            android:keyEdgeFlags="right"
             android:keyLabel="m" />
+        <Key
+            android:codes="-3"
+            android:keyLabel="\u232b"
+            android:keyWidth="15%p"
+            android:keyEdgeFlags="right"
+            android:isRepeatable="true" />
     </Row>
     <Row>
-        <!-- Needed because people are used to having their fingers at certain places for certain keys.
-        Without this empty row they would have to move their fingers to an awkwardly low placed key bar -->
+        <Key
+            android:codes="49"
+            android:keyEdgeFlags="left"
+            android:keyLabel="," />
+        <Key
+            android:codes="50"
+            android:keyLabel="." />
+        <Key
+            android:codes="51"
+            android:keyLabel="<" />
+        <Key
+            android:codes="52"
+            android:keyLabel=">" />
+        <Key
+            android:codes="53"
+            android:keyLabel="/" />
+        <Key
+            android:codes="54"
+            android:keyLabel="\?" />
+        <Key
+            android:codes="55"
+            android:keyLabel="!" />
+        <Key
+            android:codes="56"
+            android:keyLabel="\@" />
+        <Key
+            android:codes="57"
+            android:keyLabel="#" />
+        <Key
+            android:codes="48"
+            android:keyEdgeFlags="right"
+            android:keyLabel="%" />
     </Row>
 </Keyboard>
