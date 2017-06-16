@@ -31,7 +31,6 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     @DesignedForExtension
     protected void onCreate(final Bundle savedInstanceState) {
-        Validate.notNull(savedInstanceState);
         this.mDelegate = AppCompatDelegate.create(this, null);
         this.mDelegate.installViewFactory();
         this.mDelegate.onCreate(savedInstanceState);
