@@ -135,7 +135,7 @@ public final class Constants implements IConstants {
      * The more explicit result codes for inputfield checks.
      */
     public enum ExplicitFieldResultCodes {
-        GOOD_FIELD, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
+        INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
         PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY
     }
 }

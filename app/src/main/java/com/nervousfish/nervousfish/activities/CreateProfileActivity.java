@@ -37,9 +37,10 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
 
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
- * used. Suppresses return count to allow multiple returncodes while checking input fields.
+ * used.
  */
 @SuppressWarnings("checkstyle:ReturnCount")
+//Suppresses return count to allow multiple returncodes while checking input fields.
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
@@ -92,21 +93,22 @@ public final class CreateProfileActivity extends AppCompatActivity {
                     this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
                 }
                 break;
+            case ALl_FIELDS_EMPTY:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
+                break;
+            case NAME_EMPTY:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_name));
+                break;
             case PASSWORD_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_password));
                 break;
             case PASSWORD_TOO_SHORT:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_proflie_too_short_password));
                 break;
-            case NAME_EMPTY:
-                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_name));
-                break;
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
                 break;
-            case ALl_FIELDS_EMPTY:
-                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
-                break;
+
             default:
                 break;
 
@@ -118,7 +120,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * This also means that the password and the repeat password should be the same,
      * and the password length is larger or equal to 6.
      *
-     * @return a ExplicitFieldResultCodes which is the result code of the various input validations
+     * @return a {@link Constants.ExplicitFieldResultCodes} which is the result code of the various input validations
      */
     private Constants.ExplicitFieldResultCodes validateInputFields() {
         final Constants.InputFieldResultCodes nameValidation = this.helper.validateName(this.nameInput);
