@@ -5,10 +5,15 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.CORRECT_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
 /**
  * Helper method for the logical functionality of the {@link CreateProfileActivity}.
@@ -16,6 +21,7 @@ import java.util.List;
 final class CreateProfileHelper {
 
     private static final int MIN_PASSWORD_LENGTH = 6;
+
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
 
     private final IKeyGenerator keyGenerator;
@@ -31,33 +37,6 @@ final class CreateProfileHelper {
     CreateProfileHelper(final IKeyGenerator keyGenerator, final int alertColor) {
         this.keyGenerator = keyGenerator;
         this.alertColor = alertColor;
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 1 ASCII character.
-     *
-     * @param name The name that has been entered.
-     * @return a {@link boolean} indicating whether or not the name is valid.
-     */
-    private static boolean isValidName(final String name) {
-        return name != null
-                && !name.isEmpty()
-                && !name.trim().isEmpty();
-    }
-
-    /**
-     * Will return true if the name is valid. This means
-     * that it has at least 6 ASCII character.
-     *
-     * @param password The password that has been entered.
-     * @return a {@link boolean} indicating whether or not the password is valid.
-     */
-    private static boolean isValidPassword(final String password) {
-        return password != null
-                && !password.isEmpty()
-                && !password.trim().isEmpty()
-                && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
     /**
@@ -84,34 +63,39 @@ final class CreateProfileHelper {
 
     /**
      * @param input The {@link EditText} to evaluate.
-     * @return True when the name is valid.
+     * @return The resultcode of isvalidname.
      */
-    boolean validateName(final EditText input) {
+    Constants.InputFieldResultCodes validateName(final EditText input) {
         final String name = input.getText().toString();
-        if (isValidName(name)) {
+        if (this.isValidName(name) == CORRECT_FIELD) {
             input.setBackgroundColor(Color.TRANSPARENT);
-        } else {
+            return CORRECT_FIELD;
+        } else if (this.isValidName(name) == EMPTY_FIELD) {
             input.setBackgroundColor(this.alertColor);
-            return false;
+            return EMPTY_FIELD;
         }
-
-        return true;
+        return CORRECT_FIELD;
     }
 
     /**
      * @param input The {@link EditText} to evaluate.
-     * @return True when the password is valid.
+     * @return The result code of the password validation.
      */
-    boolean validatePassword(final EditText input) {
+    Constants.InputFieldResultCodes validatePassword(final EditText input) {
         final String password = input.getText().toString();
-        if (isValidPassword(password)) {
-            input.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            input.setBackgroundColor(this.alertColor);
-            return false;
+        switch (this.isValidPassword(password)) {
+            case CORRECT_FIELD:
+                input.setBackgroundColor(Color.TRANSPARENT);
+                return CORRECT_FIELD;
+            case EMPTY_FIELD:
+                input.setBackgroundColor(this.alertColor);
+                return EMPTY_FIELD;
+            case TOO_SHORT_FIELD:
+                input.setBackgroundColor(this.alertColor);
+                return TOO_SHORT_FIELD;
+            default:
+                return CORRECT_FIELD;
         }
-
-        return true;
     }
 
     /**
@@ -128,7 +112,42 @@ final class CreateProfileHelper {
             return false;
         }
 
+        passwordInput.setBackgroundColor(Color.TRANSPARENT);
+        repeatInput.setBackgroundColor(Color.TRANSPARENT);
         return true;
+    }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 1 ASCII character.
+     *
+     * @param name The name that has been entered.
+     * @return a {@link boolean} indicating whether or not the name is valid.
+     */
+    private Constants.InputFieldResultCodes isValidName(final String name) {
+        if (name != null && !name.isEmpty()
+                && !name.trim().isEmpty()) {
+            return CORRECT_FIELD;
+        }
+        return EMPTY_FIELD;
+
+    }
+
+    /**
+     * Will return true if the name is valid. This means
+     * that it has at least 6 ASCII character.
+     *
+     * @param password The password that has been entered.
+     * @return a {@link int} indicating why the password is invalid or if it's valid.
+     */
+    private Constants.InputFieldResultCodes isValidPassword(final String password) {
+        if (password.isEmpty() || password.trim().isEmpty()) {
+            return EMPTY_FIELD;
+        } else if (password.length() < MIN_PASSWORD_LENGTH) {
+            return TOO_SHORT_FIELD;
+        } else {
+            return CORRECT_FIELD;
+        }
     }
 
 }

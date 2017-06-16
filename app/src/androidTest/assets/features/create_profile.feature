@@ -55,9 +55,9 @@ Feature: Create a profile
 
     Examples:
      | name         | password  | repeatpassword    |
-     | Drake        | a         | b                 |
-     | CJ           | ^&*)(     | NetAnders         |
-     | Darth Vader  | 6782      | 4578              |
+     | Drake        | abcdefg   | bcdefgh           |
+     | CJ           | ^&*)(8999 | NetAnders         |
+     | Darth Vader  | 67824444  | 4578              |
 
   Scenario Outline: Generating different key pairs
     Given I am viewing the create profile activity
