@@ -53,7 +53,7 @@
     <string name="create_proflie_too_short_password">Het wachtwoord is te kort, het moet op z\'n minst 6 tekens bevatten</string>
     <string name="create_profile_empty_password">Gelieve een wachtwoord te selecteren.</string>
     <string name="create_profile_empty_name">Gelieve een naam te selecteren.</string>
-    <string name="create_profile_error_adding_to_database">Error bij het proberen van het profiel aan de database toe te voegen</string>
+    <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
 
 
