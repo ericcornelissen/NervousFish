@@ -11,17 +11,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A Java object representation (POJO) of a contact.
  */
-@SuppressWarnings("PMD.ImmutableField")
-//We don't want the field iban to be final.
+@SuppressWarnings({"PMD.ImmutableField", "PMD.UselessParentheses"})
+//1. We don't want the field iban to be final.
+//2. The parentheses on line 125 are not useless.
 public final class Contact implements Serializable {
 
     private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
+    @android.support.annotation.Nullable
     private String iban;
 
     /**
@@ -118,8 +121,8 @@ public final class Contact implements Serializable {
         }
 
         final Contact otherContact = (Contact) obj;
-        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys()) &&
-            (this.iban == null ? otherContact.getIban() == null : this.iban.equals(otherContact.getIban()));
+        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys())
+                && (this.iban == null ? otherContact.getIban() == null : this.iban.equals(otherContact.getIban()));
     }
 
     /**
@@ -127,7 +130,7 @@ public final class Contact implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keys.hashCode() + this.iban.hashCode();
+        return this.name.hashCode() + this.keys.hashCode() + Objects.hashCode(this.iban);
     }
 
     /**
