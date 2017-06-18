@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.exceptions.SerializationException;
+import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -27,6 +28,7 @@ abstract class APairingHandler implements IPairingHandler {
     private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
+    private final IEncryptor encryptor;
 
     /**
      * Prevent instantiation by other classes outside it's package
@@ -35,6 +37,7 @@ abstract class APairingHandler implements IPairingHandler {
      */
     APairingHandler(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
+        this.encryptor = this.serviceLocator.getEncryptor();
     }
 
     /**
@@ -86,7 +89,10 @@ abstract class APairingHandler implements IPairingHandler {
     @Override
     public final void send(final Serializable object, final int key) {
         LOGGER.info("Begin writing object encoded with key: {}", key);
-        this.send(this.objectToBytes(object));
+        final byte[] bytes = this.objectToBytes(object);
+        final String password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
+        final String encryptedMessage = this.encryptor.encryptWithPassword(bytes.toString(), password);
+        this.send(encryptedMessage.getBytes());
     }
 
     protected final IServiceLocator getServiceLocator() {
