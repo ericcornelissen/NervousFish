@@ -51,6 +51,7 @@ env:
 
 matrix:
   allow_failures:
+    - env COMPONENT=androidtest # Often the emulator doesn't start or crashes during execution
     - env COMPONENT=coveralls # Coveralls is nice to have, but not a must have
 
 git:
