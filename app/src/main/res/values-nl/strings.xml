@@ -36,7 +36,6 @@
     <string name="key_type">Type sleutel: %1$s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
-    <string name="repeat_password">Herhaal wachtwoord</string>
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
@@ -58,6 +57,9 @@
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
     <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
 
+    <string name="name_create_profile">Naam*</string>
+    <string name="repeat_password">Herhaal wachtwoord*</string>
+    <string name="password_create_profile">Wachtwoord*</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>

@@ -35,7 +35,6 @@
     <string name="key_type">Key type: %1$s</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
-    <string name="repeat_password">Repeat password</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
@@ -56,6 +55,10 @@
     <string name="create_profile_error_adding_to_database">Error while adding profile to database</string>
     <string name="create_profile_passwords_not_equal">Please make sure you typed the same password twice.</string>
     <string name="create_profile_all_fields_empty">Please fill in the fields</string>
+
+    <string name="name_create_profile">Name*</string>
+    <string name="repeat_password">Repeat password*</string>
+    <string name="password_create_profile">Password*</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>

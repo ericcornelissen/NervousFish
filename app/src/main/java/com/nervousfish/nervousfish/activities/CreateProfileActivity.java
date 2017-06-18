@@ -6,6 +6,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -49,6 +50,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private EditText ibanInput;
 
     /**
      * {@inheritDoc}
@@ -68,6 +70,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
+        this.ibanInput = (EditText) this.findViewById(R.id.iban_create_profile);
 
         LOGGER.info("Activity created");
     }
@@ -83,12 +86,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case INPUT_CORRECT:
                 final String name = nameInput.getText().toString();
                 final String password = passwordInput.getText().toString();
+                final String iban = ibanInput.getText().toString();
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
-                    final Profile userProfile = new Profile(name, keyPairs);
+                    final List<KeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
+                    final Profile userProfile = new Profile(name, keyPairs,iban);
 
                     database.createDatabase(userProfile, password);
                     database.loadDatabase(password);
@@ -183,4 +187,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Gets from the radio buttons in this activity the one checked.
+     *
+     * @return The {@link IKey.Types} of the key that is checked
+     */
+    public IKey.Types getKeyTypeFromInput() {
+        final RadioButton rsaCheckBox = (RadioButton) this.findViewById(R.id.checkbox_rsa_key);
+        final RadioButton ed25519CheckBox = (RadioButton) this.findViewById(R.id.checkbox_ed25519_key);
+        if (rsaCheckBox.isChecked()) {
+            return IKey.Types.RSA;
+        } else if (ed25519CheckBox.isChecked()) {
+            return IKey.Types.Ed25519;
+        }
+        throw new IllegalArgumentException("No radio button selected");
+    }
 }
