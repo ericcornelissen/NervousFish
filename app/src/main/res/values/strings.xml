@@ -24,6 +24,7 @@
     <string name="submit">Submit</string>
     <string name="type">Type</string>
     <string name="yes">Yes</string>
+    <string name="dash">-</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
@@ -80,6 +81,9 @@
     <string name="contact_deleted_description">The contact has been deleted!</string>
     <string name="contact_doesnt_exist">The contact doesn\'t exist</string>
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
+    <string name="contact_iban">IBAN</string>
+    <string name="contact_information">Contact information:</string>
+    <string name="contact_public_keys">Public keys:</string>
 
     <!-- RhythmActivity -->
     <string name="tap_me">Tap me!</string>
