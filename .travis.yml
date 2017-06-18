@@ -43,14 +43,19 @@ cache:
 
 env:
   matrix:
+    - COMPONENT=androidtest
     - COMPONENT=build
-    - COMPONENT=coverage
+    - COMPONENT=coveralls
     - COMPONENT=quality
     - COMPONENT=unittest
 
+matrix:
+  allow_failures:
+    - env COMPONENT=coveralls # Coveralls is nice to have, but not a must have
+
 git:
-  depth: 3 # Clone the last 3 commits
-  lfs_skip_smudge: true # Skip LFS (Large File Storage) objects
+  depth: 3
+  lfs_skip_smudge: true
 
 notifications:
   email:
