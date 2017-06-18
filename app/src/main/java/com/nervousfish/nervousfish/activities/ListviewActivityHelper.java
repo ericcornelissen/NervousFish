@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 
@@ -27,15 +28,19 @@ final class ListviewActivityHelper {
     }
 
     /**
-     * Set the name of the {@link Contact} to the {@link ContactActivity}.
+     * Used to set text of a {@link TextView} in the {@link ContactActivity}.
      *
-     * @param activity The where the name has to be set.
-     * @param name The name.
+     * @param activity The where the text has to be set.
+     * @param text The text.
      * @param id the {@code R.id} of the target {@link TextView}.
      */
-    static void setName(final Activity activity, final String name, final int id) {
+    static void setText(final Activity activity, final String text, final int id) {
         final TextView tv = (TextView) activity.findViewById(id);
-        tv.setText(name);
+        if (text != null) {
+            tv.setText(text);
+        } else {
+            tv.setText(activity.getString(R.string.dash));
+        }
     }
 
     /**

@@ -47,7 +47,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
 
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        ListviewActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
+        ListviewActivityHelper.setText(this, this.contact.getName(), R.id.edit_contact_name_input);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);

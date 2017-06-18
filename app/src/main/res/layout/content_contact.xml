@@ -105,6 +105,10 @@
                 android:textColor="@color/dark_grey"
                 android:textStyle="bold" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/general_divider_height"
+                android:background="@android:color/darker_gray"/>
 
             <ListView
                 android:id="@+id/list_view_contact"
