@@ -23,8 +23,8 @@ import java.io.IOException;
 public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
+    private IServiceLocator serviceLocator;
 
-    private String actualPassword;
 
     /**
      * {@inheritDoc}
@@ -34,15 +34,9 @@ public final class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
 
-        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-        final IDatabase database = serviceLocator.getDatabase();
-        try {
-            this.actualPassword = database.getUserPassword();
-        } catch (final IOException e) {
-            LOGGER.error("Failed to retrieve password from database", e);
-        }
+        this.serviceLocator = NervousFish.getServiceLocator();
 
-        LOGGER.info("Activity created");
+        LOGGER.info("LoginActivity created");
     }
 
     /**
@@ -73,15 +67,16 @@ public final class LoginActivity extends AppCompatActivity {
             mError.setVisibility(View.GONE);
             this.toMainActivity();
         } else {
+            final IDatabase database = this.serviceLocator.getDatabase();
             final String providedPassword = passwordInput.getText().toString();
-            final boolean wrongPassword = !providedPassword.equals(this.actualPassword);
-            if (wrongPassword) {
-                LOGGER.warn("Password incorrect!");
-                mError.setVisibility(View.VISIBLE);
-            } else {
-                LOGGER.info("Password correct");
+
+            try {
+                database.loadDatabase(providedPassword);
                 mError.setVisibility(View.GONE);
                 this.toMainActivity();
+            } catch (IOException e) {
+                LOGGER.error("Something went wrong when loading the database", e);
+                mError.setVisibility(View.VISIBLE);
             }
         }
     }

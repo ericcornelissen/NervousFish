@@ -2,11 +2,11 @@ package com.nervousfish.nervousfish.modules.database;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.modules.constants.IConstants;
+import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
@@ -14,38 +14,51 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Reader;
 import java.io.Writer;
-import java.lang.reflect.Type;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SecretKey;
+
 
 /**
  * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
  * DatabaseHandler has a lot of methods by nature and refactoring it to multiple classes or single
- * methods with more logic would make the class only less understandable.
+ * methods with more logic would make the class only less understandable. We also suppress
+ * ClassDataAbstractionCoupling of checkstyle because of the by the pojo's created to write safely,
+ * we have to import this much.
  */
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "PMD.TooManyMethods"})
 public final class GsonDatabaseAdapter implements IDatabase {
 
     private static final long serialVersionUID = -4101015873770268925L;
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
-    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
-    private static final Type TYPE_CONTACT_LIST = new TypeToken<ArrayList<Contact>>() {
-    }.getType();
-    private static final Type TYPE_PROFILE_LIST = new TypeToken<ArrayList<Profile>>() {
-    }.getType();
+    private static final String DATABASE_NOT_CREATED = "Database is not created";
+    private static final String DATABASE_WRONG_SIZE = "Database has the wrong size";
+    private static final String BAD_KEY_SPEC = "Password leads to bad key spec";
+    private static final String BAD_PADDING = "Database has bad padding";
 
-    private final String contactsPath;
-    private final String profilesPath;
+    //  Strings for saving database related objects in the map
+    private static final String DATABASE = "database";
+    private static final String ENCRYPTED_PASSWORD = "encrypted password";
+    private static final String ENCRYPTION_KEY = "encryption key";
+    private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
+
+    private final String databasePath;
+    private final String passwordPath;
+
+    private final Map<String, Object> databaseMap;
+
     private final IFileSystem fileSystem;
+    private final GsonDatabaseAdapterLoader helper;
+    private final IEncryptor encryptor;
 
     /**
      * Prevents construction from outside the class.
@@ -53,18 +66,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocator Can be used to get access to other modules
      */
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
-        final IConstants constants = serviceLocator.getConstants();
         this.fileSystem = serviceLocator.getFileSystem();
-
-        this.contactsPath = constants.getDatabaseContactsPath();
-        this.profilesPath = constants.getDatabaseUserdataPath();
-
-        try {
-            this.initializeContacts();
-            this.initializeDatabase();
-        } catch (final IOException e) {
-            LOGGER.error("Failed to initialize database", e);
-        }
+        this.encryptor = serviceLocator.getEncryptor();
+        this.databaseMap = new HashMap<>();
+        this.databasePath = serviceLocator.getConstants().getDatabasePath();
+        this.passwordPath = serviceLocator.getConstants().getPasswordPath();
+        this.helper = new GsonDatabaseAdapterLoader(serviceLocator);
         LOGGER.info("Initialized");
     }
 
@@ -84,7 +91,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
-        LOGGER.info("Adding new contact with name: {}", contact.getName());
+        LOGGER.info("Adding new contact with name: " + contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
         }
@@ -93,7 +100,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final List<Contact> contacts = this.getAllContacts();
         contacts.add(contact);
 
-        this.updateContacts(contacts);
+        this.updateDatabase();
     }
 
     /**
@@ -115,50 +122,33 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
-        this.updateContacts(contacts);
+        this.updateDatabase();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void updateContact(final Contact oldContact, final Contact newContact) throws IOException {
-        // Get the list of contacts
-        final List<Contact> contacts = this.getAllContacts();
+    public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
+        final List<Contact> contacts = getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(oldContact);
-
         // Throw if the contact to update is not found
         if (contacts.size() == lengthBefore) {
             throw new IllegalArgumentException(CONTACT_NOT_FOUND);
         }
 
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-        // Add the new contact and update the database
         contacts.add(newContact);
-
-        final Writer writer = this.fileSystem.getWriter(this.contactsPath);
-        gsonParser.toJson(contacts, writer);
-        writer.close();
+        updateDatabase();
     }
+
 
     /**
      * {@inheritDoc}
      */
     @Override
     public List<Contact> getAllContacts() throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Reader reader = this.fileSystem.getReader(this.contactsPath);
-
-        final List<Contact> contacts = gsonParser.fromJson(reader, TYPE_CONTACT_LIST);
-        reader.close();
-
-        return contacts;
+        return getDatabase().getContacts();
     }
 
     /**
@@ -166,7 +156,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public Contact getContactWithName(final String contactName) throws IOException {
-        final List<Contact> contacts = this.getAllContacts();
+        final List<Contact> contacts = getAllContacts();
         for (final Contact contact : contacts) {
             if (contact.getName().equals(contactName)) {
                 return contact;
@@ -181,165 +171,200 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public boolean contactExists(final String name) throws IOException {
-        return this.getContactWithName(name) != null;
+        return getContactWithName(name) != null;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Profile getProfile() throws IOException {
+        return getDatabase().getProfile();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Profile> getProfiles() throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Reader reader = this.fileSystem.getReader(this.profilesPath);
-        final List<Profile> profile = gsonParser.fromJson(reader, TYPE_PROFILE_LIST);
-        reader.close();
-
-        return profile;
+    public void updateProfile(final Profile newProfile) throws IOException {
+        final Database newDatabase = new Database(getDatabase().getContacts(), newProfile);
+        databaseMap.put(DATABASE, newDatabase);
+        updateDatabase();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addProfile(final Profile profile) throws IOException {
-        // Get the list of profiles and add the new profile
-        final List<Profile> profiles = this.getProfiles();
-        profiles.add(profile);
+    public void updateDatabase() throws IOException {
+        try {
+            final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
+            final Gson gsonParser = gsonBuilder.create();
 
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        // Update the database
-        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-        gsonParser.toJson(profiles, writer);
-        writer.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void deleteProfile(final Profile profile) throws IOException {
-        // Get the list of contacts
-        final List<Profile> profiles = this.getProfiles();
-        final int lengthBefore = profiles.size();
-        profiles.remove(profile);
-
-        // Throw if the contact to remove is not found
-        if (profiles.size() == lengthBefore) {
-            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
+            final String databaseJson = gsonParser.toJson(getDatabase());
+            final String encryptedDatabase = encryptor.encryptWithPassword(databaseJson, getEncryptionKey());
+            try (Writer writer = this.fileSystem.getWriter(databasePath)) {
+                writer.write(encryptedDatabase);
+            }
+        } catch (IllegalBlockSizeException e) {
+            LOGGER.error("Wrong size of password", e);
+            throw new IOException("Password is wrong size", e);
+        } catch (BadPaddingException e) {
+            LOGGER.error(BAD_PADDING, e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void loadDatabase(final String password) throws IOException, RuntimeException {
+        LOGGER.info("Started loading database");
+        try {
+            final SecretKey key = helper.loadKey(password);
+            databaseMap.put(ENCRYPTION_KEY, key);
+            final Database database = helper.loadDatabase(key);
+            databaseMap.put(DATABASE, database);
+        } catch (InvalidKeySpecException e) {
+            throw new IOException(BAD_KEY_SPEC, e);
+        }
+
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void createDatabase(final Profile profile, final String password) throws IOException {
+        LOGGER.info("Started creating database for profile");
+        initializePassword(password);
+        initializeDatabase(profile, password);
+        LOGGER.info("Database successfully created");
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean checkFirstUse() {
+        LOGGER.info("Checking first use of the database");
+        return fileSystem.checkFileExists(passwordPath) && fileSystem.checkFileExists(databasePath);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean deleteDatabase() {
+        LOGGER.info("Deleting database");
+        if (checkFirstUse()) {
+            return fileSystem.deleteFile(passwordPath) && fileSystem.deleteFile(databasePath);
+        } else {
+            return true;
+        }
+    }
+
+
+    /**
+     * Initialize the main database. Does nothing when file is present.
+     *
+     * @param profile  The profile to initialize the database for.
+     * @param password The password to initialize the database with.
+     */
+    private void initializeDatabase(final Profile profile, final String password) throws IOException {
+        LOGGER.info("Database path created: " + databasePath);
+
+        databaseMap.put(DATABASE, new Database(new ArrayList<Contact>(), profile));
 
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
-        // Update the database
-        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-        gsonParser.toJson(profiles, writer);
-        writer.close();
-    }
+        final String databaseJson = gsonParser.toJson(getDatabase());
+        LOGGER.info("Database translated to json: " + databaseJson);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updateProfile(final Profile oldProfile, final Profile newProfile) throws IOException {
-        // Get the list of contacts
-        final List<Profile> profiles = this.getProfiles();
-        final int lengthBefore = profiles.size();
-        profiles.remove(oldProfile);
+        try {
+            final SecretKey key = encryptor.makeKeyFromPassword(password);
+            final String databaseEncrypted = encryptor.encryptWithPassword(databaseJson, key);
 
-        // Throw if the contact to update is not found
-        if (profiles.size() == lengthBefore) {
-            throw new IllegalArgumentException(CONTACT_NOT_FOUND);
-        }
-
-        final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        // Add the new contact and update the database
-        profiles.add(newProfile);
-        final Writer writer = this.fileSystem.getWriter(this.profilesPath);
-        gsonParser.toJson(profiles, writer);
-        writer.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getUserPassword() {
-        return null;
-    }
-
-    /**
-     * Update the contact contents of the database.
-     *
-     * @param contacts The list of contacts to write.
-     */
-    private void updateContacts(final List<Contact> contacts) throws IOException {
-        final GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
-        final Gson gsonParser = gsonBuilder.create();
-
-        final Writer writer = this.fileSystem.getWriter(this.contactsPath);
-
-        gsonParser.toJson(contacts, writer);
-        writer.close();
-    }
-
-    /**
-     * Initialize the contacts in the database. This does nothing
-     * if the contacts section of the database already exists.
-     */
-    private void initializeContacts() throws IOException {
-        final File file = new File(this.contactsPath);
-        if (!file.exists()) {
-            LOGGER.warn("Contacts part of the database didn't exist");
-            try (Writer writer = this.fileSystem.getWriter(this.contactsPath)) {
-                writer.write("[]");
-                writer.close();
-                LOGGER.info("Created the contacts part of the database");
+            try (Writer writer = this.fileSystem.getWriter(databasePath)) {
+                writer.write(databaseEncrypted);
             }
+            LOGGER.info("Created the database: %s", this.databasePath);
+        } catch (InvalidKeySpecException e) {
+            throw new IOException(BAD_KEY_SPEC, e);
+        } catch (IllegalBlockSizeException e) {
+            throw new IOException(DATABASE_WRONG_SIZE, e);
+        } catch (BadPaddingException e) {
+            LOGGER.error(BAD_PADDING, e);
         }
     }
 
     /**
-     * Initialize the specified section in the database. This does nothing
-     * if the specified section of the database already exists.
-     */
-    private void initializeDatabase() throws IOException {
-        final File file = new File(this.profilesPath);
-        if (!file.exists()) {
-            LOGGER.warn("Part of the database didn't exist: {}", this.profilesPath);
-            try (Writer writer = this.fileSystem.getWriter(this.profilesPath)) {
-                writer.write("[]");
-                writer.close();
-                LOGGER.info("Created the part of the database: {}", this.profilesPath);
-            }
-        }
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
+     * Initialize the password file with the keys to encrypt the database. When there's no file yet
+     * it creates a new file and a new keypair. Does nothing when file is present.
      *
-     * @param stream The serialized object to be deserialized
+     * @param password The password to initialize the database with.
      */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
+    private void initializePassword(final String password) throws IOException {
+        LOGGER.info("Initializing password");
+        databaseMap.put(ENCRYPTED_PASSWORD, encryptor.hashString(password));
+
+
+        final String encryptedPassword = getEncryptedPassword();
+
+        LOGGER.info("Encrypted password: " + encryptedPassword);
+
+        try (Writer writer = this.fileSystem.getWriter(passwordPath)) {
+            writer.write(encryptedPassword);
+        }
+        LOGGER.info("Created the password file: %s", this.passwordPath);
+
+    }
+
+
+    /**
+     * Gets the encrypted password from the databaseMap
+     *
+     * @throws IOException throws IOException if the database isn't loaded yet.
+     */
+    private String getEncryptedPassword() throws DatabaseAdapterException {
+        final Object object = databaseMap.get(ENCRYPTED_PASSWORD);
+        if (object instanceof String) {
+            return (String) object;
+        } else {
+            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+        }
     }
 
     /**
-     * Ensure that the instance meets its class invariant
+     * Gets the database from the databaseMap
+     *
+     * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private void ensureClassInvariant() {
-        assertThat(this.contactsPath, notNullValue());
-        assertThat(this.profilesPath, notNullValue());
-        assertThat(this.fileSystem, notNullValue());
+    private Database getDatabase() throws DatabaseAdapterException {
+        final Object object = databaseMap.get(DATABASE);
+        if (object instanceof Database) {
+            return (Database) object;
+        } else {
+            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+        }
     }
+
+    /**
+     * Gets the encryption key from the databaseMap
+     *
+     * @throws IOException throws IOException if the database isn't loaded yet.
+     */
+    private SecretKey getEncryptionKey() throws DatabaseAdapterException {
+        final Object object = databaseMap.get(ENCRYPTION_KEY);
+        if (object instanceof SecretKey) {
+            return (SecretKey) object;
+        } else {
+            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+        }
+    }
+
 }

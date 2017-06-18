@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -83,7 +83,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 firstLoad = false;
 
                 try {
-                    preference.setSummary(serviceLocator.getDatabase().getProfiles().get(0).getName());
+                    preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
                     return;
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
@@ -93,8 +93,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             } else {
                 try {
                     LOGGER.info("Updating profile name");
-                    final Profile profile = serviceLocator.getDatabase().getProfiles().get(0);
-                    serviceLocator.getDatabase().updateProfile(profile, new Profile(stringValue, profile.getKeyPairs()));
+                    final Profile profile = serviceLocator.getDatabase().getProfile();
+                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
@@ -157,7 +157,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             PreferenceManager
                     .getDefaultSharedPreferences(this)
                     .edit()
-                    .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfiles().get(0).getName())
+                    .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
                     .apply();
         } catch (IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);
