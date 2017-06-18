@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A Profile POJO to store a contact representing the user and the user's keypairs.
@@ -17,6 +18,7 @@ public class Profile implements Serializable {
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
     private final List<KeyPair> keyPairs;
+    private String iban;
 
 
     /**
@@ -28,6 +30,20 @@ public class Profile implements Serializable {
     public Profile(final String name, final List<KeyPair> keyPairs) {
         this.keyPairs = keyPairs;
         this.name = name;
+    }
+
+    /**
+     * The constructor for the {@link Profile} class. This one
+     * includes the IBAN.
+     *
+     * @param name     The contact belonging to the user.
+     * @param keyPairs The public/private key-pairs of the user.
+     * @param iban     The iban of the user.
+     */
+    public Profile(final String name, final List<KeyPair> keyPairs, final String iban) {
+        this.keyPairs = keyPairs;
+        this.name = name;
+        this.iban = iban;
     }
 
     /**
@@ -61,13 +77,12 @@ public class Profile implements Serializable {
         return keyPairs;
     }
 
-    /**
-     * Returns the name of the profile.
-     *
-     * @return Name of the profile.
-     */
     public String getName() {
         return this.name;
+    }
+
+    public String getIban() {
+        return this.iban;
     }
 
 
@@ -82,7 +97,8 @@ public class Profile implements Serializable {
 
         final Profile that = (Profile) o;
 
-        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs);
+        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs)
+                && (this.iban == null ? that.getIban() == null : this.iban.equals(that.getIban()));
     }
 
     /**
@@ -90,7 +106,7 @@ public class Profile implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keyPairs.hashCode();
+        return this.name.hashCode() + this.keyPairs.hashCode() + Objects.hashCode(this.iban);
     }
 
     /**
@@ -116,6 +132,7 @@ public class Profile implements Serializable {
         private static final long serialVersionUID = 8191245914949893284L;
         private final String name;
         private final KeyPair[] keyPairs;
+        private String iban;
 
         /**
          * Constructs a new SerializationProxy
@@ -125,6 +142,7 @@ public class Profile implements Serializable {
         SerializationProxy(final Profile profile) {
             this.name = profile.name;
             this.keyPairs = profile.keyPairs.toArray(new KeyPair[profile.keyPairs.size()]);
+            this.iban = profile.getIban();
         }
 
         /**
@@ -133,7 +151,7 @@ public class Profile implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Profile(this.name, Arrays.asList(this.keyPairs));
+            return new Profile(this.name, Arrays.asList(this.keyPairs), this.iban);
         }
     }
 
