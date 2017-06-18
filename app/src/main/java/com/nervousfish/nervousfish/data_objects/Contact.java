@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * A Java object representation (POJO) of a contact.
  */
+@SuppressWarnings("PMD.ImmutableField")
+//We don't want the field iban to be final.
 public final class Contact implements Serializable {
 
     private static final long serialVersionUID = -4715364587956219157L;
@@ -80,7 +82,7 @@ public final class Contact implements Serializable {
         return this.name;
     }
 
-    public String getIBAN() {
+    public String getIban() {
         return this.iban;
     }
 
@@ -116,8 +118,8 @@ public final class Contact implements Serializable {
         }
 
         final Contact otherContact = (Contact) obj;
-        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys())
-                && this.iban.equals(otherContact.getIBAN());
+        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys()) &&
+            (this.iban == null ? otherContact.getIban() == null : this.iban.equals(otherContact.getIban()));
     }
 
     /**
@@ -161,7 +163,7 @@ public final class Contact implements Serializable {
         SerializationProxy(final Contact contact) {
             this.name = contact.name;
             this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
-            this.iban = contact.getIBAN();
+            this.iban = contact.getIban();
         }
 
         /**

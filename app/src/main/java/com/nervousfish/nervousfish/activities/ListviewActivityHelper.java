@@ -36,10 +36,10 @@ final class ListviewActivityHelper {
      */
     static void setText(final Activity activity, final String text, final int id) {
         final TextView tv = (TextView) activity.findViewById(id);
-        if (text != null) {
-            tv.setText(text);
-        } else {
+        if (text == null) {
             tv.setText(activity.getString(R.string.dash));
+        } else {
+            tv.setText(text);
         }
     }
 

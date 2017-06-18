@@ -49,7 +49,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.edit_contact_name_input);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
-        ListviewActivityHelper.setText(this, this.contact.getIBAN(), R.id.contact_page_change_iban);
+        ListviewActivityHelper.setText(this, this.contact.getIban(), R.id.contact_page_change_iban);
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
@@ -114,8 +114,11 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final View v) {
-            final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
-            if (editText.getText().toString().equals(contact.getName())) {
+            final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
+            final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
+            if (editTextName.getText().toString().equals(contact.getName())
+                    && (editTextIBAN.getText().toString().equals(contact.getIban())
+                    || editTextIBAN.getText().toString().equals(ChangeContactActivity.this.getString(R.string.dash)))) {
                 finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)

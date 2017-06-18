@@ -17,7 +17,6 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -72,12 +71,6 @@ public final class MainActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_main);
         this.serviceLocator = NervousFish.getServiceLocator();
         this.database = this.serviceLocator.getDatabase();
-        try {
-            database.addContact(new Contact("Aardbei", new RSAKey("TheKey", "aa", "bb"), "NL64INGB89235325"));
-            database.addContact(new Contact("Banaan", new RSAKey("TheSecondKey", "aba", "bab")));
-        } catch (IOException | IllegalArgumentException e) {
-            e.printStackTrace();
-        }
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
