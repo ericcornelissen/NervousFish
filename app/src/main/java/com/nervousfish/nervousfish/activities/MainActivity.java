@@ -75,7 +75,7 @@ public final class MainActivity extends AppCompatActivity {
         try {
             database.addContact(new Contact("Aardbei", new RSAKey("TheKey", "aa", "bb"), "NL64INGB89235325"));
             database.addContact(new Contact("Banaan", new RSAKey("TheSecondKey", "aba", "bab")));
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         }
 

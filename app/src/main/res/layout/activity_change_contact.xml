@@ -67,8 +67,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:background="@drawable/seabackflipped">
+                android:background="@drawable/seabackflipped"
+                app:layout_scrollFlags="scroll|enterAlways">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar_change_contact"
@@ -88,15 +88,15 @@
                         android:id="@+id/iv_change_contact"
                         android:layout_width="@dimen/contact_picture_width"
                         android:layout_height="@dimen/contact_picture_height"
-                        android:src="@drawable/personplaceholder"
-                        android:contentDescription="@string/contact_image" />
+                        android:contentDescription="@string/contact_image"
+                        android:src="@drawable/personplaceholder" />
 
                     <EditText
-                        android:labelFor="@id/iv_change_contact"
                         android:id="@+id/edit_contact_name_input"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:inputType="text"
+                        android:labelFor="@id/iv_change_contact"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/contact_name_size"
                         android:textStyle="bold"
@@ -115,6 +115,61 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_primary_dark"
+                    android:padding="@dimen/contact_page_side_padding"
+                    android:text="@string/contact_information"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_primary_dark"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/contact_page_side_padding"
+                    android:paddingLeft="@dimen/contact_page_side_padding"
+                    android:paddingRight="@dimen/contact_page_side_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/contact_iban"
+                        android:textColor="@color/white" />
+
+                    <EditText
+                        android:id="@+id/contact_page_change_iban"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="text"
+                        android:text="@string/dash"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/general_divider_height"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/contact_page_side_padding"
+                    android:text="@string/contact_public_keys"
+                    android:textColor="@color/dark_grey"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/general_divider_height"
+                    android:background="@android:color/darker_gray" />
+
                 <ListView
                     android:id="@+id/list_view_edit_contact"
                     android:layout_width="match_parent"
@@ -122,5 +177,6 @@
                     android:layout_marginTop="@dimen/contact_keys_list_margin_top" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

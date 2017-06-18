@@ -49,6 +49,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.edit_contact_name_input);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
+        ListviewActivityHelper.setText(this, this.contact.getIBAN(), R.id.contact_page_change_iban);
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
@@ -67,11 +68,13 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
-        if (isValidName(editText.getText().toString())) {
+        final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
+        final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
+        if (isValidName(editTextName.getText().toString())) {
             //Update contact
             try {
-                final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
+                final Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
+                        editTextIBAN.getText().toString());
                 if (!contact.equals(newContact)) {
                     serviceLocator.getDatabase().updateContact(contact, newContact);
                     contact = newContact;
