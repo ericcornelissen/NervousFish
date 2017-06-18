@@ -85,7 +85,7 @@ public final class VisualVerificationActivity extends Activity {
                     + keyPair.getPublicKey().toString());
 
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
+            this.serviceLocator.getBluetoothHandler().send(myProfileAsContact, this.securityCode);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
