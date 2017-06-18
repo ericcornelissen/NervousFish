@@ -43,10 +43,9 @@ cache:
 
 env:
   matrix:
+    - COMPONENT=build
     - COMPONENT=androidtest
     - COMPONENT=coveralls
-    - COMPONENT=quality
-    - COMPONENT=unittest
 
 matrix:
   allow_failures:
