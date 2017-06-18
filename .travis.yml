@@ -3,10 +3,10 @@ jdk: oraclejdk8
 
 
 before_script:
-  - ./travis_before_script.sh
+  - ./gradle/scripts/travis_before_script.sh
 
 script:
-  - ./travis_script.sh
+  - ./gradle/scripts/travis_script.sh
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
