@@ -54,7 +54,7 @@ matrix:
     - env COMPONENT=coveralls # Coveralls is nice to have, but not a must have
 
 git:
-  depth: 3
+  depth: 5
   lfs_skip_smudge: true
 
 notifications:
