@@ -92,7 +92,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 try {
                     // Create the new profile
                     final List<KeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
-                    final Profile userProfile = new Profile(name, keyPairs,iban);
+                    final Profile userProfile = new Profile(name, keyPairs, iban);
 
                     database.createDatabase(userProfile, password);
                     database.loadDatabase(password);

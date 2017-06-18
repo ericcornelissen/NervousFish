@@ -59,7 +59,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 LOGGER.info("Preference changed at the display name");
                 updateDisplayName(preference, stringValue);
                 return true;
-            } else if (preference.getKey().equals(ConstantKeywords.IBAN_NUMBER )) {
+            } else if (preference.getKey().equals(ConstantKeywords.IBAN_NUMBER)) {
                 LOGGER.info("Preference changed at the iban number");
                 updateIban(preference, stringValue);
                 return true;
@@ -128,7 +128,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     }
                     return;
                 } catch (IOException e) {
-                    LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
+                    LOGGER.error("Couldn't get profiles from database while loading IBAN for the first time", e);
                 }
 
                 preference.setSummary(stringValue);
@@ -139,7 +139,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     serviceLocator.getDatabase().updateProfile(
                             new Profile(profile.getName(), profile.getKeyPairs(), stringValue));
                 } catch (IOException e) {
-                    LOGGER.error("Couldn't get profiles from database", e);
+                    LOGGER.error("Couldn't get profiles from database for IBAN", e);
                 }
 
                 preference.setSummary(stringValue);

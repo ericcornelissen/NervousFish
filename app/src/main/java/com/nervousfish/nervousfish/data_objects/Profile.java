@@ -13,7 +13,10 @@ import java.util.Objects;
 /**
  * A Profile POJO to store a contact representing the user and the user's keypairs.
  */
-public class Profile implements Serializable {
+@SuppressWarnings({"PMD.ImmutableField", "PMD.UselessParentheses"})
+//1. We don't want the field iban to be final.
+//2. The parentheses on line 104 are not useless.
+public final class Profile implements Serializable {
 
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
