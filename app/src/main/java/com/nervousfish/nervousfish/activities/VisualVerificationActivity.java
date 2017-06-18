@@ -27,7 +27,7 @@ import java.io.IOException;
 public final class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
-    private static final int SECURITY_CODE_LENGTH = 5;
+    private static final int SECURITY_CODE_LENGTH = 6;
     private static final int NUM_BUTTONS = 12;
 
     private IServiceLocator serviceLocator;
@@ -76,8 +76,9 @@ public final class VisualVerificationActivity extends Activity {
         LOGGER.info("Done tapping the VisualVerification");
 
         try {
-            final Profile profile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
+
 
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
                     + keyPair.getPublicKey().toString());

@@ -12,7 +12,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
-import com.nervousfish.nervousfish.exceptions.CannotHappenException;
+import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -128,7 +128,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
         try {
-            final Profile profile = this.database.getProfiles().get(0);
+            final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
@@ -293,8 +293,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             } else if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.LONG) {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
-                LOGGER.error("A timestamp does neither belong to the short or long timestamp");
-                throw new CannotHappenException("This cannot happen");
+                LOGGER.error("A timestamp does neither belong to the short or long interval");
+                throw new UnknownIntervalException("The timestamp does neither long to the short or long interval");
             }
             this.intervals.remove(closestPoint.getRight());
         }

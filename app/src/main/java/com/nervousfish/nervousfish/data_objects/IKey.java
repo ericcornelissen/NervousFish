@@ -11,16 +11,18 @@ import java.io.Serializable;
 public interface IKey extends Serializable {
 
     /**
-     * A list of {@link IKey} implementations known to the system.
-     */
-    enum Types { RSA, Ed25519 }
-
-    /**
      * Get a string representation of a key.
      *
      * @return The key as a {@link String}.
      */
     String getKey();
+
+    /**
+     * Get a formatted representation of a key.
+     *
+     * @return The formatted key as a {@link String}.
+     */
+    String getFormattedKey();
 
     /**
      * Get a string representing the name of the key.
@@ -41,5 +43,12 @@ public interface IKey extends Serializable {
      * @param writer Used to write the key to
      */
     void toJson(JsonWriter writer) throws IOException;
+
+    /**
+     * A list of {@link IKey} implementations known to the system.
+     */
+    enum Types {
+        RSA, Ed25519
+    }
 
 }

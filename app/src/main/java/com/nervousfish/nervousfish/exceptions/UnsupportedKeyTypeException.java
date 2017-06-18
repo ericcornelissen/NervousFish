@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 /**
  * Simple {@link RuntimeException} that is used on places that cannot be reached unless something is really, really wrong.
  */
-public class CannotHappenException extends RuntimeException {
+public class UnsupportedKeyTypeException extends RuntimeException {
 
     private static final long serialVersionUID = -7030163248191198652L;
 
@@ -16,7 +16,7 @@ public class CannotHappenException extends RuntimeException {
      *
      * @param msg A string describing the exception
      */
-    public CannotHappenException(final String msg) {
+    public UnsupportedKeyTypeException(final String msg) {
         super(msg);
     }
 
