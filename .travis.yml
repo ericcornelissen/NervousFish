@@ -55,9 +55,9 @@ matrix:
   fast_finish: true
   allow_failures:
     # Often the emulator doesn't start or crashes during execution
-    - env COMPONENT=androidtest
+    - env: COMPONENT=androidtest
     # Coveralls is nice to have, but not a must have
-    - env COMPONENT=coveralls
+    - env: COMPONENT=coveralls
 
 git:
   depth: 5
