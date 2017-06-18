@@ -126,6 +126,7 @@
     <!-- Settings -->
     <string name="title_activity_settings">Settings</string>
     <string name="content_description_settings_button">Settings button three dots</string>
+    <string name="no_iban_yet">No IBAN entered yet</string>
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>
