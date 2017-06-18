@@ -29,9 +29,11 @@ public final class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
     private static final int SECURITY_CODE_LENGTH = 5;
+    private static final int NUM_BUTTONS = 12;
 
     private IServiceLocator serviceLocator;
-    private String securityCode = "";
+    private int securityCode;
+    private int numTaps;
     private Contact dataReceived;
 
     /**
@@ -75,8 +77,9 @@ public final class VisualVerificationActivity extends Activity {
         LOGGER.info("Done tapping the VisualVerification");
 
         try {
-            final Profile profile = this.serviceLocator.getDatabase().getProfiles().get(0);
+            final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
+
 
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
                     + keyPair.getPublicKey().toString());
@@ -100,18 +103,20 @@ public final class VisualVerificationActivity extends Activity {
      * @param v The view of the button being clicked.
      */
     public void buttonAction(final View v) {
-        final String button = v.getContentDescription().toString();
-        LOGGER.info("button '%s' clicked", button);
+        final int button = Integer.parseInt(v.getContentDescription().toString());
+        LOGGER.info("button {} clicked", button);
 
-        if (this.securityCode.length() > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
+        if (this.numTaps > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             LOGGER.warn("Security code already long enough");
-        } else if (this.securityCode.length() + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
+        } else if (this.numTaps + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             this.securityCode += button;
-            LOGGER.info("final code is: %s", this.securityCode);
+            LOGGER.info("final code is: {}", this.securityCode);
             this.nextActivity();
         } else {
+            this.numTaps++;
+            this.securityCode *= NUM_BUTTONS;
             this.securityCode += button;
-            LOGGER.info("code so far: %s", this.securityCode);
+            LOGGER.info("code so far: {}", this.securityCode);
         }
     }
 
