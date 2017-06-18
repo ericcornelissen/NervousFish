@@ -43,10 +43,13 @@ cache:
 
 env:
   matrix:
-    - COMPONENT=androidtest
-    - COMPONENT=coveralls
+    # Required (will be executed first)
     - COMPONENT=quality
     - COMPONENT=unittest
+    
+    # Allowed to fail (will be executed last)
+    - COMPONENT=androidtest
+    - COMPONENT=coveralls
 
 matrix:
   fast_finish: true
