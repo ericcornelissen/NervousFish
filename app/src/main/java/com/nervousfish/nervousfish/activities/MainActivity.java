@@ -60,7 +60,7 @@ public final class MainActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private IDatabase database;
     private MainActivitySorter sorter;
-    private List<Contact> contacts;
+    List<Contact> contacts;
 
     /**
      * {@inheritDoc}

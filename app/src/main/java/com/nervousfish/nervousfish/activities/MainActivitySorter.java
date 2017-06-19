@@ -105,6 +105,8 @@ final class MainActivitySorter {
 
         });
 
+        this.mainActivity.contacts.sort(NAME_SORTER);
+
         if (contactsByNameListAdapter.isEmpty()) {
             showNoContactsContent();
         } else {
