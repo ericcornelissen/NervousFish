@@ -61,31 +61,36 @@ public final class LoginActivity extends AppCompatActivity {
         final View mError = this.findViewById(R.id.error_message_login);
         final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
 
-        final boolean skipPassword = passwordInput.getText().toString().isEmpty();
-        if (skipPassword) {
-            LOGGER.warn("Password skipped!");
+
+        final IDatabase database = this.serviceLocator.getDatabase();
+        final String providedPassword = passwordInput.getText().toString();
+
+        try {
+            database.loadDatabase(providedPassword);
             mError.setVisibility(View.GONE);
             this.toMainActivity();
-        } else {
-            final IDatabase database = this.serviceLocator.getDatabase();
-            final String providedPassword = passwordInput.getText().toString();
-
-            try {
-                database.loadDatabase(providedPassword);
-                mError.setVisibility(View.GONE);
-                this.toMainActivity();
-            } catch (IOException e) {
-                LOGGER.error("Something went wrong when loading the database", e);
-                mError.setVisibility(View.VISIBLE);
-            }
+        } catch (IOException e) {
+            LOGGER.error("Something went wrong when loading the database", e);
+            mError.setVisibility(View.VISIBLE);
         }
+
     }
 
     /**
      * Go to the next activity from the {@link LoginActivity}.
      */
     private void toMainActivity() {
+        this.clearPasswordInput(); // Clear the input for security
         final Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
     }
+
+    /**
+     * Clear the password input.
+     */
+    private void clearPasswordInput() {
+        final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
+        passwordInput.setText("");
+    }
+
 }
