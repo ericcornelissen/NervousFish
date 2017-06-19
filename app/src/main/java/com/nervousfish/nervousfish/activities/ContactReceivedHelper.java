@@ -29,7 +29,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 @SuppressWarnings("checkstyle:nowhitespacebefore")
 enum ContactReceivedHelper {
     ;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactReceivedHelper.class);
+
+    private enum ContactExists {
+        NOT, BY_NAME, BY_NAME_AND_KEYS
+    }
 
     /**
      * Adds a new contact to the database. If it existed already, it asks the user if he wants to add
@@ -64,6 +69,13 @@ enum ContactReceivedHelper {
         }
     }
 
+    /**
+     * Handle the case where a newly received contact with a name already exists.
+     *
+     * @param database The {@link IDatabase} to use.
+     * @param activity The {@link Activity} to use.
+     * @param contact The new {@link Contact}.
+     */
     private static void handleExistingContact(final IDatabase database, final Activity activity, final Contact contact) {
         new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
@@ -76,6 +88,12 @@ enum ContactReceivedHelper {
                 .show();
     }
 
+    /**
+     * Handle the case where a newly received contact is a duplicate.
+     *
+     * @param activity The {@link Activity} to use.
+     * @param contact The new {@link Contact}.
+     */
     private static void handleDuplicateContact(final Activity activity, final Contact contact) {
         new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
@@ -108,6 +126,13 @@ enum ContactReceivedHelper {
         return ContactReceivedHelper.ContactExists.NOT;
     }
 
+    /**
+     * Check if the keys of two users are equal.
+     *
+     * @param keys1 The first {@link List} of {@link IKey}s.
+     * @param keys2 The second {@link List} of {@link IKey}s.
+     * @return A boolean indicating if all the {@link IKey}s in the first list are also in the second list.
+     */
     private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
         final Set<IKey> keysSet1 = new HashSet<>(keys1);
         for (final IKey key : keys2) {
@@ -118,29 +143,39 @@ enum ContactReceivedHelper {
         return true;
     }
 
-    private enum ContactExists {
-        NOT, BY_NAME, BY_NAME_AND_KEYS
-    }
-
     private static final class CreateNewContactClickListener implements SweetAlertDialog.OnSweetClickListener {
+
         private final DialogInterface.OnClickListener confirmNewNameListener = new ConfirmNewNameClickListener();
         private final Activity activity;
         private final IDatabase database;
         private final Contact contact;
         private EditText edit_newContactName;
 
+        /**
+         * Create a click listener for the creation of a new {@link Contact}.
+         *
+         * @param activity The activity related to creating the {@link Contact}.
+         * @param database The {@link IDatabase} instance to use.
+         * @param contact The {@link Contact} to add.
+         */
         CreateNewContactClickListener(final Activity activity, final IDatabase database, final Contact contact) {
             this.activity = activity;
             this.database = database;
             this.contact = contact;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
             LOGGER.info("New contact button clicked");
             this.askForNewName();
         }
 
+        /**
+         * Prompt the user to give a name for a new user.
+         */
         private void askForNewName() {
             final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity.getApplicationContext());
             this.edit_newContactName = new EditText(this.activity.getApplicationContext());
@@ -155,8 +190,12 @@ enum ContactReceivedHelper {
         // Suppressed because we only want the OnSweetClickListener to have access to this class
         @SuppressWarnings({"InnerClassTooDeeplyNested", "NonStaticInnerClassInSecureContext"})
         final class ConfirmNewNameClickListener implements DialogInterface.OnClickListener {
-            // Suppressed, because we otherwise have to add ContactReceivedHelper.CreateNewContactClickListener.this. for each variable
+
+            /**
+             * {@inheritDoc}
+             */
             @SuppressWarnings("UnqualifiedFieldAccess")
+            // Suppressed, because we otherwise have to add ContactReceivedHelper.CreateNewContactClickListener.this. for each variable
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 LOGGER.info("Confirmation button new contact name clicked");
@@ -184,26 +223,39 @@ enum ContactReceivedHelper {
                     LOGGER.error("Could not check if contact exists in database", e);
                     throw new DatabaseException(e);
                 }
+
                 LOGGER.info("Adding contact to database");
+
                 try {
-                    ContactReceivedHelper.CreateNewContactClickListener.this.database.addContact(
-                            ContactReceivedHelper.CreateNewContactClickListener.this.contact);
+                    final IDatabase database = ContactReceivedHelper.CreateNewContactClickListener.this.database;
+                    database.addContact(ContactReceivedHelper.CreateNewContactClickListener.this.contact);
                 } catch (final IOException e) {
                     LOGGER.error("Couldn't add the new contact", e);
                 }
             }
         }
+
     }
 
     private static final class AddPublicKeyToContactsClickListener implements SweetAlertDialog.OnSweetClickListener {
+
         private final IDatabase database;
         private final Contact contact;
 
+        /**
+         * Create a click listeners for the add public key to contact button.
+         *
+         * @param database The {@link IDatabase} instance to use.
+         * @param contact The {@link Contact} to add the key to.
+         */
         AddPublicKeyToContactsClickListener(final IDatabase database, final Contact contact) {
             this.database = database;
             this.contact = contact;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
             try {
@@ -212,6 +264,9 @@ enum ContactReceivedHelper {
             } catch (final IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }
+
         }
+
     }
+
 }
