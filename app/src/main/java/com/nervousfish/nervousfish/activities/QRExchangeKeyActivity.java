@@ -16,6 +16,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -24,8 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * An {@link Activity} that is used for pairing using QR codes
@@ -113,18 +112,10 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             //Key is the second part
             final IKey key = QRGenerator.deconstructToKey(result.split(SEMI_COLON)[1]);
 
+            final IDatabase database = this.serviceLocator.getDatabase();
             final Contact contact = new Contact(name, key);
-            try {
-                this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText(this.getString(R.string.contact_added_popup_title))
-                    .setContentText(this.getString(R.string.contact_added_popup_explanation))
-                    .setConfirmText(this.getString(R.string.dialog_ok))
-                    .show();
+            ContactReceivedHelper.newContactReceived(database, this, contact);
         }
     }
+
 }
