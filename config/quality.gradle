@@ -49,7 +49,7 @@ task checkstyleTest(type: Checkstyle) {
     classpath = files()
 }
 
-task findbugs(type: FindBugs) {
+task findbugs(type: FindBugs, dependsOn: ['compileDebugSources', 'compileReleaseSources']) {
     ignoreFailures = false
     effort = "max"
     reportLevel = "low"
