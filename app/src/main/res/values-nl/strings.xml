@@ -92,7 +92,7 @@
     <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
     <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
-    <string name="yes_delete">Ja, verwijder het!</string>
+    <string name="yes_delete">Ja, verwijder!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
     <string name="contact_already_exists">Dit contact bestaat al</string>
     <string name="contact_already_exists_with_name">Er bestaat al een contact met de naam "%1$s"</string>
@@ -116,6 +116,7 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
+    <string name="something_went_wrong_QR_popup_explanation">Er ging iets verkeerd bij het scannen van de QR code, probeer het opnieuw.</string>
 
     <!-- NFC -->
     <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>

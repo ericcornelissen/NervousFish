@@ -117,6 +117,7 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
+    <string name="something_went_wrong_QR_popup_explanation">Something went wrong while scanning the QR code, please try again.</string>
 
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
