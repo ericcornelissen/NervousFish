@@ -7,7 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
- * Carries the verification method to use.
+ * The only purpose of this class is to wrap the {@link VerificationMethodEnum} that is to be sent over Bluetooth
+ * to let the other person know how they should pair, i.e. by one of the methods as specified in {@link VerificationMethodEnum}.
  */
 public final class VerificationMethod implements Serializable {
     private static final long serialVersionUID = 6711854169751606007L;
