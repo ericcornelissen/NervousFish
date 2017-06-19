@@ -11,7 +11,9 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Ed25519Key;
-import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.exceptions.EncryptionException;
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
+import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -21,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 /**
  * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
@@ -79,13 +84,16 @@ public final class VisualVerificationActivity extends Activity {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
-                    + keyPair.getPublicKey().toString());
+            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
 
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact, this.securityCode);
-        } catch (IOException e) {
-            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+        } catch (final IOException e) {
+            LOGGER.error("Could not send my contact to other device");
+            throw new NoBluetoothException(e);
+        } catch (final BadPaddingException | IllegalBlockSizeException e) {
+            LOGGER.error("Could not encrypt the contact");
+            throw new EncryptionException(e);
         }
 
         final Intent intent = new Intent(this, WaitActivity.class);
@@ -124,8 +132,8 @@ public final class VisualVerificationActivity extends Activity {
      * @param event Contains the byte array
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewBytesReceivedEvent(final NewBytesReceivedEvent event) {
-        LOGGER.info("onNewBytesReceivedEvent called");
+    public void onNewBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
+        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
         this.dataReceived = event.getBytes();
     }
 }

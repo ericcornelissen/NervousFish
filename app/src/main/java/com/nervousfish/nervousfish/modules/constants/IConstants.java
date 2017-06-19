@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.modules.constants;
 
 import com.nervousfish.nervousfish.modules.IModule;
 
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 /**
@@ -47,4 +48,9 @@ public interface IConstants extends IModule {
      * @return The name of the SDP record used for the Bluetooth communication
      */
     String getSDPRecord();
+
+    /**
+     * @return The charset used in the app for writing / reading to streams
+     */
+    Charset getCharset();
 }

@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.filesystem;
 
+import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -34,6 +35,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
 
     private static final long serialVersionUID = 1937542180968231197L;
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
+    private final IConstants constants;
 
     /**
      * Prevents construction from outside the class.
@@ -44,6 +46,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
         LOGGER.info("Initialized");
+        this.constants = serviceLocator.getConstants();
     }
 
     /**
@@ -63,7 +66,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     @Override
     public Writer getWriter(final String path) throws FileNotFoundException {
         final OutputStream outputStream = new FileOutputStream(path);
-        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, this.constants.getCharset());
         return new BufferedWriter(outputStreamWriter);
     }
 

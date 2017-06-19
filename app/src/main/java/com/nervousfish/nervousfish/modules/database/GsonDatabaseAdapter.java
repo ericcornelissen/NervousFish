@@ -91,7 +91,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
-        LOGGER.info("Adding new contact with name: " + contact.getName());
+        LOGGER.info("Adding new contact with name: {}", contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
         }
@@ -130,7 +130,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
-        final List<Contact> contacts = getAllContacts();
+        final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(oldContact);
         // Throw if the contact to update is not found
@@ -139,7 +139,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         }
 
         contacts.add(newContact);
-        updateDatabase();
+        this.updateDatabase();
     }
 
 
@@ -147,16 +147,16 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public List<Contact> getAllContacts() throws IOException {
-        return getDatabase().getContacts();
+    public List<Contact> getAllContacts() {
+        return this.getDatabase().getContacts();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Contact getContactWithName(final String contactName) throws IOException {
-        final List<Contact> contacts = getAllContacts();
+    public Contact getContactWithName(final String contactName) {
+        final List<Contact> contacts = this.getAllContacts();
         for (final Contact contact : contacts) {
             if (contact.getName().equals(contactName)) {
                 return contact;
@@ -171,7 +171,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public boolean contactExists(final String name) throws IOException {
-        return getContactWithName(name) != null;
+        return this.getContactWithName(name) != null;
     }
 
 
@@ -179,8 +179,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Profile getProfile() throws IOException {
-        return getDatabase().getProfile();
+    public Profile getProfile() {
+        return this.getDatabase().getProfile();
     }
 
     /**
@@ -188,9 +188,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateProfile(final Profile newProfile) throws IOException {
-        final Database newDatabase = new Database(getDatabase().getContacts(), newProfile);
-        databaseMap.put(DATABASE, newDatabase);
-        updateDatabase();
+        final Database newDatabase = new Database(this.getDatabase().getContacts(), newProfile);
+        this.databaseMap.put(DATABASE, newDatabase);
+        this.updateDatabase();
     }
 
     /**
@@ -202,15 +202,15 @@ public final class GsonDatabaseAdapter implements IDatabase {
             final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
             final Gson gsonParser = gsonBuilder.create();
 
-            final String databaseJson = gsonParser.toJson(getDatabase());
-            final String encryptedDatabase = encryptor.encryptWithPassword(databaseJson, getEncryptionKey());
-            try (Writer writer = this.fileSystem.getWriter(databasePath)) {
+            final String databaseJson = gsonParser.toJson(this.getDatabase());
+            final String encryptedDatabase = this.encryptor.encryptWithPassword(databaseJson, this.getEncryptionKey());
+            try (Writer writer = this.fileSystem.getWriter(this.databasePath)) {
                 writer.write(encryptedDatabase);
             }
-        } catch (IllegalBlockSizeException e) {
+        } catch (final IllegalBlockSizeException e) {
             LOGGER.error("Wrong size of password", e);
             throw new IOException("Password is wrong size", e);
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             LOGGER.error(BAD_PADDING, e);
         }
     }
@@ -219,14 +219,14 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void loadDatabase(final String password) throws IOException, RuntimeException {
+    public void loadDatabase(final String password) throws IOException {
         LOGGER.info("Started loading database");
         try {
-            final SecretKey key = helper.loadKey(password);
-            databaseMap.put(ENCRYPTION_KEY, key);
-            final Database database = helper.loadDatabase(key);
-            databaseMap.put(DATABASE, database);
-        } catch (InvalidKeySpecException e) {
+            final SecretKey key = this.helper.loadKey(password);
+            this.databaseMap.put(ENCRYPTION_KEY, key);
+            final Database database = this.helper.loadDatabase(key);
+            this.databaseMap.put(DATABASE, database);
+        } catch (final InvalidKeySpecException e) {
             throw new IOException(BAD_KEY_SPEC, e);
         }
 
@@ -239,8 +239,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public void createDatabase(final Profile profile, final String password) throws IOException {
         LOGGER.info("Started creating database for profile");
-        initializePassword(password);
-        initializeDatabase(profile, password);
+        this.initializePassword(password);
+        this.initializeDatabase(profile, password);
         LOGGER.info("Database successfully created");
 
     }
@@ -251,7 +251,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public boolean checkFirstUse() {
         LOGGER.info("Checking first use of the database");
-        return fileSystem.checkFileExists(passwordPath) && fileSystem.checkFileExists(databasePath);
+        return this.fileSystem.checkFileExists(this.passwordPath) && this.fileSystem.checkFileExists(this.databasePath);
     }
 
     /**
@@ -260,8 +260,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public boolean deleteDatabase() {
         LOGGER.info("Deleting database");
-        if (checkFirstUse()) {
-            return fileSystem.deleteFile(passwordPath) && fileSystem.deleteFile(databasePath);
+        if (this.checkFirstUse()) {
+            return this.fileSystem.deleteFile(this.passwordPath) && this.fileSystem.deleteFile(this.databasePath);
         } else {
             return true;
         }
@@ -275,29 +275,24 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param password The password to initialize the database with.
      */
     private void initializeDatabase(final Profile profile, final String password) throws IOException {
-        LOGGER.info("Database path created: " + databasePath);
+        LOGGER.info("Database path created: {}", this.databasePath);
 
-        databaseMap.put(DATABASE, new Database(new ArrayList<Contact>(), profile));
+        this.databaseMap.put(DATABASE, new Database(new ArrayList<Contact>(), profile));
 
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
 
-        final String databaseJson = gsonParser.toJson(getDatabase());
-        LOGGER.info("Database translated to json: " + databaseJson);
+        final String databaseJson = gsonParser.toJson(this.getDatabase());
+        LOGGER.info("Database translated to json: {}", databaseJson);
 
-        try {
-            final SecretKey key = encryptor.makeKeyFromPassword(password);
-            final String databaseEncrypted = encryptor.encryptWithPassword(databaseJson, key);
-
-            try (Writer writer = this.fileSystem.getWriter(databasePath)) {
-                writer.write(databaseEncrypted);
-            }
-            LOGGER.info("Created the database: %s", this.databasePath);
-        } catch (InvalidKeySpecException e) {
-            throw new IOException(BAD_KEY_SPEC, e);
-        } catch (IllegalBlockSizeException e) {
+        try(Writer writer = this.fileSystem.getWriter(this.databasePath)) {
+            final SecretKey key = this.encryptor.makeKeyFromPassword(password);
+            final String databaseEncrypted = this.encryptor.encryptWithPassword(databaseJson, key);
+            writer.write(databaseEncrypted);
+            LOGGER.info("Created the database: {}", this.databasePath);
+        } catch (final IllegalBlockSizeException e) {
             throw new IOException(DATABASE_WRONG_SIZE, e);
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             LOGGER.error(BAD_PADDING, e);
         }
     }
@@ -310,17 +305,17 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     private void initializePassword(final String password) throws IOException {
         LOGGER.info("Initializing password");
-        databaseMap.put(ENCRYPTED_PASSWORD, encryptor.hashString(password));
+        this.databaseMap.put(ENCRYPTED_PASSWORD, this.encryptor.hashString(password));
 
 
-        final String encryptedPassword = getEncryptedPassword();
+        final String encryptedPassword = this.getEncryptedPassword();
 
-        LOGGER.info("Encrypted password: " + encryptedPassword);
+        LOGGER.info("Encrypted password: {}", encryptedPassword);
 
-        try (Writer writer = this.fileSystem.getWriter(passwordPath)) {
+        try (Writer writer = this.fileSystem.getWriter(this.passwordPath)) {
             writer.write(encryptedPassword);
         }
-        LOGGER.info("Created the password file: %s", this.passwordPath);
+        LOGGER.info("Created the password file: {}", this.passwordPath);
 
     }
 
@@ -331,7 +326,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
     private String getEncryptedPassword() throws DatabaseAdapterException {
-        final Object object = databaseMap.get(ENCRYPTED_PASSWORD);
+        final Object object = this.databaseMap.get(ENCRYPTED_PASSWORD);
         if (object instanceof String) {
             return (String) object;
         } else {
@@ -345,7 +340,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
     private Database getDatabase() throws DatabaseAdapterException {
-        final Object object = databaseMap.get(DATABASE);
+        final Object object = this.databaseMap.get(DATABASE);
         if (object instanceof Database) {
             return (Database) object;
         } else {
@@ -359,7 +354,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
     private SecretKey getEncryptionKey() throws DatabaseAdapterException {
-        final Object object = databaseMap.get(ENCRYPTION_KEY);
+        final Object object = this.databaseMap.get(ENCRYPTION_KEY);
         if (object instanceof SecretKey) {
             return (SecretKey) object;
         } else {

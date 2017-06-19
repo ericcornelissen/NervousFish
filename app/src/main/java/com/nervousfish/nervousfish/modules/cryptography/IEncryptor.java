@@ -29,7 +29,7 @@ public interface IEncryptor extends IModule {
      * @param password The password to make the key with
      * @return The SecretKey based on the password.
      */
-    SecretKey makeKeyFromPassword(String password) throws InvalidKeySpecException, EncryptionException;
+    SecretKey makeKeyFromPassword(String password);
 
 
     /**

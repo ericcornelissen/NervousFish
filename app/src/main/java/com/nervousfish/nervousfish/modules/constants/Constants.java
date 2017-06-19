@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -30,6 +32,7 @@ public final class Constants implements IConstants {
     private static final UUID MY_UUID = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
     private transient String androidFilesDir;
     private transient String databaseContactsPath;
     private transient String databaseUserPath;
@@ -106,6 +109,14 @@ public final class Constants implements IConstants {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Charset getCharset() {
+        return CHARSET;
+    }
+
+    /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
      * @param stream The serialized object to be deserialized
@@ -155,6 +166,6 @@ public final class Constants implements IConstants {
      */
     public enum ExplicitFieldResultCodes {
         INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
-        PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY
+        PASSWORDS_NOT_EQUAL, ALL_FIELDS_EMPTY
     }
 }

@@ -65,7 +65,7 @@ public interface IDatabase extends IModule {
      *
      * @return A {@link Profile Profiles}.
      */
-    Profile getProfile() throws IOException;
+    Profile getProfile();
 
 
     /**

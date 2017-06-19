@@ -16,7 +16,7 @@ final class ByteWrapper implements Serializable {
     /**
      * Creates a new ByteWrapper
      *
-     * @param data The byte array the wrapper wraps
+     * @param bytes The byte array the wrapper wraps
      */
     ByteWrapper(final byte[] bytes) {
         this.bytes = bytes.clone();
@@ -26,14 +26,14 @@ final class ByteWrapper implements Serializable {
      * @return The data object {@link DataWrapper} wraps
      */
     byte[] getBytes() {
-        return bytes.clone();
+        return this.bytes.clone();
     }
 
     /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new DataWrapper.SerializationProxy(this);
+        return new ByteWrapper.SerializationProxy(this);
     }
 
     /**
@@ -56,22 +56,24 @@ final class ByteWrapper implements Serializable {
     // 2) SerializationProxy doesn't need the write method, because it creates the class by calling the contstructor in readResolve
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -1704556072876435760L;
-        private final Serializable data;
+        private final byte[] bytes;
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param wrapper The current instance of the proxy
          */
-        SerializationProxy(final DataWrapper wrapper) {
-            this.data = wrapper.getData();
+        SerializationProxy(final ByteWrapper wrapper) {
+            this.bytes = wrapper.getBytes();
         }
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new DataWrapper(this.data);
+            return new ByteWrapper(this.bytes);
         }
     }
 }

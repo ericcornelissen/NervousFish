@@ -89,7 +89,7 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
-    public SecretKey makeKeyFromPassword(final String password) throws InvalidKeySpecException, EncryptionException {
+    public SecretKey makeKeyFromPassword(final String password) {
         LOGGER.info("Making key for encryption");
         try {
             final PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
@@ -97,7 +97,7 @@ public final class EncryptorAdapter implements IEncryptor {
             final SecretKey key = keyFactory.generateSecret(keySpec);
             LOGGER.info("Key successfully made");
             return key;
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
             LOGGER.error("There isn't an algorithm like PBEWithMD5AndDES", e);
             throw new EncryptionException("Cannot happen, no algorithm like PBEWithMD5AndDES", e);
         }

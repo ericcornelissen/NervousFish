@@ -20,8 +20,6 @@ import com.nervousfish.nervousfish.service_locator.NervousFish;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * An {@link Activity} that is used for pairing using QR codes
  */
@@ -44,13 +42,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-
-        try {
-            this.profile = serviceLocator.getDatabase().getProfile();
-        } catch (final IOException e) {
-            LOGGER.error("Loading the public key went wrong", e);
-        }
-
+        this.profile = serviceLocator.getDatabase().getProfile();
         this.drawQRCode();
     }
 

@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.exceptions.SerializationException;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
+import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
@@ -14,6 +15,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SecretKey;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -49,8 +54,8 @@ abstract class APairingHandler implements IPairingHandler {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 final DataWrapper object = (DataWrapper) ois.readObject();
-                if (object.getClazz() == ByteWrapper.class) {
-                    this.serviceLocator.postOnEventBus(new NewBytesReceivedEvent(((ByteWrapper) object.getData()).getBytes()));
+                if (object.getClazz().equals(ByteWrapper.class)) {
+                    this.serviceLocator.postOnEventBus(new NewEncryptedBytesReceivedEvent(((ByteWrapper) object.getData()).getBytes()));
                 } else {
                     this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 }
@@ -91,7 +96,7 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object, final int key) {
+    public final void send(final Serializable object, final int key) throws BadPaddingException, IllegalBlockSizeException {
         LOGGER.info("Begin writing object encoded with key: {}", key);
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -103,7 +108,7 @@ abstract class APairingHandler implements IPairingHandler {
             LOGGER.error("Couldn't serialize object", e);
             throw new SerializationException(e);
         }
-        final String password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
+        final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
         final String encryptedMessage = this.encryptor.encryptWithPassword(bytes.toString(), password);
         this.send(this.objectToBytes(new ByteWrapper(encryptedMessage.getBytes())));
     }

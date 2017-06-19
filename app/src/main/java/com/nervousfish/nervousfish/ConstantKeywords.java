@@ -12,7 +12,7 @@ public final class ConstantKeywords {
     public static final String PROXY_REQUIRED = "Proxy required.";
     public static final String WAIT_MESSAGE = "Wait message";
     public static final String DATA_RECEIVED = "Data received";
-    public static final String TAP_DATA = "Tap data";
+    public static final String KEY = "Key";
     public static final String CHOOSE_VERIFICATION_PREFERENCE = "choose_verification_method_every_time";
     public static final String DISPLAY_NAME = "display_name";
 

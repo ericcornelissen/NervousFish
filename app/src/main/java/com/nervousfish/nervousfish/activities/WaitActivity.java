@@ -12,15 +12,24 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
+import com.nervousfish.nervousfish.exceptions.EncryptionException;
+import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SecretKey;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -50,10 +59,10 @@ public final class WaitActivity extends Activity {
 
         final Intent intent = this.getIntent();
 
-        this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        this.key = intent.getSerializableExtra(ConstantKeywords.KEY);
+        this.dataReceived = (byte[]) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
+        this.key = (int) intent.getSerializableExtra(ConstantKeywords.KEY);
 
-        LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.dataReceived != null, this.tapCombination != null);
+        LOGGER.info("dataReceived is not null: {}, key is: {}", this.dataReceived != null, this.key);
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
@@ -86,7 +95,7 @@ public final class WaitActivity extends Activity {
         this.serviceLocator.registerToEventBus(this);
 
         if (this.dataReceived != null) {
-            this.onNewBytesReceivedEvent(this.dataReceived);
+            this.onNewEncryptedBytesReceivedEvent(new NewEncryptedBytesReceivedEvent(this.dataReceived));
         }
 
         LOGGER.info("Activity started");
@@ -142,13 +151,17 @@ public final class WaitActivity extends Activity {
      * @param event Contains the byte array
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewBytesReceivedEvent(final NewBytesReceivedEvent event) {
+    public void onNewEncryptedBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
         Validate.notNull(event);
-        LOGGER.info("onNewBytesReceivedEvent called");
-        final String password = this.encryptor.makeKeyFromPassword(this.key);
-        final byte[] bytes = this.encryptor.decryptWithPassword(event.getBytes().toString(), password).getBytes();
-        final IDataReceiver dataReceiver = (IDataReceiver) serviceLocator.getBluetoothHandler().getDataReceiver().get();
-        dataReceiver.dataReceived(bytes);
+        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
+        final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(this.key));
+        final byte[] bytes;
+        try {
+            bytes = this.encryptor.decryptWithPassword(event.getBytes().toString(), password).getBytes();
+        } catch (final IllegalBlockSizeException | BadPaddingException e) {
+            throw new EncryptionException(e);
+        }
+        this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(bytes));
     }
 
     /**

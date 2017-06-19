@@ -25,7 +25,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
+import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALL_FIELDS_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.NAME_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
@@ -99,7 +99,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                     this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
                 }
                 break;
-            case ALl_FIELDS_EMPTY:
+            case ALL_FIELDS_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
                 break;
             case NAME_EMPTY:
@@ -135,7 +135,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
         if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
                 && repeatPasswordValidation == EMPTY_FIELD) {
-            return ALl_FIELDS_EMPTY;
+            return ALL_FIELDS_EMPTY;
         } else if (nameValidation == EMPTY_FIELD) {
             return NAME_EMPTY;
         } else if (passwordValidation == EMPTY_FIELD) {

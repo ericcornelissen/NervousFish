@@ -10,14 +10,16 @@ import android.widget.Button;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
+import com.nervousfish.nervousfish.exceptions.EncryptionException;
+import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -31,6 +33,9 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -132,17 +137,20 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
-        final int key;
-        try {
-            final Profile profile = this.serviceLocator.getDatabase().getProfile();
-            final KeyPair keyPair = profile.getKeyPairs().get(0);
+        final Profile profile = this.serviceLocator.getDatabase().getProfile();
+        final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
-            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            key = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
-            this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
-        } catch (IOException e) {
+        LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
+        final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
+        final int key = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+        try {
+            this.bluetoothHandler.send(myProfileAsContact, key);
+        } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
+            throw new NoBluetoothException(e);
+        } catch (final BadPaddingException | IllegalBlockSizeException e) {
+            LOGGER.error("Could not encrypt the contact");
+            throw new EncryptionException(e);
         }
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
@@ -193,8 +201,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      * @param event Contains the bytes that are received
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewBytesReceivedEvent(final NewBytesReceivedEvent event) {
-        LOGGER.info("onNewBytesReceivedEvent called");
+    public void onNewBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
+        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
         this.dataReceived = event.getBytes();
     }
 
@@ -220,6 +228,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         /**
          * Get a list of the time between the taps (= intervals)
+         *
          * @param taps The taps that have obviously intervals in between
          * @return A list containing the time between the taps
          */
@@ -280,6 +289,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         /**
          * Adds the intervals whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         *
          * @param centerMean1 The mean of the length of the intervals in the "Short" cluster
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          */
@@ -297,7 +307,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         }
 
         /**
-         *  Returns the interval whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         * Returns the interval whose length is closest to the "Short" or "Long" cluster to the "Short" or "Long" cluster
+         *
          * @param centerMean1 The mean of the length of the intervals in the "Short" cluster
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
@@ -350,6 +361,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * Short, Long = 2
          * Short, Long, Long = 6
          * Long, Long, Long = 7
+         *
          * @param breakpoint The boundary between a short and long interval
          * @return The key as an integer
          */
@@ -369,6 +381,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         /**
          * Determines a breakpoint to determine which intervals are short and which are long
+         *
          * @return The breakpoint
          */
         private long getBreakpoint() {
