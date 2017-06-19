@@ -13,7 +13,7 @@ public abstract class ATapData implements Serializable {
     /**
      * Creates a new TapData object.
      */
-    public ATapData() {
+    ATapData() {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
@@ -21,15 +21,19 @@ public abstract class ATapData implements Serializable {
      * <b>Should only be used for testing purposes!</b>
      *
      * @param timestamp The timestamp of the tap data
+     * @throws IllegalArgumentException If the provided {@code timestamp} is {@code null}
      */
-    public ATapData(final Timestamp timestamp) {
+    ATapData(final Timestamp timestamp) {
+        if (timestamp == null) {
+            throw new IllegalArgumentException("Null is not allowed");
+        }
         this.timestamp = new Timestamp(timestamp.getTime());
     }
 
     /**
      * @return The time on which the ATapData was instantiated
      */
-    public Timestamp getTimestamp() {
+    public final Timestamp getTimestamp() {
         // Defensive copying
         return new Timestamp(this.timestamp.getTime());
     }
@@ -38,16 +42,16 @@ public abstract class ATapData implements Serializable {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || this.getClass() != o.getClass()) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
 
-        final ATapData that = (ATapData) o;
-        return this.timestamp == null ? that.timestamp == null : this.timestamp.equals(that.timestamp);
+        final ATapData other = (ATapData) obj;
+        return this.timestamp.equals(other.getTimestamp());
     }
 
     /**
@@ -55,6 +59,6 @@ public abstract class ATapData implements Serializable {
      */
     @Override
     public int hashCode() {
-        return timestamp == null ? 0 : timestamp.hashCode();
+        return this.timestamp.hashCode();
     }
 }

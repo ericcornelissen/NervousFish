@@ -5,9 +5,10 @@
     <color name="color_accent">#808183</color>
 
     <color name="transparent_white">#33FFFFFF</color>
-    <color name="white">#fff</color>
+    <color name="white">#ffffff</color>
     <color name="red_fail">#dd6b55</color>
 
     <color name="ok_green">#009900</color>
     <color name="red_alert">#9A3334</color>
+    <color name="select_verification_method_description_background_color">#40000000</color>
 </resources>

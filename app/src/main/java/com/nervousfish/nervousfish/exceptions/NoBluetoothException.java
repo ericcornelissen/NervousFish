@@ -12,19 +12,21 @@ public class NoBluetoothException extends RuntimeException {
     private static final long serialVersionUID = -7030163248191198652L;
 
     /**
-     * Default constructor for a new NoBluetoothException
-     */
-    public NoBluetoothException() {
-        super();
-    }
-
-    /**
      * Constructor for a new NoBluetoothException with a message.
      *
      * @param msg A string describing the exception
      */
     public NoBluetoothException(final String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs a new NoBluetoothException that's thrown when there went something wrong with Bluetooth.
+     *
+     * @param throwable The exception that occurred the layer above
+     */
+    public NoBluetoothException(final Throwable throwable) {
+        super(throwable);
     }
 
     /**
