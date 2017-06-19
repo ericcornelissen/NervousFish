@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -106,7 +107,7 @@ final class MainActivitySorter {
         });
 
         final List<Contact> contacts = this.mainActivity.getContacts();
-        contacts.sort(NAME_SORTER);
+        Collections.sort(contacts, NAME_SORTER);
         this.mainActivity.setContacts(contacts);
 
         if (contactsByNameListAdapter.isEmpty()) {
