@@ -113,7 +113,7 @@ enum ContactReceivedHelper {
      * @param contact The new {@link Contact}.
      */
     private static void handleDuplicateContact(final Activity activity, final Contact contact) {
-        new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
+        new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
                 .setContentText(String.format(activity.getString(R.string.contact_exists_nothing_done), contact.getName()))
                 .setConfirmText(activity.getString(R.string.dialog_ok))
