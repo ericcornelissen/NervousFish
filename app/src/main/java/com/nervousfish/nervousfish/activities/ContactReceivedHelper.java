@@ -29,6 +29,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 @SuppressWarnings("checkstyle:nowhitespacebefore")
 enum ContactReceivedHelper {
     ;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactReceivedHelper.class);
 
     /**
