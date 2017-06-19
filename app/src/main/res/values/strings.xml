@@ -120,7 +120,7 @@
 
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
-    <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
+    <string name="wait_message_partner_tapping">Waiting for your partner to finish tapping…</string>
 
     <!-- NFC -->
     <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>

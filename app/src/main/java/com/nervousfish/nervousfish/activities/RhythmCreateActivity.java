@@ -145,7 +145,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             LOGGER.error("Could not send my contact to other device ", e);
         }
         final Intent intent = new Intent(this, WaitActivity.class);
-        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, this.taps);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
