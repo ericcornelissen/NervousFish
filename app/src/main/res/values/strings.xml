@@ -24,7 +24,7 @@
     <string name="submit">Submit</string>
     <string name="type">Type</string>
     <string name="yes">Yes</string>
-    <string name="dash">-</string>
+    <string name="dash" translatable="false">-</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>

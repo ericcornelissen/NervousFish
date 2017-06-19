@@ -24,7 +24,6 @@ public final class Contact implements Serializable {
     private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
-    @android.support.annotation.Nullable
     private String iban;
 
     /**
