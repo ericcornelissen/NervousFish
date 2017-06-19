@@ -32,6 +32,7 @@
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
+    <string name="invalid_iban">Ongeldige IBAN</string>
     <string name="key_type">Type sleutel: %1$s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
@@ -102,6 +103,8 @@
     <string name="contact_iban">IBAN</string>
     <string name="contact_information">Contact gegevens:</string>
     <string name="contact_public_keys">Public keys:</string>
+
+    <string name="invalid_iban_explanation">Het IBAN nummer dat is ingevoerd is niet geldig, voer een geldige in alsjeblieft.</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>

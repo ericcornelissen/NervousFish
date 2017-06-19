@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
@@ -86,7 +87,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case INPUT_CORRECT:
                 final String name = nameInput.getText().toString();
                 final String password = passwordInput.getText().toString();
-                final String iban = ibanInput.getText().toString();
+                final IBAN iban = new IBAN(ibanInput.getText().toString());
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {

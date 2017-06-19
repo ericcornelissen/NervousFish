@@ -32,6 +32,7 @@
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
+    <string name="invalid_iban">Invalid IBAN</string>
     <string name="key_type">Key type: %1$s</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
@@ -87,6 +88,7 @@
     <string name="contact_iban">IBAN</string>
     <string name="contact_information">Contact information:</string>
     <string name="contact_public_keys">Public keys:</string>
+    <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one.</string>
 
     <!-- RhythmActivity -->
     <string name="tap_me">Tap me!</string>

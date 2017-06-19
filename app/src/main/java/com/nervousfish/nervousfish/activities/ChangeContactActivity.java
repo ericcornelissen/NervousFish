@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 /**
  * An {@link Activity} that allows the user to change attributes of contacts.
@@ -49,7 +51,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.edit_contact_name_input);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
-        ListviewActivityHelper.setText(this, this.contact.getIban(), R.id.contact_page_change_iban);
+        ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.contact_page_change_iban);
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
@@ -70,11 +72,18 @@ public final class ChangeContactActivity extends AppCompatActivity {
 
         final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
         final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
-        if (isValidName(editTextName.getText().toString())) {
+        String ibanString = editTextName.getText().toString();
+        final boolean validName = isValidName(editTextName.getText().toString());
+        boolean validIban = IBANVerifier.isValidIBAN(ibanString);
+        if(!validIban && ibanString.equals("") || ibanString.equals("-")) {
+            validIban = true;
+            ibanString = "";
+        }
+        if (validName && validIban) {
             //Update contact
             try {
                 final Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
-                        editTextIBAN.getText().toString());
+                        new IBAN(editTextIBAN.getText().toString()));
                 if (!contact.equals(newContact)) {
                     serviceLocator.getDatabase().updateContact(contact, newContact);
                     contact = newContact;
@@ -86,6 +95,13 @@ public final class ChangeContactActivity extends AppCompatActivity {
             setResult(RESULT_FIRST_USER,
                     new Intent().putExtra(ConstantKeywords.CONTACT, contact));
             finish();
+        } else if(IBANVerifier.isValidIBAN(editTextName.getText().toString())) {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.invalid_name))
+                    .setContentText(getString(R.string.invalid_name_explanation))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(null)
+                    .show();
         } else {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.invalid_name))

@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.R;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -13,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
 /**
  * A Java object representation (POJO) of a contact.
  */
@@ -24,7 +27,7 @@ public final class Contact implements Serializable {
     private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
-    private String iban;
+    private IBAN iban;
 
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
@@ -45,7 +48,7 @@ public final class Contact implements Serializable {
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
      */
-    public Contact(final String name, final IKey key, final String iban) {
+    public Contact(final String name, final IKey key, final IBAN iban) {
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
         this.iban = iban;
@@ -72,7 +75,7 @@ public final class Contact implements Serializable {
      * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
      */
-    public Contact(final String name, final Collection<IKey> keys, final String iban) {
+    public Contact(final String name, final Collection<IKey> keys, final IBAN iban) {
         this.name = name;
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));
@@ -84,8 +87,20 @@ public final class Contact implements Serializable {
         return this.name;
     }
 
-    public String getIban() {
+    public IBAN getIban() {
         return this.iban;
+    }
+
+    /**
+     * Retuns the string of the IBAN, and a dash if the object is null.
+     *
+     * @return String of the IBAN, and a dash if the object is null;
+     */
+    public String getIbanAsString() {
+        if (this.getIban() != null) {
+            return this.getIban().toString();
+        }
+        return "-";
     }
 
     /**
@@ -155,7 +170,7 @@ public final class Contact implements Serializable {
         private static final long serialVersionUID = -4715364587956219157L;
         private final String name;
         private final IKey[] keys;
-        private String iban;
+        private IBAN iban;
 
         /**
          * Constructs a new SerializationProxy

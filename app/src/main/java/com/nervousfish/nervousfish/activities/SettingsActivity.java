@@ -28,6 +28,7 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. This
@@ -120,7 +121,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 firstLoadIban = false;
 
                 try {
-                    final String iban = serviceLocator.getDatabase().getProfile().getIban();
+                    final String iban = serviceLocator.getDatabase().getProfile().getIban().toString();
                     if (iban == null) {
                         preference.setSummary("");
                     } else {
@@ -137,7 +138,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     LOGGER.info("Updating profile iban");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
                     serviceLocator.getDatabase().updateProfile(
-                            new Profile(profile.getName(), profile.getKeyPairs(), stringValue));
+                            new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database for IBAN", e);
                 }
@@ -201,7 +202,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     .getDefaultSharedPreferences(this)
                     .edit()
                     .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
-                    .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIban())
+                    .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIban().toString())
                     .apply();
         } catch (IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);

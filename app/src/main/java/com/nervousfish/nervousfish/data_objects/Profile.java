@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
 /**
  * A Profile POJO to store a contact representing the user and the user's keypairs.
  */
@@ -21,7 +23,7 @@ public final class Profile implements Serializable {
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
     private final List<KeyPair> keyPairs;
-    private String iban;
+    private IBAN iban;
 
 
     /**
@@ -43,7 +45,7 @@ public final class Profile implements Serializable {
      * @param keyPairs The public/private key-pairs of the user.
      * @param iban     The iban of the user.
      */
-    public Profile(final String name, final List<KeyPair> keyPairs, final String iban) {
+    public Profile(final String name, final List<KeyPair> keyPairs, final IBAN iban) {
         this.keyPairs = keyPairs;
         this.name = name;
         this.iban = iban;
@@ -84,7 +86,7 @@ public final class Profile implements Serializable {
         return this.name;
     }
 
-    public String getIban() {
+    public IBAN getIban() {
         return this.iban;
     }
 
@@ -135,7 +137,7 @@ public final class Profile implements Serializable {
         private static final long serialVersionUID = 8191245914949893284L;
         private final String name;
         private final KeyPair[] keyPairs;
-        private String iban;
+        private IBAN iban;
 
         /**
          * Constructs a new SerializationProxy
