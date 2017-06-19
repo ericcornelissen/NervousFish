@@ -62,7 +62,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getPasswordPath() {
-        return this.androidFilesDir + Constants.DB_PASSWORD_PATH;
+        return this.androidFilesDir + DB_PASSWORD_PATH;
     }
 
     /**
@@ -70,7 +70,7 @@ public final class Constants implements IConstants {
      */
     @Override
     public String getDatabasePath() {
-        return this.androidFilesDir + Constants.DB_DATABASE_PATH;
+        return this.androidFilesDir + DB_DATABASE_PATH;
     }
 
     /**
@@ -138,9 +138,9 @@ public final class Constants implements IConstants {
 
     private void initializePaths() {
         //noinspection StringConcatenationMissingWhitespace because this is a file path
-        this.databaseContactsPath = this.androidFilesDir + Constants.DB_CONTACTS_PATH;
+        this.databaseContactsPath = this.androidFilesDir + DB_CONTACTS_PATH;
         //noinspection StringConcatenationMissingWhitespace because this is a file path
-        this.databaseUserPath = this.androidFilesDir + Constants.DB_USERDATA_PATH;
+        this.databaseUserPath = this.androidFilesDir + DB_USERDATA_PATH;
     }
 
     /**

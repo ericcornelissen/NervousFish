@@ -55,7 +55,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         this.database = this.serviceLocator.getDatabase();
 
         // Check for available NFC Adapter
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        this.nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         LOGGER.info("Start creating an NDEF message to beam");
         Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) this.findViewById(R.id.nfc_gif));
         try {
@@ -72,7 +72,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
             LOGGER.error("Could not serialize my contact to other device ", e);
         }
         // Register callback
-        nfcAdapter.setNdefPushMessageCallback(this, this);
+        this.nfcAdapter.setNdefPushMessageCallback(this, this);
     }
 
     /**
@@ -104,8 +104,8 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         super.onResume();
         LOGGER.info("NFC onResume");
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+                new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        this.nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
         // Check to see that the Activity started due to an Android Beam
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(this.getIntent().getAction())) {
             this.processIntent(this.getIntent());

@@ -28,12 +28,12 @@ public class ATapDataTest implements Serializable {
 
     @Test (expected = IllegalArgumentException.class)
     public void testConstructorExceptionNull() {
-        ATapData contactA = new TestTapData(null);
+        ATapData contactA = new ATapDataTest.TestTapData(null);
     }
 
     @Test
     public void testTimestamp() {
-        ATapData tap = new TestTapData();
+        ATapData tap = new ATapDataTest.TestTapData();
         Timestamp stamp = tap.getTimestamp();
         assertTrue(System.currentTimeMillis() >= stamp.getTime());
         assertTrue(System.currentTimeMillis() < stamp.getTime() + 100);
@@ -41,32 +41,32 @@ public class ATapDataTest implements Serializable {
 
     @Test
     public void testEqualsWorksWithNull() {
-        ATapData contact = new TestTapData();
+        ATapData contact = new ATapDataTest.TestTapData();
         assertFalse(contact.equals(null));
     }
 
     @Test
     public void testEqualsWorksWithSameObject() {
-        ATapData contact = new TestTapData();
+        ATapData contact = new ATapDataTest.TestTapData();
         assertTrue(contact.equals(contact));
     }
 
     @Test
     public void testEqualsWithDifferentObject() {
-        ATapData contactA = new TestTapData();
+        ATapData contactA = new ATapDataTest.TestTapData();
         assertFalse(contactA.equals(new ATapDataTest()));
     }
 
     @Test
     public void testEqualsNonNullTimestamps() {
-        ATapData contactA = new TestTapData(new Timestamp(5));
-        ATapData contactB = new TestTapData(new Timestamp(5));
+        ATapData contactA = new ATapDataTest.TestTapData(new Timestamp(5));
+        ATapData contactB = new ATapDataTest.TestTapData(new Timestamp(5));
         assertTrue(contactA.equals(contactB));
     }
 
     @Test
     public void testHashCodeNotNull() {
-        ATapData contact = new TestTapData();
+        ATapData contact = new ATapDataTest.TestTapData();
         assertNotNull(contact.hashCode());
     }
 }

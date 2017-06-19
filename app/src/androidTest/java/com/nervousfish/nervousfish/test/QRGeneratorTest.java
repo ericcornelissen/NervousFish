@@ -32,31 +32,31 @@ public class QRGeneratorTest {
     public void setUp() throws Exception {
         final IKeyGenerator keyGenerator = NervousFish.getServiceLocator().getKeyGenerator();
         final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
-        publicKey = pair.getPublicKey();
+        this.publicKey = pair.getPublicKey();
         final String space = " ";
-        publicKeyString = publicKey.getType() + space + publicKey.getName()
-                + space + publicKey.getKey();
+        this.publicKeyString = this.publicKey.getType() + space + this.publicKey.getName()
+                + space + this.publicKey.getKey();
     }
     @Test
     public void testEncodeNotNull() throws Exception {
-        final Bitmap qrCode = QRGenerator.encode(publicKeyString);
+        final Bitmap qrCode = QRGenerator.encode(this.publicKeyString);
         assertNotNull(qrCode);
     }
 
     @Test
     public void testDeconstructAsExpected() throws Exception {
-        IKey keyTest = QRGenerator.deconstructToKey(publicKeyString);
-        assertEquals(publicKey, keyTest);
+        IKey keyTest = QRGenerator.deconstructToKey(this.publicKeyString);
+        assertEquals(this.publicKey, keyTest);
     }
     @Test
     public void testWidthIsAsExpected() throws Exception{
-        final Bitmap QRcode = QRGenerator.encode(publicKeyString);
+        final Bitmap QRcode = QRGenerator.encode(this.publicKeyString);
         assertEquals(QRCODE_IMAGE_WIDTH, QRcode.getWidth());
     }
 
     @Test
     public void testHeightIsAsExpected() throws Exception{
-        final Bitmap QRcode = QRGenerator.encode(publicKeyString);
+        final Bitmap QRcode = QRGenerator.encode(this.publicKeyString);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }
 

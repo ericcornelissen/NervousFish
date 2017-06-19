@@ -56,8 +56,8 @@ public class ContactSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = serviceLocator.getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
+        final IDatabase database = this.serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, this.serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
@@ -67,7 +67,7 @@ public class ContactSteps {
 
     @After
     public void reinitializeDatabase() {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         database.deleteDatabase();
     }
 
@@ -122,7 +122,7 @@ public class ContactSteps {
 
     @Then("^the contact should be deleted$")
     public void theContactShouldBeDeleted() throws IOException {
-        IDatabase database = serviceLocator.getDatabase();
+        IDatabase database = this.serviceLocator.getDatabase();
         assertFalse(database.contactExists(this.contact.getName()));
         database.deleteDatabase();
     }
@@ -131,7 +131,7 @@ public class ContactSteps {
      * Initialize the database for the ContactSteps.
      */
     private void initDatabase() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
 
         for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());

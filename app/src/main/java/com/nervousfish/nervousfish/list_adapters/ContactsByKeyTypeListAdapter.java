@@ -91,7 +91,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final View v;
 
         if (convertView == null) {
-            v = View.inflate(context, R.layout.contact_list_entry, null);
+            v = View.inflate(this.context, R.layout.contact_list_entry, null);
         } else {
             v = convertView;
         }
@@ -149,7 +149,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final String type = (String) this.getGroup(groupPosition);
         final View view;
         if (convertView == null) {
-            view = View.inflate(context, R.layout.key_type, null);
+            view = View.inflate(this.context, R.layout.key_type, null);
         } else {
             view = convertView;
         }

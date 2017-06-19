@@ -117,19 +117,19 @@ public final class MainActivity extends AppCompatActivity {
         this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                onPairingButtonClicked(v);
+                MainActivity.this.onPairingButtonClicked(v);
             }
         });
         this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                onPairingButtonClicked(v);
+                MainActivity.this.onPairingButtonClicked(v);
             }
         });
         this.findViewById(R.id.pairing_menu_qr).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                onPairingButtonClicked(v);
+                MainActivity.this.onPairingButtonClicked(v);
             }
         });
 
@@ -189,7 +189,7 @@ public final class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final SweetAlertDialog sDialog) {
                         final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
+                        MainActivity.this.startActivity(intent);
                     }
                 })
                 .show();
@@ -201,7 +201,7 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
+        if (resultCode == RESULT_OK && requestCode == ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
             this.startActivity(intent);
         }
@@ -213,7 +213,7 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The sort floating action button that was clicked
      */
     public void onSortButtonClicked(final View view) {
-        sorter.onSortButtonClicked(view);
+        this.sorter.onSortButtonClicked(view);
     }
 
     /**
@@ -242,7 +242,7 @@ public final class MainActivity extends AppCompatActivity {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
             }
-        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
+        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(this.getResources().getString(R.string.nfc))) {
             final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             if (nfcAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, NFCActivity.class));
@@ -252,7 +252,7 @@ public final class MainActivity extends AppCompatActivity {
                 return; // Prevent `this.startActivity()`
             }
 
-        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
+        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(this.getResources().getString(R.string.qr))) {
             intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
         } else {
             LOGGER.error("Unknown pairing button clicked: {}", view.getId());
@@ -373,7 +373,7 @@ public final class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(final SweetAlertDialog dialog) {
                             dialog.dismiss();
-                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                            MainActivity.this.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
                             LOGGER.info("Request to enable NFC sent, forwarded to settings");
                         }
                     })

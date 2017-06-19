@@ -101,7 +101,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
      *
      * @throws InvalidObjectException Thrown when the state of the class is unstbale
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
+    private void ensureClassInvariant() {
         // No checks to perform
     }
 

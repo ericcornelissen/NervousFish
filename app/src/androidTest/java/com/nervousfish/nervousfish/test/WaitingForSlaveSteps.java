@@ -38,7 +38,7 @@ public class WaitingForSlaveSteps {
 
     @Then("^the wait activity should be finishing$")
     public void waitActivityFinish() {
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        assertTrue(this.mActivityRule.getActivity().isFinishing());
     }
 
 }

@@ -29,12 +29,12 @@ public final class ServiceLocatorTest {
 
     @Before
     public void setup() {
-        serviceLocator = new ServiceLocator("foo");
+        this.serviceLocator = new ServiceLocator("foo");
     }
     
     @Test
     public void testGetAndroidFilesDir() {
-        assertTrue("foo".equals(serviceLocator.getAndroidFilesDir()));
+        assertTrue("foo".equals(this.serviceLocator.getAndroidFilesDir()));
     }
     
     @Test
@@ -72,42 +72,42 @@ public final class ServiceLocatorTest {
 
     @Test
     public void testGetDatabase() {
-        assertNotNull(serviceLocator.getDatabase());
+        assertNotNull(this.serviceLocator.getDatabase());
     }
 
     @Test
     public void testGetKeyGenerator() {
-        assertNotNull(serviceLocator.getKeyGenerator());
+        assertNotNull(this.serviceLocator.getKeyGenerator());
     }
 
     @Test
     public void testGetEncryptor() {
-        assertNotNull(serviceLocator.getEncryptor());
+        assertNotNull(this.serviceLocator.getEncryptor());
     }
 
     @Test
     public void testGetFileSystem() {
-        assertNotNull(serviceLocator.getFileSystem());
+        assertNotNull(this.serviceLocator.getFileSystem());
     }
 
     @Test
     public void testGetConstants() {
-        assertNotNull(serviceLocator.getConstants());
+        assertNotNull(this.serviceLocator.getConstants());
     }
 
     @Test
     public void testGetBluetoothHandler() {
-        assertNotNull(serviceLocator.getBluetoothHandler());
+        assertNotNull(this.serviceLocator.getBluetoothHandler());
     }
 
     @Test
     public void testGetNfcHandler() {
-        assertNotNull(serviceLocator.getNFCHandler());
+        assertNotNull(this.serviceLocator.getNFCHandler());
     }
 
     @Test
     public void testGetQRHandler() {
-        assertNotNull(serviceLocator.getQRHandler());
+        assertNotNull(this.serviceLocator.getQRHandler());
     }
 
     @Test(expected = ServiceLocator.ModuleNotFoundException.class)
@@ -122,7 +122,7 @@ public final class ServiceLocatorTest {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(baos)
                 ) {
-            oos.writeObject(serviceLocator);
+            oos.writeObject(this.serviceLocator);
             buf = baos.toByteArray();
 
             try (

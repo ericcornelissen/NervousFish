@@ -87,19 +87,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = nameInput.getText().toString();
-                final String password = passwordInput.getText().toString();
+                final String name = this.nameInput.getText().toString();
+                final String password = this.passwordInput.getText().toString();
                 final IDatabase database = this.serviceLocator.getDatabase();
                 final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
-                if (rsaCheckBox.isChecked()) {
+                if (this.rsaCheckBox.isChecked()) {
                     keytypesToGenerate.add(IKey.Types.RSA);
                 }
-                if (ed25519CheckBox.isChecked()) {
+                if (this.ed25519CheckBox.isChecked()) {
                     keytypesToGenerate.add(IKey.Types.Ed25519);
                 }
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(keytypesToGenerate);
+                    final List<KeyPair> keyPairs = this.helper.generateKeyPairs(keytypesToGenerate);
                     final Profile userProfile = new Profile(name, keyPairs);
 
                     database.createDatabase(userProfile, password);

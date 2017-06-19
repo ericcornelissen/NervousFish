@@ -95,9 +95,9 @@ final class MainActivitySorter {
         this.mainActivity.setContacts(contacts);
 
         if (contactsByNameListAdapter.isEmpty()) {
-            showNoContactsContent();
+            this.showNoContactsContent();
         } else {
-            hideNoContactsContent();
+            this.hideNoContactsContent();
         }
     }
 
@@ -105,16 +105,16 @@ final class MainActivitySorter {
      * Shows the message that the user has no contacts yet.
      */
     private void showNoContactsContent() {
-        mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
-        mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+        this.mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
+        this.mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
     }
 
     /**
      * Hides the message that the user has no contacts yet.
      */
     private void hideNoContactsContent() {
-        mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
-        mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
+        this.mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
+        this.mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
     }
 
     /**
@@ -126,14 +126,14 @@ final class MainActivitySorter {
                 new ContactsByKeyTypeListAdapter(this.mainActivity, this.mainActivity.getContacts());
         ev.setAdapter(contactsByKeyTypeListAdapter);
         ev.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            MainActivitySorter.this.mainActivity.openContact(childPosition);
+            this.mainActivity.openContact(childPosition);
             return false;
         });
 
         if (contactsByKeyTypeListAdapter.isEmpty()) {
-            showNoContactsContent();
+            this.showNoContactsContent();
         } else {
-            hideNoContactsContent();
+            this.hideNoContactsContent();
         }
     }
 

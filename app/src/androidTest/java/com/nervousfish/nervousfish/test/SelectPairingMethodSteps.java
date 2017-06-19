@@ -13,6 +13,8 @@ import com.nervousfish.nervousfish.activities.NFCActivity;
 import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
+import java.util.Collection;
+
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -32,7 +34,7 @@ public class SelectPairingMethodSteps extends ActivityInstrumentationTestCase2<M
 
     @Given("^I have MainActivity$")
     public void iHaveMainActivity() {
-        assertNotNull(getActivity());
+        assertNotNull(this.getActivity());
     }
 
     @When("^I press the pairing button$")
@@ -57,23 +59,23 @@ public class SelectPairingMethodSteps extends ActivityInstrumentationTestCase2<M
 
     @Then("^I go to the BluetoothConnectionActivity$")
     public void iGoToBluetoothConnection() {
-        assertEquals(getCurrentActivity().getClass(), BluetoothConnectionActivity.class);
+        assertEquals(this.getCurrentActivity().getClass(), BluetoothConnectionActivity.class);
     }
 
     @Then("^I go to the QRActivity$")
     public void iGoToQR() {
-        assertEquals(getCurrentActivity().getClass(), QRExchangeKeyActivity.class);
+        assertEquals(this.getCurrentActivity().getClass(), QRExchangeKeyActivity.class);
     }
 
     @Then("^I go to the NFCActivity$")
     public void iGoToNFC() {
-        assertEquals(getCurrentActivity().getClass(), NFCActivity.class);
+        assertEquals(this.getCurrentActivity().getClass(), NFCActivity.class);
     }
 
     private Activity getCurrentActivity() {
-        getInstrumentation().waitForIdleSync();
+        this.getInstrumentation().waitForIdleSync();
         try {
-            runTestOnUiThread(new GetCurrentActivityRunnable());
+            this.runTestOnUiThread(new SelectPairingMethodSteps.GetCurrentActivityRunnable());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -83,7 +85,7 @@ public class SelectPairingMethodSteps extends ActivityInstrumentationTestCase2<M
     private static class GetCurrentActivityRunnable implements Runnable {
         @Override
         public void run() {
-            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+            Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
             activity[0] = Iterables.getOnlyElement(activities);
         }
     }

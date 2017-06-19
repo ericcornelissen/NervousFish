@@ -36,7 +36,7 @@ public class Profile implements Serializable {
      * @param keyPair the keyPair to add.
      */
     public void addKeyPair(final KeyPair keyPair) {
-        keyPairs.add(keyPair);
+        this.keyPairs.add(keyPair);
     }
 
     /**
@@ -46,10 +46,10 @@ public class Profile implements Serializable {
      */
     public Contact getContact() {
         final List<IKey> publicKeys = new ArrayList<>();
-        for (final KeyPair pair : keyPairs) {
+        for (final KeyPair pair : this.keyPairs) {
             publicKeys.add(pair.getPublicKey());
         }
-        return new Contact(name, publicKeys);
+        return new Contact(this.name, publicKeys);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Profile implements Serializable {
      * @return The list of keypairs of the user.
      */
     public List<KeyPair> getKeyPairs() {
-        return keyPairs;
+        return this.keyPairs;
     }
 
     /**

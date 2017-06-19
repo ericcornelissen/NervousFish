@@ -16,22 +16,22 @@ public class ConstantsTest {
 
     @Test
     public void getDatabaseContactsPath() throws Exception {
-        assertNotNull(constants.getDatabaseContactsPath());
+        assertNotNull(this.constants.getDatabaseContactsPath());
     }
 
     @Test
     public void getDatabaseUserdataPath() throws Exception {
-        assertNotNull(constants.getDatabaseUserdataPath());
+        assertNotNull(this.constants.getDatabaseUserdataPath());
     }
 
     @Test
     public void getUuid() throws Exception {
-        assertNotNull(constants.getUuid());
+        assertNotNull(this.constants.getUuid());
     }
 
     @Test
     public void getSDPRecord() throws Exception {
-        assertNotNull(constants.getSDPRecord());
+        assertNotNull(this.constants.getSDPRecord());
     }
 
 }

@@ -111,7 +111,7 @@ public final class KeyManagementActivity extends Activity {
                                 final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(this.title);
-            builder.setMessage(key);
+            builder.setMessage(this.key);
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final Profile profile = this.profile;

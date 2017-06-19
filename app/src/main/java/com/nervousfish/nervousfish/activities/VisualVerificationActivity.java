@@ -82,7 +82,7 @@ public final class VisualVerificationActivity extends Activity {
 
 
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
-                    + keyPair.getPublicKey().toString());
+                    + keyPair.getPublicKey());
 
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
@@ -106,9 +106,9 @@ public final class VisualVerificationActivity extends Activity {
         final int button = Integer.parseInt(v.getContentDescription().toString());
         LOGGER.info("button {} clicked", button);
 
-        if (this.numTaps > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
+        if (this.numTaps > SECURITY_CODE_LENGTH) {
             LOGGER.warn("Security code already long enough");
-        } else if (this.numTaps + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
+        } else if (this.numTaps + 1 == SECURITY_CODE_LENGTH) {
             this.securityCode += button;
             LOGGER.info("final code is: {}", this.securityCode);
             this.nextActivity();

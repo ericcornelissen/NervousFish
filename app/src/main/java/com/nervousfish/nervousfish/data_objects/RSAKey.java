@@ -42,9 +42,9 @@ public final class RSAKey implements IKey {
      * @param map A {@link Map} mapping {@link RSAKey} attribute names to values.
      */
     public RSAKey(final Map<String, String> map) throws IllegalArgumentException {
-        this.name = map.get(RSAKey.JSON_CONSTANT_NAME);
-        this.modulus = map.get(RSAKey.JSON_CONSTANT_MODULUS);
-        this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
+        this.name = map.get(JSON_CONSTANT_NAME);
+        this.modulus = map.get(JSON_CONSTANT_MODULUS);
+        this.exponent = map.get(JSON_CONSTANT_EXPONENT);
 
         if (this.name == null || this.modulus == null || this.exponent == null) {
             throw new IllegalArgumentException("Couldn't find the name, modulus or exponent in the map");
@@ -88,9 +88,9 @@ public final class RSAKey implements IKey {
      */
     @Override
     public void toJson(final JsonWriter writer) throws IOException {
-        writer.name(RSAKey.JSON_CONSTANT_NAME).value(this.name);
-        writer.name(RSAKey.JSON_CONSTANT_MODULUS).value(this.modulus);
-        writer.name(RSAKey.JSON_CONSTANT_EXPONENT).value(this.exponent);
+        writer.name(JSON_CONSTANT_NAME).value(this.name);
+        writer.name(JSON_CONSTANT_MODULUS).value(this.modulus);
+        writer.name(JSON_CONSTANT_EXPONENT).value(this.exponent);
     }
 
     /**
@@ -120,7 +120,7 @@ public final class RSAKey implements IKey {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new RSAKey.SerializationProxy(this);
     }
 
     /**

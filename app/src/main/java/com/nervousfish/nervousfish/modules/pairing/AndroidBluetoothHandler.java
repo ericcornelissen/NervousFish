@@ -70,7 +70,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      *
      * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
+    private void ensureClassInvariant() {
         // No checks to perform
     }
 

@@ -118,7 +118,7 @@ public final class EncryptorAdapter implements IEncryptor {
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.DECRYPT_MODE;
-        final Cipher cipher = getCipher(key, ivSpec, mode);
+        final Cipher cipher = this.getCipher(key, ivSpec, mode);
 
         try {
             final byte[] decodedValue = Base64.decode(toDecrypt, Base64.DEFAULT);
@@ -144,7 +144,7 @@ public final class EncryptorAdapter implements IEncryptor {
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.ENCRYPT_MODE;
-        final Cipher cipher = getCipher(key, ivSpec, mode);
+        final Cipher cipher = this.getCipher(key, ivSpec, mode);
 
         try {
             final byte[] cipherText = cipher.doFinal(toEncrypt.getBytes(UTF_8));

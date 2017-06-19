@@ -39,8 +39,8 @@ public final class NervousFish extends Application implements INervousFish {
         this.bindService(serviceIntent, this.connection, Context.BIND_AUTO_CREATE);
 
         final String androidFileDir = this.getFilesDir().getPath();
-        NervousFish.serviceLocator = new ServiceLocator(androidFileDir);
-        NervousFish.instance = this;
+        serviceLocator = new ServiceLocator(androidFileDir);
+        instance = this;
 
         LOGGER.info("Application created");
     }
@@ -49,19 +49,20 @@ public final class NervousFish extends Application implements INervousFish {
      * @return The NervousFish {@link Application} instance,
      */
     public static Context getInstance() {
-        return NervousFish.instance;
+        return instance;
     }
 
     /**
      * @return The ServiceLocator of the {@link Application} instance.
      */
     public static IServiceLocator getServiceLocator() {
-        return NervousFish.serviceLocator;
+        return serviceLocator;
     }
 
     /**
      * @return The global bluetooth service used for bluetooth connections
      */
+    @Override
     public PairingWrapper<AndroidBluetoothService> getBluetoothService() {
         return new PairingWrapper<>(this.bluetoothService);
     }
@@ -75,7 +76,7 @@ public final class NervousFish extends Application implements INervousFish {
         public void onServiceConnected(final ComponentName componentName, final IBinder service) {
             final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
             NervousFish.this.bluetoothService = binder.getService();
-            NervousFish.this.bluetoothService.setServiceLocator(NervousFish.serviceLocator);
+            NervousFish.this.bluetoothService.setServiceLocator(serviceLocator);
 
             LOGGER.info("Bluetooth service connected");
         }

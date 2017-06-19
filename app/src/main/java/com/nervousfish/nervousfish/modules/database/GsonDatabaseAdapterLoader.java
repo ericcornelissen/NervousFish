@@ -61,7 +61,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
         final StringBuilder databaseFileStringBuilder = new StringBuilder();
 
         // Get the database from the database file
-        try (BufferedReader databaseReader = (BufferedReader) this.fileSystem.getReader(databasePath)) {
+        try (BufferedReader databaseReader = (BufferedReader) this.fileSystem.getReader(this.databasePath)) {
 
             while (true) {
                 final String line = databaseReader.readLine();
@@ -83,7 +83,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
      */
     private boolean checkPassword(final String password) throws IOException {
 
-        final BufferedReader passReader = (BufferedReader) this.fileSystem.getReader(passwordPath);
+        final BufferedReader passReader = (BufferedReader) this.fileSystem.getReader(this.passwordPath);
         final StringBuffer passwordFileStringBuffer = new StringBuffer();
         while (true) {
             final String line = passReader.readLine();
@@ -94,7 +94,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
         }
         passReader.close();
         final String encryptedPassword = passwordFileStringBuffer.toString();
-        return encryptedPassword.equals(encryptor.hashString(password));
+        return encryptedPassword.equals(this.encryptor.hashString(password));
     }
 
     /**
@@ -104,9 +104,9 @@ class GsonDatabaseAdapterLoader implements Serializable {
      * @return The secretKey made from the password\
      */
     public SecretKey loadKey(final String password) throws IOException, InvalidKeySpecException {
-        checkPassword(password);
-        if (checkPassword(password)) {
-            return encryptor.makeKeyFromPassword(password);
+        this.checkPassword(password);
+        if (this.checkPassword(password)) {
+            return this.encryptor.makeKeyFromPassword(password);
         } else {
             throw new IOException("Password is wrong");
         }
@@ -123,8 +123,8 @@ class GsonDatabaseAdapterLoader implements Serializable {
         final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeHierarchyAdapter(IKey.class, new GsonKeyAdapter());
         final Gson gsonParser = gsonBuilder.create();
         try {
-            final String databaseFileString = readDatabaseToString();
-            final String databaseJson = encryptor.decryptWithPassword(databaseFileString, key);
+            final String databaseFileString = this.readDatabaseToString();
+            final String databaseJson = this.encryptor.decryptWithPassword(databaseFileString, key);
             return gsonParser.fromJson(databaseJson, TYPE_DATABASE);
         } catch (IllegalBlockSizeException e) {
             throw new IOException(DATABASE_WRONG_SIZE, e);

@@ -50,14 +50,14 @@ class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
     @Override
     public void run() {
         LOGGER.info("Start listening on a rfcomm channel");
-        setName("AndroidBluetoothAcceptThread thread");
+        this.setName("AndroidBluetoothAcceptThread thread");
 
         final BluetoothSocket socket;
 
         try {
             // This is a blocking call and will only return on a
             // successful connection or an exception
-            socket = serverSocket.accept();
+            socket = this.serverSocket.accept();
         } catch (final IOException e) {
             LOGGER.error("Listening on the socket failed", e);
             return;
@@ -71,10 +71,11 @@ class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
     /**
      * Cancels the current accepting of the pairing request of other Bluetooth devices
      */
+    @Override
     public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
-            serverSocket.close();
+            this.serverSocket.close();
         } catch (final IOException e) {
             LOGGER.warn("Server failed/closed", e);
         }

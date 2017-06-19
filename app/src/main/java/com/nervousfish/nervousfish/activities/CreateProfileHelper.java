@@ -49,10 +49,10 @@ final class CreateProfileHelper {
         final List<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
-                keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                keyPairs.add(this.keyGenerator.generateRSAKeyPair(DEFAULT_KEY_NAME));
                 break;
             case Ed25519:
-                keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                keyPairs.add(this.keyGenerator.generateEd25519KeyPair(DEFAULT_KEY_NAME));
                 break;
             default:
                 throw new IllegalArgumentException("The selected key is not implemented:" + keyType);
@@ -72,10 +72,10 @@ final class CreateProfileHelper {
         for (final IKey.Types type : keyTypes) {
             switch (type) {
                 case RSA:
-                    keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                    keyPairs.add(this.keyGenerator.generateRSAKeyPair(DEFAULT_KEY_NAME));
                     break;
                 case Ed25519:
-                    keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
+                    keyPairs.add(this.keyGenerator.generateEd25519KeyPair(DEFAULT_KEY_NAME));
                     break;
                 default:
                     throw new IllegalArgumentException("The selected key from the list is not implemented:" + type);

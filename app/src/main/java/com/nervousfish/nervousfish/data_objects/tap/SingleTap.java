@@ -33,7 +33,7 @@ public final class SingleTap extends ATapData {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy();
+        return new SingleTap.SerializationProxy();
     }
 
     /**

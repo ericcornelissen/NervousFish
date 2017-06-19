@@ -50,6 +50,6 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
      */
     @Override
     public void dataReceived(final byte[] bytes) {
-        getDataReceiver().get().dataReceived(bytes);
+        this.getDataReceiver().get().dataReceived(bytes);
     }
 }

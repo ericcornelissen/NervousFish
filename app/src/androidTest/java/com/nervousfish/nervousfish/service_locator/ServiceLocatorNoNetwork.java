@@ -108,7 +108,7 @@ public class ServiceLocatorNoNetwork extends ServiceLocator {
      */
     private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        ensureClassInvariant();
+        this.ensureClassInvariant();
     }
 
     /**
@@ -125,7 +125,7 @@ public class ServiceLocatorNoNetwork extends ServiceLocator {
      *
      * @throws InvalidObjectException Thrown when the state of the class is unstable
      */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        assertNotNull(getAndroidFilesDir());
+    private void ensureClassInvariant() {
+        assertNotNull(this.getAndroidFilesDir());
     }
 }

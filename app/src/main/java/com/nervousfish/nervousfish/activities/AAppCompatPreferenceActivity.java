@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
+ * A {@link PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
  */
 public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
@@ -25,7 +25,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        mDelegate = AppCompatDelegate.create(this, null);
+        this.mDelegate = AppCompatDelegate.create(this, null);
         this.mDelegate.installViewFactory();
         this.mDelegate.onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -145,6 +145,7 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     /**
      * Invalidates the option menu.
      */
+    @Override
     public void invalidateOptionsMenu() {
         this.mDelegate.invalidateOptionsMenu();
     }
