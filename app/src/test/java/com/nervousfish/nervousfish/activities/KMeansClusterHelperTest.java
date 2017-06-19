@@ -134,6 +134,37 @@ public class KMeansClusterHelperTest {
         assertEquals(1 + 3 * (long) StrictMath.pow(10, 10 + 0), key);
     }
 
+    @Test
+    public void testGetEncryptionKey15Tap() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+        taps.add(new SingleTap(new Timestamp(6)));
+        taps.add(new SingleTap(new Timestamp(7)));
+        taps.add(new SingleTap(new Timestamp(8)));
+        taps.add(new SingleTap(new Timestamp(10)));
+        taps.add(new SingleTap(new Timestamp(14)));
+        taps.add(new SingleTap(new Timestamp(18)));
+        taps.add(new SingleTap(new Timestamp(30)));
+        taps.add(new SingleTap(new Timestamp(31)));
+        taps.add(new SingleTap(new Timestamp(35)));
+        taps.add(new SingleTap(new Timestamp(40)));
+        taps.add(new SingleTap(new Timestamp(50)));
+        taps.add(new SingleTap(new Timestamp(60)));
+        taps.add(new SingleTap(new Timestamp(65)));
+        taps.add(new SingleTap(new Timestamp(70)));
+        taps.add(new SingleTap(new Timestamp(71)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        long key = (long) method.invoke(kMeansClusterHelper, taps);
+
+        assertEquals(1 + 3 * (long) StrictMath.pow(10, 10 + 0), key);
+    }
+
     @Test(expected = InvocationTargetException.class)
     public void testGetEncryptionKeyNullList() throws Exception {
 

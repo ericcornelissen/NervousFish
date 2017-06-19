@@ -45,6 +45,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private static final int MINIMUM_TAPS = 3;
+    private static final int DECIMAL_SIZE = 10;
+    private static final int MAX_RHYTHM_ENCODING = 10;
 
     private Button startButton;
     private Button stopButton;
@@ -249,7 +251,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          */
         long getEncryptionKey(final List<SingleTap> taps) {
             Validate.noNullElements(taps);
-            Validate.isTrue(taps.size() >= 3);
+            Validate.isTrue(taps.size() >= MINIMUM_TAPS);
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
@@ -374,11 +376,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             }
             long tmpIntervalSize = this.intervals.size();
             int startValue = 1;
-            while (tmpIntervalSize >= startValue * 10) {
-                startValue *= 10;
+            while (tmpIntervalSize >= startValue * DECIMAL_SIZE) {
+                startValue *= DECIMAL_SIZE;
             }
-            for (int i = startValue; i >= 1; i /= 10) {
-                long m = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(10, 10) * i;
+            for (int i = startValue; i >= 1; i /= DECIMAL_SIZE) {
+                final long m = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(DECIMAL_SIZE, MAX_RHYTHM_ENCODING) * i;
                 key += m;
                 tmpIntervalSize -= m;
             }
