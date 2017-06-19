@@ -22,6 +22,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
  * to complete the pairing session. Via this Activity the verification method
@@ -153,6 +155,12 @@ public final class WaitActivity extends Activity {
      */
     private void goToMainActivity() {
         LOGGER.info("Going to the main activity");
+        try {
+            this.serviceLocator.getBluetoothHandler().stop();
+            this.serviceLocator.getBluetoothHandler().start();
+        } catch (IOException e) {
+            LOGGER.error("Restarting the threads went wrong", e);
+        }
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
