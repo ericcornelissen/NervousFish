@@ -59,7 +59,7 @@ final class TestSerializable implements Serializable {
      * Represents the logical state of this class and copies the data from that class without
      * any consistency checking or defensive copying.
      */
-    private final class SerializationProxy implements Serializable {
+    private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -4715364587956219157L;
         private final String name;
 
