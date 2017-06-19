@@ -83,6 +83,8 @@ public class MainSteps {
             onView(withText(R.string.no)).perform(click());
         } catch (NoMatchingViewException ignore) {
         }
+
+        allowPermissionsIfNeeded();
     }
 
     @Given("^there is a contact with the name (.*?) in the database$")
