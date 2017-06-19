@@ -49,7 +49,11 @@ abstract class APairingHandler implements IPairingHandler {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 final DataWrapper object = (DataWrapper) ois.readObject();
-                this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                if (event.getClazz() == ByteWrapper.class) {
+                    this.serviceLocator.postOnEventBus(new NewBytesReceivedEvent(object.getBytes()));
+                } else {
+                    this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                }
             } catch (final ClassNotFoundException | IOException e) {
                 LOGGER.error(" Couldn't start deserialization!", e);
                 throw new DeserializationException(e);
