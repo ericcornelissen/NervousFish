@@ -58,18 +58,18 @@ enum ContactReceivedHelper {
                 LOGGER.info("Adding contact to database...");
                 try {
                     database.addContact(contact);
-                    handleNewContact(activity);
+                    ContactReceivedHelper.handleNewContact(activity);
                 } catch (final IOException e) {
                     LOGGER.error("Could not add contact to database", e);
                 }
                 break;
             case BY_NAME:
                 LOGGER.warn("Contact with equal name but different keys already existed...");
-                handleExistingContact(database, activity, contact);
+                ContactReceivedHelper.handleExistingContact(database, activity, contact);
                 break;
             case BY_NAME_AND_KEYS:
                 LOGGER.warn("Contact with equal name and keys already existed...");
-                handleDuplicateContact(activity, contact);
+                ContactReceivedHelper.handleDuplicateContact(activity, contact);
                 break;
             default:
                 final String error = "No exhaustive check on ContactExists";
