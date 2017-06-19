@@ -30,6 +30,7 @@ import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 public final class ChangeContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
+    private static final String EMPTY_STRING = "";
 
     private IServiceLocator serviceLocator;
     private Contact contact;
@@ -72,18 +73,21 @@ public final class ChangeContactActivity extends AppCompatActivity {
 
         final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
         final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
-        String ibanString = editTextName.getText().toString();
+        String ibanString = editTextIBAN.getText().toString();
         final boolean validName = isValidName(editTextName.getText().toString());
         boolean validIban = IBANVerifier.isValidIBAN(ibanString);
-        if(!validIban && ibanString.equals("") || ibanString.equals("-")) {
+        if(!validIban && (ibanString.equals(EMPTY_STRING) || ibanString.equals("-"))) {
             validIban = true;
-            ibanString = "";
+            ibanString = EMPTY_STRING;
         }
         if (validName && validIban) {
             //Update contact
             try {
-                final Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
-                        new IBAN(editTextIBAN.getText().toString()));
+                Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys());
+                if (ibanString.equals(EMPTY_STRING)) {
+                    newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
+                            new IBAN(ibanString));
+                }
                 if (!contact.equals(newContact)) {
                     serviceLocator.getDatabase().updateContact(contact, newContact);
                     contact = newContact;
@@ -95,17 +99,17 @@ public final class ChangeContactActivity extends AppCompatActivity {
             setResult(RESULT_FIRST_USER,
                     new Intent().putExtra(ConstantKeywords.CONTACT, contact));
             finish();
-        } else if(IBANVerifier.isValidIBAN(editTextName.getText().toString())) {
+        } else if(!validName) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.invalid_name))
                     .setContentText(getString(R.string.invalid_name_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
                     .setConfirmClickListener(null)
                     .show();
-        } else {
+        } else if(!validIban) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.invalid_name))
-                    .setContentText(getString(R.string.invalid_name_explanation))
+                    .setTitleText(getString(R.string.invalid_iban))
+                    .setContentText(getString(R.string.invalid_iban_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
                     .setConfirmClickListener(null)
                     .show();
