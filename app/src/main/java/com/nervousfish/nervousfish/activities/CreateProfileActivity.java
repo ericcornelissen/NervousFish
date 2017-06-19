@@ -41,8 +41,13 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings("checkstyle:ReturnCount")
-//Suppresses return count to allow multiple returncodes while checking input fields.
+@SuppressWarnings({"checkstyle:ReturnCount", "pmd.ExcessiveImports"})
+/*
+1) Suppresses return count to allow multiple returncodes while checking input fields.
+2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
+    to outsource to another class
+ */
+
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
@@ -90,16 +95,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 final String name = this.nameInput.getText().toString();
                 final String password = this.passwordInput.getText().toString();
                 final IDatabase database = this.serviceLocator.getDatabase();
-                final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
-                if (this.rsaCheckBox.isChecked()) {
-                    keytypesToGenerate.add(IKey.Types.RSA);
-                }
-                if (this.ed25519CheckBox.isChecked()) {
-                    keytypesToGenerate.add(IKey.Types.Ed25519);
-                }
+
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = this.helper.generateKeyPairs(keytypesToGenerate);
+                    final List<KeyPair> keyPairs = generateKeyPairList();
                     final Profile userProfile = new Profile(name, keyPairs);
 
                     database.createDatabase(userProfile, password);
@@ -131,6 +130,22 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    /**
+     * Generates a list of key pairs, given the checked boxes.
+     *
+     * @return A list of keypairs with the types checked in the boxes.
+     */
+    private List<KeyPair> generateKeyPairList() {
+        final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
+        if (this.rsaCheckBox.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.RSA);
+        }
+        if (this.ed25519CheckBox.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.Ed25519);
+        }
+        return this.helper.generateKeyPairs(keytypesToGenerate);
     }
 
     /**
