@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.R;
 
 import org.apache.commons.lang3.SerializationUtils;
 

@@ -43,8 +43,11 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings("checkstyle:ReturnCount")
-//Suppresses return count to allow multiple returncodes while checking input fields.
+@SuppressWarnings({"checkstyle:ReturnCount", "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+    "PMD.ExcessiveImports"})
+//1. Suppresses return count to allow multiple returncodes while checking input fields.
+//2 and 3. The complexity does not make the code unreadible at this moment.
+//4. We want to have so much imports so we dont have to write Constants.ExplicitFieldResultCodes every time.
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");

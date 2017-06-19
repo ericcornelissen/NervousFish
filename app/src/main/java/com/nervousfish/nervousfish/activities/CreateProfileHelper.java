@@ -26,6 +26,7 @@ final class CreateProfileHelper {
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
+    private static final String EMPTY_STRING = "";
 
     private final IKeyGenerator keyGenerator;
     private final int alertColor;
@@ -86,7 +87,7 @@ final class CreateProfileHelper {
      */
     Constants.InputFieldResultCodes validateIban(final EditText input) {
         final String iban = input.getText().toString();
-        if (iban.equals("") || IBANVerifier.isValidIBAN(iban)) {
+        if (EMPTY_STRING.equals(iban) || IBANVerifier.isValidIBAN(iban)) {
             input.setBackgroundColor(Color.TRANSPARENT);
             return CORRECT_FIELD;
         } else if (!IBANVerifier.isValidIBAN(iban)) {

@@ -125,7 +125,6 @@ public class ChangeContactSteps {
 
     @When("^I type (.*?) as new IBAN")
     public void iTypeNewIBANAsNewIBAN(final String newIban) {
-        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.contact_page_change_iban)).perform(replaceText(newIban));
     }
 

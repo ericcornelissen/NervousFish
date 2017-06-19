@@ -27,6 +27,8 @@ import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 /**
  * An {@link Activity} that allows the user to change attributes of contacts.
  */
+@SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD.CyclomaticComplexity"})
+//1 and 2. The complexity does not make the code unreadible at this moment.
 public final class ChangeContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
@@ -76,7 +78,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         String ibanString = editTextIBAN.getText().toString();
         final boolean validName = isValidName(editTextName.getText().toString());
         boolean validIban = IBANVerifier.isValidIBAN(ibanString);
-        if(!validIban && (ibanString.equals(EMPTY_STRING) || ibanString.equals("-"))) {
+        if (!validIban && (EMPTY_STRING.equals(ibanString) || "-".equals(ibanString))) {
             validIban = true;
             ibanString = EMPTY_STRING;
         }
@@ -84,7 +86,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
             //Update contact
             try {
                 Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys());
-                if (ibanString.equals(EMPTY_STRING)) {
+                if (!ibanString.equals(EMPTY_STRING)) {
                     newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
                             new IBAN(ibanString));
                 }
@@ -99,17 +101,17 @@ public final class ChangeContactActivity extends AppCompatActivity {
             setResult(RESULT_FIRST_USER,
                     new Intent().putExtra(ConstantKeywords.CONTACT, contact));
             finish();
-        } else if(!validName) {
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.invalid_name))
-                    .setContentText(getString(R.string.invalid_name_explanation))
-                    .setConfirmText(getString(R.string.dialog_ok))
-                    .setConfirmClickListener(null)
-                    .show();
-        } else if(!validIban) {
+        } else if (validName) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.invalid_iban))
                     .setContentText(getString(R.string.invalid_iban_explanation))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(null)
+                    .show();
+        } else {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.invalid_name))
+                    .setContentText(getString(R.string.invalid_name_explanation))
                     .setConfirmText(getString(R.string.dialog_ok))
                     .setConfirmClickListener(null)
                     .show();
