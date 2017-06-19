@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.exceptions.SerializationException;
+import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
@@ -32,6 +33,7 @@ abstract class APairingHandler implements IPairingHandler {
     private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
+    private final IConstants constants;
     private final IEncryptor encryptor;
 
     /**
@@ -41,6 +43,7 @@ abstract class APairingHandler implements IPairingHandler {
      */
     APairingHandler(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
+        this.constants = this.serviceLocator.getConstants();
         this.encryptor = this.serviceLocator.getEncryptor();
     }
 
@@ -108,8 +111,9 @@ abstract class APairingHandler implements IPairingHandler {
             throw new SerializationException(e);
         }
         final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
-        final String encryptedMessage = this.encryptor.encryptWithPassword(bytes.toString(), password);
-        this.send(this.objectToBytes(new ByteWrapper(encryptedMessage.getBytes())));
+        final String encryptedMessage = this.encryptor.encryptWithPassword(new String(bytes, this.constants.getCharset()), password);
+        final ByteWrapper byteWrapper = new ByteWrapper(encryptedMessage.getBytes(this.constants.getCharset()));
+        this.send(this.objectToBytes(byteWrapper));
     }
 
     protected final IServiceLocator getServiceLocator() {

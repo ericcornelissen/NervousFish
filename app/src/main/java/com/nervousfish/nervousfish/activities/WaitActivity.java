@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
+import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
@@ -43,6 +44,7 @@ public final class WaitActivity extends Activity {
     private IServiceLocator serviceLocator;
     private IEncryptor encryptor;
     private IDatabase database;
+    private IConstants constants;
     private byte[] dataReceived;
     private int key;
 
@@ -56,6 +58,7 @@ public final class WaitActivity extends Activity {
         this.serviceLocator = NervousFish.getServiceLocator();
         this.encryptor = this.serviceLocator.getEncryptor();
         this.database = this.serviceLocator.getDatabase();
+        this.constants = this.serviceLocator.getConstants();
 
         final Intent intent = this.getIntent();
 
@@ -157,7 +160,9 @@ public final class WaitActivity extends Activity {
         final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(this.key));
         final byte[] bytes;
         try {
-            bytes = this.encryptor.decryptWithPassword(event.getBytes().toString(), password).getBytes();
+            final String bytesAsString = new String(event.getBytes(), this.constants.getCharset());
+            final String encryptedString = this.encryptor.decryptWithPassword(bytesAsString, password);
+            bytes = encryptedString.getBytes(this.constants.getCharset());
         } catch (final IllegalBlockSizeException | BadPaddingException e) {
             throw new EncryptionException(e);
         }
