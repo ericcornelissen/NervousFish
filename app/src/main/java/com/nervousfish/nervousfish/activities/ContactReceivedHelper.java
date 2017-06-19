@@ -50,12 +50,13 @@ enum ContactReceivedHelper {
                 LOGGER.info("Adding contact to database...");
                 try {
                     database.addContact(contact);
+                    handleNewContact(activity);
                 } catch (final IOException e) {
-                    LOGGER.error("Could not add contact to databae", e);
+                    LOGGER.error("Could not add contact to database", e);
                 }
                 break;
             case BY_NAME:
-                LOGGER.warn("Contact with equal name but diffent keys already existed...");
+                LOGGER.warn("Contact with equal name but different keys already existed...");
                 handleExistingContact(database, activity, contact);
                 break;
             case BY_NAME_AND_KEYS:
@@ -67,6 +68,19 @@ enum ContactReceivedHelper {
                 LOGGER.error(error);
                 throw new AssertionError(error);
         }
+    }
+
+    /**
+     * Handle the case where a newly received contact is actually new.
+     *
+     * @param activity The {@link Activity} to use.
+     */
+    private static void handleNewContact(final Activity activity) {
+        new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(activity.getString(R.string.contact_added_popup_title))
+                .setContentText(activity.getString(R.string.contact_added_popup_explanation))
+                .setConfirmText(activity.getString(R.string.dialog_ok))
+                .show();
     }
 
     /**
