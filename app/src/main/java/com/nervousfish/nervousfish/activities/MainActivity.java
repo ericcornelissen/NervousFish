@@ -17,6 +17,7 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -60,7 +61,7 @@ public final class MainActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private IDatabase database;
     private MainActivitySorter sorter;
-    List<Contact> contacts;
+    private List<Contact> contacts;
 
     /**
      * {@inheritDoc}
@@ -383,6 +384,10 @@ public final class MainActivity extends AppCompatActivity {
 
     List<Contact> getContacts() {
         return new ArrayList<>(this.contacts);
+    }
+
+    void setContacts(final List<Contact> contacts) {
+        this.contacts = contacts;
     }
 
 }
