@@ -1,7 +1,9 @@
 package com.nervousfish.nervousfish.test;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
+import android.view.inputmethod.InputMethodManager;
 
 import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
@@ -33,6 +35,7 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -47,7 +50,7 @@ public class ChangeContactSteps {
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
     private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
-
+    private InputMethodManager inputMethodManager;
 
     private static final String testpass = "Testpass";
 
@@ -80,6 +83,7 @@ public class ChangeContactSteps {
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.CONTACT, this.contact);
         this.mActivityRule.launchActivity(intent);
+        this.inputMethodManager = (InputMethodManager) this.mActivityRule.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @When("^I press the change contact back button$")
@@ -111,6 +115,18 @@ public class ChangeContactSteps {
     public void iTypeNewNameAsNewName(final String newName) {
         this.newName = newName;
         onView(withId(R.id.edit_contact_name_input)).perform(replaceText(newName));
+    }
+
+    @When("^I select the IBAN field$")
+    public void iSelectTheIBANField() {
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.contact_page_change_iban)).perform(click());
+    }
+
+    @When("^I type (.*?) as new IBAN")
+    public void iTypeNewIBANAsNewIBAN(final String newIban) {
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.contact_page_change_iban)).perform(replaceText(newIban));
     }
 
     @When("^I verify that I want to dismiss the contact changes$")
