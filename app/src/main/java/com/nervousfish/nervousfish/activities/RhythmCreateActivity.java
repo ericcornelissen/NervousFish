@@ -120,7 +120,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
         if (this.taps != null && this.startButton.getVisibility() == View.GONE) {
-            this.taps.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
+            this.taps.add(new Timestamp(System.currentTimeMillis()));
         }
     }
 
@@ -134,7 +134,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         final Profile profile = this.serviceLocator.getDatabase().getProfile();
         final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-        LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
+        }
         final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
         final int key = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
         try {
@@ -208,14 +210,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     /**
      * Executes K-means++ clustering on the intervals to divide them into a short and long cluster
      */
-    public static final class KMeansClusterHelper {
+    private static final class KMeansClusterHelper {
         private List<Long> intervals;
         private List<Long> clusterCenter1;
         private List<Long> clusterCenter2;
-
-        private KMeansClusterHelper() {
-            // Prevent instantiation from outside the package
-        }
 
         /**
          * Get a list of the time between the taps (= intervals)
@@ -223,10 +221,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param taps The taps that have obviously intervals in between
          * @return A list containing the time between the taps
          */
-        private static List<Long> getIntervals(final List<SingleTap> taps) {
+        private static List<Long> getIntervals(final List<Timestamp> taps) {
             final List<Long> intervals = new ArrayList<>(taps.size() - 1);
             for (int i = 0; i < taps.size() - 1; i++) {
-                intervals.add(taps.get(i + 1).getTimestamp().getTime() - taps.get(i).getTimestamp().getTime());
+                intervals.add(taps.get(i + 1).getTime() - taps.get(i).getTime());
             }
             return intervals;
         }
@@ -241,7 +239,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param taps The taps that should be encoded to a key
          * @return The unique key that corresponds to the taps
          */
-        int getEncryptionKey(final List<SingleTap> taps) {
+        int getEncryptionKey(final List<Timestamp> taps) {
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);

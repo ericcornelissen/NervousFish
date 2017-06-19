@@ -86,6 +86,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
 
     /**
      * Called by Greenrobot's Eventbus whenever a received byte array is decrypted
+     *
+     * @param event Contains the decrypted bytes
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDecryptedBytesReceivedEvent(final NewDecryptedBytesReceivedEvent event) {
