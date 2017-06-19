@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,9 @@ enum ContactReceivedHelper {
      * @param contact  The newly received {@link Contact}
      */
     static void newContactReceived(final IDatabase database, final Activity activity, final Contact contact) {
+        Validate.notNull(database);
+        Validate.notNull(activity);
+
         if (contact == null) {
             return;
         }
