@@ -89,10 +89,19 @@ abstract class APairingHandler implements IPairingHandler {
     @Override
     public final void send(final Serializable object, final int key) {
         LOGGER.info("Begin writing object encoded with key: {}", key);
-        final byte[] bytes = this.objectToBytes(object);
+        final byte[] bytes;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(object);
+            oos.flush();
+            bytes = bos.toByteArray();
+        } catch (final IOException e) {
+            LOGGER.error("Couldn't serialize object", e);
+            throw new SerializationException(e);
+        }
         final String password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
         final String encryptedMessage = this.encryptor.encryptWithPassword(bytes.toString(), password);
-        this.send(encryptedMessage.getBytes());
+        this.send(new ByteWrapper(encryptedMessage.getBytes()));
     }
 
     protected final IServiceLocator getServiceLocator() {
