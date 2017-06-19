@@ -1,31 +1,31 @@
-package com.nervousfish.nervousfish.exceptions;
+package com.nervousfish.nervousfish;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Simple {@link RuntimeException} that is used on places that cannot be reached unless something is really, really wrong.
+ * Created to be able to inject Serializable things (in this case an Exception)
+ * in classes without having to use classes from the app that may be deleted
+ * in the future.
  */
-public class UnsupportedKeyTypeException extends RuntimeException {
+public final class TestException extends RuntimeException {
 
-    private static final long serialVersionUID = -7030163248191198652L;
+    private static final long serialVersionUID = -5464890114687852303L;
 
     /**
-     * Constructor for a new NoBluetoothException with a message.
-     *
-     * @param msg A string describing the exception
+     * Constructs a new TestException with a string
+     * @param msg A random message
      */
-    public UnsupportedKeyTypeException(final String msg) {
+    public TestException(final String msg) {
         super(msg);
     }
 
     /**
-     * Constructs a new UnsupportedKeyTypeException with an exception (a throwable)
-     *
-     * @param throwable The exception that occurred the layer above
+     * Constructs a new TestException with an exception
+     * @param throwable A random exception = a random throwable
      */
-    public UnsupportedKeyTypeException(final Throwable throwable) {
+    public TestException(final Throwable throwable) {
         super(throwable);
     }
 
@@ -54,4 +54,5 @@ public class UnsupportedKeyTypeException extends RuntimeException {
     private void ensureClassInvariant() {
         // No checks to perform
     }
+
 }

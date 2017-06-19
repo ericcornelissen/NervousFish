@@ -130,7 +130,7 @@ class GsonDatabaseAdapterLoader implements Serializable {
             throw new IOException(DATABASE_WRONG_SIZE, e);
         } catch (BadPaddingException e) {
             LOGGER.error(BAD_PADDING, e);
-            throw new DatabaseAdapterException(BAD_PADDING, e);
+            throw new DatabaseException(e);
         }
     }
 }
