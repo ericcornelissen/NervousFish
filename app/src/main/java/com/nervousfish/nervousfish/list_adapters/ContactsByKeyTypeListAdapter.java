@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.list_adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -92,8 +91,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final View v;
 
         if (convertView == null) {
-            final LayoutInflater vi = this.context.getLayoutInflater();
-            v = vi.inflate(R.layout.contact_list_entry, null);
+            v = View.inflate(context, R.layout.contact_list_entry, null);
         } else {
             v = convertView;
         }
@@ -151,8 +149,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final String type = (String) this.getGroup(groupPosition);
         final View view;
         if (convertView == null) {
-            final LayoutInflater vi = this.context.getLayoutInflater();
-            view = vi.inflate(R.layout.key_type, null);
+            view = View.inflate(context, R.layout.key_type, null);
         } else {
             view = convertView;
         }

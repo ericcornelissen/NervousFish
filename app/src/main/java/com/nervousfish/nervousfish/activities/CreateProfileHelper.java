@@ -55,7 +55,7 @@ final class CreateProfileHelper {
                 keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
                 break;
             default:
-                throw new IllegalArgumentException("The selected key is not implemented");
+                throw new IllegalArgumentException("The selected key is not implemented:" + keyType);
         }
 
         return keyPairs;
@@ -78,7 +78,7 @@ final class CreateProfileHelper {
                     keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
                     break;
                 default:
-                    throw new IllegalArgumentException("The selected key is not implemented");
+                    throw new IllegalArgumentException("The selected key from the list is not implemented:" + type);
             }
         }
 

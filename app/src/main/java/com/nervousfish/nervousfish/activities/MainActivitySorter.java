@@ -8,12 +8,8 @@ import android.widget.ViewFlipper;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 
@@ -26,6 +22,7 @@ final class MainActivitySorter {
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
     private static final int NUMBER_OF_SORTING_MODES = 2;
+
     private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
         @Override
         public int compare(final Contact o1, final Contact o2) {
