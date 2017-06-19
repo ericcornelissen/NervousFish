@@ -29,7 +29,7 @@ import java.io.IOException;
 public final class VisualVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("VisualVerificationActivity");
-    private static final int SECURITY_CODE_LENGTH = 5;
+    private static final int SECURITY_CODE_LENGTH = 6;
     private static final int NUM_BUTTONS = 12;
 
     private IServiceLocator serviceLocator;
