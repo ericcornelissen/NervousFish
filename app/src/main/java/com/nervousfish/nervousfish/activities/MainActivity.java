@@ -146,6 +146,7 @@ public final class MainActivity extends AppCompatActivity {
         final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         // Start Bluetooth
         try {
+            this.askBluetoothLocationPermission();
             //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
             bluetoothHandler.start();
         } catch (final NoBluetoothException e) {
