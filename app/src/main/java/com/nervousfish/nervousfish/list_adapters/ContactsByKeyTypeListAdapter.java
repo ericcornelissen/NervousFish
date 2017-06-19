@@ -54,9 +54,9 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
             this.groupedContacts.put(type, new ArrayList<Contact>());
         }
         for (final Contact contact : contacts) {
-            for (final String type : types) {
-                if (!this.groupedContacts.get(type).contains(contact)) {
-                    this.groupedContacts.get(type).add(contact);
+            for (final IKey key : contact.getKeys()) {
+                if (!this.groupedContacts.get(key.getType()).contains(contact)) {
+                    this.groupedContacts.get(key.getType()).add(contact);
                 }
             }
         }

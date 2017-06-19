@@ -385,4 +385,8 @@ public final class MainActivity extends AppCompatActivity {
         return new ArrayList<>(this.contacts);
     }
 
+    void setContacts(final List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
 }

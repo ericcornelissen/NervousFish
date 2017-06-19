@@ -11,7 +11,9 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Is used to sort the list in the MainActivity
@@ -87,6 +89,10 @@ final class MainActivitySorter {
             }
 
         });
+
+        final List<Contact> contacts = this.mainActivity.getContacts();
+        Collections.sort(contacts, NAME_SORTER);
+        this.mainActivity.setContacts(contacts);
 
         if (contactsByNameListAdapter.isEmpty()) {
             showNoContactsContent();
