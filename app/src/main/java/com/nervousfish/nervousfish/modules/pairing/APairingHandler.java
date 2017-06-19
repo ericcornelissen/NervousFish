@@ -49,8 +49,8 @@ abstract class APairingHandler implements IPairingHandler {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 final DataWrapper object = (DataWrapper) ois.readObject();
-                if (event.getClazz() == ByteWrapper.class) {
-                    this.serviceLocator.postOnEventBus(new NewBytesReceivedEvent(object.getBytes()));
+                if (object.getClazz() == ByteWrapper.class) {
+                    this.serviceLocator.postOnEventBus(new NewBytesReceivedEvent(((ByteWrapper) object.getData()).getBytes()));
                 } else {
                     this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
                 }
@@ -96,7 +96,7 @@ abstract class APairingHandler implements IPairingHandler {
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(object);
+            oos.writeObject(new DataWrapper(object));
             oos.flush();
             bytes = bos.toByteArray();
         } catch (final IOException e) {
@@ -105,7 +105,7 @@ abstract class APairingHandler implements IPairingHandler {
         }
         final String password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
         final String encryptedMessage = this.encryptor.encryptWithPassword(bytes.toString(), password);
-        this.send(new ByteWrapper(encryptedMessage.getBytes()));
+        this.send(this.objectToBytes(new ByteWrapper(encryptedMessage.getBytes())));
     }
 
     protected final IServiceLocator getServiceLocator() {

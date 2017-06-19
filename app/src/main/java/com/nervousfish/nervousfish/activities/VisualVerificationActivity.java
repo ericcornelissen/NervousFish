@@ -75,11 +75,9 @@ public final class VisualVerificationActivity extends Activity {
      */
     private void nextActivity() {
         LOGGER.info("Done tapping the VisualVerification");
-
         try {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
-
 
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
                     + keyPair.getPublicKey().toString());
@@ -93,7 +91,7 @@ public final class VisualVerificationActivity extends Activity {
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
-        intent.putExtra(ConstantKeywords.TAP_DATA, this.securityCode);
+        intent.putExtra(ConstantKeywords.KEY, this.securityCode);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 
@@ -130,5 +128,4 @@ public final class VisualVerificationActivity extends Activity {
         LOGGER.info("onNewBytesReceivedEvent called");
         this.dataReceived = event.getBytes();
     }
-
 }

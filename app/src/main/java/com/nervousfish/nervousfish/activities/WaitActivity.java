@@ -32,9 +32,10 @@ public final class WaitActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
+    private IEncryptor encryptor;
     private IDatabase database;
-    private Object dataReceived;
-    private Object tapCombination;
+    private byte[] dataReceived;
+    private int key;
 
     /**
      * {@inheritDoc}
@@ -44,13 +45,13 @@ public final class WaitActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.encryptor = this.serviceLocator.getEncryptor();
         this.database = this.serviceLocator.getDatabase();
 
         final Intent intent = this.getIntent();
 
-
         this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+        this.key = intent.getSerializableExtra(ConstantKeywords.KEY);
 
         LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.dataReceived != null, this.tapCombination != null);
 
@@ -84,8 +85,8 @@ public final class WaitActivity extends Activity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
 
-        if (this.dataReceived != null && this.tapCombination != null) {
-            this.goToMainActivity();
+        if (this.dataReceived != null) {
+            this.onNewBytesReceivedEvent(this.dataReceived);
         }
 
         LOGGER.info("Activity started");
@@ -131,11 +132,23 @@ public final class WaitActivity extends Activity {
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
             this.goToMainActivity();
         }
+    }
+
+    /**
+     * Called when a new byte array is received.
+     *
+     * @param event Contains the byte array
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewBytesReceivedEvent(final NewBytesReceivedEvent event) {
+        Validate.notNull(event);
+        LOGGER.info("onNewBytesReceivedEvent called");
+        final String password = this.encryptor.makeKeyFromPassword(this.key);
+        final byte[] bytes = this.encryptor.decryptWithPassword(event.getBytes().toString(), password).getBytes();
+        final IDataReceiver dataReceiver = (IDataReceiver) serviceLocator.getBluetoothHandler().getDataReceiver().get();
+        dataReceiver.dataReceived(bytes);
     }
 
     /**
