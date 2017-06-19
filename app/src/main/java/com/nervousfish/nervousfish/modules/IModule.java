@@ -8,5 +8,5 @@ import java.io.Serializable;
  * before use.
  */
 
-public interface IModule extends Serializable {
+public interface IModule {
 }
