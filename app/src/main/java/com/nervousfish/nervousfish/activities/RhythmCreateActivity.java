@@ -38,9 +38,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The RhythmCreateActivity is an Activity where you can tap a sequence.
  */
-@SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized"})
+@SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized", "PMD.ExcessiveImports"})
 // 1) List is cast to an ArrayList, but that is needed to put in an intent.
 // 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
+// 3) We cannot easily reduce the number of imports because most of them are plain data objects to events
 public final class RhythmCreateActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
@@ -380,9 +381,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                 startValue *= DECIMAL_SIZE;
             }
             for (int i = startValue; i >= 1; i /= DECIMAL_SIZE) {
-                final long m = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(DECIMAL_SIZE, MAX_RHYTHM_ENCODING) * i;
-                key += m;
-                tmpIntervalSize -= m;
+                final long l = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(DECIMAL_SIZE, MAX_RHYTHM_ENCODING) * i;
+                key += l;
+                tmpIntervalSize -= i * Math.floor(tmpIntervalSize / i);
             }
             return key;
         }

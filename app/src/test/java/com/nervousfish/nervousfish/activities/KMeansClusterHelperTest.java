@@ -162,7 +162,7 @@ public class KMeansClusterHelperTest {
         method.setAccessible(true);
         long key = (long) method.invoke(kMeansClusterHelper, taps);
 
-        assertEquals(1 + 3 * (long) StrictMath.pow(10, 10 + 0), key);
+        assertEquals(16241 + 1 * (long) StrictMath.pow(10, 10 + 1) + 5 * (long) StrictMath.pow(10, 10 + 0), key);
     }
 
     @Test(expected = InvocationTargetException.class)
