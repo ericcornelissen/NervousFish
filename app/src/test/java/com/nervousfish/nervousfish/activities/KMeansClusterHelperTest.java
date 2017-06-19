@@ -6,6 +6,7 @@ import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
 
 public class KMeansClusterHelperTest {
     @Test
-    public void getEncryptionKey() throws Exception {
+    public void testGetEncryptionKey() throws Exception {
         RhythmCreateActivity activity = new RhythmCreateActivity();
 
         final List<SingleTap> taps = new ArrayList<>();
@@ -31,8 +32,131 @@ public class KMeansClusterHelperTest {
         Object kMeansClusterHelper = constructor.newInstance();
         Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
         method.setAccessible(true);
-        int key = (int) method.invoke(kMeansClusterHelper, taps);
+        long key = (long) method.invoke(kMeansClusterHelper, taps);
 
-        assertEquals(2 + 8, key);
+        assertEquals(2 + 8 + 4 * (long) StrictMath.pow(10, 10 + 0), key);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void testGetEncryptionKeyNoTaps() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        method.invoke(kMeansClusterHelper, taps);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void testGetEncryptionKeySingleTap() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        method.invoke(kMeansClusterHelper, taps);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void testGetEncryptionKeyDoubleTap() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+        taps.add(new SingleTap(new Timestamp(5)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        method.invoke(kMeansClusterHelper, taps);
+    }
+
+    @Test
+    public void testGetEncryptionKeyTripleTap() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+        taps.add(new SingleTap(new Timestamp(5)));
+        taps.add(new SingleTap(new Timestamp(11)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        long key = (long) method.invoke(kMeansClusterHelper, taps);
+
+        assertEquals(2 + 2 * (long) StrictMath.pow(10, 10 + 0), key);
+    }
+
+    @Test
+    public void testGetEncryptionKeyTripleTap2() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+        taps.add(new SingleTap(new Timestamp(6)));
+        taps.add(new SingleTap(new Timestamp(10)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        long key = (long) method.invoke(kMeansClusterHelper, taps);
+
+        assertEquals(1 + 2 * (long) StrictMath.pow(10, 10 + 0), key);
+    }
+
+    @Test
+    public void testGetEncryptionKeyTripleTap3() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+        taps.add(new SingleTap(new Timestamp(6)));
+        taps.add(new SingleTap(new Timestamp(7)));
+        taps.add(new SingleTap(new Timestamp(8)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        long key = (long) method.invoke(kMeansClusterHelper, taps);
+
+        assertEquals(1 + 3 * (long) StrictMath.pow(10, 10 + 0), key);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void testGetEncryptionKeyNullList() throws Exception {
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        method.invoke(kMeansClusterHelper, (Object) null);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void testGetEncryptionKeyNullTaps() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(null);
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        method.invoke(kMeansClusterHelper, taps);
     }
 }

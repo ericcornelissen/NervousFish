@@ -21,6 +21,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -138,9 +139,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+            final long encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }
         final Intent intent = new Intent(this, WaitActivity.class);
@@ -246,7 +247,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param taps The taps that should be encoded to a key
          * @return The unique key that corresponds to the taps
          */
-        int getEncryptionKey(final List<SingleTap> taps) {
+        long getEncryptionKey(final List<SingleTap> taps) {
+            Validate.noNullElements(taps);
+            Validate.isTrue(taps.size() >= 3);
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
@@ -358,16 +361,26 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param breakpoint The boundary between a short and long interval
          * @return The key as an integer
          */
-        private int generateKey(final long breakpoint) {
-            int key = 0;
+        private long generateKey(final long breakpoint) {
+            long key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
-                if (interval < breakpoint) {
+                if (interval <= breakpoint) {
                     counter++;
                 } else {
                     key += StrictMath.pow(2, counter);
                     counter++;
                 }
+            }
+            long tmpIntervalSize = this.intervals.size();
+            int startValue = 1;
+            while (tmpIntervalSize >= startValue * 10) {
+                startValue *= 10;
+            }
+            for (int i = startValue; i >= 1; i /= 10) {
+                long m = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(10, 10) * i;
+                key += m;
+                tmpIntervalSize -= m;
             }
             return key;
         }
