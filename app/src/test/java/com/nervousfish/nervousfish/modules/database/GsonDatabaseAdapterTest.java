@@ -39,29 +39,29 @@ public class GsonDatabaseAdapterTest {
     private static final String DB_PASSWORD_PATH = "databaseKey.txt";
     private static final String TEST_PASSWORD = "TESTPASS";
 
-    private final IServiceLocator serviceLocator = mock(IServiceLocator.class);
-    private final IConstants constants = mock(IConstants.class);
+    private IServiceLocator serviceLocator = mock(IServiceLocator.class);
+    private IConstants constants = mock(IConstants.class);
 
     private IDatabase database;
     private Database databaseObject;
     private Profile profile;
-    private final boolean encryptionCalled;
+    private boolean encryptionCalled = false;
 
     @Before
     public void setup() {
 
-        when(this.serviceLocator.getConstants()).thenReturn(this.constants);
-        when(this.serviceLocator.getFileSystem()).thenReturn((AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, this.serviceLocator));
-        when(this.constants.getDatabasePath()).thenReturn(DB_DATABASE_PATH);
-        when(this.constants.getPasswordPath()).thenReturn(DB_PASSWORD_PATH);
+        when(serviceLocator.getConstants()).thenReturn(constants);
+        when(serviceLocator.getFileSystem()).thenReturn((AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator));
+        when(constants.getDatabasePath()).thenReturn(DB_DATABASE_PATH);
+        when(constants.getPasswordPath()).thenReturn(DB_PASSWORD_PATH);
 
-        this.database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, this.serviceLocator);
+        database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
 
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, this.serviceLocator);
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        this.profile = new Profile("name", new ArrayList<KeyPair>());
-        this.profile.addKeyPair(keyPair);
-        this.databaseObject = new Database(new ArrayList<Contact>(), this.profile);
+        profile = new Profile("name", new ArrayList<KeyPair>());
+        profile.addKeyPair(keyPair);
+        databaseObject = new Database(new ArrayList<Contact>(), profile);
 
     }
 
@@ -75,7 +75,7 @@ public class GsonDatabaseAdapterTest {
 
     @Test
     public void testNewInstance() throws Exception {
-        ModuleWrapper<GsonDatabaseAdapter> wrapper = GsonDatabaseAdapter.newInstance(this.serviceLocator);
+        ModuleWrapper<GsonDatabaseAdapter> wrapper = GsonDatabaseAdapter.newInstance(serviceLocator);
         assertNotNull(wrapper);
     }
 

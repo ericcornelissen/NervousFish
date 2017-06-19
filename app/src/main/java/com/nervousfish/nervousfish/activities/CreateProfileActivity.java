@@ -41,7 +41,7 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings({"checkstyle:ReturnCount", "pmd.ExcessiveImports"})
+@SuppressWarnings({"checkstyle:ReturnCount", "PMD.ExcessiveImports"})
 /*
 1) Suppresses return count to allow multiple returncodes while checking input fields.
 2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
