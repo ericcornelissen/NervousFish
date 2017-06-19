@@ -20,9 +20,6 @@ import java.security.spec.RSAPublicKeySpec;
  * An adapter to the default Java class for generating keys
  */
 public final class KeyGeneratorAdapter implements IKeyGenerator {
-
-    private static final long serialVersionUID = -5933759426888012276L;
-
     private static final Logger LOGGER = LoggerFactory.getLogger("KeyGeneratorAdapter");
 
     private static final String RSA_KEY_ALGORITHM = "RSA";

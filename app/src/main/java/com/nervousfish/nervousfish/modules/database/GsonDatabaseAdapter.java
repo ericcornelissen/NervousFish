@@ -36,8 +36,6 @@ import javax.crypto.SecretKey;
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "PMD.TooManyMethods"})
 public final class GsonDatabaseAdapter implements IDatabase {
-
-    private static final long serialVersionUID = -4101015873770268925L;
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_CREATED = "Database is not created";

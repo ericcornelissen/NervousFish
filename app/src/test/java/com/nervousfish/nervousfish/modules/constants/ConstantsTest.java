@@ -49,24 +49,4 @@ public class ConstantsTest {
     public void getSDPRecord() throws Exception {
         assertNotNull(constants.getSDPRecord());
     }
-
-    @Test
-    public void testSerialization() throws IOException, ClassNotFoundException {
-        try (
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(bos)
-        ) {
-            oos.writeObject(constants);
-            byte[] bytes = bos.toByteArray();
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                 ObjectInputStream ois = new ObjectInputStream(bis)) {
-                Object constants1 = ois.readObject();
-                assertTrue(constants1.getClass().equals(Constants.class));
-                Constants constants2 = (Constants) constants1;
-                assertEquals(constants.getDatabaseContactsPath(), constants2.getDatabaseContactsPath());
-                assertEquals(constants.getDatabasePath(), constants2.getDatabasePath());
-                assertEquals(constants.getDatabaseUserdataPath(), constants2.getDatabaseUserdataPath());
-            }
-        }
-    }
 }
