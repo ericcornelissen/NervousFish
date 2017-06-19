@@ -15,7 +15,6 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -50,7 +49,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private Button doneButton;
     private ArrayList<SingleTap> taps;
     private IServiceLocator serviceLocator;
-    private IDatabase database;
     private IBluetoothHandler bluetoothHandler;
     private Contact contactReceived;
 
@@ -63,7 +61,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_rhythm_create);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
@@ -195,7 +192,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
-            this.contactReceived = (Contact) event.getData();;
+            this.contactReceived = (Contact) event.getData();
         }
     }
 

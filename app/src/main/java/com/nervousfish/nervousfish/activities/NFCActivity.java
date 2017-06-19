@@ -41,7 +41,6 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     private IServiceLocator serviceLocator;
     private byte[] bytes;
     private NfcAdapter nfcAdapter;
-    private IDatabase database;
 
     /**
      * {@inheritDoc}
@@ -50,16 +49,16 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_nfc);
-
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
 
         // Check for available NFC Adapter
         this.nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         LOGGER.info("Start creating an NDEF message to beam");
         Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) this.findViewById(R.id.nfc_gif));
+
+        final IDatabase database = this.serviceLocator.getDatabase();
         try {
-            final Profile profile = this.database.getProfile();
+            final Profile profile = database.getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {} , public key: {} ", profile.getName(),
