@@ -137,7 +137,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
-            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
+            final Contact myProfileAsContact = new Contact(profile.getName(),
+                    new Ed25519Key("Ed25519 key", "73890ien"), profile.getIban());
             final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (IOException e) {

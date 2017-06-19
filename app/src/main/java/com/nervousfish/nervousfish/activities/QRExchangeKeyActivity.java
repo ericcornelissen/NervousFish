@@ -82,8 +82,9 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
     private void drawQRCode() {
         final KeyPair keyPair = this.profile.getKeyPairs().get(0);
         final IKey publicKey = keyPair.getPublicKey();
-        final Bitmap qrCode = QRGenerator.encode(String.format("%s;%s %s %s",
-                this.profile.getName(), publicKey.getType(), publicKey.getName(), publicKey.getKey()));
+        final Bitmap qrCode = QRGenerator.encode(String.format("%s;%s;%s %s %s",
+                this.profile.getName(), this.profile.getIban(), publicKey.getType(),
+                publicKey.getName(), publicKey.getKey()));
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
