@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.exceptions;
 
-import java.io.IOException;
-
 /**
  * Thrown when there's an issue while encrypting.
  */

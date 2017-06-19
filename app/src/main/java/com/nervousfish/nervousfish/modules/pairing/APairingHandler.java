@@ -2,10 +2,11 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.exceptions.SerializationException;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
-import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,13 +21,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
  */
-@SuppressWarnings("checkstyle:classdataabstractioncoupling")
+@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "checkstyle:ClassFanOutComplexity"})
+// 1 / 2) Suppressed the code base if cluttered if we split this class that's already quite small in even smaller classes
 abstract class APairingHandler implements IPairingHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
@@ -105,7 +104,7 @@ abstract class APairingHandler implements IPairingHandler {
             oos.flush();
             bytes = bos.toByteArray();
         } catch (final IOException e) {
-            LOGGER.error("Couldn't serialize object", e);
+            LOGGER.error("Couldn't serialize the object", e);
             throw new SerializationException(e);
         }
         final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
@@ -140,6 +139,6 @@ abstract class APairingHandler implements IPairingHandler {
      * Ensure that the instance meets its class invariant
      */
     private void ensureClassInvariant() {
-        assertThat(this.serviceLocator, notNullValue());
+        Validate.notNull(this.serviceLocator);
     }
 }

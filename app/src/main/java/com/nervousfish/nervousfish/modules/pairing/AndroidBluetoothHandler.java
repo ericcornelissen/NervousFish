@@ -79,9 +79,14 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     @Override
     public void send(final byte[] bytes) {
         this.getService().write(bytes);
-        LOGGER.info("Bytes written: {}", Arrays.toString(bytes));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Bytes written: {}", Arrays.toString(bytes));
+        }
     }
 
+    /**
+     * Called by Greenrobot's Eventbus whenever a received byte array is decrypted
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDecryptedBytesReceivedEvent(final NewDecryptedBytesReceivedEvent event) {
         this.getDataReceiver().get().dataReceived(event.getBytes());

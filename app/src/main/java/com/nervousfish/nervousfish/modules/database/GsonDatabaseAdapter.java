@@ -285,7 +285,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String databaseJson = gsonParser.toJson(this.getDatabase());
         LOGGER.info("Database translated to json: {}", databaseJson);
 
-        try(Writer writer = this.fileSystem.getWriter(this.databasePath)) {
+        try (Writer writer = this.fileSystem.getWriter(this.databasePath)) {
             final SecretKey key = this.encryptor.makeKeyFromPassword(password);
             final String databaseEncrypted = this.encryptor.encryptWithPassword(databaseJson, key);
             writer.write(databaseEncrypted);

@@ -3,8 +3,6 @@ package com.nervousfish.nervousfish.modules.cryptography;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
 import com.nervousfish.nervousfish.modules.IModule;
 
-import java.security.spec.InvalidKeySpecException;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;

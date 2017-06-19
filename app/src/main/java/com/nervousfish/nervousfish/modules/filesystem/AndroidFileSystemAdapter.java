@@ -30,7 +30,8 @@ import java.nio.charset.StandardCharsets;
  * it's just not possible to work without all the imports, they are small but necessairy for safe file
  * writing and reading.
  */
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "ClassFanOutComplexity"})
+// 1 / 2) Suppressed because the java.io library is very verbose
 public final class AndroidFileSystemAdapter implements IFileSystem {
 
     private static final long serialVersionUID = 1937542180968231197L;

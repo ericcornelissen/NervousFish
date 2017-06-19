@@ -88,9 +88,6 @@ public final class VisualVerificationActivity extends Activity {
 
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact, this.securityCode);
-        } catch (final IOException e) {
-            LOGGER.error("Could not send my contact to other device");
-            throw new NoBluetoothException(e);
         } catch (final BadPaddingException | IllegalBlockSizeException e) {
             LOGGER.error("Could not encrypt the contact");
             throw new EncryptionException(e);
