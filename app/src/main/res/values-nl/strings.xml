@@ -56,6 +56,7 @@
     <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
     <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
+    <string name="create_profile_invalid_iban">Het IBAN nummer is ongeldig, vul alsjeblieft een geldige in. Zorg er ook voor dat de letters hoofdletters zijn.</string>
 
     <string name="name_create_profile">Naam*</string>
     <string name="repeat_password">Herhaal wachtwoord*</string>

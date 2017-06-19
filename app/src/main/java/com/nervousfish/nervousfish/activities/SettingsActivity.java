@@ -3,7 +3,9 @@ package com.nervousfish.nervousfish.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -26,9 +28,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. This
@@ -121,12 +125,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 firstLoadIban = false;
 
                 try {
-                    final String iban = serviceLocator.getDatabase().getProfile().getIban().toString();
-                    if (iban == null) {
-                        preference.setSummary("");
-                    } else {
-                        preference.setSummary(iban);
-                    }
+                    final String iban = serviceLocator.getDatabase().getProfile().getIbanAsString();
+                    preference.setSummary(iban);
                     return;
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database while loading IBAN for the first time", e);
@@ -135,15 +135,27 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 preference.setSummary(stringValue);
             } else {
                 try {
-                    LOGGER.info("Updating profile iban");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(
-                            new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
+                    System.out.println(IBANVerifier.isValidIBAN(stringValue));
+                    System.out.println(stringValue);
+                    if (IBANVerifier.isValidIBAN(stringValue)) {
+                        LOGGER.info("Updating profile iban");
+                        serviceLocator.getDatabase().updateProfile(
+                                new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
+                        preference.setSummary(stringValue);
+                    } else {
+                        preference.setSummary("INVALID IBAN");
+                        final Context context = preference.getContext();
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(context.getString(R.string.invalid_iban))
+                                .setContentText(context.getString(R.string.invalid_iban_explanation))
+                                .setConfirmText(context.getString(R.string.dialog_ok))
+                                .setConfirmClickListener(null)
+                                .show();
+                    }
                 } catch (IOException e) {
                     LOGGER.error("Couldn't get profiles from database for IBAN", e);
                 }
-
-                preference.setSummary(stringValue);
             }
         }
 
@@ -202,7 +214,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     .getDefaultSharedPreferences(this)
                     .edit()
                     .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
-                    .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIban().toString())
+                    .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIbanAsString())
                     .apply();
         } catch (IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);

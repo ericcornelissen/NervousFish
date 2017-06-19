@@ -147,7 +147,7 @@ public final class Constants implements IConstants {
      * The general result codes for inputfield checks.
      */
     public enum InputFieldResultCodes {
-        CORRECT_FIELD, EMPTY_FIELD, TOO_SHORT_FIELD
+        CORRECT_FIELD, EMPTY_FIELD, TOO_SHORT_FIELD, INVALID_IBAN
     }
 
     /**
@@ -155,6 +155,6 @@ public final class Constants implements IConstants {
      */
     public enum ExplicitFieldResultCodes {
         INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
-        PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY
+        PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY, INVALID_IBAN
     }
 }

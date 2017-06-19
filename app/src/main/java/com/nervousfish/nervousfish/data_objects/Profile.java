@@ -90,6 +90,18 @@ public final class Profile implements Serializable {
         return this.iban;
     }
 
+    /**
+     * Retuns the string of the IBAN, and an empty string if the object is null.
+     *
+     * @return String of the IBAN, and an empty string if the object is null;
+     */
+    public String getIbanAsString() {
+        if (this.getIban() != null) {
+            return this.getIban().toString();
+        }
+        return "";
+    }
+
 
     /**
      * {@inheritDoc}

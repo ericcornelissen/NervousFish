@@ -56,6 +56,7 @@
     <string name="create_profile_error_adding_to_database">Error while adding profile to database</string>
     <string name="create_profile_passwords_not_equal">Please make sure you typed the same password twice.</string>
     <string name="create_profile_all_fields_empty">Please fill in the fields</string>
+    <string name="create_profile_invalid_iban">The IBAN number is invalid, please enter a valid one.</string>
 
     <string name="name_create_profile">Name*</string>
     <string name="repeat_password">Repeat password*</string>
@@ -88,7 +89,7 @@
     <string name="contact_iban">IBAN</string>
     <string name="contact_information">Contact information:</string>
     <string name="contact_public_keys">Public keys:</string>
-    <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one.</string>
+    <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one. Also make sure the letters are capitalized.</string>
 
     <!-- RhythmActivity -->
     <string name="tap_me">Tap me!</string>

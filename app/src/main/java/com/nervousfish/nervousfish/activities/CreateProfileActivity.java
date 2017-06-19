@@ -26,6 +26,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
@@ -34,6 +35,7 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFi
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.INVALID_IBAN;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
 
@@ -87,7 +89,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case INPUT_CORRECT:
                 final String name = nameInput.getText().toString();
                 final String password = passwordInput.getText().toString();
-                final IBAN iban = new IBAN(ibanInput.getText().toString());
+                IBAN iban = null;
+                if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
+                    iban = new IBAN(ibanInput.getText().toString());
+                }
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
@@ -119,6 +124,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
                 break;
+            case INVALID_IBAN:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_invalid_iban));
+                break;
 
             default:
                 break;
@@ -137,6 +145,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.InputFieldResultCodes nameValidation = this.helper.validateName(this.nameInput);
         final Constants.InputFieldResultCodes passwordValidation = this.helper.validatePassword(this.passwordInput);
         final Constants.InputFieldResultCodes repeatPasswordValidation = this.helper.validatePassword(this.repeatPasswordInput);
+        final Constants.InputFieldResultCodes ibanValidation = this.helper.validateIban(this.ibanInput);
 
         if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
                 && repeatPasswordValidation == EMPTY_FIELD) {
@@ -147,6 +156,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
             return PASSWORD_EMPTY;
         } else if (passwordValidation == TOO_SHORT_FIELD) {
             return PASSWORD_TOO_SHORT;
+        } else if (ibanValidation == INVALID_IBAN) {
+            return Constants.ExplicitFieldResultCodes.INVALID_IBAN;
         } else if (this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
             return INPUT_CORRECT;
         } else {
