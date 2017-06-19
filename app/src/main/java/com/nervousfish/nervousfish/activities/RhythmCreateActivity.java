@@ -52,7 +52,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private IDatabase database;
     private IBluetoothHandler bluetoothHandler;
-    private Contact dataReceived;
+    private byte[] dataReceived;
 
     /**
      * {@inheritDoc}
@@ -187,20 +187,14 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when a new data is received.
+     * Called when new bytes are received.
      *
-     * @param event Contains additional data about the event
+     * @param event Contains the bytes that are received
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called");
-        if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
-        }
+    public void onNewBytesReceivedEvent(final NewBytesReceivedEvent event) {
+        LOGGER.info("onNewBytesReceivedEvent called");
+        this.dataReceived = event.getBytes();
     }
 
     /**

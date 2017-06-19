@@ -34,7 +34,7 @@ public final class VisualVerificationActivity extends Activity {
     private IServiceLocator serviceLocator;
     private int securityCode;
     private int numTaps;
-    private Contact dataReceived;
+    private byte[] dataReceived;
 
     /**
      * {@inheritDoc}
@@ -121,25 +121,14 @@ public final class VisualVerificationActivity extends Activity {
     }
 
     /**
-     * Called when a new data is received.
+     * Called when a new byte array is received.
      *
-     * @param event Contains additional data about the event
+     * @param event Contains the byte array
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called");
-        if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
-        }
+    public void onNewBytesReceivedEvent(final NewBytesReceivedEvent event) {
+        LOGGER.info("onNewBytesReceivedEvent called");
+        this.dataReceived = event.getBytes();
     }
 
 }
