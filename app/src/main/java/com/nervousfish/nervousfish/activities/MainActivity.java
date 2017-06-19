@@ -85,10 +85,9 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         // Start Bluetooth
+        final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         try {
-            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
             bluetoothHandler.start();
         } catch (final NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button", e);
@@ -99,11 +98,7 @@ public final class MainActivity extends AppCompatActivity {
             this.enableBluetooth(false);
         }
 
-        // Bluetooth exchange result
-        final Intent intent = this.getIntent();
-        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE);
-        this.showSuccessfulBluetoothPopup(successfulBluetooth);
-
+        // Check if NFC is available
         if (NfcAdapter.getDefaultAdapter(this) == null) {
             LOGGER.info("NFC not available on device, disabling button");
             final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_nfc);
@@ -114,24 +109,14 @@ public final class MainActivity extends AppCompatActivity {
         this.sorter = new MainActivitySorter(this);
 
         // Fab button listeners, inserted programmatically to support older devices
-        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
-        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
-        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
+        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(v -> onPairingButtonClicked(v));
+        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(v -> onPairingButtonClicked(v));
+        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(v -> onPairingButtonClicked(v));
+
+        // Bluetooth exchange result
+        final Intent intent = this.getIntent();
+        final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        ContactReceivedHelper.newContactReceived(this.database, this, contact);
 
         LOGGER.info("Activity created");
     }
@@ -213,7 +198,7 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The sort floating action button that was clicked
      */
     public void onSortButtonClicked(final View view) {
-        sorter.onSortButtonClicked(view);
+        this.sorter.onSortButtonClicked(view);
     }
 
     /**
@@ -298,25 +283,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a popup that adding a contact went fine if the boolean
-     * added in the intent is true.
-     *
-     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
-     */
-    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
-        if (successfulBluetooth != null) {
-            final boolean success = (boolean) successfulBluetooth;
-            if (success) {
-                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(this.getString(R.string.contact_added_popup_title))
-                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
-                        .setConfirmText(this.getString(R.string.dialog_ok))
-                        .show();
-            }
-        }
-    }
-
-    /**
      * Prompt user to enable Bluetooth if it is disabled.
      */
     private void enableBluetooth(final boolean buttonClicked) {
@@ -354,6 +320,9 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Prompt user to enable NFC if it is disabled.
+     */
     private void enableNFC() {
         final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 

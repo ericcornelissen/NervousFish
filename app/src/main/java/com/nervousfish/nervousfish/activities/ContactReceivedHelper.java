@@ -45,6 +45,10 @@ enum ContactReceivedHelper {
      * @param contact  The newly received {@link Contact}
      */
     static void newContactReceived(final IDatabase database, final Activity activity, final Contact contact) {
+        if (contact == null) {
+            return;
+        }
+
         switch (checkExists(database, contact)) {
             case NOT:
                 LOGGER.info("Adding contact to database...");

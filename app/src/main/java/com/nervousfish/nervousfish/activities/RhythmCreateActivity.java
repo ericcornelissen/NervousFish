@@ -52,7 +52,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private IServiceLocator serviceLocator;
     private IDatabase database;
     private IBluetoothHandler bluetoothHandler;
-    private Contact dataReceived;
+    private Contact contactReceived;
 
     /**
      * {@inheritDoc}
@@ -143,9 +143,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }
+
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.contactReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, this.taps);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
@@ -155,7 +156,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      *
      * @param v - the {@link View} clicked
      */
-
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
         this.taps = new ArrayList<>();
@@ -195,11 +195,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
+            this.contactReceived = (Contact) event.getData();;
         }
     }
 
