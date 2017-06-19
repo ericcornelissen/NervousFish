@@ -48,10 +48,7 @@ enum ContactReceivedHelper {
     static void newContactReceived(final IDatabase database, final Activity activity, final Contact contact) {
         Validate.notNull(database);
         Validate.notNull(activity);
-
-        if (contact == null) {
-            return;
-        }
+        Validate.notNull(contact);
 
         switch (checkExists(database, contact)) {
             case NOT:

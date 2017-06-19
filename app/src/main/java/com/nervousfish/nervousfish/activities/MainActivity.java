@@ -101,29 +101,29 @@ public final class MainActivity extends AppCompatActivity {
         this.sorter = new MainActivitySorter(this);
 
         // Fab button listeners, inserted programmatically to support older devices
-        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(v -> onPairingButtonClicked(v));
-        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(v -> onPairingButtonClicked(v));
-        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(v -> onPairingButtonClicked(v));
+        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(this::onPairingButtonClicked);
+        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(this::onPairingButtonClicked);
+        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(this::onPairingButtonClicked);
 
         // Bluetooth exchange result
         final Intent intent = this.getIntent();
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        ContactReceivedHelper.newContactReceived(this.database, this, contact);
+        if (contact != null) {
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
+        }
 
         LOGGER.info("Activity created");
     }
 
     /**
-     * Tries to start up bluetooth:
-     * if it is already enabled, do nothing
-     * if bluetooth is not enabled yet, show a popup to enable it
-     * if the device has no bluetooth, disable the bluetooth button
+     * Tries to start bluetooth:
+     * - If Bluetooth is already enabled, do nothing
+     * - If Bluetooth is not enabled yet, prompt the user to enable it
+     * - If the device has no Bluetooth, disable the Bluetooth button
      */
     private void startBluetooth() {
         final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-        // Start Bluetooth
         try {
-            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
             bluetoothHandler.start();
         } catch (final NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button", e);
