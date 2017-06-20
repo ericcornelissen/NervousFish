@@ -1,8 +1,10 @@
 package com.nervousfish.nervousfish.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
+import android.view.View;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
@@ -78,10 +80,13 @@ public class MainSteps {
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
+    }
 
+    @Given("^I dismiss the enable Bluetooth popup$")
+    public void iDismissTheEnableBluetoothPopup() {
         try {
             onView(withText(R.string.no)).perform(click());
-        } catch (NoMatchingViewException ignore) { }
+        } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
     }
 
     @Given("^there is a contact with the name (.*?) in the database$")
@@ -172,12 +177,20 @@ public class MainSteps {
 
     @Then("^I should go to the Bluetooth activity from main$")
     public void iShouldGoToTheBluetoothActivity() {
-        // intended(hasComponent(BluetoothConnectionActivity.class.getName()));
+        final Activity activity = this.mActivityRule.getActivity();
+        final View bluetoothButtom = activity.findViewById(R.id.pairing_menu_bluetooth);
+        if (bluetoothButtom.isEnabled()) {
+            // intended(hasComponent(BluetoothConnectionActivity.class.getName()));
+        }
     }
 
     @Then("^I should go to the NFC activity from main$")
     public void iShouldGoToTheNFCActivity() {
-        intended(hasComponent(NFCActivity.class.getName()));
+        final Activity activity = this.mActivityRule.getActivity();
+        final View nfcButton = activity.findViewById(R.id.pairing_menu_nfc);
+        if (nfcButton.isEnabled()) {
+            intended(hasComponent(NFCActivity.class.getName()));
+        }
     }
 
     @Then("^I should go to the QR activity from main$")
