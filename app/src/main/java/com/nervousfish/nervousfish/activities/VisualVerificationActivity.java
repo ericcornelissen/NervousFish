@@ -33,7 +33,7 @@ public final class VisualVerificationActivity extends Activity {
     private IServiceLocator serviceLocator;
     private int securityCode;
     private int numTaps;
-    private Contact dataReceived;
+    private Contact contactReceived;
 
     /**
      * {@inheritDoc}
@@ -79,7 +79,6 @@ public final class VisualVerificationActivity extends Activity {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-
             LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
                     + keyPair.getPublicKey().toString());
 
@@ -91,7 +90,7 @@ public final class VisualVerificationActivity extends Activity {
 
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.contactReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, this.securityCode);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
@@ -128,16 +127,7 @@ public final class VisualVerificationActivity extends Activity {
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
+            this.contactReceived = (Contact) event.getData();
         }
     }
 
