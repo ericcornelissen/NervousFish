@@ -15,12 +15,12 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,22 +37,24 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * The RhythmCreateActivity is an Activity where you can tap a sequence.
  */
-@SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized"})
+@SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized", "PMD.ExcessiveImports"})
 // 1) List is cast to an ArrayList, but that is needed to put in an intent.
 // 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
+// 3) We cannot easily reduce the number of imports because most of them are plain data objects to events
 public final class RhythmCreateActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private static final int MINIMUM_TAPS = 3;
+    private static final int DECIMAL_SIZE = 10;
+    private static final int MAX_RHYTHM_ENCODING = 10;
 
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
     private ArrayList<SingleTap> taps;
     private IServiceLocator serviceLocator;
-    private IDatabase database;
     private IBluetoothHandler bluetoothHandler;
-    private Contact dataReceived;
+    private Contact contactReceived;
 
     /**
      * {@inheritDoc}
@@ -63,7 +65,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_rhythm_create);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
@@ -138,14 +139,15 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+            final long encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }
+
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.contactReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, this.taps);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
@@ -155,7 +157,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      *
      * @param v - the {@link View} clicked
      */
-
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
         this.taps = new ArrayList<>();
@@ -195,11 +196,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
         if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
+            this.contactReceived = (Contact) event.getData();
         }
     }
 
@@ -246,7 +243,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param taps The taps that should be encoded to a key
          * @return The unique key that corresponds to the taps
          */
-        int getEncryptionKey(final List<SingleTap> taps) {
+        long getEncryptionKey(final List<SingleTap> taps) {
+            Validate.noNullElements(taps);
+            Validate.isTrue(taps.size() >= MINIMUM_TAPS);
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
@@ -358,16 +357,26 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param breakpoint The boundary between a short and long interval
          * @return The key as an integer
          */
-        private int generateKey(final long breakpoint) {
-            int key = 0;
+        private long generateKey(final long breakpoint) {
+            long key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
-                if (interval < breakpoint) {
+                if (interval <= breakpoint) {
                     counter++;
                 } else {
                     key += StrictMath.pow(2, counter);
                     counter++;
                 }
+            }
+            long tmpIntervalSize = this.intervals.size();
+            int startValue = 1;
+            while (tmpIntervalSize >= startValue * DECIMAL_SIZE) {
+                startValue *= DECIMAL_SIZE;
+            }
+            for (int i = startValue; i >= 1; i /= DECIMAL_SIZE) {
+                final long l = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(DECIMAL_SIZE, MAX_RHYTHM_ENCODING) * i;
+                key += l;
+                tmpIntervalSize -= i * Math.floor(tmpIntervalSize / i);
             }
             return key;
         }

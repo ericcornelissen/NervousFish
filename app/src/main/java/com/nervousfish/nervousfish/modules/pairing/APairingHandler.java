@@ -81,7 +81,7 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object, final int key) {
+    public final void send(final Serializable object, final long key) {
         LOGGER.info("Begin writing object encoded with key: {}", key);
         this.send(this.objectToBytes(object));
     }
