@@ -32,7 +32,7 @@ public class LoginSteps {
     public ActivityTestRule<LoginActivity> mActivityRule =
             new ActivityTestRule<>(LoginActivity.class, true, false);
 
-    @Given("^I am viewing the activity_login activity$")
+    @Given("^I am viewing the login activity$")
     public void iAmViewingTheLoginActivity() throws IOException {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
@@ -43,7 +43,7 @@ public class LoginSteps {
         onView(withId(R.id.login_password_input)).perform(typeText(password));
     }
 
-    @When("^I press the activity_login button$")
+    @When("^I press the login button$")
     public void iPressTheLoginButton() {
         onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
     }

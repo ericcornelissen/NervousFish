@@ -139,7 +139,7 @@ public class MainSteps {
         intended(hasComponent(MainActivity.class.getName()));
     }
 
-    @Then("^I should go to the activity_login activity after pressing back$")
+    @Then("^I should go to the login activity after pressing back$")
     public void iShouldGoToTheLoginActivity() {
         intended(hasComponent(LoginActivity.class.getName()));
     }
