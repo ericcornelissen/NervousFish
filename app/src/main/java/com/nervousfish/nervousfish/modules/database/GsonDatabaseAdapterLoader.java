@@ -59,7 +59,6 @@ class GsonDatabaseAdapterLoader implements Serializable {
      */
     private String readDatabaseToString() throws IOException {
         final StringBuilder databaseFileStringBuilder = new StringBuilder();
-
         // Get the database from the database file
         try (BufferedReader databaseReader = (BufferedReader) this.fileSystem.getReader(this.databasePath)) {
 
@@ -104,7 +103,6 @@ class GsonDatabaseAdapterLoader implements Serializable {
      * @return The secretKey made from the password\
      */
     public SecretKey loadKey(final String password) throws IOException, InvalidKeySpecException {
-        this.checkPassword(password);
         if (this.checkPassword(password)) {
             return this.encryptor.makeKeyFromPassword(password);
         } else {

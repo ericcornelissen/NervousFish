@@ -42,12 +42,9 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
  * used.
  */
 @SuppressWarnings({"checkstyle:ReturnCount", "PMD.ExcessiveImports"})
-/*
-1) Suppresses return count to allow multiple returncodes while checking input fields.
-2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
-    to outsource to another class
- */
-
+// 1) Suppresses return count to allow multiple returncodes while checking input fields.
+// 2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
+//    to outsource to another class
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");

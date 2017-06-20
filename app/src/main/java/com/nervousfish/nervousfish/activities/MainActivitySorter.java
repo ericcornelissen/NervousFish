@@ -120,11 +120,11 @@ final class MainActivitySorter {
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) this.mainActivity.findViewById(R.id.expandable_contact_list_by_key_type);
+        final ExpandableListView expandabelView = (ExpandableListView) this.mainActivity.findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter =
                 new ContactsByKeyTypeListAdapter(this.mainActivity, this.mainActivity.getContacts());
-        ev.setAdapter(contactsByKeyTypeListAdapter);
-        ev.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+        expandabelView.setAdapter(contactsByKeyTypeListAdapter);
+        expandabelView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             this.mainActivity.openContact(childPosition);
             return false;
         });
