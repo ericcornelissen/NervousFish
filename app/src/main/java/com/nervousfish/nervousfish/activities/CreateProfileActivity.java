@@ -142,7 +142,14 @@ public final class CreateProfileActivity extends AppCompatActivity {
         if (this.ed25519CheckBox.isChecked()) {
             keytypesToGenerate.add(IKey.Types.Ed25519);
         }
-        return this.helper.generateKeyPairs(keytypesToGenerate);
+        final List<KeyPair> keyPairs = this.helper.generateKeyPairs(keytypesToGenerate.get(0));
+        if (keytypesToGenerate.size() > 1) {
+            for (int i = 1; i < keytypesToGenerate.size(); i++) {
+                keyPairs.addAll(this.helper.generateKeyPairs(keytypesToGenerate.get(i)));
+            }
+        }
+        return keyPairs;
+
     }
 
     /**
