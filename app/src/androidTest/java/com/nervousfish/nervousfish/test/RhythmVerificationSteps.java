@@ -32,7 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @CucumberOptions(features = "features")
-public class RhythmCreateActivitySteps {
+public class RhythmVerificationSteps {
 
     @Rule
     public ActivityTestRule<RhythmVerificationActivity> mActivityRule =

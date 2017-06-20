@@ -19,7 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
-public class QRExchangeKeyActivitySteps {
+public class QRExchangeSteps {
 
     @Rule
     public ActivityTestRule<QRExchangeActivity> mActivityRule =
