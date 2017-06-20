@@ -1,5 +1,5 @@
 Feature: QR exchange key activity
-    Generates QR of the user's public key and scans other public keys
+   Using the QR exchange activity
 
     Scenario: Press back
         Given I am viewing QRExchange activity
