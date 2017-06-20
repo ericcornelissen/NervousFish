@@ -122,14 +122,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ed25519_key" />
 
-            <Button
-                android:id="@+id/btn_use_existing_keypair"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/small_button_height"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/color_primary"
-                android:gravity="center"
-                android:onClick="onUseExistingKeypairClick"
+            <CheckBox android:id="@+id/checkbox_use_existing_keypair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/use_existing_keypair" />
         </LinearLayout>
 

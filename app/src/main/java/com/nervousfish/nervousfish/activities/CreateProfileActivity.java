@@ -1,8 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -10,12 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -26,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -54,9 +52,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
-    private IKey.Types customKeyType;
-    private String customPublicKey;
-    private String customPrivateKey;
 
     /**
      * {@inheritDoc}
@@ -89,22 +84,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = this.nameInput.getText().toString();
-                final String password = this.passwordInput.getText().toString();
-                final IDatabase database = this.serviceLocator.getDatabase();
-
-                try {
-                    // Create the new profile
-                    final List<KeyPair> keyPairs = this.helper.generateKeyPairs(IKey.Types.RSA);
-                    final Profile userProfile = new Profile(name, keyPairs);
-
-                    database.createDatabase(userProfile, password);
-                    database.loadDatabase(password);
-
-                    this.showProfileCreatedDialog();
-                } catch (final IOException e) {
-                    LOGGER.error("Something went wrong when creating a profile", e);
-                    this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+                if (((CheckBox) this.findViewById(R.id.checkbox_use_existing_keypair)).isChecked()) {
+                    this.customKeyHelper.askForCustomKeypair();
+                } else {
+                    this.finishCreatingProfile(this.helper.generateKeyPairs(IKey.Types.RSA));
                 }
                 break;
             case ALl_FIELDS_EMPTY:
@@ -129,11 +112,24 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when the button "Use existing keypair" is clicked
-     * @param view The button
+     * Creates the new {@link Profile}, adds it to the database and goes to {@link MainActivity}
      */
-    public void onUseExistingKeypairClick(final View view) {
-        this.customKeyHelper.askForCustomKeypair();
+    private void finishCreatingProfile(final List<KeyPair> keyPairs) {
+        final String name = this.nameInput.getText().toString();
+        final String password = this.passwordInput.getText().toString();
+        final IDatabase database = this.serviceLocator.getDatabase();
+
+        try {
+            final Profile userProfile = new Profile(name, keyPairs);
+
+            database.createDatabase(userProfile, password);
+            database.loadDatabase(password);
+
+            this.showProfileCreatedDialog();
+        } catch (final IOException e) {
+            LOGGER.error("Something went wrong when creating a profile", e);
+            this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+        }
     }
 
     /**
@@ -198,15 +194,16 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Can be given by {@link CreateProfileActivity} to classes that are allowed finish creating the new profile
+     * by supplying a new RSAKey
+     */
     final class CustomKeySetter {
-        void setKeyType(final IKey.Types type) {
-            CreateProfileActivity.this.customKeyType = type;
-        }
-        void setPublicKey(final String publicKey) {
-            CreateProfileActivity.this.customPublicKey = publicKey;
-        }
-        void setPrivateKey(final String privateKey) {
-            CreateProfileActivity.this.customPrivateKey = privateKey;
+
+        void setRSAKey(final RSAKey publicKey, final RSAKey privateKey) {
+            final List<KeyPair> keyPairs = new ArrayList<>();
+            keyPairs.add(new KeyPair("Custom key", publicKey, privateKey));
+            CreateProfileActivity.this.finishCreatingProfile(keyPairs);
         }
     }
 }
