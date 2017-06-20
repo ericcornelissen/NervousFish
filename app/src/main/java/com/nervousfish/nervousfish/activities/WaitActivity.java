@@ -28,6 +28,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
@@ -46,7 +48,7 @@ public final class WaitActivity extends Activity {
     private IDatabase database;
     private IConstants constants;
     private byte[] dataReceived;
-    private int key;
+    private long key;
 
     /**
      * {@inheritDoc}
@@ -63,7 +65,10 @@ public final class WaitActivity extends Activity {
         final Intent intent = this.getIntent();
 
         this.dataReceived = (byte[]) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        this.key = (int) intent.getSerializableExtra(ConstantKeywords.KEY);
+        final Serializable keyFromIntent = intent.getSerializableExtra(ConstantKeywords.KEY);
+        if (keyFromIntent != null) {
+            this.key = (long) intent.getSerializableExtra(ConstantKeywords.KEY);
+        }
 
         LOGGER.info("dataReceived is not null: {}, key is: {}", this.dataReceived != null, this.key);
 
@@ -157,7 +162,7 @@ public final class WaitActivity extends Activity {
     public void onNewEncryptedBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
         Validate.notNull(event);
         LOGGER.info("onNewEncryptedBytesReceivedEvent called");
-        final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(this.key));
+        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(this.key));
         final byte[] bytes;
         try {
             final String bytesAsString = new String(event.getBytes(), this.constants.getCharset());

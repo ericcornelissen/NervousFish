@@ -63,7 +63,7 @@ abstract class APairingHandler implements IPairingHandler {
                 }
             } catch (final ClassNotFoundException | IOException e) {
                 LOGGER.error(" Couldn't start deserialization!", e);
-                throw new DeserializationException(e);
+                 throw new DeserializationException(e);
             }
         });
     }
