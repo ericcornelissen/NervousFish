@@ -1,11 +1,16 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -42,13 +47,16 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
 @SuppressWarnings("checkstyle:ReturnCount")
 //Suppresses return count to allow multiple returncodes while checking input fields.
 public final class CreateProfileActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
+    private final CreateProfileCustomKeyHelper customKeyHelper = new CreateProfileCustomKeyHelper(this, new CustomKeySetter());
     private IServiceLocator serviceLocator;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private IKey.Types customKeyType;
+    private String customPublicKey;
+    private String customPrivateKey;
 
     /**
      * {@inheritDoc}
@@ -81,13 +89,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = nameInput.getText().toString();
-                final String password = passwordInput.getText().toString();
+                final String name = this.nameInput.getText().toString();
+                final String password = this.passwordInput.getText().toString();
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
+                    final List<KeyPair> keyPairs = this.helper.generateKeyPairs(IKey.Types.RSA);
                     final Profile userProfile = new Profile(name, keyPairs);
 
                     database.createDatabase(userProfile, password);
@@ -114,11 +122,18 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
                 break;
-
             default:
                 break;
 
         }
+    }
+
+    /**
+     * Called when the button "Use existing keypair" is clicked
+     * @param view The button
+     */
+    public void onUseExistingKeypairClick(final View view) {
+        this.customKeyHelper.askForCustomKeypair();
     }
 
     /**
@@ -183,4 +198,15 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    final class CustomKeySetter {
+        void setKeyType(final IKey.Types type) {
+            CreateProfileActivity.this.customKeyType = type;
+        }
+        void setPublicKey(final String publicKey) {
+            CreateProfileActivity.this.customPublicKey = publicKey;
+        }
+        void setPrivateKey(final String privateKey) {
+            CreateProfileActivity.this.customPrivateKey = privateKey;
+        }
+    }
 }
