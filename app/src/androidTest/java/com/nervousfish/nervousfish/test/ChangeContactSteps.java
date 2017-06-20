@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
@@ -16,7 +15,6 @@ import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -47,14 +45,12 @@ public class ChangeContactSteps {
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
     private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
-
-
     private static final String testpass = "Testpass";
+    private String newName;
 
     @Rule
     public ActivityTestRule<ChangeContactActivity> mActivityRule =
             new ActivityTestRule<>(ChangeContactActivity.class, true, false);
-    private String newName;
 
     @Before
     public void createDatabase() throws Exception {

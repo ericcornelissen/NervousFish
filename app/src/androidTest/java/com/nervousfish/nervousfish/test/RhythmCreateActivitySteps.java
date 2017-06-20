@@ -8,12 +8,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.RhythmVerificationActivity;
 import com.nervousfish.nervousfish.activities.WaitActivity;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -37,33 +34,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class RhythmCreateActivitySteps {
 
-    private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
-
     @Rule
     public ActivityTestRule<RhythmVerificationActivity> mActivityRule =
             new ActivityTestRule<>(RhythmVerificationActivity.class, true, false);
-
-    /**
-     * Checks if an element has a certain background color.
-     *
-     * @param color - the color that has to be checked
-     * @return a {@link Matcher}
-     */
-    private static Matcher<View> withBackgroundColor(final int color) {
-        Checks.checkNotNull(color);
-        return new BoundedMatcher<View, EditText>(EditText.class) {
-            @Override
-            public boolean matchesSafely(EditText warning) {
-
-                return color == ((ColorDrawable) warning.getBackground()).getColor();
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with text color: ");
-            }
-        };
-    }
 
     @Given("^I am viewing the create rhythm activity$")
     public void iAmViewingTheCreateRhythmActivity() throws IOException {
@@ -102,6 +75,28 @@ public class RhythmCreateActivitySteps {
     @Then("^I go to WaitActivity$")
     public void iGoToWaitActivity() {
         intended(hasComponent(WaitActivity.class.getName()));
+    }
+
+    /**
+     * Checks if an element has a certain background color.
+     *
+     * @param color - the color that has to be checked
+     * @return a {@link Matcher}
+     */
+    private static Matcher<View> withBackgroundColor(final int color) {
+        Checks.checkNotNull(color);
+        return new BoundedMatcher<View, EditText>(EditText.class) {
+            @Override
+            public boolean matchesSafely(EditText warning) {
+
+                return color == ((ColorDrawable) warning.getBackground()).getColor();
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with text color: ");
+            }
+        };
     }
 
 }

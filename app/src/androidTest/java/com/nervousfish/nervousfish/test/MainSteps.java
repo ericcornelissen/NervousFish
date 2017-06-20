@@ -49,7 +49,6 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
 @CucumberOptions(features = "features")
 public class MainSteps {
 
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, true, false);

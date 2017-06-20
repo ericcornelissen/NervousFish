@@ -40,4 +40,5 @@ public class QRExchangeKeyActivitySteps {
     public void iShouldReturnFromTheQRExchangeKeyActivity() {
         assertTrue(mActivityRule.getActivity().isFinishing());
     }
+
 }
