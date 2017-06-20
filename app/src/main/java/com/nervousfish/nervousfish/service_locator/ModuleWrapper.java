@@ -3,10 +3,13 @@ package com.nervousfish.nervousfish.service_locator;
 import com.nervousfish.nervousfish.modules.IModule;
 
 /**
- * Wraps a module and provides a package-private method to retrieve it so that only the service_locator classes can access the module.
+ * Wraps a module and provides a package-private method to retrieve it so that only the
+ * {@link ServiceLocator} can access the module.
+ *
  * @param <T> The type of the Module that the ModuleWrapper is wrapping
  */
 public final class ModuleWrapper<T extends IModule> {
+
     private final T module;
 
     /**
@@ -23,4 +26,5 @@ public final class ModuleWrapper<T extends IModule> {
     T getModule() {
         return this.module;
     }
+
 }

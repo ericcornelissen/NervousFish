@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.database;
+package com.nervousfish.nervousfish.exceptions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

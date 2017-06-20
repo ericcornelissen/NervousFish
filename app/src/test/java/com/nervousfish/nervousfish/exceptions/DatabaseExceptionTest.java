@@ -1,7 +1,7 @@
-package com.nervousfish.nervousfish.modules.database;
+package com.nervousfish.nervousfish.exceptions;
 
 import com.nervousfish.nervousfish.TestException;
-import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
+import com.nervousfish.nervousfish.exceptions.DatabaseException;
 
 import org.junit.Test;
 
@@ -10,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import static org.junit.Assert.assertTrue;
 

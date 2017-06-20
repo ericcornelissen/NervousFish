@@ -1,7 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.TestException;
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
 
 import org.junit.Test;
 
