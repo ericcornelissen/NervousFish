@@ -9,6 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +40,7 @@ public final class IbanVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");
     private IServiceLocator serviceLocator;
+    private Contact contact;
 
     /**
      * {@inheritDoc}
@@ -46,10 +48,14 @@ public final class IbanVerificationActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_nfc);
+        this.setContentView(R.layout.activity_iban_verification);
 
         this.serviceLocator = NervousFish.getServiceLocator();
+        final Intent intent = this.getIntent();
+        this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
+        ListviewActivityHelper.setText(this, this.contact.getName(), R.id.verification_page_name);
+        ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.verification_page_iban);
     }
 
     /**
@@ -59,5 +65,23 @@ public final class IbanVerificationActivity extends Activity {
     public void onBackPressed() {
         LOGGER.info("Back button was pressed");
         this.finish();
+    }
+
+    /**
+     * Gets triggered when the manual verification button is pressed.
+     *
+     * @param view The button clicked
+     */
+    public void onManualVerificationClick(final View view) {
+        LOGGER.info("Manual verification button was pressed");
+    }
+
+    /**
+     * Gets triggered when the bunq verification button is pressed.
+     *
+     * @param view The button clicked
+     */
+    public void onBunqVerificationClick(final View view) {
+        LOGGER.info("Bunq verification button was pressed");
     }
 }

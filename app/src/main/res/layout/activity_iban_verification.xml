@@ -69,6 +69,8 @@
         android:id="@+id/iban_explanation_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/twenty_padding"
+        android:layout_marginStart="@dimen/twenty_padding"
         android:layout_marginTop="@dimen/iban_verification_explanation_margin_top"
         android:layout_marginBottom="@dimen/iban_verification_explanation_margin_top"
         android:gravity="center"
@@ -140,8 +142,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/twenty_padding"
         android:layout_marginStart="@dimen/twenty_padding"
-        android:layout_marginTop="50dp"
-        android:onClick="onScanButtonClick"
+        android:layout_marginTop="@dimen/iban_verification_manual_button_margin_top"
+        android:onClick="onManualVerificationClick"
         android:text="@string/iban_manual_verification" />
 
     <Button
@@ -150,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/twenty_padding"
         android:layout_marginStart="@dimen/twenty_padding"
-        android:onClick="onScanButtonClick"
+        android:onClick="onBunqVerificationClick"
         android:text="@string/iban_bunq_verification" />
 
 </LinearLayout>
