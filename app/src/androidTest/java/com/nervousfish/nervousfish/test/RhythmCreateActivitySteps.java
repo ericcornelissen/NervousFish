@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.RhythmCreateActivity;
+import com.nervousfish.nervousfish.activities.RhythmVerificationActivity;
 import com.nervousfish.nervousfish.activities.WaitActivity;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ServiceLocator;
@@ -40,8 +40,8 @@ public class RhythmCreateActivitySteps {
     private final IServiceLocator serviceLocator = (IServiceLocator) BaseTest.accessConstructor(ServiceLocator.class, Instrumentation.filesDir);
 
     @Rule
-    public ActivityTestRule<RhythmCreateActivity> mActivityRule =
-            new ActivityTestRule<>(RhythmCreateActivity.class, true, false);
+    public ActivityTestRule<RhythmVerificationActivity> mActivityRule =
+            new ActivityTestRule<>(RhythmVerificationActivity.class, true, false);
 
     /**
      * Checks if an element has a certain background color.

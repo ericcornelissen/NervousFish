@@ -35,15 +35,15 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The RhythmCreateActivity is an Activity where you can tap a sequence.
+ * The RhythmVerificationActivity is an Activity where you can tap a sequence.
  */
 @SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized", "PMD.ExcessiveImports"})
 // 1) List is cast to an ArrayList, but that is needed to put in an intent.
 // 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
 // 3) We cannot easily reduce the number of imports because most of them are plain data objects to events
-public final class RhythmCreateActivity extends AppCompatActivity {
+public final class RhythmVerificationActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmVerificationActivity");
     private static final int MINIMUM_TAPS = 3;
     private static final int DECIMAL_SIZE = 10;
     private static final int MAX_RHYTHM_ENCODING = 10;
@@ -139,7 +139,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            final long encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+            final long encryptionKey = new RhythmVerificationActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
@@ -288,10 +288,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          */
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
-            final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
-            if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
+            final ImmutablePair<RhythmVerificationActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
+            if (closestPoint.getLeft() == RhythmVerificationActivity.Cluster.SHORT) {
                 this.clusterCenter1.add(closestPoint.getRight());
-            } else if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.LONG) {
+            } else if (closestPoint.getLeft() == RhythmVerificationActivity.Cluster.LONG) {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
                 LOGGER.error("A timestamp does neither belong to the short or long interval");
@@ -306,22 +306,22 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
          */
-        private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+        private ImmutablePair<RhythmVerificationActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
-            RhythmCreateActivity.Cluster targetCluster = null;
+            RhythmVerificationActivity.Cluster targetCluster = null;
             for (final Long interval : this.intervals) {
                 final long dist1 = interval - centerMean1;
                 if (dist1 < distance) {
                     closestPoint = interval;
                     distance = dist1;
-                    targetCluster = RhythmCreateActivity.Cluster.SHORT;
+                    targetCluster = RhythmVerificationActivity.Cluster.SHORT;
                 }
                 final long dist2 = centerMean2 - interval;
                 if (dist2 < distance) {
                     closestPoint = interval;
                     distance = dist2;
-                    targetCluster = RhythmCreateActivity.Cluster.LONG;
+                    targetCluster = RhythmVerificationActivity.Cluster.LONG;
                 }
             }
             return new ImmutablePair<>(targetCluster, closestPoint);

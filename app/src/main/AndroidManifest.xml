@@ -46,10 +46,10 @@
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.RhythmCreateActivity"
+            android:name=".activities.RhythmVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.BluetoothConnectionActivity"
+            android:name=".activities.BluetoothConnectActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.WelcomeActivity"
@@ -61,7 +61,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".activities.NFCActivity"
+            android:name=".activities.NFCExchangeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -70,7 +70,7 @@
             </intent-filter>
         <activity android:name=".activities.SelectVerificationMethodActivity" />
         <activity
-            android:name=".activities.QRExchangeKeyActivity"
+            android:name=".activities.QRExchangeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SettingsActivity"

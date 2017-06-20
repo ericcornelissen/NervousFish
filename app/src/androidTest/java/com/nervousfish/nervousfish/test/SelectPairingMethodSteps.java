@@ -6,11 +6,11 @@ import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
+import com.nervousfish.nervousfish.activities.BluetoothConnectActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.NFCActivity;
-import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
+import com.nervousfish.nervousfish.activities.NFCExchangeActivity;
+import com.nervousfish.nervousfish.activities.QRExchangeActivity;
 import com.nervousfish.nervousfish.service_locator.EntryActivity;
 
 import cucumber.api.CucumberOptions;
@@ -55,19 +55,19 @@ public class SelectPairingMethodSteps extends ActivityInstrumentationTestCase2<M
         onView(withId(R.id.pairing_menu_nfc)).perform(click());
     }
 
-    @Then("^I go to the BluetoothConnectionActivity$")
+    @Then("^I go to the BluetoothConnectActivity$")
     public void iGoToBluetoothConnection() {
-        assertEquals(getCurrentActivity().getClass(), BluetoothConnectionActivity.class);
+        assertEquals(getCurrentActivity().getClass(), BluetoothConnectActivity.class);
     }
 
     @Then("^I go to the QRActivity$")
     public void iGoToQR() {
-        assertEquals(getCurrentActivity().getClass(), QRExchangeKeyActivity.class);
+        assertEquals(getCurrentActivity().getClass(), QRExchangeActivity.class);
     }
 
-    @Then("^I go to the NFCActivity$")
+    @Then("^I go to the NFCExchangeActivity$")
     public void iGoToNFC() {
-        assertEquals(getCurrentActivity().getClass(), NFCActivity.class);
+        assertEquals(getCurrentActivity().getClass(), NFCExchangeActivity.class);
     }
 
     private Activity getCurrentActivity() {
