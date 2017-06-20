@@ -69,8 +69,10 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
+
         this.serviceLocator = NervousFish.getServiceLocator();
         this.database = this.serviceLocator.getDatabase();
+        this.popups = new MainActivityPopups(this);
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
@@ -85,14 +87,10 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        this.popups = new MainActivityPopups(this);
-        startUpBluetooth();
+        // Start Bluetooth
+        this.startBluetooth();
 
-        // Bluetooth exchange result
-        final Intent intent = this.getIntent();
-        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE);
-        this.popups.showSuccessfulBluetoothPopup(successfulBluetooth);
-
+        // Check if NFC is available
         if (NfcAdapter.getDefaultAdapter(this) == null) {
             LOGGER.info("NFC not available on device, disabling button");
             final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_nfc);
@@ -103,38 +101,29 @@ public final class MainActivity extends AppCompatActivity {
         this.sorter = new MainActivitySorter(this);
 
         // Fab button listeners, inserted programmatically to support older devices
-        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
-        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
-        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
+        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(this::onPairingButtonClicked);
+        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(this::onPairingButtonClicked);
+        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(this::onPairingButtonClicked);
+
+        // Bluetooth exchange result
+        final Intent intent = this.getIntent();
+        final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        if (contact != null) {
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
+        }
+
         LOGGER.info("Activity created");
     }
 
     /**
-     * Tries to start up bluetooth:
-     * if it is already enabled, do nothing
-     * if bluetooth is not enabled yet, show a popup to enable it
-     * if the device has no bluetooth, disable the bluetooth button
+     * Tries to start bluetooth:
+     * - If Bluetooth is already enabled, do nothing
+     * - If Bluetooth is not enabled yet, prompt the user to enable it
+     * - If the device has no Bluetooth, disable the Bluetooth button
      */
-    private void startUpBluetooth() {
+    private void startBluetooth() {
         final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-        // Start Bluetooth
         try {
-            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
             bluetoothHandler.start();
         } catch (final NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button", e);
@@ -214,7 +203,7 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The sort floating action button that was clicked
      */
     public void onSortButtonClicked(final View view) {
-        sorter.onSortButtonClicked(view);
+        this.sorter.onSortButtonClicked(view);
     }
 
     /**
@@ -312,6 +301,9 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Prompt user to enable NFC if it is disabled.
+     */
     private void enableNFC() {
         final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
