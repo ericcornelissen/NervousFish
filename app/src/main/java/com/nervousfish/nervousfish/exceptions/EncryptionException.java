@@ -20,6 +20,15 @@ public class EncryptionException extends IOException {
     }
 
     /**
+     * Constructs a new EncryptionException that's thrown when there is an issue while encrypting.
+     *
+     * @param throwable The exception that occurred the layer above
+     */
+    public EncryptionException(final Throwable throwable) {
+        super(throwable);
+    }
+
+    /**
      * Constructs a new EncryptionException that's thrown when there is an issue while
      * encrypting.
      *
