@@ -143,7 +143,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
             keytypesToGenerate.add(IKey.Types.Ed25519);
         }
         final List<KeyPair> keyPairs = new ArrayList<>();
-        for(IKey.Types type : keytypesToGenerate) {
+        for (IKey.Types type : keytypesToGenerate) {
             keyPairs.addAll(this.helper.generateKeyPairs(type));
         }
 
