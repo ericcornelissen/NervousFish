@@ -136,6 +136,14 @@ public final class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * Clear the password input.
+     */
+    private void clearPasswordInput() {
+        final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
+        passwordInput.setText("");
+    }
+
+    /**
      * Lets all its methods return false so that the copy/paste menu won't appear / work
      */
     private static final class EditPasswordSelectionCallback implements ActionMode.Callback {
@@ -225,13 +233,5 @@ public final class LoginActivity extends AppCompatActivity {
         public void swipeUp() {
             // Unused
         }
-    }
-  
-    /**
-     * Clear the password input.
-     */
-    private void clearPasswordInput() {
-        final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
-        passwordInput.setText("");
     }
 }
