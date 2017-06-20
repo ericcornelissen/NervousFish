@@ -27,11 +27,11 @@ android:
     - extra-android-m2repository
     - addon-google_apis-google-19
 
-    # The SDK version used to compile your project
+    # The SDK version used for compilation
     - android-22
     - android-26
 
-    # The emulator(s) used during your tests
+    # The emulator(s) used during tests
     - sys-img-armeabi-v7a-android-22
     - sys-img-armeabi-v7a-android-26
 
@@ -51,6 +51,15 @@ env:
     - COMPONENT=androidtest
     - COMPONENT=coveralls
 
+git:
+  depth: 5
+  lfs_skip_smudge: true
+
+licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+
 matrix:
   fast_finish: true
   allow_failures:
@@ -58,10 +67,6 @@ matrix:
     - env: COMPONENT=androidtest
     # Coveralls is nice to have, but not a must have
     - env: COMPONENT=coveralls
-
-git:
-  depth: 5
-  lfs_skip_smudge: true
 
 notifications:
   email:
