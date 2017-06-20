@@ -34,4 +34,18 @@
         <Bug code="UPM" />
         <Class name="~.*\$\$Lambda\$.*"/>
     </Match>
+
+    <!-- Suppressed because we cannot use the postfix L for functions called inline -->
+    <Match>
+        <Class name="com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper" />
+        <Method name="generateKey" />
+        <Bug pattern="ICAST_INTEGER_MULTIPLY_CAST_TO_LONG" />
+    </Match>
+
+    <!-- Suppressed because we actually need this double because the division will be rounded off otherwise! -->
+    <Match>
+        <Class name="com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper" />
+        <Method name="generateKey" />
+        <Bug pattern="ICAST_IDIV_CAST_TO_DOUBLE" />
+    </Match>
 </FindBugsFilter>
