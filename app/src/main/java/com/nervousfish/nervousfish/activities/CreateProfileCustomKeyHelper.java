@@ -1,17 +1,15 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -22,14 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-
 /**
  * Helps {@link CreateProfileActivity} by providing functions to let the user input his own custom keypair
  * instead of generating a new one.
  */
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
-// 1) Suppressed because the alerts have to import quite some views
 final class CreateProfileCustomKeyHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileCustomKeyHelper");
     private static final String CUSTOM_PUBLIC_KEY = "Custom public key";
@@ -38,6 +32,8 @@ final class CreateProfileCustomKeyHelper {
     private final DialogInterface.OnClickListener confirmKeyTypeListener;
     private final DialogInterface.OnClickListener confirmPublicKeyListener;
     private final DialogInterface.OnClickListener confirmPrivateKeyListener;
+    private final Activity activity;
+    private final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter;
     private EditText publicKeyModulusInput;
     private EditText publicKeyExponentInput;
     private EditText privateKeyModulusInput;
@@ -49,14 +45,12 @@ final class CreateProfileCustomKeyHelper {
     private String customPublicKeyExponent = "";
     private String customPrivateKeyModulus = "";
     private String customPrivateKeyExponent = "";
-    private final Activity activity;
-    private final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter;
 
     /**
      * Constructs a new helper class that provides functions to let the user input his own custom keypair
      * instead of generating a new one.
      *
-     * @param activity The activity responsible for displaying alerts
+     * @param activity            The activity responsible for displaying alerts
      * @param customKeyPairSetter Used to set the final private and public key
      */
     CreateProfileCustomKeyHelper(final Activity activity, final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter) {
@@ -88,8 +82,6 @@ final class CreateProfileCustomKeyHelper {
             LOGGER.info("Confirmation button public key clicked");
             this.customPublicKeyModulus = this.publicKeyModulusInput.getText().toString();
             this.customPublicKeyExponent = this.publicKeyExponentInput.getText().toString();
-            LOGGER.info("Public key entered is: modulus: {} - exponent: {}",
-                    this.customPublicKeyModulus, this.customPublicKeyExponent);
             if (this.customPublicKeyModulus.isEmpty() || this.customPublicKeyExponent.isEmpty()) {
                 LOGGER.warn("Public key was too short. Modulus length was: {}, exponent length was: {}",
                         this.customPublicKeyModulus.length(), this.customPublicKeyExponent.length());
@@ -102,8 +94,6 @@ final class CreateProfileCustomKeyHelper {
         this.confirmPrivateKeyListener = (dialog, which) -> {
             LOGGER.info("Confirmation button private key clicked");
             this.customPrivateKeyModulus = this.privateKeyModulusInput.getText().toString();
-            LOGGER.info("Private key entered is: modulus: {} - exponent: {}",
-                    this.customPrivateKeyModulus, this.customPrivateKeyExponent);
             if (this.customPrivateKeyModulus.isEmpty()) {
                 LOGGER.warn("Private key was too short. Modulus length was: {}, exponent length was: {}",
                         this.customPrivateKeyModulus.length(), this.customPrivateKeyExponent.length());
@@ -155,6 +145,8 @@ final class CreateProfileCustomKeyHelper {
      *
      * @param warnTooShort True if the dialog should warn the user that the key should have more than 0 characters
      */
+    @SuppressLint("InflateParams")
+    // 1) Suppressed because this view has no root because it is a dialog
     private void askForPublicKey(final boolean warnTooShort) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
 
@@ -184,6 +176,8 @@ final class CreateProfileCustomKeyHelper {
      *
      * @param warnTooShort True if the dialog should warn the user that the key should have more than 0 characters
      */
+    @SuppressLint("InflateParams")
+    // 1) Suppressed because this view has no root because it is a dialog
     private void askForPrivateKey(final boolean warnTooShort) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
 

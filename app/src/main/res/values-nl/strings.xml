@@ -62,7 +62,7 @@
     <string name="enter_public_key">Voer je public key in:</string>
     <string name="enter_private_key">Voer je private key in:</string>
     <string name="enter_public_key_too_short">De key is te kort!\nVoer je public key in:</string>
-    <string name="enter_private_keytoo_short">De key is te kort!\nVoer je private key in:</string>
+    <string name="enter_private_key_too_short">De key is te kort!\nVoer je private key in:</string>
     <string name="choose_your_keytype">Kies het type van je huidige keypair:</string>
     <string name="not_yet_implemented">Dit is nog niet mogelijk</string>
     <string name="custom_ed25519_key_not_yet_implemented">Je eigen ED25519 key invoeren in helaas nog niet mogelijk</string>
