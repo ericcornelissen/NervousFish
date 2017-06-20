@@ -64,7 +64,7 @@ public final class RSAKey implements IKey {
      */
     @Override
     public String getFormattedKey() {
-        return String.format("Exponent : %s %nModulus : %s", this.exponent, this.modulus);
+        return String.format("Modulus : %s %nExponent : %s", this.modulus, this.exponent);
     }
 
     /**
