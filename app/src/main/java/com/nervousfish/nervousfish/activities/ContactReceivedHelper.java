@@ -163,34 +163,27 @@ enum ContactReceivedHelper {
                 LOGGER.info("Confirmation button new contact name clicked");
                 final String newName = edit_newContactName.getText().toString();
                 LOGGER.info("New contact name entered is \"{}\"", newName);
-                try {
-                    if (database.contactExists(newName)) {
-                        new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText(activity.getString(R.string.contact_already_exists))
-                                .setContentText(String.format(
-                                        activity.getString(R.string.contact_already_exists_with_name),
-                                        contact.getName()))
-                                .setConfirmText(activity.getString(R.string.add_public_key_to_contact))
-                                .setCancelText(activity.getString(R.string.create_new_contact))
-                                .showCancelButton(true)
-                                .setCancelClickListener(
-                                        new ContactReceivedHelper.CreateNewContactClickListener(
-                                                activity,
-                                                database,
-                                                contact))
-                                .setConfirmClickListener(ContactReceivedHelper.CreateNewContactClickListener.this)
-                                .show();
-                    }
-                } catch (final IOException e) {
-                    LOGGER.error("Could not check if contact exists in database", e);
-                    throw new DatabaseException(e);
-                }
-                LOGGER.info("Adding contact to database");
-                try {
-                    ContactReceivedHelper.CreateNewContactClickListener.this.database.addContact(
-                            ContactReceivedHelper.CreateNewContactClickListener.this.contact);
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't add the new contact", e);
+                switch (checkExists(database, contact)) {
+                    case NOT:
+                        LOGGER.info("Adding contact to database...");
+                        try {
+                            database.addContact(contact);
+                        } catch (final IOException e) {
+                            LOGGER.error("Could not add contact to databae", e);
+                        }
+                        break;
+                    case BY_NAME:
+                        LOGGER.warn("Contact with equal name but diffent keys already existed...");
+                        handleExistingContact(database, activity, contact);
+                        break;
+                    case BY_NAME_AND_KEYS:
+                        LOGGER.warn("Contact with equal name and keys already existed...");
+                        handleDuplicateContact(activity, contact);
+                        break;
+                    default:
+                        final String error = "No exhaustive check on ContactExists";
+                        LOGGER.error(error);
+                        throw new AssertionError(error);
                 }
             }
         }
