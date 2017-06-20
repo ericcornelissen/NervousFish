@@ -243,7 +243,6 @@ public final class MainActivity extends AppCompatActivity {
             if (bluetoothAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                this.startActivity(intent);
             } else {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
@@ -252,7 +251,6 @@ public final class MainActivity extends AppCompatActivity {
             final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             if (nfcAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, NFCActivity.class));
-                this.startActivity(intent);
             } else {
                 this.enableNFC();
                 return; // Prevent `this.startActivity()`
