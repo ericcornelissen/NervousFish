@@ -15,7 +15,6 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -54,9 +53,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     private Button doneButton;
     private ArrayList<SingleTap> taps;
     private IServiceLocator serviceLocator;
-    private IDatabase database;
     private IBluetoothHandler bluetoothHandler;
-    private Contact dataReceived;
+    private Contact contactReceived;
 
     /**
      * {@inheritDoc}
@@ -67,7 +65,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_rhythm_create);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
@@ -149,9 +146,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }
+
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.contactReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, this.taps);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
@@ -161,7 +159,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      *
      * @param v - the {@link View} clicked
      */
-
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
         Validate.notNull(v);
@@ -204,11 +201,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         LOGGER.info("onNewDataReceivedEvent called");
         Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
+            this.contactReceived = (Contact) event.getData();
         }
     }
 

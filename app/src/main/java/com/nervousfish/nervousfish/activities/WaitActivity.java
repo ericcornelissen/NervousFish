@@ -12,7 +12,6 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -33,8 +32,7 @@ public final class WaitActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
-    private IDatabase database;
-    private Object dataReceived;
+    private Contact contactReceived;
     private Object tapCombination;
 
     /**
@@ -45,15 +43,12 @@ public final class WaitActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
 
         final Intent intent = this.getIntent();
-
-
-        this.dataReceived = intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
+        this.contactReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
 
-        LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.dataReceived != null, this.tapCombination != null);
+        LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.contactReceived != null, this.tapCombination != null);
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
@@ -85,8 +80,8 @@ public final class WaitActivity extends Activity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
 
-        if (this.dataReceived != null && this.tapCombination != null) {
-            this.goToMainActivity();
+        if (this.contactReceived != null && this.tapCombination != null) {
+            this.goToMainActivity(this.contactReceived);
         }
 
         LOGGER.info("Activity started");
@@ -131,11 +126,7 @@ public final class WaitActivity extends Activity {
             this.startActivityForResult(intent, 0);
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
-            this.goToMainActivity();
+            this.goToMainActivity(contact);
         }
     }
 
@@ -152,12 +143,15 @@ public final class WaitActivity extends Activity {
 
     /**
      * Launch the mainActivity at the top.
+     *
+     * @param contact The contact to give to the {@link MainActivity}.
      */
-    private void goToMainActivity() {
+    private void goToMainActivity(final Contact contact) {
         LOGGER.info("Going to the main activity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
     }
+
 }

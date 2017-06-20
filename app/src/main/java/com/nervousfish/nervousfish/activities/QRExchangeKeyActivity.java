@@ -53,7 +53,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
         this.serviceLocator = NervousFish.getServiceLocator();
 
         try {
-            this.profile = serviceLocator.getDatabase().getProfile();
+            this.profile = this.serviceLocator.getDatabase().getProfile();
         } catch (final IOException e) {
             LOGGER.error("Loading the public key went wrong", e);
         }
