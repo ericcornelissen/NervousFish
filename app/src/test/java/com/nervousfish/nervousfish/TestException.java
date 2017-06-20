@@ -22,14 +22,6 @@ public final class TestException extends RuntimeException {
     }
 
     /**
-     * Constructs a new TestException with an exception
-     * @param throwable A random exception = a random throwable
-     */
-    public TestException(final Throwable throwable) {
-        super(throwable);
-    }
-
-    /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
      * @param stream The serialized object to be deserialized
