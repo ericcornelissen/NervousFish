@@ -21,6 +21,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -53,7 +54,6 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
 @CucumberOptions(features = "features")
 public class MainSteps {
 
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, true, false);
@@ -63,7 +63,7 @@ public class MainSteps {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");
@@ -72,7 +72,6 @@ public class MainSteps {
     @After
     public void deleteDatabase() {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-
         database.deleteDatabase();
     }
 
@@ -80,10 +79,7 @@ public class MainSteps {
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
-    }
 
-    @Given("^I dismiss the enable Bluetooth popup$")
-    public void iDismissTheEnableBluetoothPopup() {
         try {
             onView(withText(R.string.no)).perform(click());
         } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
@@ -160,7 +156,7 @@ public class MainSteps {
         onView(withText(R.string.qr)).perform(click());
     }
 
-    @Then("^I should stay in the main activity after pressing back$")
+    @Then("^I should stay in the main activity from the main activity$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
     }
@@ -178,9 +174,17 @@ public class MainSteps {
     @Then("^I should go to the Bluetooth activity from main$")
     public void iShouldGoToTheBluetoothActivity() {
         final Activity activity = this.mActivityRule.getActivity();
-        final View bluetoothButtom = activity.findViewById(R.id.pairing_menu_bluetooth);
-        if (bluetoothButtom.isEnabled()) {
-            // intended(hasComponent(BluetoothConnectionActivity.class.getName()));
+        final View bluetoothButton = activity.findViewById(R.id.pairing_menu_bluetooth);
+        if (bluetoothButton.isEnabled()) {
+            try {
+                onView(withText(R.string.no)).perform(click());
+
+                // If a popup showed up, we should stay in the MainActivity (since we clicked "no")
+                intended(hasComponent(MainActivity.class.getName()));
+            } catch (NoMatchingViewException ignore) {
+                // If no popup showed up, the Bluetooth activity should be displayed
+//                intended(hasComponent(BluetoothConnectionActivity.class.getName()));
+            }
         }
     }
 
@@ -189,7 +193,15 @@ public class MainSteps {
         final Activity activity = this.mActivityRule.getActivity();
         final View nfcButton = activity.findViewById(R.id.pairing_menu_nfc);
         if (nfcButton.isEnabled()) {
-            intended(hasComponent(NFCActivity.class.getName()));
+            try {
+                onView(withText(R.string.no)).perform(click());
+
+                // If a popup showed up, we should stay in the MainActivity (since we clicked "no")
+                intended(hasComponent(MainActivity.class.getName()));
+            } catch (NoMatchingViewException ignore) {
+                // If no popup showed up, the NFC activity should be displayed
+                intended(hasComponent(NFCActivity.class.getName()));
+            }
         }
     }
 
