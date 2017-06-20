@@ -377,7 +377,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          */
         private long generateKey(final long breakpoint) {
             assert breakpoint >= 0;
-            int key = 0;
+            long key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
                 if (interval <= breakpoint) {
