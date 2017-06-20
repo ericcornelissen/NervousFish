@@ -27,9 +27,8 @@ interface IPairingHandler extends IModule, Serializable {
      *
      * @param object The object to serialize
      * @param key    The key to encrypt the message with
-     * @throws IOException When deserialization goes wrong
      */
-    void send(Serializable object, int key) throws BadPaddingException, IllegalBlockSizeException;
+    void send(Serializable object, long key) throws BadPaddingException, IllegalBlockSizeException;
 
     /**
      * Write the buffer to the world

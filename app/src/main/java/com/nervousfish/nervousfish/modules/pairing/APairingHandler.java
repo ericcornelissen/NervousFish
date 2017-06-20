@@ -98,7 +98,7 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object, final int key) throws BadPaddingException, IllegalBlockSizeException {
+    public final void send(final Serializable object, final long key) throws BadPaddingException, IllegalBlockSizeException {
         LOGGER.info("Begin writing object encoded with key: {}", key);
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -110,7 +110,7 @@ abstract class APairingHandler implements IPairingHandler {
             LOGGER.error("Couldn't serialize the object", e);
             throw new SerializationException(e);
         }
-        final SecretKey password = this.encryptor.makeKeyFromPassword(Integer.toString(key));
+        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(key));
         final String encryptedMessage = this.encryptor.encryptWithPassword(new String(bytes, this.constants.getCharset()), password);
         final ByteWrapper byteWrapper = new ByteWrapper(encryptedMessage.getBytes(this.constants.getCharset()));
         this.send(this.objectToBytes(byteWrapper));
