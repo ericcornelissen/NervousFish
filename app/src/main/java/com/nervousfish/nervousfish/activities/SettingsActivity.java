@@ -94,7 +94,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 try {
                     preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
                     return;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
                 }
 
@@ -104,7 +104,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
                     serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
 
@@ -127,7 +127,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     final String iban = serviceLocator.getDatabase().getProfile().getIbanAsString();
                     preference.setSummary(iban);
                     return;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database while loading IBAN for the first time", e);
                 }
 
@@ -135,8 +135,6 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             } else {
                 try {
                     final Profile profile = serviceLocator.getDatabase().getProfile();
-                    System.out.println(IBANVerifier.isValidIBAN(stringValue));
-                    System.out.println(stringValue);
                     if (IBANVerifier.isValidIBAN(stringValue)) {
                         LOGGER.info("Updating profile iban");
                         serviceLocator.getDatabase().updateProfile(
@@ -152,7 +150,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                                 .setConfirmClickListener(null)
                                 .show();
                     }
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database for IBAN", e);
                 }
             }
@@ -215,7 +213,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
                     .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIbanAsString())
                     .apply();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);
         }
         LOGGER.info("SettingsActivity created");

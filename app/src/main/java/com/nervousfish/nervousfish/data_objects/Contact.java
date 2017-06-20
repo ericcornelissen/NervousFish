@@ -26,7 +26,7 @@ public final class Contact implements Serializable {
     private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
-    private IBAN iban;
+    private final IBAN iban;
 
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
@@ -37,6 +37,7 @@ public final class Contact implements Serializable {
     public Contact(final String name, final IKey key) {
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
+        this.iban = null;
     }
 
     /**
@@ -64,6 +65,7 @@ public final class Contact implements Serializable {
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));
         }
+        this.iban = null;
     }
 
     /**
@@ -96,8 +98,8 @@ public final class Contact implements Serializable {
      * @return String of the IBAN, and a dash if the object is null;
      */
     public String getIbanAsString() {
-        if (this.getIban() != null) {
-            return this.getIban().toString();
+        if (this.iban != null) {
+            return this.iban.toString();
         }
         return "-";
     }
@@ -169,7 +171,7 @@ public final class Contact implements Serializable {
         private static final long serialVersionUID = -4715364587956219157L;
         private final String name;
         private final IKey[] keys;
-        private IBAN iban;
+        private final IBAN iban;
 
         /**
          * Constructs a new SerializationProxy

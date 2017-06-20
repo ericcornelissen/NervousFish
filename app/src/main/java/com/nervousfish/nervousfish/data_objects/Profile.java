@@ -23,7 +23,7 @@ public final class Profile implements Serializable {
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
     private final List<KeyPair> keyPairs;
-    private IBAN iban;
+    private final IBAN iban;
 
 
     /**
@@ -35,6 +35,7 @@ public final class Profile implements Serializable {
     public Profile(final String name, final List<KeyPair> keyPairs) {
         this.keyPairs = keyPairs;
         this.name = name;
+        this.iban = null;
     }
 
     /**

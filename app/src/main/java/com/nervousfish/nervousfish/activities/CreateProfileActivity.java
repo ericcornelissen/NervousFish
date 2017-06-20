@@ -118,6 +118,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case NAME_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_name));
                 break;
+            case INVALID_IBAN:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_invalid_iban));
+                break;
             case PASSWORD_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_password));
                 break;
@@ -126,9 +129,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 break;
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
-                break;
-            case INVALID_IBAN:
-                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_invalid_iban));
                 break;
 
             default:
@@ -208,11 +208,11 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * @return The {@link IKey.Types} of the key that is checked
      */
     public IKey.Types getKeyTypeFromInput() {
-        final RadioButton rsaCheckBox = (RadioButton) this.findViewById(R.id.checkbox_rsa_key);
-        final RadioButton ed25519CheckBox = (RadioButton) this.findViewById(R.id.checkbox_ed25519_key);
-        if (rsaCheckBox.isChecked()) {
+        final RadioButton rsaRadioButton = (RadioButton) this.findViewById(R.id.checkbox_rsa_key);
+        final RadioButton ed25519RadioButton = (RadioButton) this.findViewById(R.id.checkbox_ed25519_key);
+        if (rsaRadioButton.isChecked()) {
             return IKey.Types.RSA;
-        } else if (ed25519CheckBox.isChecked()) {
+        } else if (ed25519RadioButton.isChecked()) {
             return IKey.Types.Ed25519;
         }
         throw new IllegalArgumentException("No radio button selected");

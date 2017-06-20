@@ -81,8 +81,8 @@ public final class VisualVerificationActivity extends Activity {
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
 
-            LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: " + keyPair.getPublicKey()
-                    + ", iban:" + profile.getIban());
+            LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
+                    profile.getName(), keyPair.getPublicKey(), profile.getIban());
 
             final Contact myProfileAsContact = new Contact(profile.getName(),
                     new Ed25519Key("Ed25519 key", "73890ien"), profile.getIban());

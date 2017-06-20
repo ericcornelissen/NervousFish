@@ -121,7 +121,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             Contact contact;
             try {
                 contact = new Contact(name, key, new IBAN(iban));
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 LOGGER.info("IBAN is not valid", e);
                 contact = new Contact(name, key);
             }
