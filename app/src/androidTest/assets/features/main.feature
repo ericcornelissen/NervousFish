@@ -25,19 +25,43 @@ Feature: Main Activity
       | Zoidberg |
       | Dr. Evil |
 
+  Scenario: Clicking the Bluetooth button
+    Given I am viewing the main activity
+    When I click on the new connection button
+    And I click the button with the Bluetooth icon
+    Then I should go to the Bluetooth activity from main
+
+  Scenario: Clicking the Bluetooth button label
+    Given I am viewing the main activity
+    When I click on the new connection button
+    And I click the button with the Bluetooth text label
+    Then I should go to the Bluetooth activity from main
+
+  Scenario: Clicking the NFC button
+    Given I am viewing the main activity
+    When I click on the new connection button
+    And I click the button with the NFC icon
+    Then I should go to the NFC activity from main
+
+  Scenario: Clicking the NFC button label
+    Given I am viewing the main activity
+    When I click on the new connection button
+    And I click the button with the NFC text label
+    Then I should go to the NFC activity from main
+
   Scenario: Clicking the QR button
-      Given I am viewing the main activity
-      When I click open buttons with the plus
-      And I click the button with the QR icon
-      Then I should go to the QR activity from main
+    Given I am viewing the main activity
+    When I click on the new connection button
+    And I click the button with the QR icon
+    Then I should go to the QR activity from main
 
   Scenario: Clicking the QR button label
-        Given I am viewing the main activity
-        When I click open buttons with the plus
-        And I click the button with the QR text label
-        Then I should go to the QR activity from main
+    Given I am viewing the main activity
+    When I click on the new connection button
+    And I click the button with the QR text label
+    Then I should go to the QR activity from main
 
   Scenario: Clicking the settings button
-      Given I am viewing the main activity
-      When I click the three dots in the main activity
-      Then I should go to the settings screen
+    Given I am viewing the main activity
+    When I click the three dots in the main activity
+    Then I should go to the settings screen

@@ -238,7 +238,6 @@ public final class MainActivity extends AppCompatActivity {
             final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
-                this.startActivity(intent);
             } else {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
@@ -247,12 +246,10 @@ public final class MainActivity extends AppCompatActivity {
             final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             if (nfcAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, NFCActivity.class));
-                this.startActivity(intent);
             } else {
                 this.enableNFC();
                 return; // Prevent `this.startActivity()`
             }
-
         } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
             intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
         } else {
