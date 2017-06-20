@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_change_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/back_button_QR_exchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/color_primary"
+                    android:contentDescription="@string/go_back"
+                    android:onClick="onBackButtonClick"
+                    android:src="?attr/actionModeCloseDrawable"
+                    tools:targetApi="lollipop" />
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/app_name"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/toolbar_title_size"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/empty_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.5"
+                    android:backgroundTint="@color/color_primary"
+                    tools:ignore="ContentDescription"
+                    tools:targetApi="lollipop" />
+
+                <!-- Empty button doesn't need a description -->
+
+            </LinearLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id="@+id/iban_explanation_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/iban_verification_explanation_margin_top"
+        android:layout_marginBottom="@dimen/iban_verification_explanation_margin_top"
+        android:gravity="center"
+        android:text="@string/iban_verification_explanation" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_primary_dark"
+        android:padding="@dimen/contact_page_side_padding"
+        android:text="@string/contact_to_verify"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_primary_dark"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/contact_page_side_padding"
+        android:paddingLeft="@dimen/contact_page_side_padding"
+        android:paddingRight="@dimen/contact_page_side_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/name"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/verification_page_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dash"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_primary_dark"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/contact_page_side_padding"
+        android:paddingLeft="@dimen/contact_page_side_padding"
+        android:paddingRight="@dimen/contact_page_side_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/contact_iban"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/verification_page_iban"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dash"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/manual_iban_verification_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/twenty_padding"
+        android:layout_marginStart="@dimen/twenty_padding"
+        android:layout_marginTop="50dp"
+        android:onClick="onScanButtonClick"
+        android:text="@string/iban_manual_verification" />
+
+    <Button
+        android:id="@+id/bunq_iban_verification_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/twenty_padding"
+        android:layout_marginStart="@dimen/twenty_padding"
+        android:onClick="onScanButtonClick"
+        android:text="@string/iban_bunq_verification" />
+
+</LinearLayout>

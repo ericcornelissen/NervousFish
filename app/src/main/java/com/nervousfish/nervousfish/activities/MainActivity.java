@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -269,8 +272,23 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The view that was clicked
      */
     public void onClickDotsButton(final View view) {
-        final Intent intent = new Intent(this, SettingsActivity.class);
-        this.startActivity(intent);
+        final PopupMenu popup = new PopupMenu(this, view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.settings_menu_item) {
+                    final Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    MainActivity.this.startActivity(intent);
+                } else if (menuItem.getItemId() == R.id.delete_contact_menu_item) {
+                    final Intent intent = new Intent(MainActivity.this, IbanVerificationActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+                return false;
+            }
+        });
+        final MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.main_three_dots_menu, popup.getMenu());
+        popup.show();
     }
 
     /**

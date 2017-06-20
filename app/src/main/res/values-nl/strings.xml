@@ -146,4 +146,8 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
+
+    <!-- IBAN Verification -->
+    <string name="iban_verification_activity_title">IBAN verification</string>
+    <string name="iban_verification_explanation">Om er zeker van te zijn dat de persoon in je contacten lijst echt is kunnen we hem verifiëren via een IBAN transactie.</string>
 </resources>
