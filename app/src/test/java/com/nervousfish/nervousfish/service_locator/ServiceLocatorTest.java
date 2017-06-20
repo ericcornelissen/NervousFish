@@ -116,25 +116,6 @@ public final class ServiceLocatorTest {
     }
 
     @Test
-    public void testSerialization() throws IOException, ClassNotFoundException {
-        byte[] buf;
-        try (
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(baos)
-                ) {
-            oos.writeObject(serviceLocator);
-            buf = baos.toByteArray();
-
-            try (
-                    ByteArrayInputStream baos2 = new ByteArrayInputStream(buf);
-                    ObjectInputStream oos2 = new ObjectInputStream(baos2)
-            ) {
-                ServiceLocator object = (ServiceLocator) oos2.readObject();
-            }
-        }
-    }
-
-    @Test
     public void testSerializationModuleNotFoundException() throws IOException, ClassNotFoundException {
         byte[] buf;
         try (
