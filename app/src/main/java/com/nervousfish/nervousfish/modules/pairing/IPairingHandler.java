@@ -26,7 +26,7 @@ interface IPairingHandler extends IModule, Serializable {
      * @param key    The key to encrypt the message with. Must be positive
      * @throws IOException When deserialization goes wrong
      */
-    void send(Serializable object, int key) throws IOException;
+    void send(Serializable object, long key) throws IOException;
 
     /**
      * Write the buffer to the world

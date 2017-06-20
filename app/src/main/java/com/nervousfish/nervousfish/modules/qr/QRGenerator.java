@@ -9,15 +9,13 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 
 
 /**
@@ -75,6 +73,7 @@ public final class QRGenerator {
 
     /**
      * Deconstructs a decrypted qrmessage to a key.
+     *
      * @param qrMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */

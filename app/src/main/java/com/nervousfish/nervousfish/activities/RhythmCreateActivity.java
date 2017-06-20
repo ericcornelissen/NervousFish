@@ -41,11 +41,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 @SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized", "PMD.ExcessiveImports"})
 // 1) List is cast to an ArrayList, but that is needed to put in an intent.
 // 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
-// 3) We cannot easily reduce the coupling of this class
+// 3) We cannot easily reduce the number of imports because most of them are plain data objects to events
 public final class RhythmCreateActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
     private static final int MINIMUM_TAPS = 3;
+    private static final int DECIMAL_SIZE = 10;
+    private static final int MAX_RHYTHM_ENCODING = 10;
 
     private Button startButton;
     private Button stopButton;
@@ -140,9 +142,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
+            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
             final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+            final long encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
@@ -255,9 +257,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param taps The taps that should be encoded to a key
          * @return The unique key that corresponds to the taps
          */
-        int getEncryptionKey(final List<SingleTap> taps) {
-            Validate.notNull(taps);
-            Validate.isTrue(taps.size() >= 2);
+        long getEncryptionKey(final List<SingleTap> taps) {
+            Validate.noNullElements(taps);
+            Validate.isTrue(taps.size() >= MINIMUM_TAPS);
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
@@ -371,19 +373,29 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * Short, Long, Long = 6
          * Long, Long, Long = 7
          * @param breakpoint The boundary between a short and long interval
-         * @return The key as an integer
+         * @return The key as a Long
          */
-        private int generateKey(final long breakpoint) {
+        private long generateKey(final long breakpoint) {
             assert breakpoint >= 0;
             int key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
-                if (interval < breakpoint) {
+                if (interval <= breakpoint) {
                     counter++;
                 } else {
                     key += StrictMath.pow(2, counter);
                     counter++;
                 }
+            }
+            long tmpIntervalSize = this.intervals.size();
+            int startValue = 1;
+            while (tmpIntervalSize >= startValue * DECIMAL_SIZE) {
+                startValue *= DECIMAL_SIZE;
+            }
+            for (int i = startValue; i >= 1; i /= DECIMAL_SIZE) {
+                final long l = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(DECIMAL_SIZE, MAX_RHYTHM_ENCODING) * i;
+                key += l;
+                tmpIntervalSize -= i * Math.floor(tmpIntervalSize / i);
             }
             return key;
         }

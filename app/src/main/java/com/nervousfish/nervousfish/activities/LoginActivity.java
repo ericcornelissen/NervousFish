@@ -82,7 +82,17 @@ public final class LoginActivity extends AppCompatActivity {
      * Go to the next activity from the {@link LoginActivity}.
      */
     private void toMainActivity() {
+        this.clearPasswordInput(); // Clear the input for security
         final Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
     }
+
+    /**
+     * Clear the password input.
+     */
+    private void clearPasswordInput() {
+        final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
+        passwordInput.setText("");
+    }
+
 }
