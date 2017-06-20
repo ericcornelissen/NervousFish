@@ -121,11 +121,6 @@ public class MainSteps {
                 .perform(click());
     }
 
-    @When("^I click the button with the Bluetooth icon$")
-    public void iClickBluetoothButton() {
-        onView(withId(R.id.pairing_menu_bluetooth)).perform(click());
-    }
-
     @When("^I click the button with the NFC icon$")
     public void iClickNFCButton() {
         onView(withId(R.id.pairing_menu_nfc)).perform(click());
@@ -139,11 +134,6 @@ public class MainSteps {
     @When("^I click on the contact with the name (.*?)$")
     public void iClickOnTheContactWithTheName(final String name) {
         onView(withText(name)).perform(click());
-    }
-
-    @When("^I click the button with the Bluetooth text label$")
-    public void iClickBluetoothLabel() {
-        onView(withText(R.string.bluetooth)).perform(click());
     }
 
     @When("^I click the button with the NFC text label$")
@@ -169,23 +159,6 @@ public class MainSteps {
     @Then("^I should go to the settings screen$")
     public void iShouldGoToSettingsScreen() {
         intended(hasComponent(SettingsActivity.class.getName()));
-    }
-
-    @Then("^I should go to the Bluetooth activity from main$")
-    public void iShouldGoToTheBluetoothActivity() {
-        final Activity activity = this.mActivityRule.getActivity();
-        final View bluetoothButton = activity.findViewById(R.id.pairing_menu_bluetooth);
-        if (bluetoothButton.isEnabled()) {
-            try {
-                onView(withText(R.string.no)).perform(click());
-
-                // If a popup showed up, we should stay in the MainActivity (since we clicked "no")
-                intended(hasComponent(MainActivity.class.getName()));
-            } catch (NoMatchingViewException ignore) {
-                // If no popup showed up, the Bluetooth activity should be displayed
-//                intended(hasComponent(BluetoothConnectionActivity.class.getName()));
-            }
-        }
     }
 
     @Then("^I should go to the NFC activity from main$")
