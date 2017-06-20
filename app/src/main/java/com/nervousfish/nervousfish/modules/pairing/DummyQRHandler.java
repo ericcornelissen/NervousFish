@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
  * A handler for QR related functionality without implementation, needed because NFC is unavailable on the emulator
  */
 public final class DummyQRHandler extends APairingHandler implements IQRHandler {
-
-    private static final long serialVersionUID = -1164062335787406761L;
     private static final Logger LOGGER = LoggerFactory.getLogger("DummyQRHandler");
 
     /**
