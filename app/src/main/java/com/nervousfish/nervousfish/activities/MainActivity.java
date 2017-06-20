@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TabHost;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -122,20 +121,7 @@ public final class MainActivity extends AppCompatActivity {
                 onPairingButtonClicked(v);
             }
         });
-
-        initializeTabs();
         LOGGER.info("Activity created");
-    }
-
-    private void initializeTabs() {
-        final TabHost tabHost = (TabHost) findViewById(R.id.tabs_main_activity);
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
-            @Override
-            public void onTabChanged(String tabId) {
-                if("test".equals(tabId)) {
-                    //destroy earth
-                }
-            }});
     }
 
     /**
