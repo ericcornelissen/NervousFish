@@ -41,11 +41,6 @@ public class DataWrapperTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 // Classes in the test module cannot be deserialized ?!?
-                /*Object wrapper1 = ois.readObject();
-                assertTrue(wrapper1.getClass().equals(DataWrapper.class));
-                DataWrapper wrapper2 = (DataWrapper) wrapper1;
-                assertTrue(wrapper2.getData().getClass().equals(Test.class));
-                assertTrue(((TestSerializable) wrapper2.getData()).getName().equals("foo"));*/
             }
         }
     }
