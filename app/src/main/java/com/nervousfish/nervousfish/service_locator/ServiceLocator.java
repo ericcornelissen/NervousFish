@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.service_locator;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
@@ -22,10 +21,6 @@ import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 
 /**
  * Manages all modules and provides access to them. This class should be dependency injected into all
@@ -258,6 +253,7 @@ public class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
+    @DesignedForExtension
     public void postOnEventBus(final Object object) {
         EventBus.getDefault().post(object);
     }
@@ -290,52 +286,5 @@ public class ServiceLocator implements IServiceLocator {
         ModuleNotFoundException(final String message) {
             super(message);
         }
-
-        /**
-         * Serialize the created proxy instead of the {@link ServiceLocator.ModuleNotFoundException} instance.
-         */
-        private Object writeReplace() {
-            return new ServiceLocator.ModuleNotFoundException.SerializationProxy(this);
-        }
-
-        /**
-         * Ensure no instance of {@link ServiceLocator.ModuleNotFoundException} is created when present in the stream.
-         */
-        private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-            throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
-        }
-
-        /**
-         * A proxy representing the logical state of {@link ServiceLocator.ModuleNotFoundException}. Copies the data
-         * from that class without any consistency checking or defensive copying.
-         */
-        private static final class SerializationProxy implements Serializable {
-
-            private static final long serialVersionUID = -1930759144828515311L;
-
-            private final String message;
-            private final Throwable throwable;
-
-            /**
-             * Constructs a new SerializationProxy
-             *
-             * @param exception The current instance of the proxy
-             */
-            SerializationProxy(final ServiceLocator.ModuleNotFoundException exception) {
-                this.message = exception.getMessage();
-                this.throwable = exception.getCause();
-            }
-
-            /**
-             * Not to be called by the user - resolves a new object of this proxy
-             *
-             * @return The object resolved by this proxy
-             */
-            private Object readResolve() {
-                return new ServiceLocator.ModuleNotFoundException(this.message).initCause(this.throwable);
-            }
-        }
-
     }
-
 }
