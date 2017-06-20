@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
 /**
  * An {@link Activity} that is used for pairing using QR codes
  */
@@ -88,8 +90,9 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
     private void drawQRCode() {
         final KeyPair keyPair = this.profile.getKeyPairs().get(0);
         final IKey publicKey = keyPair.getPublicKey();
-        final Bitmap qrCode = QRGenerator.encode(String.format("%s ; %s, %s, %s",
-                this.profile.getName(), publicKey.getType(), publicKey.getName(), publicKey.getKey()));
+        final Bitmap qrCode = QRGenerator.encode(String.format("%s ; %s ; %s, %s, %s",
+                this.profile.getName(), this.profile.getIbanAsString(), publicKey.getType(),
+                publicKey.getName(), publicKey.getKey()));
 
         final ImageView imageView = (ImageView) this.findViewById(R.id.QR_code_image);
         imageView.setImageBitmap(qrCode);
@@ -109,11 +112,19 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
             LOGGER.info("Adding new contact to database");
             //Name is the first part
             final String name = result.split(SEMI_COLON)[0];
-            //Key is the second part
-            final IKey key = QRGenerator.deconstructToKey(result.split(SEMI_COLON)[1]);
+            //IBAN is the second part
+            final String iban = result.split(SEMI_COLON)[1];
+            //Key is the third part
+            final IKey key = QRGenerator.deconstructToKey(result.split(SEMI_COLON)[2]);
 
             final IDatabase database = this.serviceLocator.getDatabase();
-            final Contact contact = new Contact(name, key);
+            Contact contact;
+            try {
+                contact = new Contact(name, key, new IBAN(iban));
+            } catch (final IllegalArgumentException e) {
+                LOGGER.info("IBAN is not valid", e);
+                contact = new Contact(name, key);
+            }
             ContactReceivedHelper.newContactReceived(database, this, contact);
         }
     }

@@ -11,15 +11,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * A Java object representation (POJO) of a contact.
  */
+@SuppressWarnings({"PMD.UselessParentheses", "PMD.NullAssignment"})
+//1. The parentheses on line 125 are not useless.
+//2. We want iban to be immutable, but not a required field.
 public final class Contact implements Serializable {
 
     private static final long serialVersionUID = -4715364587956219157L;
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
+    private final IBAN iban;
 
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
@@ -30,6 +37,21 @@ public final class Contact implements Serializable {
     public Contact(final String name, final IKey key) {
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
+        this.iban = null;
+    }
+
+    /**
+     * Constructor for the {@link Contact} POJO for a single {@link IKey},
+     * and an IBAN.
+     *
+     * @param name The name of the {@link Contact}
+     * @param key  The {@link IKey} to initialize the {@link Contact} with
+     * @param iban  The IBAN of the {@link Contact}
+     */
+    public Contact(final String name, final IKey key, final IBAN iban) {
+        this.name = name;
+        this.keys.add(SerializationUtils.clone(key));
+        this.iban = iban;
     }
 
     /**
@@ -43,10 +65,43 @@ public final class Contact implements Serializable {
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));
         }
+        this.iban = null;
+    }
+
+    /**
+     * Constructor for the {@link Contact} POJO for multiple {@link IKey}s, and
+     * the IBAN.
+     *
+     * @param name The name of the {@link Contact}
+     * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
+     * @param iban  The IBAN of the {@link Contact}
+     */
+    public Contact(final String name, final Collection<IKey> keys, final IBAN iban) {
+        this.name = name;
+        for (final IKey key : keys) {
+            this.keys.add(SerializationUtils.clone(key));
+        }
+        this.iban = iban;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public IBAN getIban() {
+        return this.iban;
+    }
+
+    /**
+     * Retuns the string of the IBAN, and a dash if the object is null.
+     *
+     * @return String of the IBAN, and a dash if the object is null;
+     */
+    public String getIbanAsString() {
+        if (this.iban != null) {
+            return this.iban.toString();
+        }
+        return "-";
     }
 
     /**
@@ -81,7 +136,8 @@ public final class Contact implements Serializable {
         }
 
         final Contact otherContact = (Contact) obj;
-        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys());
+        return this.name.equals(otherContact.getName()) && this.keys.equals(otherContact.getKeys())
+                && (this.iban == null ? otherContact.getIban() == null : this.iban.equals(otherContact.getIban()));
     }
 
     /**
@@ -89,7 +145,7 @@ public final class Contact implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keys.hashCode();
+        return this.name.hashCode() + this.keys.hashCode() + Objects.hashCode(this.iban);
     }
 
     /**
@@ -115,6 +171,7 @@ public final class Contact implements Serializable {
         private static final long serialVersionUID = -4715364587956219157L;
         private final String name;
         private final IKey[] keys;
+        private final IBAN iban;
 
         /**
          * Constructs a new SerializationProxy
@@ -124,6 +181,7 @@ public final class Contact implements Serializable {
         SerializationProxy(final Contact contact) {
             this.name = contact.name;
             this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
+            this.iban = contact.getIban();
         }
 
         /**
@@ -132,7 +190,7 @@ public final class Contact implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Contact(this.name, Arrays.asList(this.keys));
+            return new Contact(this.name, Arrays.asList(this.keys), iban);
         }
     }
 }

@@ -21,13 +21,18 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 /**
  * An {@link Activity} that allows the user to change attributes of contacts.
  */
+@SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD.CyclomaticComplexity"})
+//1 and 2. The complexity does not make the code unreadible at this moment.
 public final class ChangeContactActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ChangeContactActivity");
+    private static final String EMPTY_STRING = "";
 
     private IServiceLocator serviceLocator;
     private Contact contact;
@@ -47,8 +52,9 @@ public final class ChangeContactActivity extends AppCompatActivity {
 
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
-        ListviewActivityHelper.setName(this, this.contact.getName(), R.id.edit_contact_name_input);
+        ListviewActivityHelper.setText(this, this.contact.getName(), R.id.edit_contact_name_input);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_edit_contact);
+        ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.contact_page_change_iban);
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(new BackButtonListener());
@@ -67,11 +73,23 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
-        if (isValidName(editText.getText().toString())) {
+        final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
+        final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
+        String ibanString = editTextIBAN.getText().toString();
+        final boolean validName = isValidName(editTextName.getText().toString());
+        boolean validIban = IBANVerifier.isValidIBAN(ibanString);
+        if (!validIban && (EMPTY_STRING.equals(ibanString) || "-".equals(ibanString))) {
+            validIban = true;
+            ibanString = EMPTY_STRING;
+        }
+        if (validName && validIban) {
             //Update contact
             try {
-                final Contact newContact = new Contact(editText.getText().toString(), contact.getKeys());
+                Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys());
+                if (!ibanString.equals(EMPTY_STRING)) {
+                    newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
+                            new IBAN(ibanString));
+                }
                 if (!contact.equals(newContact)) {
                     serviceLocator.getDatabase().updateContact(contact, newContact);
                     contact = newContact;
@@ -83,6 +101,13 @@ public final class ChangeContactActivity extends AppCompatActivity {
             setResult(RESULT_FIRST_USER,
                     new Intent().putExtra(ConstantKeywords.CONTACT, contact));
             finish();
+        } else if (validName) {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.invalid_iban))
+                    .setContentText(getString(R.string.invalid_iban_explanation))
+                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setConfirmClickListener(null)
+                    .show();
         } else {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.invalid_name))
@@ -111,8 +136,11 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final View v) {
-            final EditText editText = (EditText) findViewById(R.id.edit_contact_name_input);
-            if (editText.getText().toString().equals(contact.getName())) {
+            final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
+            final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
+            if (editTextName.getText().toString().equals(contact.getName())
+                    && (editTextIBAN.getText().toString().equals(contact.getIban())
+                    || editTextIBAN.getText().toString().equals(ChangeContactActivity.this.getString(R.string.dash)))) {
                 finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)

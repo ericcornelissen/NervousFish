@@ -56,8 +56,9 @@ public final class ContactActivity extends AppCompatActivity {
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
-        ListviewActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
+        ListviewActivityHelper.setText(this, this.contact.getName(), R.id.contact_name);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_contact);
+        ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.contact_information_page_iban);
 
         final ListView lv = (ListView) this.findViewById(R.id.list_view_contact);
 
@@ -76,7 +77,8 @@ public final class ContactActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_FIRST_USER) {
             this.contact = (Contact) data.getSerializableExtra(ConstantKeywords.CONTACT);
-            ListviewActivityHelper.setName(this, this.contact.getName(), R.id.contact_name);
+            ListviewActivityHelper.setText(this, this.contact.getName(), R.id.contact_name);
+            ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.contact_information_page_iban);
         }
     }
 

@@ -11,8 +11,11 @@ import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
+
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.CORRECT_FIELD;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.INVALID_IBAN;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
 /**
@@ -23,6 +26,7 @@ final class CreateProfileHelper {
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
+    private static final String EMPTY_STRING = "";
 
     private final IKeyGenerator keyGenerator;
     private final int alertColor;
@@ -73,6 +77,22 @@ final class CreateProfileHelper {
         } else if (this.isValidName(name) == EMPTY_FIELD) {
             input.setBackgroundColor(this.alertColor);
             return EMPTY_FIELD;
+        }
+        return CORRECT_FIELD;
+    }
+
+    /**
+     * @param input The {@link EditText} to evaluate.
+     * @return The resultcode of validateIban.
+     */
+    Constants.InputFieldResultCodes validateIban(final EditText input) {
+        final String iban = input.getText().toString();
+        if (EMPTY_STRING.equals(iban) || IBANVerifier.isValidIBAN(iban)) {
+            input.setBackgroundColor(Color.TRANSPARENT);
+            return CORRECT_FIELD;
+        } else if (!IBANVerifier.isValidIBAN(iban)) {
+            input.setBackgroundColor(this.alertColor);
+            return INVALID_IBAN;
         }
         return CORRECT_FIELD;
     }

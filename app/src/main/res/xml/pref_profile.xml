@@ -13,6 +13,14 @@
             android:title="@string/display_name" />
 
         <EditTextPreference
+            android:inputType="textCapCharacters"
+            android:key="iban_number"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/contact_iban" />
+
+        <EditTextPreference
             android:key="password"
             android:summary="Enter your password"
             android:password="true"
