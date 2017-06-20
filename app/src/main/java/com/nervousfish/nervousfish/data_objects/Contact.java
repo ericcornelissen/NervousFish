@@ -18,9 +18,9 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 /**
  * A Java object representation (POJO) of a contact.
  */
-@SuppressWarnings({"PMD.ImmutableField", "PMD.UselessParentheses"})
-//1. We don't want the field iban to be final.
-//2. The parentheses on line 125 are not useless.
+@SuppressWarnings({"PMD.UselessParentheses", "PMD.NullAssignment"})
+//1. The parentheses on line 125 are not useless.
+//2. We want iban to be immutable, but not a required field.
 public final class Contact implements Serializable {
 
     private static final long serialVersionUID = -4715364587956219157L;

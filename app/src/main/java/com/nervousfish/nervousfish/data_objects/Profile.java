@@ -15,9 +15,9 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 /**
  * A Profile POJO to store a contact representing the user and the user's keypairs.
  */
-@SuppressWarnings({"PMD.ImmutableField", "PMD.UselessParentheses"})
-//1. We don't want the field iban to be final.
-//2. The parentheses on line 104 are not useless.
+@SuppressWarnings({"PMD.UselessParentheses", "PMD.NullAssignment"})
+//1. The parentheses on line 104 are not useless.
+//2. We want iban to be immutable, but not a required field.
 public final class Profile implements Serializable {
 
     private static final long serialVersionUID = 8191245914949893284L;
@@ -150,7 +150,7 @@ public final class Profile implements Serializable {
         private static final long serialVersionUID = 8191245914949893284L;
         private final String name;
         private final KeyPair[] keyPairs;
-        private IBAN iban;
+        private final IBAN iban;
 
         /**
          * Constructs a new SerializationProxy
