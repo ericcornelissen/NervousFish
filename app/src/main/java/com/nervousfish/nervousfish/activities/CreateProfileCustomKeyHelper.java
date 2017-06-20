@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.EditText;
@@ -26,10 +28,13 @@ import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
  * Helps {@link CreateProfileActivity} by providing functions to let the user input his own custom keypair
  * instead of generating a new one.
  */
+@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+// 1) Suppressed because the alerts have to import quite some views
 final class CreateProfileCustomKeyHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileCustomKeyHelper");
     private static final String CUSTOM_PUBLIC_KEY = "Custom public key";
     private static final String CUSTOM_PRIVATE_KEY = "Custom private key";
+    private static final int KEY_LINES = 5;
     private final DialogInterface.OnClickListener confirmKeyTypeListener;
     private final DialogInterface.OnClickListener confirmPublicKeyListener;
     private final DialogInterface.OnClickListener confirmPrivateKeyListener;
@@ -45,18 +50,18 @@ final class CreateProfileCustomKeyHelper {
     private String customPrivateKeyModulus = "";
     private String customPrivateKeyExponent = "";
     private final Activity activity;
-    private final CreateProfileActivity.CustomKeySetter customKeySetter;
+    private final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter;
 
     /**
      * Constructs a new helper class that provides functions to let the user input his own custom keypair
      * instead of generating a new one.
      *
      * @param activity The activity responsible for displaying alerts
-     * @param customKeySetter Used to set the final private and public key
+     * @param customKeyPairSetter Used to set the final private and public key
      */
-    CreateProfileCustomKeyHelper(final Activity activity, final CreateProfileActivity.CustomKeySetter customKeySetter) {
+    CreateProfileCustomKeyHelper(final Activity activity, final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter) {
         this.activity = activity;
-        this.customKeySetter = customKeySetter;
+        this.customKeyPairSetter = customKeyPairSetter;
 
         this.confirmKeyTypeListener = (dialog, which) -> {
             LOGGER.info("Confirmation button key type clicked");
@@ -106,7 +111,7 @@ final class CreateProfileCustomKeyHelper {
             } else {
                 final RSAKey publicKey = new RSAKey(CUSTOM_PUBLIC_KEY, this.customPublicKeyModulus, this.customPrivateKeyExponent);
                 final RSAKey privateKey = new RSAKey(CUSTOM_PRIVATE_KEY, this.customPrivateKeyModulus, this.customPrivateKeyExponent);
-                this.customKeySetter.setRSAKey(publicKey, privateKey);
+                this.customKeyPairSetter.setRSAKeyPair(publicKey, privateKey);
             }
         };
     }
@@ -153,33 +158,14 @@ final class CreateProfileCustomKeyHelper {
     private void askForPublicKey(final boolean warnTooShort) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMarginStart((int) this.activity.getResources().getDimension(R.dimen.field_margin_left));
-        layoutParams.setMarginEnd((int) this.activity.getResources().getDimension(R.dimen.field_margin_right));
+        final LayoutInflater inflater = this.activity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.enter_rsa_key, null);
+        alert.setView(dialogView);
 
-        final LinearLayout linearLayout = new LinearLayout(this.activity);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        final TextView tvModulus = new TextView(this.activity);
-        tvModulus.setLayoutParams(layoutParams);
-        tvModulus.setText(this.activity.getResources().getString(R.string.modulus));
-        this.publicKeyModulusInput = new EditText(this.activity);
+        this.publicKeyModulusInput = (EditText) dialogView.findViewById(R.id.edit_custom_rsa_key_modulus);
         this.publicKeyModulusInput.setText(this.customPublicKeyModulus);
-        this.publicKeyModulusInput.setLines(5);
-        this.publicKeyModulusInput.setMinLines(5);
-        this.publicKeyModulusInput.setMaxLines(5);
-        this.publicKeyModulusInput.setVerticalScrollBarEnabled(true);
-        this.publicKeyModulusInput.setLayoutParams(layoutParams);
-        final TextView tvExponent = new TextView(this.activity);
-        tvExponent.setLayoutParams(layoutParams);
-        tvExponent.setText(this.activity.getResources().getString(R.string.exponent));
-        this.publicKeyExponentInput = new EditText(this.activity);
-        this.publicKeyExponentInput.setInputType(TYPE_TEXT_FLAG_MULTI_LINE);
-        this.publicKeyExponentInput.setLines(5);
-        this.publicKeyExponentInput.setMinLines(5);
-        this.publicKeyExponentInput.setMaxLines(5);
-        this.publicKeyExponentInput.setVerticalScrollBarEnabled(true);
+        this.publicKeyExponentInput = (EditText) dialogView.findViewById(R.id.edit_custom_rsa_key_exponent);
         this.publicKeyExponentInput.setText(this.customPublicKeyExponent);
-        this.publicKeyExponentInput.setLayoutParams(layoutParams);
 
         alert.setTitle(this.activity.getString(R.string.use_existing_keypair));
         if (warnTooShort) {
@@ -187,11 +173,6 @@ final class CreateProfileCustomKeyHelper {
         } else {
             alert.setMessage(this.activity.getString(R.string.enter_public_key));
         }
-        linearLayout.addView(tvModulus);
-        linearLayout.addView(this.publicKeyModulusInput);
-        linearLayout.addView(tvExponent);
-        linearLayout.addView(this.publicKeyExponentInput);
-        alert.setView(linearLayout);
 
         alert.setPositiveButton(this.activity.getString(R.string.confirm), this.confirmPublicKeyListener);
         alert.setNegativeButton(this.activity.getString(R.string.cancel), null);
@@ -206,33 +187,14 @@ final class CreateProfileCustomKeyHelper {
     private void askForPrivateKey(final boolean warnTooShort) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMarginStart((int) this.activity.getResources().getDimension(R.dimen.field_margin_left));
-        layoutParams.setMarginEnd((int) this.activity.getResources().getDimension(R.dimen.field_margin_right));
+        final LayoutInflater inflater = this.activity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.enter_rsa_key, null);
+        alert.setView(dialogView);
 
-        final LinearLayout linearLayout = new LinearLayout(this.activity);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        final TextView tvModulus = new TextView(this.activity);
-        tvModulus.setLayoutParams(layoutParams);
-        tvModulus.setText(this.activity.getResources().getString(R.string.modulus));
-        this.privateKeyModulusInput = new EditText(this.activity);
+        this.privateKeyModulusInput = (EditText) dialogView.findViewById(R.id.edit_custom_rsa_key_modulus);
         this.privateKeyModulusInput.setText(this.customPrivateKeyModulus);
-        this.privateKeyModulusInput.setLines(5);
-        this.privateKeyModulusInput.setMinLines(5);
-        this.privateKeyModulusInput.setMaxLines(5);
-        this.privateKeyModulusInput.setVerticalScrollBarEnabled(true);
-        this.privateKeyModulusInput.setLayoutParams(layoutParams);
-        final TextView tvExponent = new TextView(this.activity);
-        tvExponent.setLayoutParams(layoutParams);
-        tvExponent.setText(this.activity.getResources().getString(R.string.exponent));
-        this.privateKeyExponentInput = new EditText(this.activity);
-        this.privateKeyExponentInput.setInputType(TYPE_TEXT_FLAG_MULTI_LINE);
-        this.privateKeyExponentInput.setLines(5);
-        this.privateKeyExponentInput.setMinLines(5);
-        this.privateKeyExponentInput.setMaxLines(5);
-        this.privateKeyExponentInput.setVerticalScrollBarEnabled(true);
+        this.privateKeyExponentInput = (EditText) dialogView.findViewById(R.id.edit_custom_rsa_key_exponent);
         this.privateKeyExponentInput.setText(this.customPrivateKeyExponent);
-        this.privateKeyExponentInput.setLayoutParams(layoutParams);
 
         alert.setTitle(this.activity.getString(R.string.use_existing_keypair));
         if (warnTooShort) {
@@ -240,11 +202,6 @@ final class CreateProfileCustomKeyHelper {
         } else {
             alert.setMessage(this.activity.getString(R.string.enter_private_key));
         }
-        linearLayout.addView(tvModulus);
-        linearLayout.addView(this.privateKeyModulusInput);
-        linearLayout.addView(tvExponent);
-        linearLayout.addView(this.privateKeyExponentInput);
-        alert.setView(linearLayout);
 
         alert.setPositiveButton(this.activity.getString(R.string.confirm), this.confirmPrivateKeyListener);
         alert.setNegativeButton(this.activity.getString(R.string.cancel), null);

@@ -46,7 +46,7 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
 //Suppresses return count to allow multiple returncodes while checking input fields.
 public final class CreateProfileActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
-    private final CreateProfileCustomKeyHelper customKeyHelper = new CreateProfileCustomKeyHelper(this, new CustomKeySetter());
+    private final CreateProfileCustomKeyHelper customKeyHelper = new CreateProfileCustomKeyHelper(this, new CustomKeyPairSetter());
     private IServiceLocator serviceLocator;
     private CreateProfileHelper helper;
     private EditText nameInput;
@@ -198,9 +198,14 @@ public final class CreateProfileActivity extends AppCompatActivity {
      * Can be given by {@link CreateProfileActivity} to classes that are allowed finish creating the new profile
      * by supplying a new RSAKey
      */
-    final class CustomKeySetter {
+    final class CustomKeyPairSetter {
 
-        void setRSAKey(final RSAKey publicKey, final RSAKey privateKey) {
+        /**
+         * Sets the custom key of the user to the RSA key pair specified
+         * @param publicKey The public part of the RSA key pair
+         * @param privateKey The private part of the RSA key pair
+         */
+        void setRSAKeyPair(final RSAKey publicKey, final RSAKey privateKey) {
             final List<KeyPair> keyPairs = new ArrayList<>();
             keyPairs.add(new KeyPair("Custom key", publicKey, privateKey));
             CreateProfileActivity.this.finishCreatingProfile(keyPairs);

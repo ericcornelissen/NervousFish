@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_enter_rsa_key"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:text="@string/modulus" />
+    <EditText
+        android:id="@+id/edit_custom_rsa_key_modulus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:lines="5"
+        android:scrollbars="vertical" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:text="@string/exponent" />
+    <EditText
+        android:id="@+id/edit_custom_rsa_key_exponent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:lines="5"
+        android:scrollbars="vertical" />
+</LinearLayout>
