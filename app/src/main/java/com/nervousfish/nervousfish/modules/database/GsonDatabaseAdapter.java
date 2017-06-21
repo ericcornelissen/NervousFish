@@ -11,10 +11,13 @@ import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Writer;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
@@ -26,16 +29,15 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 
-
 /**
- * An adapter to the GSON database library. We suppress the TooManyMethods warning of PMD because a
- * DatabaseHandler has a lot of methods by nature and refactoring it to multiple classes or single
- * methods with more logic would make the class only less understandable. We also suppress
- * ClassDataAbstractionCoupling of checkstyle because of the by the pojo's created to write safely,
- * we have to import this much.
+ * An adapter class that adapter our {@link IDatabase} to the GSON serialization library, use for data storage
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "PMD.TooManyMethods"})
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity", "PMD.TooManyMethods"})
+//  1 / 3) Suppressed because a DatabaseHandler has a lot of methods by nature and refactoring it to multiple
+// classes or single methods with more logic would make the class only less understandable
+//  2) Suppressed because of the by the pojo's created to write safely, we have to import this much
 public final class GsonDatabaseAdapter implements IDatabase {
+
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_CREATED = "Database is not created";
@@ -64,6 +66,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param serviceLocator Can be used to get access to other modules
      */
     private GsonDatabaseAdapter(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         this.fileSystem = serviceLocator.getFileSystem();
         this.encryptor = serviceLocator.getEncryptor();
         this.databaseMap = new HashMap<>();
@@ -81,6 +84,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<GsonDatabaseAdapter> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new GsonDatabaseAdapter(serviceLocator));
     }
 
@@ -89,6 +93,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void addContact(final Contact contact) throws IOException {
+        Validate.notNull(contact);
+
         LOGGER.info("Adding new contact with name: {}", contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
@@ -106,6 +112,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void deleteContact(final String contactName) throws IOException {
+        Validate.notBlank(contactName);
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         for (final Contact contact : contacts) {
@@ -128,6 +135,9 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
+        Validate.notNull(oldContact);
+        Validate.notNull(newContact);
+        // Get the list of contacts
         final List<Contact> contacts = this.getAllContacts();
         final int lengthBefore = contacts.size();
         contacts.remove(oldContact);
@@ -153,7 +163,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Contact getContactWithName(final String contactName) {
+    public Contact getContactWithName(final String contactName) throws IOException {
+        Validate.notBlank(contactName);
         final List<Contact> contacts = this.getAllContacts();
         for (final Contact contact : contacts) {
             if (contact.getName().equals(contactName)) {
@@ -169,6 +180,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public boolean contactExists(final String name) throws IOException {
+        Validate.notBlank(name);
         return this.getContactWithName(name) != null;
     }
 
@@ -186,6 +198,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void updateProfile(final Profile newProfile) throws IOException {
+        Validate.notNull(newProfile);
         final Database newDatabase = new Database(this.getDatabase().getContacts(), newProfile);
         this.databaseMap.put(DATABASE, newDatabase);
         this.updateDatabase();
@@ -258,11 +271,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public boolean deleteDatabase() {
         LOGGER.info("Deleting database");
-        if (this.checkFirstUse()) {
-            return this.fileSystem.deleteFile(this.passwordPath) && this.fileSystem.deleteFile(this.databasePath);
-        } else {
-            return true;
-        }
+        return !this.checkFirstUse()
+                || this.fileSystem.deleteFile(this.passwordPath) && this.fileSystem.deleteFile(this.databasePath);
     }
 
 
@@ -273,6 +283,8 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param password The password to initialize the database with.
      */
     private void initializeDatabase(final Profile profile, final String password) throws IOException {
+        Validate.notNull(profile);
+        Validate.notBlank(password);
         LOGGER.info("Database path created: {}", this.databasePath);
 
         this.databaseMap.put(DATABASE, new Database(new ArrayList<Contact>(), profile));
@@ -283,10 +295,13 @@ public final class GsonDatabaseAdapter implements IDatabase {
         final String databaseJson = gsonParser.toJson(this.getDatabase());
         LOGGER.info("Database translated to json: {}", databaseJson);
 
-        try (Writer writer = this.fileSystem.getWriter(this.databasePath)) {
+        try {
             final SecretKey key = this.encryptor.makeKeyFromPassword(password);
             final String databaseEncrypted = this.encryptor.encryptWithPassword(databaseJson, key);
-            writer.write(databaseEncrypted);
+
+            try (Writer writer = this.fileSystem.getWriter(this.databasePath)) {
+                writer.write(databaseEncrypted);
+            }
             LOGGER.info("Created the database: {}", this.databasePath);
         } catch (final IllegalBlockSizeException e) {
             throw new IOException(DATABASE_WRONG_SIZE, e);
@@ -302,12 +317,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * @param password The password to initialize the database with.
      */
     private void initializePassword(final String password) throws IOException {
+        assert password != null;
+        assert !password.isEmpty();
         LOGGER.info("Initializing password");
         this.databaseMap.put(ENCRYPTED_PASSWORD, this.encryptor.hashString(password));
 
-
         final String encryptedPassword = this.getEncryptedPassword();
-
         LOGGER.info("Encrypted password: {}", encryptedPassword);
 
         try (Writer writer = this.fileSystem.getWriter(this.passwordPath)) {
@@ -320,8 +335,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     /**
      * Gets the encrypted password from the databaseMap
-     *
-     * @throws IOException throws IOException if the database isn't loaded yet.
      */
     private String getEncryptedPassword() throws DatabaseException {
         final Object object = this.databaseMap.get(ENCRYPTED_PASSWORD);
@@ -334,8 +347,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     /**
      * Gets the database from the databaseMap
-     *
-     * @throws IOException throws IOException if the database isn't loaded yet.
      */
     private Database getDatabase() throws DatabaseException {
         final Object object = this.databaseMap.get(DATABASE);
@@ -348,8 +359,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
 
     /**
      * Gets the encryption key from the databaseMap
-     *
-     * @throws IOException throws IOException if the database isn't loaded yet.
      */
     private SecretKey getEncryptionKey() throws DatabaseException {
         final Object object = this.databaseMap.get(ENCRYPTION_KEY);
@@ -358,6 +367,37 @@ public final class GsonDatabaseAdapter implements IDatabase {
         } else {
             throw new DatabaseException(DATABASE_NOT_CREATED);
         }
+    }
+
+    /**
+     * Deserialize the instance using readObject to ensure invariants and security.
+     *
+     * @param stream The serialized object to be deserialized
+     */
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        this.ensureClassInvariant();
+    }
+
+    /**
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     */
+    private void ensureClassInvariant() {
+        assert this.fileSystem != null;
+        assert this.databasePath != null;
+        assert this.passwordPath != null;
+        assert this.helper != null;
+        assert this.encryptor != null;
+        assert this.databaseMap != null;
     }
 
 }

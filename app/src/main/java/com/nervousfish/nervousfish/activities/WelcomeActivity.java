@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.R;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ public final class WelcomeActivity extends AppCompatActivity {
      * @param view The {@link View} being clicked.
      */
     public void onGetStartedClick(final View view) {
+        Validate.notNull(view);
         final Intent intent = new Intent(this, CreateProfileActivity.class);
         this.startActivity(intent);
     }

@@ -19,6 +19,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -149,6 +150,7 @@ public final class WaitActivity extends Activity {
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
+        Validate.notNull(view);
         this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
         this.finish();
     }

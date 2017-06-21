@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionLos
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothListeningEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     public void setServiceLocator(final IServiceLocator serviceLocator) {
         synchronized (this.lock) {
+            Validate.notNull(serviceLocator);
             if (this.serviceLocator != null) {
                 this.serviceLocator.unregisterFromEventBus(this);
             }
@@ -105,6 +107,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     @Override
     public void connect(final BluetoothDevice device) {
         LOGGER.info("Connect Bluetooth thread initialized");
+        Validate.notNull(device);
 
         synchronized (this.lock) {
             // Cancel any running thread
@@ -137,6 +140,8 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothAlmostConnectedEvent(final BluetoothAlmostConnectedEvent event) {
         LOGGER.info("onBluetoothAlmostConnectedEvent called");
+        Validate.notNull(event);
+        Validate.notNull(event.getSocket());
 
         synchronized (this.lock) {
             this.state = STATE_CONNECTED;
@@ -154,6 +159,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     @Override
     public void stop() {
         LOGGER.info("Bluetooth service stopped");
+        Validate.notNull(this.serviceLocator);
 
         synchronized (this.lock) {
             // Cancel the running thread, namely the ConnectThread
@@ -171,6 +177,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      */
     @Override
     public void write(final byte[] output) {
+        Validate.isTrue(output.length > 0);
         // Create temporary object
         final AndroidBluetoothConnectedThread ready;
 
@@ -206,6 +213,8 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionLostEvent(final BluetoothConnectionLostEvent event) {
         LOGGER.info("onBluetoothConnectionLostEvent called");
+        Validate.notNull(event);
+
         synchronized (this.lock) {
             this.state = STATE_NONE;
         }
@@ -225,6 +234,8 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectionFailedEvent(final BluetoothConnectionFailedEvent event) {
         LOGGER.info("onBluetoothConnectionFailedEvent called");
+        Validate.notNull(event);
+
         synchronized (this.lock) {
             this.state = STATE_NONE;
         }
@@ -250,6 +261,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
          */
         LocalBinder(final AndroidBluetoothService service) {
             super();
+            Validate.notNull(service);
             this.service = service;
         }
 

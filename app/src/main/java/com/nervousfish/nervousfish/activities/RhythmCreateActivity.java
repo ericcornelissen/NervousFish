@@ -128,6 +128,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
+        Validate.notNull(v);
         if (this.taps != null && this.startButton.getVisibility() == View.GONE) {
             this.taps.add(new Timestamp(System.currentTimeMillis()));
         }
@@ -136,10 +137,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     /**
      * Gets triggered when the done button is clicked.
      *
-     * @param v - the {@link View} clicked
+     * @param view - the {@link View} clicked
      */
-    public void onDoneCreatingRhythmClick(final View v) {
+    public void onDoneCreatingRhythmClick(final View view) {
         LOGGER.info("Done tapping button clicked");
+        Validate.notNull(view);
+
         final Profile profile = this.serviceLocator.getDatabase().getProfile();
         final KeyPair keyPair = profile.getKeyPairs().get(0);
 
@@ -166,6 +169,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
+        Validate.notNull(v);
         this.taps = new ArrayList<>();
         this.startButton.setVisibility(View.GONE);
         this.stopButton.setVisibility(View.VISIBLE);
@@ -179,6 +183,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
+        Validate.notNull(v);
         this.startButton.setVisibility(View.VISIBLE);
         this.stopButton.setVisibility(View.GONE);
         if (this.taps.size() < MINIMUM_TAPS) {
@@ -202,6 +207,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewEncryptedBytesReceivedEvent called");
+        Validate.notNull(event);
+
         try {
             this.dataReceived = ((ByteWrapper) event.getData()).getBytes();
         } catch (final ClassCastException e) {
@@ -221,6 +228,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      * Executes K-means++ clustering on the intervals to divide them into a short and long cluster
      */
     private static final class KMeansClusterHelper {
+
         private List<Long> intervals;
         private List<Long> clusterCenter1;
         private List<Long> clusterCenter2;
@@ -232,6 +240,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @return A list containing the time between the taps
          */
         private static List<Long> getIntervals(final List<Timestamp> taps) {
+            assert taps != null;
+            assert taps.size() >= 2;
             final List<Long> intervals = new ArrayList<>(taps.size() - 1);
             for (int i = 0; i < taps.size() - 1; i++) {
                 intervals.add(taps.get(i + 1).getTime() - taps.get(i).getTime());
@@ -295,6 +305,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          */
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
+            assert centerMean1 >= 0;
+            assert centerMean2 >= 0;
+
             final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
             if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
                 this.clusterCenter1.add(closestPoint.getRight());
@@ -315,6 +328,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
          */
         private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+            assert centerMean1 >= 0;
+            assert centerMean2 >= 0;
+
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
             RhythmCreateActivity.Cluster targetCluster = null;
@@ -364,9 +380,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * Long, Long, Long = 7
          *
          * @param breakpoint The boundary between a short and long interval
-         * @return The key as an integer
+         * @return The key as a Long
          */
         private long generateKey(final long breakpoint) {
+            assert breakpoint >= 0;
+
             long key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
@@ -400,6 +418,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             final long firstLongInterval = this.clusterCenter2.get(0);
             return (firstLongInterval - lastShortInterval) / 2 + lastShortInterval;
         }
+
     }
 
 }

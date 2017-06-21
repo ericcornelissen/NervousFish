@@ -21,7 +21,7 @@ public class VerificationMethodTest {
         verificationMethod = new VerificationMethod(VerificationMethodEnum.RHYTHM);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testNullConstructor() {
         new VerificationMethod(null);
     }

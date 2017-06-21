@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.service_locator;
 
 import com.nervousfish.nervousfish.modules.IModule;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * Wraps a module and provides a package-private method to retrieve it so that only the service_locator classes can access the module.
  * @param <T> The type of the Module that the ModuleWrapper is wrapping
@@ -17,6 +19,7 @@ public final class ModuleWrapper<T extends IModule> {
      * @param module The module the wrapper should wrap
      */
     public ModuleWrapper(final T module) {
+        Validate.notNull(module);
         this.module = module;
     }
 

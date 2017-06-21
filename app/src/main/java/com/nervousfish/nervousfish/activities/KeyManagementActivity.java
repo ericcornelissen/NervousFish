@@ -44,6 +44,7 @@ public final class KeyManagementActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_key_management);
+
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
         final Profile myProfile = database.getProfile();
@@ -99,8 +100,7 @@ public final class KeyManagementActivity extends Activity {
         }
 
         @Override
-        public void onItemClick(final AdapterView<?> parent, final View view, final int position,
-                                final long id) {
+        public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(this.title);
             builder.setMessage(key);

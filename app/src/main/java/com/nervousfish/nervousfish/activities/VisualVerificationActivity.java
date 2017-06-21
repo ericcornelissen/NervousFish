@@ -7,12 +7,17 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +36,7 @@ public final class VisualVerificationActivity extends Activity {
     private IServiceLocator serviceLocator;
     private long securityCode;
     private int numTaps;
-    private byte[] dataReceived;
+    private Contact contactReceived;
 
     /**
      * {@inheritDoc}
@@ -77,7 +82,6 @@ public final class VisualVerificationActivity extends Activity {
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
-
             this.serviceLocator.getBluetoothHandler().send(profile.getContact(), this.securityCode);
         } catch (final BadPaddingException | IllegalBlockSizeException e) {
             LOGGER.error("Could not encrypt the contact");
@@ -86,7 +90,7 @@ public final class VisualVerificationActivity extends Activity {
 
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.contactReceived);
         intent.putExtra(ConstantKeywords.KEY, this.securityCode);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
@@ -97,6 +101,7 @@ public final class VisualVerificationActivity extends Activity {
      * @param v The view of the button being clicked.
      */
     public void buttonAction(final View v) {
+        Validate.notNull(v);
         final int button = Integer.parseInt(v.getContentDescription().toString());
         LOGGER.info("button {} clicked", button);
 
@@ -111,6 +116,20 @@ public final class VisualVerificationActivity extends Activity {
             this.securityCode *= NUM_BUTTONS;
             this.securityCode += button;
             LOGGER.info("code so far: {}", this.securityCode);
+        }
+    }
+
+    /**
+     * Called when a new data is received.
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
+        if (event.getClazz().equals(Contact.class)) {
+            this.contactReceived = (Contact) event.getData();
         }
     }
 

@@ -20,6 +20,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,19 +36,93 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  */
 @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 //Because of the structure with the static methods, a static attribute has to be set.
-@SuppressWarnings({"checkstyle:AnonInnerLength", "PMD.AvoidUsingVolatile"})
+@SuppressWarnings({"checkstyle:AnonInnerLength", "checkstyle:MultipleStringLiterals", "PMD.AvoidUsingVolatile"})
 //1. In this class large anonymous classes are needed. It does not infer with readability.
-//2. The volatile identifier is needed because this class uses static methods, which are essential.
+//2. The same string is used multiple times and we can't get strings using .getString() here...
+//3. The volatile identifier is needed because this class uses static methods, which are essential.
 public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
+    private static boolean firstLoad = true;
+    private static volatile IServiceLocator serviceLocator;
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static final Preference.OnPreferenceChangeListener BIND_PREF_TO_VALUE_LISTENER = new SettingsActivity.BindPreferenceToValueListener();
-    private static boolean firstLoad = true;
-    private static volatile IServiceLocator serviceLocator;
+    private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
+            new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+            LOGGER.info("Preference changed");
+            Validate.notNull(preference);
+            Validate.notNull(newValue);
+            final String stringValue = newValue.toString();
+
+            if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
+                LOGGER.info("Preference changed at the display name");
+                this.updateDisplayName(preference, stringValue);
+                return true;
+            } else if (preference instanceof ListPreference) {
+                LOGGER.info("Preference changed for a ListPreference");
+                this.updateListPreference(preference, stringValue);
+                return true;
+            } else {
+                LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
+                // For all other preferences, set the summary to the value's
+                // simple string representation.
+                preference.setSummary(stringValue);
+                return true;
+            }
+        }
+
+        /**
+         * If the key is display_name this method is called to update the summary
+         * and the Profile in the database.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateDisplayName(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
+            if (firstLoad) {
+                firstLoad = false;
+
+                preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
+            } else {
+                try {
+                    LOGGER.info("Updating profile name");
+                    final Profile profile = serviceLocator.getDatabase().getProfile();
+                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                } catch (final IOException e) {
+                    LOGGER.error("Couldn't get profiles from database", e);
+                }
+
+                preference.setSummary(stringValue);
+            }
+        }
+
+        /**
+         * If the preference is a list preference this method is called to update the summary.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateListPreference(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
+            // For list preferences, look up the correct display value in
+            // the preference's 'entries' list.
+            final ListPreference listPreference = (ListPreference) preference;
+            final int index = listPreference.findIndexOfValue(stringValue);
+
+            // Set the summary to reflect the new value.
+            preference.setSummary(
+                    index >= 0
+                            ? listPreference.getEntries()[index]
+                            : "");
+        }
+    };
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -56,20 +131,24 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
-     * @see #BIND_PREF_TO_VALUE_LISTENER
+     * @see #BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER
      */
-    private static void bindPreferenceToValue(final Preference preference) {
+    private static void bindPreferenceSummaryToValue(final Preference preference) {
+        assert preference != null;
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(BIND_PREF_TO_VALUE_LISTENER);
+        preference.setOnPreferenceChangeListener(BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        BIND_PREF_TO_VALUE_LISTENER.onPreferenceChange(preference,
+        BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +163,13 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 .edit()
                 .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
                 .apply();
+
         LOGGER.info("SettingsActivity created");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onHeaderClick(final PreferenceActivity.Header header, final int position) {
         super.onHeaderClick(header, position);
@@ -156,7 +239,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceToValue(this.findPreference(ConstantKeywords.CHOOSE_VERIFICATION_PREFERENCE));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.CHOOSE_VERIFICATION_PREFERENCE));
         }
 
         @Override
@@ -187,7 +270,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceToValue(this.findPreference(ConstantKeywords.DISPLAY_NAME));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.DISPLAY_NAME));
         }
 
         @Override
@@ -269,4 +352,5 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                             : "");
         }
     }
+
 }

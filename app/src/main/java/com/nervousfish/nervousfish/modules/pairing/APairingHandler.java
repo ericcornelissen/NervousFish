@@ -5,6 +5,7 @@ import com.nervousfish.nervousfish.exceptions.SerializationException;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +106,7 @@ abstract class APairingHandler implements IPairingHandler {
     @Override
     public final byte[] objectToBytes(final Serializable object) {
         LOGGER.info("Begin serializing object: {}", object);
+        Validate.notNull(object);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(new DataWrapper(object));
@@ -122,6 +124,7 @@ abstract class APairingHandler implements IPairingHandler {
     @Override
     public final void send(final Serializable object) {
         LOGGER.info("Begin writing object: {}", object);
+        Validate.notNull(object);
         this.send(this.objectToBytes(object));
     }
 
@@ -131,7 +134,11 @@ abstract class APairingHandler implements IPairingHandler {
     @Override
     public final void send(final Serializable object, final Long key) throws BadPaddingException, IllegalBlockSizeException {
         LOGGER.info("Begin writing object encoded with key: {}", key);
+        Validate.notNull(object);
+        Validate.isTrue(key >= 0);
+
         final byte[] bytes;
+        this.send(this.objectToBytes(object));
 
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
