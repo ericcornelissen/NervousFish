@@ -84,7 +84,7 @@ public final class VisualVerificationActivity extends Activity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
 
-            this.serviceLocator.getBluetoothHandler().send(profile.getContact(), this.securityCode);
+            this.serviceLocator.getBluetoothHandler().send(profile.getContact(), new Long(this.securityCode));
         } catch (final BadPaddingException | IllegalBlockSizeException e) {
             LOGGER.error("Could not encrypt the contact");
             throw new EncryptionException(e);

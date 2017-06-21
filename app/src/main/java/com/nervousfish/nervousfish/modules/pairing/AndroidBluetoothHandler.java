@@ -88,6 +88,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDecryptedBytesReceivedEvent(final NewDecryptedBytesReceivedEvent event) {
+        LOGGER.info("onNewDecryptedBytesReceivedEvent received");
         this.getDataReceiver().get().dataReceived(event.getBytes());
     }
 
