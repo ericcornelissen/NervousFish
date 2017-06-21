@@ -151,12 +151,11 @@ abstract class APairingHandler implements IPairingHandler {
             throw new SerializationException(e);
         }
         try {
-
-            final String k = "Bar12345Bar12345";
-            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2);
             buffer.putLong(key);
-            final Key aesKey = new SecretKeySpec(k.getBytes(), "AES");
-            final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            buffer.putLong(key);
+            final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
+            final Cipher cipher = Cipher.getInstance("AES");
             // encrypt the text
             cipher.init(Cipher.ENCRYPT_MODE, aesKey);
             final byte[] encrypted = cipher.doFinal(bytes);

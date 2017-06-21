@@ -71,6 +71,16 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
         this.doneButton = (Button) this.findViewById(R.id.done_tapping_button);
 
+        final Intent intent = this.getIntent();
+        final Boolean rhythmFailure = (Boolean) intent.getSerializableExtra(ConstantKeywords.RHYTHM_FAILURE);
+
+        if (rhythmFailure != null && rhythmFailure) {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(this.getString(R.string.not_the_same_rhythm_title))
+                    .setContentText(this.getString(R.string.not_the_same_rhythm_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .show();
+        }
         LOGGER.info("Activity created");
     }
 

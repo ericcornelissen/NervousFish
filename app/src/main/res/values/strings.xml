@@ -95,6 +95,8 @@
     <string name="create_new_contact">Create a new contact</string>
     <string name="enter_name_contact">Enter the name of the new contact</string>
     <string name="confirm">Confirm</string>
+    <string name="not_the_same_rhythm_title">Rhythm not the same</string>
+    <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
 
     <!-- Select verification method -->
     <string name="select_verification_method">How do you want to secure your connection?</string>

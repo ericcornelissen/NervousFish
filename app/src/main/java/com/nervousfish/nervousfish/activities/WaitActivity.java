@@ -183,18 +183,20 @@ public final class WaitActivity extends Activity {
      */
     public void validateEncryptedData() {
         try {
-            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2);
             buffer.putLong(key);
-
-            final String k = "Bar12345Bar12345";
-            final Key aesKey = new SecretKeySpec(k.getBytes(), "AES");
-            final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            buffer.putLong(key);
+            final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
+            final Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, aesKey);
             final byte[] decryptedData = cipher.doFinal(this.dataReceived);
 
             LOGGER.info("Decrypted data");
             this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
-        } catch (Exception e) {
+        } catch (BadPaddingException e) {
+            LOGGER.warn("Keys didn't match!");
+            this.goToRhythmActivity();
+        } catch (InvalidKeyException | IllegalBlockSizeException | NoSuchAlgorithmException | NoSuchPaddingException e) {
             LOGGER.error("An error occured when validating the encrypted data", e);
         }
     }
@@ -218,4 +220,13 @@ public final class WaitActivity extends Activity {
         this.startActivity(intent);
     }
 
+    /**
+     * Launch the RhythmActivity after failure.
+     */
+    private void goToRhythmActivity() {
+        LOGGER.info("Going to the rhythm activity");
+        final Intent intent = new Intent(this, RhythmCreateActivity.class);
+        intent.putExtra(ConstantKeywords.RHYTHM_FAILURE, true);
+        this.startActivity(intent);
+    }
 }
