@@ -55,10 +55,11 @@ import static junit.framework.Assert.assertEquals;
 public class CreateProfileSteps {
 
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+    private InputMethodManager inputMethodManager;
+
     @Rule
     public ActivityTestRule<CreateProfileActivity> mActivityRule =
             new ActivityTestRule<>(CreateProfileActivity.class, true, false);
-    private InputMethodManager inputMethodManager;
 
     /**
      * Checks if an element has a certain background color.

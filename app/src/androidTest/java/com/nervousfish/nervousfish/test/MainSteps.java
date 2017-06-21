@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
@@ -79,7 +80,8 @@ public class MainSteps {
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
-
+        this.allowPermissionsIfNeeded();
+      
         try {
             onView(withText(R.string.no)).perform(click());
         } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
@@ -186,6 +188,14 @@ public class MainSteps {
     @Then("^I should go to the contact activity from main$")
     public void iShouldGoToTheContactActivity() {
         intended(hasComponent(ContactActivity.class.getName()));
+    }
+
+    private void allowPermissionsIfNeeded()  {
+        if (Build.VERSION.SDK_INT >= 23) {
+            try {
+                onView(withText("Allow")).perform(click());
+            } catch (NoMatchingViewException ignore) { }
+        }
     }
 
 }
