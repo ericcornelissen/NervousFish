@@ -6,13 +6,11 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 /**
@@ -24,7 +22,6 @@ import java.util.Arrays;
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
-    private static final long serialVersionUID = -6465987636766819498L;
 
     /**
      * Prevents construction from outside the class.
@@ -43,35 +40,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<AndroidBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new AndroidBluetoothHandler(serviceLocator));
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
-     */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
     }
 
     /**
@@ -103,9 +73,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void send(final byte[] bytes) {
+        Validate.isTrue(bytes.length > 0);
         this.getService().write(bytes);
 
-        LOGGER.info("Bytes written: " + Arrays.toString(bytes));
+        LOGGER.info("Bytes written: {}", Arrays.toString(bytes));
     }
 
     private IBluetoothHandlerService getService() {

@@ -9,10 +9,14 @@ import android.view.View;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +31,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SelectVerificationMethodActivity");
 
+    private IServiceLocator serviceLocator;
     private IBluetoothHandler bluetoothHandler;
 
     /**
@@ -37,7 +42,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_select_verification_method);
 
-        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        this.serviceLocator = NervousFish.getServiceLocator();
         this.bluetoothHandler = serviceLocator.getBluetoothHandler();
 
         LOGGER.info("Activity created");
@@ -49,6 +54,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
      * @param view The view on which the click was performed
      */
     public void onVerificationMethodClick(final View view) {
+        Validate.notNull(view);
         final Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.btn_select_visual_verification:
@@ -87,6 +93,57 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
                 .setContentText(this.getString(R.string.unknown_verification_method_description))
                 .setConfirmText(this.getString(R.string.dialog_ok))
                 .show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.serviceLocator.registerToEventBus(this);
+
+        LOGGER.info("Activity started");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStop() {
+        this.serviceLocator.unregisterFromEventBus(this);
+
+        LOGGER.info("Activity stopped");
+        super.onStop();
+    }
+
+    /**
+     * Called when a new data is received.
+     *
+     * @param event Contains additional data about the event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
+        LOGGER.info("onNewDataReceivedEvent called, type is " + event.getClazz());
+        if (event.getClazz().equals(VerificationMethod.class)) {
+            final VerificationMethodEnum verificationMethod = ((VerificationMethod) event.getData()).getVerificationMethod();
+
+            final Intent intent = new Intent();
+            switch (verificationMethod) {
+                case RHYTHM:
+                    //Go to RhythmActivity
+                    intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                    break;
+                case VISUAL:
+                    //Go to VisualVerificationActivity
+                    intent.setComponent(new ComponentName(this, VisualVerificationActivity.class));
+                    break;
+                default:
+                    LOGGER.error("Unknown verification method");
+                    throw new IllegalArgumentException("Only existing verification methods can be used");
+            }
+            this.startActivityForResult(intent, 0);
+        }
     }
 
 }

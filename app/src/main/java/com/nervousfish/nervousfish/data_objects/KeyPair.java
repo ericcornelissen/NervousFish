@@ -1,5 +1,12 @@
 package com.nervousfish.nervousfish.data_objects;
 
+
+import com.nervousfish.nervousfish.ConstantKeywords;
+
+import org.apache.commons.lang3.Validate;
+
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
@@ -20,6 +27,9 @@ public final class KeyPair implements Serializable {
      * @param privateKey The privateKey of the {@link KeyPair}.
      */
     public KeyPair(final String name, final IKey publicKey, final IKey privateKey) {
+        Validate.notBlank(name);
+        Validate.notNull(publicKey);
+        Validate.notNull(privateKey);
         this.name = name;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
@@ -75,6 +85,20 @@ public final class KeyPair implements Serializable {
         return this.name.hashCode() + this.publicKey.hashCode() + this.privateKey.hashCode();
     }
 
+    /**
+     * Serialize the created proxy instead of this instance.
+     */
+    private Object writeReplace() {
+        return new KeyPair.SerializationProxy(this);
+    }
+
+    /**
+     * Ensure that no instance of this class is created because it was present in the stream. A correct
+     * stream should only contain instances of the proxy.
+     */
+    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
+    }
 
     /**
      * Represents the logical state of this class and copies the data from that class without

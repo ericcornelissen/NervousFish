@@ -21,6 +21,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public final class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.login);
+        this.setContentView(R.layout.activity_login);
 
         this.serviceLocator = NervousFish.getServiceLocator();
 
@@ -102,12 +103,13 @@ public final class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Validate a login attempt.
+     * Validate a activity_login attempt.
      *
      * @param view The submit button that was clicked
      */
     public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
+        Validate.notNull(view);
 
         final View mError = this.findViewById(R.id.error_message_login);
         final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
