@@ -11,6 +11,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
+import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -36,7 +37,7 @@ public final class VisualVerificationActivity extends Activity {
     private IServiceLocator serviceLocator;
     private long securityCode;
     private int numTaps;
-    private Contact contactReceived;
+    private byte[] dataReceived;
 
     /**
      * {@inheritDoc}
@@ -90,7 +91,7 @@ public final class VisualVerificationActivity extends Activity {
 
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
-        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.contactReceived);
+        intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
         intent.putExtra(ConstantKeywords.KEY, this.securityCode);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
@@ -120,16 +121,19 @@ public final class VisualVerificationActivity extends Activity {
     }
 
     /**
-     * Called when a new data is received.
+     * Called when new bytes are received.
      *
-     * @param event Contains additional data about the event
+     * @param event Contains the bytes that are received
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewDataReceivedEvent called");
+        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
         Validate.notNull(event);
-        if (event.getClazz().equals(Contact.class)) {
-            this.contactReceived = (Contact) event.getData();
+
+        try {
+            this.dataReceived = ((ByteWrapper) event.getData()).getBytes();
+        } catch (final ClassCastException e) {
+            LOGGER.error("Something else than a ByteWrapper is received: ", e);
         }
     }
 
