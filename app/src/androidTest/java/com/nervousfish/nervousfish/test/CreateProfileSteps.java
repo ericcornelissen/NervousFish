@@ -42,7 +42,6 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -109,7 +108,7 @@ public class CreateProfileSteps {
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
         inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.submitProfile)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.submitProfile)).perform(click());
     }
 
     @When("^I click ok on the popup with the success message about creating a profile$")
@@ -125,19 +124,19 @@ public class CreateProfileSteps {
     @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
         inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.profile_enter_name)).perform(scrollTo()).perform(replaceText(name));
+        onView(withId(R.id.profile_enter_name)).perform(replaceText(name));
     }
 
     @When("^I enter a valid (.*?) as password$")
     public void iEnterValidPassword(final String password) {
         inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.profile_enter_password)).perform(scrollTo()).perform(typeText(password));
+        onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a valid repeat (.*?) as repeat password$")
     public void iEnterValidRepeatPassword(final String password) {
         inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.profile_repeat_password)).perform(scrollTo()).perform(typeText(password));
+        onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
     }
 
     @When("^I enter a (.*?) with a length smaller than 6 characters$")
@@ -156,7 +155,7 @@ public class CreateProfileSteps {
     public void iSelectARSAKeyPair(final Boolean select) {
         if (select) {
             inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-            onView(withId(R.id.checkbox_ed25519_key)).perform(scrollTo()).perform(click());
+            onView(withId(R.id.checkbox_ed25519_key)).perform(click());
         }
     }
 
@@ -164,7 +163,7 @@ public class CreateProfileSteps {
     public void iSelectAEd25519KeyPair(final Boolean select) {
         if (select) {
             inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-            onView(withId(R.id.checkbox_rsa_key)).perform(scrollTo()).perform(click());
+            onView(withId(R.id.checkbox_rsa_key)).perform(click());
         }
     }
 

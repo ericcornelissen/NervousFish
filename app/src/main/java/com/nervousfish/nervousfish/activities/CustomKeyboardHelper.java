@@ -20,6 +20,9 @@ import java.util.Objects;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+/**
+ * A helper method for {@link Activity}s that want to use a custom keyboard.
+ */
 final class CustomKeyboardHelper {
 
     private final Activity activity;
