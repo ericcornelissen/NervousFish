@@ -18,6 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
+
+        <!-- Activities -->
         <activity
             android:name=".service_locator.EntryActivity"
             android:noHistory="true">
@@ -32,27 +34,14 @@
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".activities.ContactActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ChangeContactActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.VisualVerificationActivity"
-            android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.WaitActivity"
-            android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.RhythmCreateActivity"
-            android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.BluetoothConnectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.WelcomeActivity"
             android:noHistory="true"
@@ -62,24 +51,48 @@
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan" />
+
+        <activity
+            android:name=".activities.BluetoothConnectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SelectVerificationMethodActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.WaitActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.RhythmCreateActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.VisualVerificationActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.NFCActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-        <activity android:name=".activities.SelectVerificationMethodActivity"
-            android:noHistory="true" />
+
         <activity
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.KeyManagementActivity" />
+
+        <!-- Intent filters -->
+        <intent-filter>
+            <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="text/plain" />
+        </intent-filter>
+
+        <!-- Services -->
         <service android:name=".modules.pairing.AndroidBluetoothService" />
     </application>
 </manifest>
