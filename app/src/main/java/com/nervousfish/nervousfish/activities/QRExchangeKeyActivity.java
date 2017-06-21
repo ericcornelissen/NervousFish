@@ -37,8 +37,7 @@ import java.util.regex.Pattern;
 public final class QRExchangeKeyActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
-    private static final String SEMI_COLON = " ; ";
-    private static final Pattern COMPILE_SEMICOLON = Pattern.compile(SEMI_COLON);
+    private static final Pattern COMPILE_SEMICOLON = Pattern.compile(";");
 
     private IDatabase database;
     private Profile profile;

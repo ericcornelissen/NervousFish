@@ -138,13 +138,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         final Profile profile = this.serviceLocator.getDatabase().getProfile();
         final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
-        }
-        final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
+        LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
         final long key = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
         try {
-            this.bluetoothHandler.send(myProfileAsContact, key);
+            this.bluetoothHandler.send(profile.getContact(), key);
         } catch (final BadPaddingException | IllegalBlockSizeException e) {
             LOGGER.error("Could not encrypt the contact");
             throw new EncryptionException(e);
