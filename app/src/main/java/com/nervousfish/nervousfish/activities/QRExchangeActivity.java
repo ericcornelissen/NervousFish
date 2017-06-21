@@ -21,6 +21,7 @@ import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
      */
     public void onBackButtonClick(final View view) {
         LOGGER.info("Return to previous screen");
+        Validate.notNull(view);
         this.finish();
     }
 
@@ -77,6 +79,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
      */
     public void onScanButtonClick(final View view) {
         LOGGER.info("Started scanning QR code");
+        Validate.notNull(view);
         final IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
     }

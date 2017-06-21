@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothAlmostConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  * like a server-side client. It runs until a connection is accepted
  * (or until cancelled).
  */
-class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
+final class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothAcceptThread");
     // The local server socket
     private final BluetoothServerSocket serverSocket;
@@ -32,8 +33,9 @@ class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
      * like a server-side client. It runs until a connection is accepted
      * @param serviceLocator The service locator used
      */
-    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException, NoBluetoothException {
+    AndroidBluetoothAcceptThread(final IServiceLocator serviceLocator) throws IOException {
         super();
+        Validate.notNull(serviceLocator);
         this.serviceLocator = serviceLocator;
 
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -50,14 +52,14 @@ class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
     @Override
     public void run() {
         LOGGER.info("Start listening on a rfcomm channel");
-        setName("AndroidBluetoothAcceptThread thread");
+        this.setName("AndroidBluetoothAcceptThread thread");
 
         final BluetoothSocket socket;
 
         try {
             // This is a blocking call and will only return on a
             // successful connection or an exception
-            socket = serverSocket.accept();
+            socket = this.serverSocket.accept();
         } catch (final IOException e) {
             LOGGER.error("Listening on the socket failed", e);
             return;
@@ -71,12 +73,13 @@ class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
     /**
      * Cancels the current accepting of the pairing request of other Bluetooth devices
      */
+    @Override
     public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
-            serverSocket.close();
+            this.serverSocket.close();
         } catch (final IOException e) {
-            LOGGER.warn("Server failed/closed", e);
+            LOGGER.warn("Server failed or closed", e);
         }
     }
 }

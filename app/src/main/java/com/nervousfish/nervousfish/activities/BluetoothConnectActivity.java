@@ -22,6 +22,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEven
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -42,33 +43,29 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("BluetoothConnectActivity");
     private static final int DISCOVERABLE_DURATION = 300; // Device discoverable for 300 seconds
+    private static final int MINIMUM_MAC_LENGTH = 48; // The minimum length of a MAC address
 
     private final Set<BluetoothDevice> newDevices = new HashSet<>();
+    // Create a BroadcastReceiver for ACTION_FOUND.
+    private final BroadcastReceiver broadcastReceiver = new BluetoothDiscoverBroadcastReceiver();
     private IServiceLocator serviceLocator;
     private BluetoothAdapter bluetoothAdapter;
     private IBluetoothHandler bluetoothHandler;
     private Set<BluetoothDevice> pairedDevices;
     private boolean isMaster;
-    // Used to fill the listview of newly discovered Bluetooth devices
+    /*
+     * Used to fill the listview of newly discovered Bluetooth devices
+     */
     private ArrayAdapter<String> newDevicesArrayAdapter;
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothConnectActivity.this.addNewDevice(intent);
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                BluetoothConnectActivity.this.setNoDevicesFound();
-            }
-        }
-
-    };
     /**
      * Used to fill the listview of paired Bluetooth devices
      */
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
+
+
+    private static String getDeviceDescription(final BluetoothDevice device) {
+        return String.format("%s%n%s", device.getName(), device.getAddress());
+    }
 
     /**
      * {@inheritDoc}
@@ -209,6 +206,7 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBluetoothConnectedEvent(final BluetoothConnectedEvent event) {
         LOGGER.info("onBluetoothConnectedEvent called");
+        Validate.notNull(event);
         if (this.isMaster) {
             final Intent intent = new Intent(this, SelectVerificationMethodActivity.class);
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
@@ -226,13 +224,14 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
      * @param intent The {@link BroadcastReceiver} {@code intent}.
      */
     private void addNewDevice(final Intent intent) {
+        Validate.notNull(intent);
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
         // Skip paired devices and devices without a valid name.
         if (this.isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED
                 && this.newDevicesArrayAdapter.getPosition(device.getName() + "\n" + device.getAddress()) == -1) {
             this.newDevices.add(device);
-            this.newDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            this.newDevicesArrayAdapter.add(getDeviceDescription(device));
         }
     }
 
@@ -248,16 +247,6 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
     }
 
     /**
-     * Set message when no devices
-     */
-    private void setNoDevicesFound() {
-        this.setTitle(R.string.select_device);
-        if (this.newDevicesArrayAdapter.getCount() == 0) {
-            this.newDevicesArrayAdapter.add(this.getString(R.string.no_devices_found));
-        }
-    }
-
-    /**
      * The on-click listener for all devices in the ListViews
      */
     private final class DeviceClickListener implements AdapterView.OnItemClickListener {
@@ -266,12 +255,12 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
          * {@inheritDoc}
          */
         @Override
-        public void onItemClick(final AdapterView<?> av, final View v, final int arg2, final long arg3) {
+        public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
             // Cancel discovery because it's costly and we're about to connect
             BluetoothConnectActivity.this.stopDiscovering();
 
             // Get the device MAC address, which is the last 17 chars in the View
-            final String info = ((TextView) v).getText().toString();
+            final String info = ((TextView) view).getText().toString();
             if (info.equals(BluetoothConnectActivity.this.getString(R.string.no_devices_found))) {
                 return;
             }
@@ -289,6 +278,8 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
          * @return The BLuetoothDevice corresponding to the mac address.
          */
         private BluetoothDevice getDevice(final String address) {
+            assert address != null;
+            assert address.length() >= MINIMUM_MAC_LENGTH;
             for (final BluetoothDevice device : BluetoothConnectActivity.this.pairedDevices) {
                 if (device.getAddress().equals(address)) {
                     return device;
@@ -301,7 +292,30 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
 
+    private final class BluetoothDiscoverBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            Validate.notNull(context);
+            Validate.notNull(intent);
+            final String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothConnectActivity.this.addNewDevice(intent);
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                this.setNoDevicesFound();
+            }
+        }
+
+        /**
+         * Set message when no devices
+         */
+        private void setNoDevicesFound() {
+            BluetoothConnectActivity.this.setTitle(R.string.select_device);
+            if (BluetoothConnectActivity.this.newDevicesArrayAdapter.getCount() == 0) {
+                BluetoothConnectActivity.this.newDevicesArrayAdapter.add(BluetoothConnectActivity.this.getString(R.string.no_devices_found));
+            }
+        }
     }
 
 }

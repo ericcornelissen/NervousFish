@@ -86,6 +86,7 @@ public final class ContactActivity extends AppCompatActivity {
      * @param v - the View element clicked
      */
     public void showPopupMenu(final View v) {
+        Validate.notNull(v);
         final PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(new PopupMenuListener());
         final MenuInflater inflater = popup.getMenuInflater();
@@ -155,7 +156,6 @@ public final class ContactActivity extends AppCompatActivity {
                 return false;
             }
         }
-
     }
 
     private final class DeleteContactClickListener implements SweetAlertDialog.OnSweetClickListener {
@@ -189,7 +189,6 @@ public final class ContactActivity extends AppCompatActivity {
                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
             }
         }
-
     }
 
     private final class DismissClickListener implements SweetAlertDialog.OnSweetClickListener {
@@ -202,7 +201,5 @@ public final class ContactActivity extends AppCompatActivity {
             sweetAlertDialog.dismiss();
             ContactActivity.this.finish();
         }
-
     }
-
 }

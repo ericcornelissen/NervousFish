@@ -10,6 +10,7 @@ import android.os.IBinder;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothService;
 import com.nervousfish.nervousfish.modules.pairing.PairingWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ public final class NervousFish extends Application {
      * @return The NervousFish {@link Application} instance,
      */
     public static Context getInstance() {
+        Validate.notNull(NervousFish.instance);
         return NervousFish.instance;
     }
 
@@ -56,6 +58,7 @@ public final class NervousFish extends Application {
      * @return The ServiceLocator of the {@link Application} instance.
      */
     public static IServiceLocator getServiceLocator() {
+        Validate.notNull(NervousFish.serviceLocator);
         return NervousFish.serviceLocator;
     }
 
@@ -72,7 +75,7 @@ public final class NervousFish extends Application {
          * {@inheritDoc}
          */
         @Override
-        public void onServiceConnected(final ComponentName componentName, final IBinder service) {
+        public void onServiceConnected(final ComponentName name, final IBinder service) {
             final AndroidBluetoothService.LocalBinder binder = (AndroidBluetoothService.LocalBinder) service;
             NervousFish.this.bluetoothService = binder.getService();
             NervousFish.this.bluetoothService.setServiceLocator(NervousFish.serviceLocator);
@@ -84,7 +87,7 @@ public final class NervousFish extends Application {
          * {@inheritDoc}
          */
         @Override
-        public void onServiceDisconnected(final ComponentName componentName) {
+        public void onServiceDisconnected(final ComponentName name) {
             LOGGER.info("Bluetooth service disconnected");
         }
 

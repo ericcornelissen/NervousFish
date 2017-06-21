@@ -9,6 +9,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectingEve
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,9 @@ class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
     AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
         super();
 
+        Validate.notNull(serviceLocator);
+        Validate.notNull(device);
+
         this.serviceLocator = serviceLocator;
         BluetoothSocket tmp = null;
 
@@ -44,7 +48,7 @@ class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
         } catch (final IOException e) {
             LOGGER.error("Connection failed", e);
         }
-        socket = tmp;
+        this.socket = tmp;
         serviceLocator.postOnEventBus(new BluetoothConnectingEvent());
     }
 
@@ -54,7 +58,7 @@ class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
     @Override
     public void run() {
         LOGGER.info("Connect Bluetooth thread started");
-        setName("AndroidBluetoothConnectThread thread");
+        this.setName("AndroidBluetoothConnectThread thread");
 
         // Always cancel discovery because it will slow down a connection
         BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
@@ -63,28 +67,29 @@ class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
         try {
             // This is a blocking call and will only return on a
             // successful connection or an exception
-            socket.connect();
+            this.socket.connect();
         } catch (final IOException e) {
             LOGGER.warn("Exception while connecting over Bluetooth", e);
             try {
-                socket.close();
+                this.socket.close();
             } catch (final IOException esocketCloseException) {
-                LOGGER.error("Connection failed/couldn't close the socket", esocketCloseException);
+                LOGGER.error("Connection failed because the socket couldn't be closed", esocketCloseException);
             }
-            serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
+            this.serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
             return;
         }
 
-        serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(socket));
+        this.serviceLocator.postOnEventBus(new BluetoothAlmostConnectedEvent(this.socket));
     }
 
     /**
      * Cancels the connect thread and closes the socket
      */
+    @Override
     public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
-            socket.close();
+            this.socket.close();
         } catch (final IOException e) {
             LOGGER.error("Closing socket", e);
         }
