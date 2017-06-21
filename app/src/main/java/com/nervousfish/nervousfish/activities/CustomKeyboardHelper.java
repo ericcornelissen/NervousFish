@@ -86,10 +86,8 @@ final class CustomKeyboardHelper {
     private void clickListener(final View view) {
         this.keyboardView.setVisibility(View.VISIBLE);
         this.keyboardView.setEnabled(true);
-        this.hideRealKeyboard(view);
-    }
 
-    private void hideRealKeyboard(final View view) {
+        // Hide the real keyboard
         final InputMethodManager inputMethodManager = (InputMethodManager) this.activity.getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
