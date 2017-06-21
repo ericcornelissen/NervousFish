@@ -186,7 +186,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Can be given by {@link CreateProfileActivity} to classes that are allowed finish creating the new profile
+     * Can be given by {@link CreateProfileActivity} to classes that are allowed to finish the creation of the new profile
      * by supplying a new RSAKey
      */
     final class CustomKeyPairSetter {
