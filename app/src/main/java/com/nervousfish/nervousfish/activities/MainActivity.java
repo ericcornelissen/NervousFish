@@ -1,11 +1,13 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -116,6 +118,16 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Asks if the users wants to give permission to use their location.
+     */
+    private void askBluetoothLocationPermission() {
+        LOGGER.info("Location permission for Bluetooth asked");
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+    }
+  
+    /**
      * Tries to start bluetooth:
      * - If Bluetooth is already enabled, do nothing
      * - If Bluetooth is not enabled yet, prompt the user to enable it
@@ -124,6 +136,8 @@ public final class MainActivity extends AppCompatActivity {
     private void startBluetooth() {
         final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         try {
+            this.askBluetoothLocationPermission();
+            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
             bluetoothHandler.start();
         } catch (final NoBluetoothException e) {
             LOGGER.info("Bluetooth not available on device, disabling button", e);
@@ -193,6 +207,7 @@ public final class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         }
     }
@@ -227,6 +242,7 @@ public final class MainActivity extends AppCompatActivity {
             final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             } else {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
@@ -293,6 +309,7 @@ public final class MainActivity extends AppCompatActivity {
 
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
             final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
             this.popups.showEnableBluetoothPopup(buttonClicked);
