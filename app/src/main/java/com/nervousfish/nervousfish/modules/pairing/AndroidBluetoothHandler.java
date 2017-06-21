@@ -6,6 +6,7 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<AndroidBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new AndroidBluetoothHandler(serviceLocator));
     }
 
@@ -71,9 +73,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void send(final byte[] bytes) {
+        Validate.isTrue(bytes.length > 0);
         this.getService().write(bytes);
 
-        LOGGER.info("Bytes written: " + Arrays.toString(bytes));
+        LOGGER.info("Bytes written: {}", Arrays.toString(bytes));
     }
 
     private IBluetoothHandlerService getService() {

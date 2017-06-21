@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.modules.constants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ public final class Constants implements IConstants {
      * @param serviceLocator Can be used to get access to other modules
      */
     private Constants(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
         //noinspection StringConcatenationMissingWhitespace because this is a file path
         this.databaseContactsPath = this.androidFilesDir + Constants.DB_CONTACTS_PATH;
@@ -48,6 +50,7 @@ public final class Constants implements IConstants {
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<Constants> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new Constants(serviceLocator));
     }
 
