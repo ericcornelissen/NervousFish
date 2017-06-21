@@ -22,7 +22,6 @@
     <dimen name="contacts_list_divider_left_margin">60dp</dimen>
     <dimen name="contacts_list_divider_right_margin">15dp</dimen>
 
-    <dimen name="enter_password_padding_top">40dp</dimen>
     <dimen name="error_password_margin_top">10dp</dimen>
     <dimen name="enter_password_field_margin_top">30dp</dimen>
     <dimen name="field_margin_left">20dp</dimen>
@@ -36,6 +35,7 @@
     <dimen name="enter_password_text_size">20sp</dimen>
     <dimen name="error_password_text_size">18sp</dimen>
     <dimen name="submit_password_text_size">20sp</dimen>
+    <dimen name="login_margin_bottom">60dp</dimen>
 
     <dimen name="waiting_for_slave_text_offset">40dp</dimen>
 
