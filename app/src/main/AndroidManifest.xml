@@ -40,6 +40,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.VisualVerificationActivity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.WaitActivity"
@@ -47,6 +48,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.RhythmCreateActivity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.BluetoothConnectionActivity"
@@ -68,7 +70,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
-        <activity android:name=".activities.SelectVerificationMethodActivity" />
+        <activity android:name=".activities.SelectVerificationMethodActivity"
+            android:noHistory="true" />
         <activity
             android:name=".activities.QRExchangeKeyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
