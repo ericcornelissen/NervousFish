@@ -100,6 +100,16 @@ public final class WaitActivity extends Activity {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        this.serviceLocator.getBluetoothHandler().stop();
+        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        this.finish();
+    }
+
+    /**
      * Called when a new data is received.
      *
      * @param event Contains additional data about the event
@@ -137,8 +147,7 @@ public final class WaitActivity extends Activity {
      * @param view The view that called this method
      */
     public void cancelWaiting(final View view) {
-        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
-        this.finish();
+        this.onBackPressed();
     }
 
     /**

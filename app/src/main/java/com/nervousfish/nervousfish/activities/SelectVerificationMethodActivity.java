@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
@@ -83,17 +84,6 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
     }
 
     /**
-     * Show a popup when (somehow) an unknown verification method was selected.
-     */
-    private void showUnknownVerificationMethodPopup() {
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(this.getString(R.string.unknown_verification_method_title))
-                .setContentText(this.getString(R.string.unknown_verification_method_description))
-                .setConfirmText(this.getString(R.string.dialog_ok))
-                .show();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -113,6 +103,16 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
 
         LOGGER.info("Activity stopped");
         super.onStop();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        this.serviceLocator.getBluetoothHandler().stop();
+        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        this.finish();
     }
 
     /**
@@ -142,6 +142,17 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
             }
             this.startActivityForResult(intent, 0);
         }
+    }
+
+    /**
+     * Show a popup when (somehow) an unknown verification method was selected.
+     */
+    private void showUnknownVerificationMethodPopup() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(this.getString(R.string.unknown_verification_method_title))
+                .setContentText(this.getString(R.string.unknown_verification_method_description))
+                .setConfirmText(this.getString(R.string.dialog_ok))
+                .show();
     }
 
 }
