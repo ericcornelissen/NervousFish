@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-import com.nervousfish.nervousfish.modules.cryptography.KeyGenerationException;
+import com.nervousfish.nervousfish.TestException;
+import com.nervousfish.nervousfish.modules.database.DatabaseException;
 
 import org.junit.Test;
 
@@ -33,18 +34,39 @@ public class DeserializationExceptionTest {
     }
 
     @Test
-    public void testSerialization() throws IOException, ClassNotFoundException {
-        final DeserializationException exception = new DeserializationException(new Exception());
+    public void testSerializationWithException() throws IOException, ClassNotFoundException {
+        final DeserializationException exception = new DeserializationException(new TestException("foo"));
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
-                ) {
+        ) {
             oos.writeObject(exception);
             byte[] bytes = bos.toByteArray();
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
                 assertTrue(exception1.getClass().equals(DeserializationException.class));
+                DeserializationException exception2 = (DeserializationException) exception1;
+                assertTrue(exception2.getCause().getMessage().equals("foo"));
+            }
+        }
+    }
+
+    @Test
+    public void testSerializationWithString() throws IOException, ClassNotFoundException {
+        final DeserializationException exception = new DeserializationException("foo");
+        try (
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)
+        ) {
+            oos.writeObject(exception);
+            byte[] bytes = bos.toByteArray();
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
+                Object exception1 = ois.readObject();
+                assertTrue(exception1.getClass().equals(DeserializationException.class));
+                DeserializationException exception2 = (DeserializationException) exception1;
+                assertTrue(exception2.getMessage().equals("foo"));
             }
         }
     }
