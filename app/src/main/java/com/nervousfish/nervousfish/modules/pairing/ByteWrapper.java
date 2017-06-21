@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * This class contains a byte array and is used as a wrapped object from
  */
-final class ByteWrapper implements Serializable {
+public final class ByteWrapper implements Serializable {
     private static final long serialVersionUID = -1704556072876435760L;
     private final byte[] bytes;
 
@@ -25,7 +25,7 @@ final class ByteWrapper implements Serializable {
     /**
      * @return The data object {@link DataWrapper} wraps
      */
-    byte[] getBytes() {
+    public byte[] getBytes() {
         return this.bytes.clone();
     }
 

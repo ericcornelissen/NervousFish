@@ -32,6 +32,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
+        serviceLocator.registerToEventBus(this);
     }
 
     /**

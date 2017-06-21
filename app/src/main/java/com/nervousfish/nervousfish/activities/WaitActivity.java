@@ -16,6 +16,7 @@ import com.nervousfish.nervousfish.exceptions.EncryptionException;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -29,11 +30,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.IOException;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -49,9 +57,9 @@ public final class WaitActivity extends Activity {
     private IDatabase database;
     private IConstants constants;
     private byte[] dataReceived;
-    private long key;
     private Contact contactReceived;
     private Object tapCombination;
+    private Long key;
 
     /**
      * {@inheritDoc}
@@ -105,8 +113,12 @@ public final class WaitActivity extends Activity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
 
-        if (this.dataReceived != null) {
-            this.onNewEncryptedBytesReceivedEvent(new NewEncryptedBytesReceivedEvent(this.dataReceived));
+//        if (this.dataReceived != null) {
+//            this.onNewEncryptedBytesReceivedEvent(new NewEncryptedBytesReceivedEvent(this.dataReceived));
+//        }
+
+        if (this.dataReceived != null && this.key != null) {
+            validateEncryptedData();
         }
 
         LOGGER.info("Activity started");
@@ -149,6 +161,9 @@ public final class WaitActivity extends Activity {
                     throw new IllegalArgumentException("Only existing verification methods can be used");
             }
             this.startActivityForResult(intent, 0);
+        } else if (event.getClazz().equals(ByteWrapper.class)) {
+            this.dataReceived = ((ByteWrapper) event.getData()).getBytes();
+            this.validateEncryptedData();
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
@@ -165,16 +180,16 @@ public final class WaitActivity extends Activity {
     public void onNewEncryptedBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
         Validate.notNull(event);
         LOGGER.info("onNewEncryptedBytesReceivedEvent called");
-        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(this.key));
-        final byte[] bytes;
-        try {
-            final String bytesAsString = new String(event.getBytes(), this.constants.getCharset());
-            final String encryptedString = this.encryptor.decryptWithPassword(bytesAsString, password);
-            bytes = encryptedString.getBytes(this.constants.getCharset());
-        } catch (final IllegalBlockSizeException | BadPaddingException e) {
-            throw new EncryptionException(e);
-        }
-        this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(bytes));
+//        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(this.key));
+//        final byte[] bytes;
+//        try {
+//            final String bytesAsString = new String(event.getBytes(), this.constants.getCharset());
+//            final String encryptedString = this.encryptor.decryptWithPassword(bytesAsString, password);
+//            bytes = encryptedString.getBytes(this.constants.getCharset());
+//        } catch (final IllegalBlockSizeException | BadPaddingException e) {
+//            throw new EncryptionException(e);
+//        }
+//        this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(bytes));
     }
 
     /**
@@ -185,6 +200,31 @@ public final class WaitActivity extends Activity {
     public void cancelWaiting(final View view) {
         this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
         this.finish();
+    }
+
+    /**
+     * Will validate and save the contact saved in the bytearray.
+     */
+    public void validateEncryptedData() {
+        try {
+            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            buffer.putLong(key);
+
+            final String k = "Bar12345Bar12345";
+            final Key aesKey = new SecretKeySpec(k.getBytes(), "AES");
+            final Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            final byte[] decryptedData = cipher.doFinal(this.dataReceived);
+
+            LOGGER.info("Decrypted data");
+            this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
+        } catch (NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

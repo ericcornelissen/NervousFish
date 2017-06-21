@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.exceptions.SerializationException;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
-import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
 import org.apache.commons.lang3.Validate;
@@ -22,9 +21,18 @@ import java.io.Serializable;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.StreamCorruptedException;
 import java.util.Arrays;
+
+import java.nio.ByteBuffer;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
@@ -60,6 +68,7 @@ abstract class APairingHandler implements IPairingHandler {
     public PairingWrapper<IDataReceiver> getDataReceiver() {
         return new PairingWrapper<>(bytes -> {
                 final byte[] srcBytes = trim(bytes);
+                LOGGER.info("Byte array received = " + Arrays.toString(bytes));
                 
                 final byte[] newBuffer = new byte[this.readBuffer.length + srcBytes.length];
                 System.arraycopy(this.readBuffer, 0, newBuffer, 0, this.readBuffer.length);
@@ -69,16 +78,14 @@ abstract class APairingHandler implements IPairingHandler {
                      ObjectInputStream ois = new ObjectInputStream(bis)) {
 
                     final DataWrapper object = (DataWrapper) ois.readObject();
-                    if (object.getClazz().equals(ByteWrapper.class)) {
-                        this.serviceLocator.postOnEventBus(new NewEncryptedBytesReceivedEvent(((ByteWrapper) object.getData()).getBytes()));
-                    } else {
-                        this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
-                    }
+                    LOGGER.info("Read object in data received");
+                    this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
 
                     this.readBuffer = new byte[0];
                 } catch (final ClassNotFoundException | IOException e) {
                     if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
                         this.readBuffer = newBuffer;
+                        LOGGER.info("Put in readbuffer");
                     } else {
                         LOGGER.error(" Couldn't start deserialization!", e);
                     }
@@ -131,7 +138,7 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object, final long key) throws BadPaddingException, IllegalBlockSizeException {
+    public final void send(final Serializable object, final Long key) throws BadPaddingException, IllegalBlockSizeException {
         LOGGER.info("Begin writing object encoded with key: {}", key);
         final byte[] bytes;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -143,10 +150,31 @@ abstract class APairingHandler implements IPairingHandler {
             LOGGER.error("Couldn't serialize the object", e);
             throw new SerializationException(e);
         }
-        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(key));
-        final String encryptedMessage = this.encryptor.encryptWithPassword(new String(bytes, this.constants.getCharset()), password);
-        final ByteWrapper byteWrapper = new ByteWrapper(encryptedMessage.getBytes(this.constants.getCharset()));
-        this.send(this.objectToBytes(byteWrapper));
+        try {
+
+            final String k = "Bar12345Bar12345";
+            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+            buffer.putLong(key);
+            final Key aesKey = new SecretKeySpec(k.getBytes(), "AES");
+            final Cipher cipher = Cipher.getInstance("AES");
+            // encrypt the text
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            final byte[] encrypted = cipher.doFinal(bytes);
+
+            LOGGER.info("Unencrypted object to send = " + Arrays.toString(object.toString().getBytes()));
+            LOGGER.info("Encrypted to send = " + Arrays.toString(encrypted));
+
+//        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(key));
+//        final String encryptedMessage = this.encryptor.encryptWithPassword(new String(bytes, this.constants.getCharset()), password);
+            final ByteWrapper byteWrapper = new ByteWrapper(encrypted);
+            this.send(this.objectToBytes(byteWrapper));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
     }
 
     protected final IServiceLocator getServiceLocator() {

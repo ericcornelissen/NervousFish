@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -191,9 +192,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      * @param event Contains the bytes that are received
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
+    public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewEncryptedBytesReceivedEvent called");
-        this.dataReceived = event.getBytes();
+        this.dataReceived = (byte[]) event.getData();
     }
 
     /**
