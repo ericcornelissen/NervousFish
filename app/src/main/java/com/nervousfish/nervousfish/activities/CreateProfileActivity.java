@@ -28,15 +28,6 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.NAME_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
-
 
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
@@ -144,19 +135,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.InputFieldResultCodes passwordValidation = this.helper.validatePassword(this.passwordInput);
         final Constants.InputFieldResultCodes repeatPasswordValidation = this.helper.validatePassword(this.repeatPasswordInput);
 
-        if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
-                && repeatPasswordValidation == EMPTY_FIELD) {
-            return ALl_FIELDS_EMPTY;
-        } else if (nameValidation == EMPTY_FIELD) {
-            return NAME_EMPTY;
-        } else if (passwordValidation == EMPTY_FIELD) {
-            return PASSWORD_EMPTY;
-        } else if (passwordValidation == TOO_SHORT_FIELD) {
-            return PASSWORD_TOO_SHORT;
+        if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD && passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD
+                && repeatPasswordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
+        } else if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.NAME_EMPTY;
+        } else if (passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
+        } else if (passwordValidation == Constants.InputFieldResultCodes.TOO_SHORT_FIELD) {
+            return Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
         } else if (this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
-            return INPUT_CORRECT;
+            return Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
         } else {
-            return PASSWORDS_NOT_EQUAL;
+            return Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
         }
     }
 

@@ -24,23 +24,22 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Helps {@link CreateProfileActivity} by providing functions to let the user input his own custom keypair
  * instead of generating a new one.
  */
+@SuppressWarnings("PMD.ImmutableField")
+// 1) Suppressed because PMD incorrectly thinks that the code int he lambda's is executed in the constructor directly
 final class CreateProfileCustomKeyHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileCustomKeyHelper");
     private static final String CUSTOM_PUBLIC_KEY = "Custom public key";
     private static final String CUSTOM_PRIVATE_KEY = "Custom private key";
-    private static final int KEY_LINES = 5;
     private final DialogInterface.OnClickListener confirmKeyTypeListener;
     private final DialogInterface.OnClickListener confirmPublicKeyListener;
     private final DialogInterface.OnClickListener confirmPrivateKeyListener;
     private final Activity activity;
-    private final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter;
     private EditText publicKeyModulusInput;
     private EditText publicKeyExponentInput;
     private EditText privateKeyModulusInput;
     private EditText privateKeyExponentInput;
     private RadioButton rsaRadioButton;
     private RadioButton ed25519RadioButton;
-    private IKey.Types customKeyType;
     private String customPublicKeyModulus = "";
     private String customPublicKeyExponent = "";
     private String customPrivateKeyModulus = "";
@@ -55,7 +54,6 @@ final class CreateProfileCustomKeyHelper {
      */
     CreateProfileCustomKeyHelper(final Activity activity, final CreateProfileActivity.CustomKeyPairSetter customKeyPairSetter) {
         this.activity = activity;
-        this.customKeyPairSetter = customKeyPairSetter;
 
         this.confirmKeyTypeListener = (dialog, which) -> {
             LOGGER.info("Confirmation button key type clicked");
@@ -65,9 +63,9 @@ final class CreateProfileCustomKeyHelper {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Key type clicked is: {}", rsaTypeEnabled ? "RSA" : ed25519TypeEnabled ? "ED25519" : "<undefined>");
             }
-            this.customKeyType = rsaTypeEnabled ? IKey.Types.RSA : IKey.Types.Ed25519;
+            final IKey.Types customKeyType = rsaTypeEnabled ? IKey.Types.RSA : IKey.Types.Ed25519;
 
-            if (this.customKeyType == IKey.Types.RSA) {
+            if (customKeyType == IKey.Types.RSA) {
                 this.askForPublicKey(false);
             } else {
                 new SweetAlertDialog(this.activity, SweetAlertDialog.WARNING_TYPE)
@@ -94,6 +92,7 @@ final class CreateProfileCustomKeyHelper {
         this.confirmPrivateKeyListener = (dialog, which) -> {
             LOGGER.info("Confirmation button private key clicked");
             this.customPrivateKeyModulus = this.privateKeyModulusInput.getText().toString();
+            this.customPrivateKeyExponent = this.privateKeyExponentInput.getText().toString();
             if (this.customPrivateKeyModulus.isEmpty()) {
                 LOGGER.warn("Private key was too short. Modulus length was: {}, exponent length was: {}",
                         this.customPrivateKeyModulus.length(), this.customPrivateKeyExponent.length());
@@ -101,7 +100,7 @@ final class CreateProfileCustomKeyHelper {
             } else {
                 final RSAKey publicKey = new RSAKey(CUSTOM_PUBLIC_KEY, this.customPublicKeyModulus, this.customPrivateKeyExponent);
                 final RSAKey privateKey = new RSAKey(CUSTOM_PRIVATE_KEY, this.customPrivateKeyModulus, this.customPrivateKeyExponent);
-                this.customKeyPairSetter.setRSAKeyPair(publicKey, privateKey);
+                customKeyPairSetter.setRSAKeyPair(publicKey, privateKey);
             }
         };
     }
