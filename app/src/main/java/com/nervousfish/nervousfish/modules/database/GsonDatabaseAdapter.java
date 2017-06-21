@@ -37,8 +37,6 @@ import javax.crypto.SecretKey;
 // classes or single methods with more logic would make the class only less understandable
 //  2) Suppressed because of the by the pojo's created to write safely, we have to import this much
 public final class GsonDatabaseAdapter implements IDatabase {
-
-    private static final long serialVersionUID = -4101015873770268925L;
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_CREATED = "Database is not created";
@@ -340,36 +338,36 @@ public final class GsonDatabaseAdapter implements IDatabase {
     /**
      * Gets the encrypted password from the databaseMap
      */
-    private String getEncryptedPassword() {
+    private String getEncryptedPassword() throws DatabaseException {
         final Object object = this.databaseMap.get(ENCRYPTED_PASSWORD);
         if (object instanceof String) {
             return (String) object;
         } else {
-            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+            throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
 
     /**
      * Gets the database from the databaseMap
      */
-    private Database getDatabase() {
+    private Database getDatabase() throws DatabaseException {
         final Object object = this.databaseMap.get(DATABASE);
         if (object instanceof Database) {
             return (Database) object;
         } else {
-            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+            throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
 
     /**
      * Gets the encryption key from the databaseMap
      */
-    private SecretKey getEncryptionKey() throws DatabaseAdapterException {
+    private SecretKey getEncryptionKey() throws DatabaseException {
         final Object object = this.databaseMap.get(ENCRYPTION_KEY);
         if (object instanceof SecretKey) {
             return (SecretKey) object;
         } else {
-            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+            throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
 

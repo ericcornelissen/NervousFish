@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.security.spec.InvalidKeySpecException;
 
@@ -26,9 +25,7 @@ import javax.crypto.SecretKey;
 /**
  * Helper method for the logical functionality of the {@link GsonDatabaseAdapter}.
  */
-final class GsonDatabaseAdapterLoader implements Serializable {
-
-    private static final long serialVersionUID = -4101015873770268925L;
+class GsonDatabaseAdapterLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger("GsonDatabaseAdapter");
     private static final Type TYPE_DATABASE = new TypeToken<Database>() {
     }.getType();
@@ -80,8 +77,8 @@ final class GsonDatabaseAdapterLoader implements Serializable {
      * Checks the password, throws IOException if it's wrong.
      *
      * @param password -   The password to check.
-     * @throws IOException Thrown when password is wrong.
      * @return Whether the password is correct.
+     * @throws IOException Thrown when password is wrong.
      */
     private boolean checkPassword(final String password) throws IOException {
         Validate.notBlank(password);
@@ -134,7 +131,7 @@ final class GsonDatabaseAdapterLoader implements Serializable {
             throw new IOException(DATABASE_WRONG_SIZE, e);
         } catch (final BadPaddingException e) {
             LOGGER.error(BAD_PADDING, e);
-            throw new DatabaseAdapterException(BAD_PADDING, e);
+            throw new DatabaseException(e);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -168,7 +166,9 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
 
         this.pairedDevices = this.bluetoothAdapter.getBondedDevices();
         for (final BluetoothDevice device : this.pairedDevices) {
-            this.pairedDevicesArrayAdapter.add(getDeviceDescription(device));
+            if (this.pairedDevicesArrayAdapter.getPosition(device.getName() + "\n" + device.getAddress()) == -1) {
+                this.pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
         }
 
         LOGGER.info("Pairing query done");
@@ -179,9 +179,6 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
      */
     public void discoverDevices() {
         this.setTitle(R.string.scanning);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-
         this.stopDiscovering();
 
         final Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -231,7 +228,8 @@ public final class BluetoothConnectionActivity extends AppCompatActivity {
         final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
         // Skip paired devices and devices without a valid name.
-        if (this.isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED) {
+        if (this.isValidDevice(device) && device.getBondState() != BluetoothDevice.BOND_BONDED
+                && this.newDevicesArrayAdapter.getPosition(device.getName() + "\n" + device.getAddress()) == -1) {
             this.newDevices.add(device);
             this.newDevicesArrayAdapter.add(getDeviceDescription(device));
         }

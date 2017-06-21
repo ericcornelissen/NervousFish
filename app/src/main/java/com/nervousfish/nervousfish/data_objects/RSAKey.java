@@ -160,7 +160,7 @@ public final class RSAKey implements IKey {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new RSAKey(this.name, this.modulus, this.exponent);
+            return new RSAKey(this.name, modulus, exponent);
         }
     }
 }

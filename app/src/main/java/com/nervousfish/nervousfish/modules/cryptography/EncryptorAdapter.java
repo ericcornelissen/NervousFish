@@ -37,7 +37,6 @@ import javax.crypto.spec.PBEParameterSpec;
 @SuppressWarnings("checkstyle:ClassFanOutComplexity")
 // 1) Suppressed because the java crypto and security libraries require a lot of objects to use correctly
 public final class EncryptorAdapter implements IEncryptor {
-    private static final long serialVersionUID = 5930930748980177440L;
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
     private static final String UTF_8_NO_LONGER_SUPPORTED = "UTF-8 is no longer an encoding algorithm";
