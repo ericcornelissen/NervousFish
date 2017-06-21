@@ -46,6 +46,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private IServiceLocator serviceLocator;
+    private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
@@ -70,7 +71,23 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
+        // Use a custom keyboard
+        this.customKeyboard = new CustomKeyboardHelper(this);
+        this.customKeyboard.addInput(this.nameInput);
+        this.customKeyboard.addInput(this.passwordInput);
+        this.customKeyboard.addInput(this.repeatPasswordInput);
+
         LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        if (this.customKeyboard.isVisible()) {
+            this.customKeyboard.hide();
+        }
     }
 
     /**

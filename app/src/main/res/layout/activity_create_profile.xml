@@ -133,5 +133,7 @@
             android:onClick="onSubmitClick"
             android:text="@string/done"
             android:textSize="@dimen/submit_text_size" />
+
+        <include layout="@layout/custom_keyboard" />
     </LinearLayout>
 </ScrollView>
