@@ -117,22 +117,17 @@ final class CreateProfileCustomKeyHelper {
      */
     private void askForKeyType() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
-        final RadioGroup keyTypeRadioButtonesWrapper = new RadioGroup(this.activity);
-        this.rsaRadioButton = new RadioButton(this.activity);
-        this.ed25519RadioButton = new RadioButton(this.activity);
-        this.rsaRadioButton.setChecked(true);
-        this.rsaRadioButton.setText(this.activity.getResources().getString(R.string.rsa_key));
-        this.ed25519RadioButton.setText(this.activity.getResources().getString(R.string.ed25519_key));
-        this.rsaRadioButton.setId(0);
-        //noinspection ResourceType Because the ID is only used because the radiogroup needs them and is not used elsewhere
-        this.ed25519RadioButton.setId(1);
-        keyTypeRadioButtonesWrapper.addView(this.rsaRadioButton);
-        keyTypeRadioButtonesWrapper.addView(this.ed25519RadioButton);
-        keyTypeRadioButtonesWrapper.setOrientation(LinearLayout.VERTICAL);
+
+        final LayoutInflater inflater = this.activity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.choose_custom_key_type, null);
+        alert.setView(dialogView);
+
+        this.rsaRadioButton = (RadioButton) dialogView.findViewById(R.id.radio_choose_custom_key_rsa);
+        this.ed25519RadioButton = (RadioButton) dialogView.findViewById(R.id.radio_choose_custom_key_ed25519);
+        if (this.)
 
         alert.setTitle(this.activity.getString(R.string.use_existing_keypair));
         alert.setMessage(this.activity.getString(R.string.choose_your_keytype));
-        alert.setView(keyTypeRadioButtonesWrapper);
 
         alert.setPositiveButton(this.activity.getString(R.string.confirm), this.confirmKeyTypeListener);
         alert.setNegativeButton(this.activity.getString(R.string.cancel), null);
