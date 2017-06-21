@@ -8,6 +8,8 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +88,7 @@ final class CreateProfileHelper {
      * @return The resultcode of validateIban.
      */
     Constants.InputFieldResultCodes validateIban(final EditText input) {
+        Validate.notNull(input);
         final String iban = input.getText().toString();
         if (EMPTY_STRING.equals(iban) || IBANVerifier.isValidIBAN(iban)) {
             input.setBackgroundColor(Color.TRANSPARENT);

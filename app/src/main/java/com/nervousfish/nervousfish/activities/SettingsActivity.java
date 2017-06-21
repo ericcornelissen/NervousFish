@@ -120,6 +120,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
          * @param stringValue The string value which is new
          */
         private void updateIban(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
             if (firstLoadIban) {
                 firstLoadIban = false;
 

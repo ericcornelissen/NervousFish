@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -33,6 +35,8 @@ public final class Profile implements Serializable {
      * @param keyPairs the public/private key-pairs of the user.
      */
     public Profile(final String name, final List<KeyPair> keyPairs) {
+        Validate.notBlank(name);
+        Validate.noNullElements(keyPairs);
         this.keyPairs = keyPairs;
         this.name = name;
         this.iban = null;
@@ -47,6 +51,8 @@ public final class Profile implements Serializable {
      * @param iban     The iban of the user.
      */
     public Profile(final String name, final List<KeyPair> keyPairs, final IBAN iban) {
+        Validate.notBlank(name);
+        Validate.noNullElements(keyPairs);
         this.keyPairs = keyPairs;
         this.name = name;
         this.iban = iban;

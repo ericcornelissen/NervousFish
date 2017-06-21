@@ -138,9 +138,11 @@ public final class ChangeContactActivity extends AppCompatActivity {
         public void onClick(final View v) {
             final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
             final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
-            if (editTextName.getText().toString().equals(contact.getName())
-                    && (editTextIBAN.getText().toString().equals(contact.getIban())
-                    || editTextIBAN.getText().toString().equals(ChangeContactActivity.this.getString(R.string.dash)))) {
+            final String name = editTextName.getText().toString();
+            final String iban = editTextIBAN.getText().toString();
+            if (name.equals(contact.getName()) && (iban.equals(contact.getIbanAsString())
+                    || iban.equals(ChangeContactActivity.this.getString(R.string.dash))
+                    || iban.equals(EMPTY_STRING))) {
                 finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)

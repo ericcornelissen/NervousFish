@@ -100,8 +100,7 @@
                         android:labelFor="@id/iv_change_contact"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/contact_name_size"
-                        android:textStyle="bold"
-                        tools:ignore="LabelFor" /> <!-- Needs no label -->
+                        android:textStyle="bold" />
                 </LinearLayout>
             </RelativeLayout>
         </android.support.design.widget.AppBarLayout>
@@ -138,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/contact_iban"
+                        android:text="@string/iban"
                         android:textColor="@color/white" />
 
                     <EditText
