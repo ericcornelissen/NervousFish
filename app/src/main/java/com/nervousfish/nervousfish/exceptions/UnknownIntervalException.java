@@ -21,6 +21,15 @@ public class UnknownIntervalException extends RuntimeException {
     }
 
     /**
+     * Constructs a new UnknownIntervalException with an exception (a throwable)
+     *
+     * @param throwable The exception that occurred the layer above
+     */
+    public UnknownIntervalException(final Throwable throwable) {
+        super(throwable);
+    }
+
+    /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
      * @param stream The serialized object to be deserialized

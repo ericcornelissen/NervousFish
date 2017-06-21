@@ -36,8 +36,6 @@ import javax.crypto.SecretKey;
  */
 @SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "PMD.TooManyMethods"})
 public final class GsonDatabaseAdapter implements IDatabase {
-
-    private static final long serialVersionUID = -4101015873770268925L;
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_CREATED = "Database is not created";
@@ -330,12 +328,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private String getEncryptedPassword() throws DatabaseAdapterException {
-        final Object object = this.databaseMap.get(ENCRYPTED_PASSWORD);
+    private String getEncryptedPassword() throws DatabaseException {
+        final Object object = databaseMap.get(ENCRYPTED_PASSWORD);
         if (object instanceof String) {
             return (String) object;
         } else {
-            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+            throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
 
@@ -344,12 +342,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private Database getDatabase() throws DatabaseAdapterException {
-        final Object object = this.databaseMap.get(DATABASE);
+    private Database getDatabase() throws DatabaseException {
+        final Object object = databaseMap.get(DATABASE);
         if (object instanceof Database) {
             return (Database) object;
         } else {
-            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+            throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
 
@@ -358,12 +356,12 @@ public final class GsonDatabaseAdapter implements IDatabase {
      *
      * @throws IOException throws IOException if the database isn't loaded yet.
      */
-    private SecretKey getEncryptionKey() throws DatabaseAdapterException {
-        final Object object = this.databaseMap.get(ENCRYPTION_KEY);
+    private SecretKey getEncryptionKey() throws DatabaseException {
+        final Object object = databaseMap.get(ENCRYPTION_KEY);
         if (object instanceof SecretKey) {
             return (SecretKey) object;
         } else {
-            throw new DatabaseAdapterException(DATABASE_NOT_CREATED);
+            throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
 

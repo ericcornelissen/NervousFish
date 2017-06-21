@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,7 +11,6 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -66,9 +64,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         this.serviceLocator = NervousFish.getServiceLocator();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-
-        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
-        this.setSupportActionBar(toolbar);
 
         this.startButton = (Button) this.findViewById(R.id.start_recording_button);
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
@@ -137,8 +132,8 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
-            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
+            LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
+            final Contact myProfileAsContact = new Contact(profile.getName(), keyPair.getPublicKey());
             final long encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (final IOException e) {

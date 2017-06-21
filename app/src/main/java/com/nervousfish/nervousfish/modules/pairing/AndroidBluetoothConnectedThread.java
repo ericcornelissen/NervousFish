@@ -60,13 +60,13 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     @Override
     public void run() {
         LOGGER.info("Connected Bluetooth thread begin");
-        this.setName("AndroidBluetoothConnectedThread thread");
+        setName("AndroidBluetoothConnectedThread thread");
 
         final byte[] buffer = new byte[BUFFER_SIZE];
+        // Read from the InputStream
         try {
-            // Read from the InputStream
             while (true) {
-                final int bytes = this.inStream.read(buffer);
+                final int bytes = inStream.read(buffer);
                 LOGGER.info("Read {} bytes", bytes);
 
                 this.dataReceiver.dataReceived(buffer);
@@ -85,7 +85,8 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     public void write(final byte[] buffer) {
         LOGGER.info("Writing the bytes {} to the outputstream", Arrays.toString(buffer));
         try {
-            this.outStream.write(buffer);
+            outStream.write(buffer);
+            outStream.flush();
         } catch (final IOException e) {
             LOGGER.error("Exception during writing", e);
         }
@@ -94,11 +95,10 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
     /**
      * Cancels the connected thread and closes the socket
      */
-    @Override
     public void cancel() {
         LOGGER.warn("Cancelled!");
         try {
-            this.socket.close();
+            socket.close();
         } catch (final IOException e) {
             LOGGER.error("Closing socket", e);
         }

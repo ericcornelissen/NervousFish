@@ -29,12 +29,12 @@ public final class ServiceLocatorTest {
 
     @Before
     public void setup() {
-        this.serviceLocator = new ServiceLocator("foo");
+        serviceLocator = new ServiceLocator("foo");
     }
     
     @Test
     public void testGetAndroidFilesDir() {
-        assertTrue("foo".equals(this.serviceLocator.getAndroidFilesDir()));
+        assertTrue("foo".equals(serviceLocator.getAndroidFilesDir()));
     }
     
     @Test
@@ -72,66 +72,47 @@ public final class ServiceLocatorTest {
 
     @Test
     public void testGetDatabase() {
-        assertNotNull(this.serviceLocator.getDatabase());
+        assertNotNull(serviceLocator.getDatabase());
     }
 
     @Test
     public void testGetKeyGenerator() {
-        assertNotNull(this.serviceLocator.getKeyGenerator());
+        assertNotNull(serviceLocator.getKeyGenerator());
     }
 
     @Test
     public void testGetEncryptor() {
-        assertNotNull(this.serviceLocator.getEncryptor());
+        assertNotNull(serviceLocator.getEncryptor());
     }
 
     @Test
     public void testGetFileSystem() {
-        assertNotNull(this.serviceLocator.getFileSystem());
+        assertNotNull(serviceLocator.getFileSystem());
     }
 
     @Test
     public void testGetConstants() {
-        assertNotNull(this.serviceLocator.getConstants());
+        assertNotNull(serviceLocator.getConstants());
     }
 
     @Test
     public void testGetBluetoothHandler() {
-        assertNotNull(this.serviceLocator.getBluetoothHandler());
+        assertNotNull(serviceLocator.getBluetoothHandler());
     }
 
     @Test
     public void testGetNfcHandler() {
-        assertNotNull(this.serviceLocator.getNFCHandler());
+        assertNotNull(serviceLocator.getNFCHandler());
     }
 
     @Test
     public void testGetQRHandler() {
-        assertNotNull(this.serviceLocator.getQRHandler());
+        assertNotNull(serviceLocator.getQRHandler());
     }
 
     @Test(expected = ServiceLocator.ModuleNotFoundException.class)
     public void testModuleNotFound() {
         new ServiceLocator(null);
-    }
-
-    @Test
-    public void testSerialization() throws IOException, ClassNotFoundException {
-        byte[] buf;
-        try (
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(baos)
-                ) {
-            oos.writeObject(this.serviceLocator);
-            buf = baos.toByteArray();
-
-            try (
-                    ByteArrayInputStream baos2 = new ByteArrayInputStream(buf);
-                    ObjectInputStream oos2 = new ObjectInputStream(baos2)
-            ) {
-                ServiceLocator object = (ServiceLocator) oos2.readObject();
-            }
-        }
     }
 
     @Test

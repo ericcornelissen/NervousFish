@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
 public final class NFCHandler extends APairingHandler implements INfcHandler {
-
-    private static final long serialVersionUID = -6465987636766819498L;
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCHandler");
 
     /**
