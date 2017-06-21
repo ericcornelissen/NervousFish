@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
@@ -70,12 +71,6 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
-
-        // Use a custom keyboard
-        this.customKeyboard = new CustomKeyboardHelper(this);
-        this.customKeyboard.addInput(this.nameInput);
-        this.customKeyboard.addInput(this.passwordInput);
-        this.customKeyboard.addInput(this.repeatPasswordInput);
 
         LOGGER.info("Activity created");
     }
