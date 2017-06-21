@@ -75,4 +75,7 @@
     <dimen name="no_users_text_margin_bottom">40dp</dimen>
     <dimen name="no_users_icon_size">150dp</dimen>
     <dimen name="no_users_icon_margin_bottom">20dp</dimen>
+
+    <!-- Custom keyboard -->
+    <dimen name="keyboard_button_radius">4dp</dimen>
 </resources>
