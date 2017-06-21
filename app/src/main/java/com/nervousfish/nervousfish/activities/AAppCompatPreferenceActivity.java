@@ -43,7 +43,6 @@ public abstract class AAppCompatPreferenceActivity extends PreferenceActivity {
     @Override
     protected final void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Validate.notNull(savedInstanceState);
         this.mDelegate.onPostCreate(savedInstanceState);
     }
 

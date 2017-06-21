@@ -38,7 +38,6 @@ final class CreateProfileHelper {
      */
     CreateProfileHelper(final IKeyGenerator keyGenerator, final int alertColor) {
         Validate.notNull(keyGenerator);
-        Validate.isTrue(alertColor > 0);
         this.keyGenerator = keyGenerator;
         this.alertColor = alertColor;
     }
