@@ -8,8 +8,6 @@ import android.widget.Button;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
@@ -17,7 +15,6 @@ import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
 import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
-import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -195,7 +192,11 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewEncryptedBytesReceivedEvent called");
-        this.dataReceived = ((ByteWrapper) event.getData()).getBytes();
+        try {
+            this.dataReceived = ((ByteWrapper) event.getData()).getBytes();
+        } catch (final ClassCastException e) {
+            LOGGER.error("Something else than a ByteWrapper is received: ", e);
+        }
     }
 
     /**

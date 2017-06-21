@@ -7,18 +7,12 @@ import android.view.View;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
-import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
-import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,16 +112,5 @@ public final class VisualVerificationActivity extends Activity {
             this.securityCode += button;
             LOGGER.info("code so far: {}", this.securityCode);
         }
-    }
-
-    /**
-     * Called when a new byte array is received.
-     *
-     * @param event Contains the byte array
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
-        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
-        this.dataReceived = event.getBytes();
     }
 }

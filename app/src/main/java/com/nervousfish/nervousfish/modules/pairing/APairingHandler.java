@@ -156,24 +156,16 @@ abstract class APairingHandler implements IPairingHandler {
             final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
             buffer.putLong(key);
             final Key aesKey = new SecretKeySpec(k.getBytes(), "AES");
-            final Cipher cipher = Cipher.getInstance("AES");
+            final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             // encrypt the text
             cipher.init(Cipher.ENCRYPT_MODE, aesKey);
             final byte[] encrypted = cipher.doFinal(bytes);
 
-            LOGGER.info("Unencrypted object to send = " + Arrays.toString(object.toString().getBytes()));
-            LOGGER.info("Encrypted to send = " + Arrays.toString(encrypted));
-
-//        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(key));
-//        final String encryptedMessage = this.encryptor.encryptWithPassword(new String(bytes, this.constants.getCharset()), password);
             final ByteWrapper byteWrapper = new ByteWrapper(encrypted);
+            LOGGER.info("Sending data encrypted");
             this.send(this.objectToBytes(byteWrapper));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
+            LOGGER.info("An error occured encrypting the data", e);
         }
     }
 

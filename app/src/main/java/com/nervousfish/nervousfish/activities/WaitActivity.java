@@ -12,18 +12,15 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
-import com.nervousfish.nervousfish.exceptions.EncryptionException;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
-import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
-import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -39,7 +36,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+
 import java.io.IOException;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -172,27 +169,6 @@ public final class WaitActivity extends Activity {
     }
 
     /**
-     * Called when a new byte array is received.
-     *
-     * @param event Contains the byte array
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewEncryptedBytesReceivedEvent(final NewEncryptedBytesReceivedEvent event) {
-        Validate.notNull(event);
-        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
-//        final SecretKey password = this.encryptor.makeKeyFromPassword(Long.toString(this.key));
-//        final byte[] bytes;
-//        try {
-//            final String bytesAsString = new String(event.getBytes(), this.constants.getCharset());
-//            final String encryptedString = this.encryptor.decryptWithPassword(bytesAsString, password);
-//            bytes = encryptedString.getBytes(this.constants.getCharset());
-//        } catch (final IllegalBlockSizeException | BadPaddingException e) {
-//            throw new EncryptionException(e);
-//        }
-//        this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(bytes));
-    }
-
-    /**
      * Can be called by a button to cancel the pairing
      *
      * @param view The view that called this method
@@ -212,18 +188,14 @@ public final class WaitActivity extends Activity {
 
             final String k = "Bar12345Bar12345";
             final Key aesKey = new SecretKeySpec(k.getBytes(), "AES");
-            final Cipher cipher = Cipher.getInstance("AES");
+            final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, aesKey);
             final byte[] decryptedData = cipher.doFinal(this.dataReceived);
 
             LOGGER.info("Decrypted data");
             this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
-        } catch (NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("An error occured when validating the encrypted data", e);
         }
     }
 
