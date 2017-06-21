@@ -1,6 +1,7 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.exceptions;
 
 import com.nervousfish.nervousfish.TestException;
+import com.nervousfish.nervousfish.exceptions.DeserializationException;
 
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ import java.io.ObjectOutputStream;
 import static org.junit.Assert.assertTrue;
 
 public class DeserializationExceptionTest {
+
     @Test
     public void testExceptionConstructorString() {
         DeserializationException keyGenerationException = new DeserializationException("foo");
@@ -69,4 +71,5 @@ public class DeserializationExceptionTest {
             }
         }
     }
+
 }

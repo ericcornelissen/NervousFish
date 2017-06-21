@@ -1,4 +1,4 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.exceptions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -55,4 +55,5 @@ final class DeserializationException extends RuntimeException {
     private void ensureClassInvariant() {
         // No checks to perform
     }
+
 }
