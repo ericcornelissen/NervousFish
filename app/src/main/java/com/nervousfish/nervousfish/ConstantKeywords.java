@@ -16,8 +16,6 @@ public final class ConstantKeywords {
     public static final String CHOOSE_VERIFICATION_PREFERENCE = "choose_verification_method_every_time";
     public static final String DISPLAY_NAME = "display_name";
 
-    public static final String SUCCESSFUL_EXCHANGE = "Successful exchange";
-
     public static final int CANCEL_PAIRING_RESULT_CODE = 44;
     public static final int DONE_PAIRING_RESULT_CODE = 55;
     public static final int START_RHYTHM_REQUEST_CODE = 66;

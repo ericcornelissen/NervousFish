@@ -1,6 +1,7 @@
 package com.nervousfish.nervousfish.test;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 
@@ -76,11 +77,14 @@ public class MainSteps {
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
-
+        allowPermissionsIfNeeded();
+      
         try {
             onView(withText(R.string.no)).perform(click());
         } catch (NoMatchingViewException ignore) {
         }
+
+        allowPermissionsIfNeeded();
     }
 
     @Given("^there is a contact with the name (.*?) in the database$")
@@ -159,4 +163,11 @@ public class MainSteps {
         intended(hasComponent(ContactActivity.class.getName()));
     }
 
+    private void allowPermissionsIfNeeded()  {
+        if (Build.VERSION.SDK_INT >= 23) {
+            try {
+                onView(withText("Allow")).perform(click());
+            } catch (NoMatchingViewException ignore) { }
+        }
+    }
 }

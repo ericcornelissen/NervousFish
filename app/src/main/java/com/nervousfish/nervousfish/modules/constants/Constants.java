@@ -13,16 +13,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 /**
  * Class containing global constants for the application. These constants are definied in this file, because
  * they're used by multiple files and don't logically belong to any one of them.
  */
 public final class Constants implements IConstants {
-
-    private static final long serialVersionUID = -2465684567600871939L;
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private static final String DB_USERDATA_PATH = "accountInformation.json";
     private static final String DB_CONTACTS_PATH = "contacts.json";
@@ -33,9 +28,9 @@ public final class Constants implements IConstants {
     // Name for the SDP record when creating server socket
     private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
     private static final Charset CHARSET = StandardCharsets.UTF_8;
-    private transient String androidFilesDir;
-    private transient String databaseContactsPath;
-    private transient String databaseUserPath;
+    private final String androidFilesDir;
+    private final String databaseContactsPath;
+    private final String databaseUserPath;
 
     /**
      * Prevents construction from outside the class.
@@ -44,7 +39,10 @@ public final class Constants implements IConstants {
      */
     private Constants(final IServiceLocator serviceLocator) {
         this.androidFilesDir = serviceLocator.getAndroidFilesDir();
-        this.initializePaths();
+        //noinspection StringConcatenationMissingWhitespace because this is a file path
+        this.databaseContactsPath = this.androidFilesDir + Constants.DB_CONTACTS_PATH;
+        //noinspection StringConcatenationMissingWhitespace because this is a file path
+        this.databaseUserPath = this.androidFilesDir + Constants.DB_USERDATA_PATH;
         LOGGER.info("Initialized");
     }
 
@@ -114,44 +112,6 @@ public final class Constants implements IConstants {
     @Override
     public Charset getCharset() {
         return CHARSET;
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.androidFilesDir = stream.readUTF();
-        this.initializePaths();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        stream.writeUTF(this.androidFilesDir);
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        assertThat(this.androidFilesDir, notNullValue());
-        assertThat(this.databaseContactsPath, notNullValue());
-        assertThat(this.databaseUserPath, notNullValue());
-    }
-
-    private void initializePaths() {
-        //noinspection StringConcatenationMissingWhitespace because this is a file path
-        this.databaseContactsPath = this.androidFilesDir + Constants.DB_CONTACTS_PATH;
-        //noinspection StringConcatenationMissingWhitespace because this is a file path
-        this.databaseUserPath = this.androidFilesDir + Constants.DB_USERDATA_PATH;
     }
 
     /**

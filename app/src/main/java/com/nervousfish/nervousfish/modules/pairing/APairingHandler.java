@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
+import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.exceptions.SerializationException;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,6 +23,8 @@ import java.io.Serializable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
+import java.io.StreamCorruptedException;
+import java.util.Arrays;
 
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
@@ -35,6 +39,7 @@ abstract class APairingHandler implements IPairingHandler {
     private final IServiceLocator serviceLocator;
     private final IConstants constants;
     private final IEncryptor encryptor;
+    private byte[] readBuffer = new byte[0];
 
     /**
      * Prevent instantiation by other classes outside it's package
@@ -51,21 +56,49 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final PairingWrapper<IDataReceiver> getDataReceiver() {
+    @DesignedForExtension
+    public PairingWrapper<IDataReceiver> getDataReceiver() {
         return new PairingWrapper<>(bytes -> {
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                 ObjectInputStream ois = new ObjectInputStream(bis)) {
-                final DataWrapper object = (DataWrapper) ois.readObject();
-                if (object.getClazz().equals(ByteWrapper.class)) {
-                    this.serviceLocator.postOnEventBus(new NewEncryptedBytesReceivedEvent(((ByteWrapper) object.getData()).getBytes()));
-                } else {
-                    this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                final byte[] srcBytes = trim(bytes);
+                
+                final byte[] newBuffer = new byte[this.readBuffer.length + srcBytes.length];
+                System.arraycopy(this.readBuffer, 0, newBuffer, 0, this.readBuffer.length);
+                System.arraycopy(srcBytes, 0, newBuffer, this.readBuffer.length, srcBytes.length);
+
+                try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
+                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+
+                    final DataWrapper object = (DataWrapper) ois.readObject();
+                    if (object.getClazz().equals(ByteWrapper.class)) {
+                        this.serviceLocator.postOnEventBus(new NewEncryptedBytesReceivedEvent(((ByteWrapper) object.getData()).getBytes()));
+                    } else {
+                        this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+                    }
+
+                    this.readBuffer = new byte[0];
+                } catch (final ClassNotFoundException | IOException e) {
+                    if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
+                        this.readBuffer = newBuffer;
+                    } else {
+                        LOGGER.error(" Couldn't start deserialization!", e);
+                    }
                 }
-            } catch (final ClassNotFoundException | IOException e) {
-                LOGGER.error(" Couldn't start deserialization!", e);
-                 throw new DeserializationException(e);
-            }
         });
+    }
+
+    /**
+     * Trims a byte array to not contain any 0's at the end.
+     *
+     * @param bytes The byte[] to be trimmed
+     * @return the newly trimmed byte[]
+     */
+    private static byte[] trim(final byte[] bytes) {
+        int i = bytes.length - 1;
+        while (i >= 0 && bytes[i] == 0) {
+            --i;
+        }
+
+        return Arrays.copyOf(bytes, i + 1);
     }
 
     /**
@@ -118,31 +151,5 @@ abstract class APairingHandler implements IPairingHandler {
 
     protected final IServiceLocator getServiceLocator() {
         return this.serviceLocator;
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        Validate.notNull(this.serviceLocator);
     }
 }

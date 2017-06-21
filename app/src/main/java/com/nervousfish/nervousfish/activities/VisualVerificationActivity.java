@@ -13,6 +13,7 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.EncryptionException;
 import com.nervousfish.nervousfish.modules.pairing.events.NewEncryptedBytesReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -83,8 +84,7 @@ public final class VisualVerificationActivity extends Activity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
 
-            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
-            this.serviceLocator.getBluetoothHandler().send(myProfileAsContact, this.securityCode);
+            this.serviceLocator.getBluetoothHandler().send(profile.getContact(), this.securityCode);
         } catch (final BadPaddingException | IllegalBlockSizeException e) {
             LOGGER.error("Could not encrypt the contact");
             throw new EncryptionException(e);

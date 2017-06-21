@@ -32,7 +32,7 @@ public final class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.login);
+        this.setContentView(R.layout.activity_login);
 
         this.serviceLocator = NervousFish.getServiceLocator();
 
@@ -51,7 +51,7 @@ public final class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Validate a login attempt.
+     * Validate a activity_login attempt.
      *
      * @param view The submit button that was clicked
      */

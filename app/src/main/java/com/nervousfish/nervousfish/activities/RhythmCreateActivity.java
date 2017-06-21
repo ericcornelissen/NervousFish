@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -68,9 +67,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         this.serviceLocator = NervousFish.getServiceLocator();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-
-        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
-        this.setSupportActionBar(toolbar);
 
         this.startButton = (Button) this.findViewById(R.id.start_recording_button);
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
@@ -146,6 +142,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
             LOGGER.error("Could not encrypt the contact");
             throw new EncryptionException(e);
         }
+
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
@@ -158,7 +155,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      *
      * @param v - the {@link View} clicked
      */
-
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
         this.taps = new ArrayList<>();

@@ -11,7 +11,7 @@ import javax.crypto.IllegalBlockSizeException;
 /**
  * Defines the interface implemented by all pairing handlers
  */
-interface IPairingHandler extends IModule, Serializable {
+interface IPairingHandler extends IModule {
 
     /**
      * Serializes an object and returns it's bytes by using the subclass specific method

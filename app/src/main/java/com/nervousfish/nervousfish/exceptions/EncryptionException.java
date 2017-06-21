@@ -18,8 +18,7 @@ public class EncryptionException extends RuntimeException {
     }
 
     /**
-     * Constructs a new EncryptionException that's thrown when there is an issue while
-     * encrypting / decrypting
+     * Constructs a new EncryptionException that's thrown when there is an issue while encrypting.
      *
      * @param throwable The exception that occurred the layer above
      */

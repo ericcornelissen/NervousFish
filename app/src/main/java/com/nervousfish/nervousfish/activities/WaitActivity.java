@@ -33,6 +33,7 @@ import java.io.Serializable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
+import java.io.IOException;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -49,6 +50,8 @@ public final class WaitActivity extends Activity {
     private IConstants constants;
     private byte[] dataReceived;
     private long key;
+    private Contact contactReceived;
+    private Object tapCombination;
 
     /**
      * {@inheritDoc}
@@ -115,8 +118,8 @@ public final class WaitActivity extends Activity {
     @Override
     protected void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Activity stopped");
 
+        LOGGER.info("Activity stopped");
         super.onStop();
     }
 
@@ -149,7 +152,7 @@ public final class WaitActivity extends Activity {
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
-            this.goToMainActivity();
+            this.goToMainActivity(contact);
         }
     }
 
@@ -186,12 +189,21 @@ public final class WaitActivity extends Activity {
 
     /**
      * Launch the mainActivity at the top.
+     *
+     * @param contact The contact to give to the {@link MainActivity}.
      */
-    private void goToMainActivity() {
+    private void goToMainActivity(final Contact contact) {
         LOGGER.info("Going to the main activity");
+        try {
+            this.serviceLocator.getBluetoothHandler().stop();
+            this.serviceLocator.getBluetoothHandler().start();
+        } catch (IOException e) {
+            LOGGER.error("Restarting the threads went wrong", e);
+        }
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
     }
+
 }

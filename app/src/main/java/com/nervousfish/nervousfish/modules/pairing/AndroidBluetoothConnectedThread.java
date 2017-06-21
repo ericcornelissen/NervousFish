@@ -63,8 +63,8 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
         setName("AndroidBluetoothConnectedThread thread");
 
         final byte[] buffer = new byte[BUFFER_SIZE];
+        // Read from the InputStream
         try {
-            // Read from the InputStream
             while (true) {
                 final int bytes = inStream.read(buffer);
                 LOGGER.info("Read {} bytes", bytes);
@@ -86,6 +86,7 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
         LOGGER.info("Writing the bytes {} to the outputstream", Arrays.toString(buffer));
         try {
             outStream.write(buffer);
+            outStream.flush();
         } catch (final IOException e) {
             LOGGER.error("Exception during writing", e);
         }
