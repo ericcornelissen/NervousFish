@@ -32,7 +32,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        serviceLocator.registerToEventBus(this);
     }
 
     /**
@@ -60,6 +59,15 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     @Override
     public void connect(final BluetoothDevice device) {
         this.getService().connect(device);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void restart() throws IOException {
+        this.getService().start();
+        this.getService().stop();
     }
 
     /**

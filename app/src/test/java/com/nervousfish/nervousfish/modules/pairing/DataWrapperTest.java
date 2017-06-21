@@ -1,26 +1,20 @@
 package com.nervousfish.nervousfish.modules.pairing;
 
-<<<<<<< HEAD
 import org.junit.Test;
 
 import java.io.Serializable;
-=======
-import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.data_objects.tap.ATapData;
-
-import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
->>>>>>> origin
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class DataWrapperTest {
+
     @Test
     public void testGetData() throws Exception {
         Serializable mock = mock(Serializable.class);
@@ -50,4 +44,5 @@ public class DataWrapperTest {
             }
         }
     }
+
 }

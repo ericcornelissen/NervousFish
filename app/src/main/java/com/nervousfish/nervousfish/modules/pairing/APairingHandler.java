@@ -2,12 +2,9 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.exceptions.SerializationException;
-import com.nervousfish.nervousfish.modules.constants.IConstants;
-import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +19,6 @@ import java.io.Serializable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import java.io.StreamCorruptedException;
 import java.util.Arrays;
 
@@ -42,11 +38,8 @@ import javax.crypto.spec.SecretKeySpec;
 abstract class APairingHandler implements IPairingHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
-    private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
-    private final IConstants constants;
-    private final IEncryptor encryptor;
     private byte[] readBuffer = new byte[0];
 
     /**
@@ -56,8 +49,6 @@ abstract class APairingHandler implements IPairingHandler {
      */
     APairingHandler(final IServiceLocator serviceLocator) {
         this.serviceLocator = serviceLocator;
-        this.constants = this.serviceLocator.getConstants();
-        this.encryptor = this.serviceLocator.getEncryptor();
     }
 
     /**
@@ -67,29 +58,29 @@ abstract class APairingHandler implements IPairingHandler {
     @DesignedForExtension
     public PairingWrapper<IDataReceiver> getDataReceiver() {
         return new PairingWrapper<>(bytes -> {
-                final byte[] srcBytes = trim(bytes);
-                LOGGER.info("Byte array received = " + Arrays.toString(bytes));
-                
-                final byte[] newBuffer = new byte[this.readBuffer.length + srcBytes.length];
-                System.arraycopy(this.readBuffer, 0, newBuffer, 0, this.readBuffer.length);
-                System.arraycopy(srcBytes, 0, newBuffer, this.readBuffer.length, srcBytes.length);
+            final byte[] srcBytes = trim(bytes);
+            LOGGER.info("Byte array received = " + Arrays.toString(bytes));
 
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
-                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+            final byte[] newBuffer = new byte[this.readBuffer.length + srcBytes.length];
+            System.arraycopy(this.readBuffer, 0, newBuffer, 0, this.readBuffer.length);
+            System.arraycopy(srcBytes, 0, newBuffer, this.readBuffer.length, srcBytes.length);
 
-                    final DataWrapper object = (DataWrapper) ois.readObject();
-                    LOGGER.info("Read object in data received");
-                    this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
 
-                    this.readBuffer = new byte[0];
-                } catch (final ClassNotFoundException | IOException e) {
-                    if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
-                        this.readBuffer = newBuffer;
-                        LOGGER.info("Put in readbuffer");
-                    } else {
-                        LOGGER.error(" Couldn't start deserialization!", e);
-                    }
+                final DataWrapper object = (DataWrapper) ois.readObject();
+                LOGGER.info("Read object in data received");
+                this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+
+                this.readBuffer = new byte[0];
+            } catch (final ClassNotFoundException | IOException e) {
+                if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
+                    this.readBuffer = newBuffer;
+                    LOGGER.info("Put in readbuffer");
+                } else {
+                    LOGGER.error(" Couldn't start deserialization!", e);
                 }
+            }
         });
     }
 
@@ -141,6 +132,7 @@ abstract class APairingHandler implements IPairingHandler {
     public final void send(final Serializable object, final Long key) throws BadPaddingException, IllegalBlockSizeException {
         LOGGER.info("Begin writing object encoded with key: {}", key);
         final byte[] bytes;
+
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(new DataWrapper(object));
@@ -150,12 +142,13 @@ abstract class APairingHandler implements IPairingHandler {
             LOGGER.error("Couldn't serialize the object", e);
             throw new SerializationException(e);
         }
+
         try {
-            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2);
-            buffer.putLong(key);
+            final ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
             buffer.putLong(key);
             final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
-            final Cipher cipher = Cipher.getInstance("AES");
+            final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
             // encrypt the text
             cipher.init(Cipher.ENCRYPT_MODE, aesKey);
             final byte[] encrypted = cipher.doFinal(bytes);
@@ -168,7 +161,4 @@ abstract class APairingHandler implements IPairingHandler {
         }
     }
 
-    protected final IServiceLocator getServiceLocator() {
-        return this.serviceLocator;
-    }
 }

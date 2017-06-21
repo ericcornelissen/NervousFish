@@ -29,7 +29,7 @@ public final class VisualVerificationActivity extends Activity {
     private static final int NUM_BUTTONS = 12;
 
     private IServiceLocator serviceLocator;
-    private int securityCode;
+    private long securityCode;
     private int numTaps;
     private byte[] dataReceived;
 
@@ -78,7 +78,7 @@ public final class VisualVerificationActivity extends Activity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey());
 
-            this.serviceLocator.getBluetoothHandler().send(profile.getContact(), new Long(this.securityCode));
+            this.serviceLocator.getBluetoothHandler().send(profile.getContact(), this.securityCode);
         } catch (final BadPaddingException | IllegalBlockSizeException e) {
             LOGGER.error("Could not encrypt the contact");
             throw new EncryptionException(e);
@@ -113,4 +113,5 @@ public final class VisualVerificationActivity extends Activity {
             LOGGER.info("code so far: {}", this.securityCode);
         }
     }
+
 }

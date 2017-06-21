@@ -22,6 +22,11 @@ public interface IBluetoothCommunicator {
     void connect(BluetoothDevice device);
 
     /**
+     * Restarts all threads
+     */
+    void restart() throws IOException;
+
+    /**
      * Stop all threads
      */
     void stop();

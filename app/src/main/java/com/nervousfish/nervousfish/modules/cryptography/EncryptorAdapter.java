@@ -10,9 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -26,11 +29,15 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * An adapter to the default Java class for encrypting messages
  */
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
+// Relys on many other classes for proper encryption, which is a trade of worth making
 public final class EncryptorAdapter implements IEncryptor {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
     private static final String UTF_8_NO_LONGER_SUPPORTED = "UTF-8 is no longer an encoding algorithm";
@@ -38,7 +45,6 @@ public final class EncryptorAdapter implements IEncryptor {
     private static final int SEED = 1234569;
     private static final int IV_SPEC_SIZE = 8;
     private static final String UTF_8 = "UTF-8";
-
 
     /**
      * Prevents construction from outside the class.
@@ -102,6 +108,20 @@ public final class EncryptorAdapter implements IEncryptor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte[] decryptWithPassword(final byte[] toDecrypt, final long key) throws GeneralSecurityException {
+        LOGGER.info("Started decrypting byte array with password");
+
+        final ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
+        buffer.putLong(key);
+        final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
+        final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+        return cipher.doFinal(toDecrypt);
+    }
 
     /**
      * {@inheritDoc}
@@ -109,15 +129,14 @@ public final class EncryptorAdapter implements IEncryptor {
     @Override
     public String decryptWithPassword(final String toDecrypt, final SecretKey key) throws EncryptionException,
             IllegalBlockSizeException, BadPaddingException {
-        LOGGER.info("Started decrypting with password");
-
+        LOGGER.info("Started decrypting string with password");
 
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.DECRYPT_MODE;
-        final Cipher cipher = getCipher(key, ivSpec, mode);
+        final Cipher cipher = this.getCipher(key, ivSpec, mode);
 
         try {
             final byte[] decodedValue = Base64.decode(toDecrypt, Base64.DEFAULT);
@@ -137,13 +156,12 @@ public final class EncryptorAdapter implements IEncryptor {
             IllegalBlockSizeException, BadPaddingException {
         LOGGER.info("Started encrypting with password");
 
-
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.ENCRYPT_MODE;
-        final Cipher cipher = getCipher(key, ivSpec, mode);
+        final Cipher cipher = this.getCipher(key, ivSpec, mode);
 
         try {
             final byte[] cipherText = cipher.doFinal(toEncrypt.getBytes(UTF_8));

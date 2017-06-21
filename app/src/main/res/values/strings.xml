@@ -4,6 +4,7 @@
     <!-- Words -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
     <string name="ed25519_key">Ed25519 key</string>
@@ -94,7 +95,6 @@
     <string name="add_public_key_to_contact">Add public key to contact</string>
     <string name="create_new_contact">Create a new contact</string>
     <string name="enter_name_contact">Enter the name of the new contact</string>
-    <string name="confirm">Confirm</string>
     <string name="not_the_same_rhythm_title">Rhythm not the same</string>
     <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
 
@@ -128,12 +128,10 @@
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>
-
     <string name="pref_verification_method_to_use">Verification method to use</string>
 
     <!-- Profile Settings -->
     <string name="pref_header_profile">Profile information</string>
-
     <string name="display_name">Display name</string>
 
     <!-- KeyManagementActivity -->

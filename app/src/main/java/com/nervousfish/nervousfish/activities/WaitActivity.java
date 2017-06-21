@@ -12,9 +12,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
-import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -26,19 +24,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import java.io.IOException;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -51,11 +41,7 @@ public final class WaitActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
     private IEncryptor encryptor;
-    private IDatabase database;
-    private IConstants constants;
     private byte[] dataReceived;
-    private Contact contactReceived;
-    private Object tapCombination;
     private Long key;
 
     /**
@@ -67,16 +53,10 @@ public final class WaitActivity extends Activity {
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
         this.encryptor = this.serviceLocator.getEncryptor();
-        this.database = this.serviceLocator.getDatabase();
-        this.constants = this.serviceLocator.getConstants();
 
         final Intent intent = this.getIntent();
-
         this.dataReceived = (byte[]) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        final Serializable keyFromIntent = intent.getSerializableExtra(ConstantKeywords.KEY);
-        if (keyFromIntent != null) {
-            this.key = (long) intent.getSerializableExtra(ConstantKeywords.KEY);
-        }
+        this.key = (Long) intent.getSerializableExtra(ConstantKeywords.KEY);
 
         LOGGER.info("dataReceived is not null: {}, key is: {}", this.dataReceived != null, this.key);
 
@@ -110,12 +90,8 @@ public final class WaitActivity extends Activity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
 
-//        if (this.dataReceived != null) {
-//            this.onNewEncryptedBytesReceivedEvent(new NewEncryptedBytesReceivedEvent(this.dataReceived));
-//        }
-
         if (this.dataReceived != null && this.key != null) {
-            validateEncryptedData();
+            this.validateEncryptedData();
         }
 
         LOGGER.info("Activity started");
@@ -163,7 +139,6 @@ public final class WaitActivity extends Activity {
             this.validateEncryptedData();
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
             this.goToMainActivity(contact);
         }
     }
@@ -183,21 +158,16 @@ public final class WaitActivity extends Activity {
      */
     public void validateEncryptedData() {
         try {
-            final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2);
-            buffer.putLong(key);
-            buffer.putLong(key);
-            final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
-            final Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            final byte[] decryptedData = cipher.doFinal(this.dataReceived);
-
+            final byte[] decryptedData = this.encryptor.decryptWithPassword(this.dataReceived, this.key);
             LOGGER.info("Decrypted data");
             this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
         } catch (BadPaddingException e) {
-            LOGGER.warn("Keys didn't match!");
-            this.goToRhythmActivity();
-        } catch (InvalidKeyException | IllegalBlockSizeException | NoSuchAlgorithmException | NoSuchPaddingException e) {
-            LOGGER.error("An error occured when validating the encrypted data", e);
+            LOGGER.warn("Keys didn't match! Going back to the rhythm activity");
+            final Intent intent = new Intent(this, RhythmCreateActivity.class);
+            intent.putExtra(ConstantKeywords.RHYTHM_FAILURE, true);
+            this.startActivity(intent);
+        } catch (GeneralSecurityException e) {
+            LOGGER.error("An error occurred when validating the encrypted data", e);
         }
     }
 
@@ -208,25 +178,17 @@ public final class WaitActivity extends Activity {
      */
     private void goToMainActivity(final Contact contact) {
         LOGGER.info("Going to the main activity");
+
         try {
-            this.serviceLocator.getBluetoothHandler().stop();
-            this.serviceLocator.getBluetoothHandler().start();
-        } catch (IOException e) {
+            this.serviceLocator.getBluetoothHandler().restart();
+        } catch (final IOException e) {
             LOGGER.error("Restarting the threads went wrong", e);
         }
+
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(intent);
     }
 
-    /**
-     * Launch the RhythmActivity after failure.
-     */
-    private void goToRhythmActivity() {
-        LOGGER.info("Going to the rhythm activity");
-        final Intent intent = new Intent(this, RhythmCreateActivity.class);
-        intent.putExtra(ConstantKeywords.RHYTHM_FAILURE, true);
-        this.startActivity(intent);
-    }
 }

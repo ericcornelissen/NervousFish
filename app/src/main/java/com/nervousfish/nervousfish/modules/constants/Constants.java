@@ -6,9 +6,6 @@ import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -18,6 +15,7 @@ import java.util.UUID;
  * they're used by multiple files and don't logically belong to any one of them.
  */
 public final class Constants implements IConstants {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private static final String DB_USERDATA_PATH = "accountInformation.json";
     private static final String DB_CONTACTS_PATH = "contacts.json";
@@ -128,4 +126,5 @@ public final class Constants implements IConstants {
         INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
         PASSWORDS_NOT_EQUAL, ALL_FIELDS_EMPTY
     }
+
 }

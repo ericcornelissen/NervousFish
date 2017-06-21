@@ -8,6 +8,7 @@ public final class ConstantKeywords {
 
     public static final String ED25519_KEY = "ed25519";
     public static final String RSA_KEY = "RSA";
+    public static final String AES = "AES";
     public static final String CONTACT = "contact";
     public static final String PROXY_REQUIRED = "Proxy required.";
     public static final String WAIT_MESSAGE = "Wait message";
