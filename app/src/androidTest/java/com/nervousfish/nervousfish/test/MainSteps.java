@@ -2,13 +2,11 @@ package com.nervousfish.nervousfish.test;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.BluetoothConnectionActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
@@ -22,7 +20,6 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
-import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -123,6 +120,11 @@ public class MainSteps {
                 .perform(click());
     }
 
+    @When("^I click the button with the Bluetooth icon$")
+    public void iClickBluetoothButton() {
+        onView(withId(R.id.pairing_menu_bluetooth)).perform(click());
+    }
+
     @When("^I click the button with the NFC icon$")
     public void iClickNFCButton() {
         onView(withId(R.id.pairing_menu_nfc)).perform(click());
@@ -136,6 +138,11 @@ public class MainSteps {
     @When("^I click on the contact with the name (.*?)$")
     public void iClickOnTheContactWithTheName(final String name) {
         onView(withText(name)).perform(click());
+    }
+
+    @When("^I click the button with the Bluetooth text label$")
+    public void iClickBluetoothLabel() {
+        onView(withText(R.string.bluetooth)).perform(click());
     }
 
     @When("^I click the button with the NFC text label$")
@@ -161,6 +168,25 @@ public class MainSteps {
     @Then("^I should go to the settings screen$")
     public void iShouldGoToSettingsScreen() {
         intended(hasComponent(SettingsActivity.class.getName()));
+    }
+
+    @Then("^I should go to the Bluetooth activity from main$")
+    public void iShouldGoToTheBluetoothActivity() {
+        final Activity activity = this.mActivityRule.getActivity();
+        final View bluetoothButton = activity.findViewById(R.id.pairing_menu_bluetooth);
+        if (bluetoothButton.isEnabled()) {
+            try {
+                onView(withText(R.string.no)).perform(click());
+
+                // If a popup showed up, we should stay in the MainActivity (since we clicked "no")
+                intended(hasComponent(MainActivity.class.getName()));
+            } catch (NoMatchingViewException ignore) {
+                this.allowPermissionsIfNeeded();
+
+                // If no popup showed up, the NFC activity should be displayed
+                intended(hasComponent(NFCActivity.class.getName()));
+            }
+        }
     }
 
     @Then("^I should go to the NFC activity from main$")
@@ -190,12 +216,10 @@ public class MainSteps {
         intended(hasComponent(ContactActivity.class.getName()));
     }
 
-    private void allowPermissionsIfNeeded()  {
-        if (Build.VERSION.SDK_INT >= 23) {
-            try {
-                onView(withText("Allow")).perform(click());
-            } catch (NoMatchingViewException ignore) { }
-        }
+    private void allowPermissionsIfNeeded() {
+        try {
+            onView(withText("Allow")).perform(click());
+        } catch (NoMatchingViewException ignore) { }
     }
 
 }
