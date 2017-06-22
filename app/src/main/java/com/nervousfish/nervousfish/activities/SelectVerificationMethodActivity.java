@@ -73,7 +73,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
                 } catch (final IOException e) {
                     LOGGER.error("Sending the Verification RHYTHM went wrong: ", e);
                 }
-                intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                intent.setComponent(new ComponentName(this, RhythmVerificationActivity.class));
                 break;
             default:
                 LOGGER.warn("unknown verification method selected, view: {}", view);
@@ -132,7 +132,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
             switch (verificationMethod) {
                 case RHYTHM:
                     //Go to RhythmActivity
-                    intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                    intent.setComponent(new ComponentName(this, RhythmVerificationActivity.class));
                     break;
                 case VISUAL:
                     //Go to VisualVerificationActivity

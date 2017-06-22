@@ -115,7 +115,7 @@ public final class WaitActivity extends Activity {
             switch (verificationMethod) {
                 case RHYTHM:
                     //Go to RhythmActivity
-                    intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                    intent.setComponent(new ComponentName(this, RhythmVerificationActivity.class));
                     break;
                 case VISUAL:
                     //Go to VisualVerificationActivity

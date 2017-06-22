@@ -243,6 +243,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public static final class LocalBinder extends Binder {
+
         private final AndroidBluetoothService service;
 
         /**
@@ -263,6 +264,7 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
             // Return this instance of LocalService so clients can call public methods
             return this.service;
         }
+
     }
 
 }

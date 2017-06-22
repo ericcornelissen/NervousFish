@@ -10,8 +10,8 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.activities.NFCActivity;
-import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
+import com.nervousfish.nervousfish.activities.NFCExchangeActivity;
+import com.nervousfish.nervousfish.activities.QRExchangeActivity;
 import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -187,14 +187,14 @@ public class MainSteps {
                 intended(hasComponent(MainActivity.class.getName()));
             } catch (NoMatchingViewException ignore) {
                 // If no popup showed up, the NFC activity should be displayed
-                intended(hasComponent(NFCActivity.class.getName()));
+                intended(hasComponent(NFCExchangeActivity.class.getName()));
             }
         }
     }
 
     @Then("^I should go to the QR activity from main$")
     public void iShouldGoToTheQRActivity() {
-        intended(hasComponent(QRExchangeKeyActivity.class.getName()));
+        intended(hasComponent(QRExchangeActivity.class.getName()));
     }
 
     @Then("^I should go to the contact activity from main$")

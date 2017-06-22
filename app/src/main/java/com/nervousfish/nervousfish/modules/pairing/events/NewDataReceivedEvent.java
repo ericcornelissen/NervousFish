@@ -8,6 +8,7 @@ import org.apache.commons.lang3.Validate;
  * Sent when a new data object is received
  */
 public final class NewDataReceivedEvent {
+
     private final Object data;
     private final Class<?> clazz;
 
@@ -37,4 +38,5 @@ public final class NewDataReceivedEvent {
     public Class<?> getClazz() {
         return this.clazz;
     }
+
 }

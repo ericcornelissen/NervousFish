@@ -11,19 +11,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

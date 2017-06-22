@@ -19,7 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
 
 @CucumberOptions(features = "features")
-public class WaitingForSlaveSteps {
+public class BluetoothWaiting {
 
     @Rule
     public ActivityTestRule<WaitActivity> mActivityRule =

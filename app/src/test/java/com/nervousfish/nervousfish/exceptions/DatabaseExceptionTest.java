@@ -1,7 +1,7 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.exceptions;
 
 import com.nervousfish.nervousfish.TestException;
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
+import com.nervousfish.nervousfish.exceptions.DatabaseException;
 
 import org.junit.Test;
 
@@ -13,29 +13,20 @@ import java.io.ObjectOutputStream;
 
 import static org.junit.Assert.assertTrue;
 
-public class DeserializationExceptionTest {
-    @Test
-    public void testExceptionConstructorString() {
-        DeserializationException keyGenerationException = new DeserializationException("foo");
-        assertTrue(keyGenerationException.getMessage().equals("foo"));
-    }
-    @Test
-    public void testExceptionConstructorThrowable() {
-        final Exception exception = new Exception();
-        DeserializationException keyGenerationException = new DeserializationException(exception);
-        assertTrue(keyGenerationException.getCause().equals(exception));
+public class DatabaseExceptionTest {
+    @Test(expected = DatabaseException.class)
+    public void testStringConstructor() {
+        throw new DatabaseException("foo");
     }
 
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testThrowableConstructor() {
-        final Throwable throwable = new Throwable();
-        DeserializationException keyGenerationException = new DeserializationException(throwable);
-        assertTrue(keyGenerationException.getCause().equals(throwable));
+        throw new DatabaseException(new IOException("foo"));
     }
 
     @Test
     public void testSerializationWithException() throws IOException, ClassNotFoundException {
-        final DeserializationException exception = new DeserializationException(new TestException("foo"));
+        final DatabaseException exception = new DatabaseException(new TestException("foo"));
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -45,8 +36,8 @@ public class DeserializationExceptionTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(DeserializationException.class));
-                DeserializationException exception2 = (DeserializationException) exception1;
+                assertTrue(exception1.getClass().equals(DatabaseException.class));
+                DatabaseException exception2 = (DatabaseException) exception1;
                 assertTrue(exception2.getCause().getMessage().equals("foo"));
             }
         }
@@ -54,7 +45,7 @@ public class DeserializationExceptionTest {
 
     @Test
     public void testSerializationWithString() throws IOException, ClassNotFoundException {
-        final DeserializationException exception = new DeserializationException("foo");
+        final DatabaseException exception = new DatabaseException("foo");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -64,10 +55,11 @@ public class DeserializationExceptionTest {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 Object exception1 = ois.readObject();
-                assertTrue(exception1.getClass().equals(DeserializationException.class));
-                DeserializationException exception2 = (DeserializationException) exception1;
+                assertTrue(exception1.getClass().equals(DatabaseException.class));
+                DatabaseException exception2 = (DatabaseException) exception1;
                 assertTrue(exception2.getMessage().equals("foo"));
             }
         }
     }
 }
+

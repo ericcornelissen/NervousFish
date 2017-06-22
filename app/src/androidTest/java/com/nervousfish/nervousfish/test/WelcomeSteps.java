@@ -6,8 +6,6 @@ import android.support.test.rule.ActivityTestRule;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.WelcomeActivity;
-import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
@@ -35,7 +33,6 @@ import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
 
 @CucumberOptions(features = "features")
 public class WelcomeSteps {
-
 
     @Rule
     public ActivityTestRule<WelcomeActivity> mActivityRule =
