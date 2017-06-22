@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -45,6 +46,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
     private static boolean firstLoad = true;
     private static volatile IServiceLocator serviceLocator;
+    private static IDatabase database;
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -88,12 +90,12 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             if (firstLoad) {
                 firstLoad = false;
 
-                preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
+                preference.setSummary(database.getProfile().getName());
             } else {
                 try {
                     LOGGER.info("Updating profile name");
-                    final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                    final Profile profile = database.getProfile();
+                    database.updateProfile(new Profile(stringValue, profile.getKeyPairs()));
                 } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
@@ -157,11 +159,14 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         if (serviceLocator == null) {
             serviceLocator = NervousFish.getServiceLocator();
         }
+        if (database == null) {
+            database = serviceLocator.getDatabase();
+        }
 
         PreferenceManager
                 .getDefaultSharedPreferences(this)
                 .edit()
-                .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
+                .putString(ConstantKeywords.DISPLAY_NAME, database.getProfile().getName())
                 .apply();
 
         LOGGER.info("SettingsActivity created");
@@ -285,72 +290,4 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-    private static final class BindPreferenceToValueListener implements Preference.OnPreferenceChangeListener {
-        @Override
-        public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-            LOGGER.info("Preference changed");
-            final String stringValue = newValue.toString();
-
-            if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
-                LOGGER.info("Preference changed at the display name");
-                updateDisplayName(preference, stringValue);
-                return true;
-            } else if (preference instanceof ListPreference) {
-                LOGGER.info("Preference changed for a ListPreference");
-                updateListPreference(preference, stringValue);
-                return true;
-            } else {
-                LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-                return true;
-            }
-        }
-
-        /**
-         * If the key is display_name this method is called to update the summary
-         * and the Profile in the database.
-         *
-         * @param preference  The preference which is changed
-         * @param stringValue The string value which is new
-         */
-        private static void updateDisplayName(final Preference preference, final String stringValue) {
-            if (firstLoad) {
-                firstLoad = false;
-                preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
-            } else {
-                try {
-                    LOGGER.info("Updating profile name");
-                    final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't get profiles from database", e);
-                }
-
-                preference.setSummary(stringValue);
-            }
-        }
-
-        /**
-         * If the preference is a list preference this method is called to update the summary.
-         *
-         * @param preference  The preference which is changed
-         * @param stringValue The string value which is new
-         */
-        private static void updateListPreference(final Preference preference, final String stringValue) {
-            // For list preferences, look up the correct display value in
-            // the preference's 'entries' list.
-            final ListPreference listPreference = (ListPreference) preference;
-            final int index = listPreference.findIndexOfValue(stringValue);
-
-            // Set the summary to reflect the new value.
-            preference.setSummary(
-                    index >= 0
-                            ? listPreference.getEntries()[index]
-                            : "");
-        }
-    }
-
 }
