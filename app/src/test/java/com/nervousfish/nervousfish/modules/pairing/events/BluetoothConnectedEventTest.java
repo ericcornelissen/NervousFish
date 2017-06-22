@@ -13,7 +13,7 @@ public class BluetoothConnectedEventTest {
         new BluetoothConnectedEvent(mock(IBluetoothThread.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testBluetoothConnectedEventGetThreadNull() {
         new BluetoothConnectedEvent(null);
     }

@@ -21,6 +21,7 @@ import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +35,9 @@ import java.io.IOException;
 //  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
 //  3)  Uses many utility imports.
-public final class QRExchangeKeyActivity extends AppCompatActivity {
+public final class QRExchangeActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeActivity");
     private static final String SEMI_COLON = " ; ";
 
     private IServiceLocator serviceLocator;
@@ -67,6 +68,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onBackButtonClick(final View view) {
         LOGGER.info("Return to previous screen");
+        Validate.notNull(view);
         this.finish();
     }
 
@@ -77,6 +79,7 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
      */
     public void onScanButtonClick(final View view) {
         LOGGER.info("Started scanning QR code");
+        Validate.notNull(view);
         final IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
     }

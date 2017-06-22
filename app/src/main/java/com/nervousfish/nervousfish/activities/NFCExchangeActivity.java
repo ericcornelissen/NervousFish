@@ -23,6 +23,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -35,9 +36,9 @@ import static android.nfc.NdefRecord.createMime;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
-public final class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
+public final class NFCExchangeActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("NFCExchangeActivity");
     private IServiceLocator serviceLocator;
     private byte[] bytes;
     private NfcAdapter nfcAdapter;
@@ -67,7 +68,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
             final Contact contact = new Contact(profile.getName(), keyPair.getPublicKey());
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
             this.bytes = nfcHandler.objectToBytes(contact);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not serialize my contact to other device ", e);
         }
 
@@ -107,7 +108,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         this.nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
-
+      
         // Check to see that the Activity started due to an Android Beam
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(this.getIntent().getAction())) {
             this.processIntent(this.getIntent());
@@ -154,7 +155,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     @Override
     public void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Stopped NFCActivity");
+        LOGGER.info("Stopped NFCExchangeActivity");
         super.onStop();
     }
 
@@ -166,6 +167,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             this.goToMainActivity(contact);
