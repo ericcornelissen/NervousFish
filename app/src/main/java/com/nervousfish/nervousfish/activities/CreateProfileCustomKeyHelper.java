@@ -7,9 +7,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -115,6 +113,8 @@ final class CreateProfileCustomKeyHelper {
     /**
      * Ask the user for the type of his own key
      */
+    @SuppressLint("InflateParams")
+    // 1) Suppressed because this view has no root because it is a dialog
     private void askForKeyType() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
 
@@ -124,7 +124,6 @@ final class CreateProfileCustomKeyHelper {
 
         this.rsaRadioButton = (RadioButton) dialogView.findViewById(R.id.radio_choose_custom_key_rsa);
         this.ed25519RadioButton = (RadioButton) dialogView.findViewById(R.id.radio_choose_custom_key_ed25519);
-        if (this.)
 
         alert.setTitle(this.activity.getString(R.string.use_existing_keypair));
         alert.setMessage(this.activity.getString(R.string.choose_your_keytype));
