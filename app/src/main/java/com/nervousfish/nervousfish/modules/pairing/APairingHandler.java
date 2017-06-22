@@ -156,7 +156,7 @@ abstract class APairingHandler implements IPairingHandler {
             buffer.putLong(key);
             final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
             final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
+            final IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
 
             // encrypt the text
             cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec);

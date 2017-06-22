@@ -164,7 +164,7 @@ public final class EncryptorAdapter implements IEncryptor {
         final ByteBuffer buffer = ByteBuffer.allocate(2 * Long.SIZE / Byte.SIZE);
         buffer.putLong(key);
         final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
+        final IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
         final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
         return cipher.doFinal(toDecrypt);
