@@ -25,7 +25,7 @@ public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private IServiceLocator serviceLocator;
-
+    private CustomKeyboardHelper customKeyboard;
 
     /**
      * {@inheritDoc}
@@ -34,8 +34,11 @@ public final class LoginActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_login);
-
         this.serviceLocator = NervousFish.getServiceLocator();
+
+        // Use a custom keyboard
+        this.customKeyboard = new CustomKeyboardHelper(this);
+        this.customKeyboard.addInput((EditText) this.findViewById(R.id.login_password_input));
 
         LOGGER.info("LoginActivity created");
     }
@@ -45,10 +48,14 @@ public final class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
+        if (this.customKeyboard.isVisible()) {
+            this.customKeyboard.hide();
+        } else {
+            final Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        }
     }
 
     /**
@@ -75,7 +82,6 @@ public final class LoginActivity extends AppCompatActivity {
             LOGGER.error("Something went wrong when loading the database", e);
             mError.setVisibility(View.VISIBLE);
         }
-
     }
 
     /**
