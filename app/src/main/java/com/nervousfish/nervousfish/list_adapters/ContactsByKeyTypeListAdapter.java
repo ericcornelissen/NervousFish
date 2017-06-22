@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.list_adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;

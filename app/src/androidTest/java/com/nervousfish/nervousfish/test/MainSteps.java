@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
+import android.widget.ViewFlipper;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
@@ -44,12 +45,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 
 @CucumberOptions(features = "features")
 public class MainSteps {
-
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
@@ -138,6 +140,11 @@ public class MainSteps {
         onView(withText(R.string.qr)).perform(click());
     }
 
+    @When("^I click the sort button in the main activity$")
+    public void iClickSortButton() {
+        onView(withId(R.id.sort_button)).perform(click());
+    }
+
     @Then("^I should stay in the main activity after pressing back$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
@@ -161,6 +168,11 @@ public class MainSteps {
     @Then("^I should go to the contact activity from main$")
     public void iShouldGoToTheContactActivity() {
         intended(hasComponent(ContactActivity.class.getName()));
+    }
+
+    @Then("^The app shouldn't crash$")
+    public void appShouldntCrash() {
+        assertFalse(this.mActivityRule.getActivity().isFinishing());
     }
 
     private void allowPermissionsIfNeeded()  {
