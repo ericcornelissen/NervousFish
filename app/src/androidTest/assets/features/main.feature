@@ -29,13 +29,13 @@ Feature: Main Activity
     Given I am viewing the main activity
     When I click on the new connection button
     And I click the button with the Bluetooth icon
-    Then I should go to the Bluetooth activity from main
+    Then the app shouldn't crash because of Bluetooth
 
   Scenario: Clicking the Bluetooth button label
     Given I am viewing the main activity
     When I click on the new connection button
     And I click the button with the Bluetooth text label
-    Then I should go to the Bluetooth activity from main
+    Then the app shouldn't crash because of Bluetooth
 
   Scenario: Clicking the NFC button
     Given I am viewing the main activity
