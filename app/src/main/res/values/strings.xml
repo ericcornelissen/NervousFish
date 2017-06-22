@@ -125,7 +125,7 @@
 
     <!-- NFC -->
     <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>
-    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
+    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange keys with.</string>
     <string name="popup_enable_nfc_title">Enable NFC?</string>
     <string name="popup_enable_nfc_settings">Please activate NFC and press Back to return to the application!</string>
 
