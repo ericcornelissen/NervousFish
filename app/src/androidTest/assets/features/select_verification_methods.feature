@@ -1,4 +1,6 @@
 Feature: Select verification method
+  Using the activity to select a verification method for Bluetooth
+
   Scenario: Select the rhythm verification method
     Given I am viewing the select verification method activity
     When I press the tab a rhythm button

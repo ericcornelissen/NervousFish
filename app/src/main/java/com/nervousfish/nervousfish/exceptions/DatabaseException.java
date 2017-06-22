@@ -1,32 +1,31 @@
-package com.nervousfish.nervousfish.modules.pairing;
+package com.nervousfish.nervousfish.exceptions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Thrown when there is an issue with deserialization.
+ * Thrown when there is an issue with the database
  */
-final class DeserializationException extends RuntimeException {
+public final class DatabaseException extends RuntimeException {
 
-    private static final long serialVersionUID = -1930461199728515311L;
+    private static final long serialVersionUID = -5464890114687852303L;
 
     /**
-     * Constructs a new DeserializationException that's thrown when there is an issue with
-     * deserialization.
+     * Constructs a new Database Exception, thrown when there is an issue with the database
      *
-     * @param msg A string describing the event
+     * @param msg A message describing the event that happened
      */
-    DeserializationException(final String msg) {
+    public DatabaseException(final String msg) {
         super(msg);
     }
 
     /**
-     * Constructs a new DeserializationException that's thrown when there is an issue with
-     * deserialization.
-     * @param throwable The exception that occurred that caused this throwable to happen
+     * Constructs a new Datbase Exception, thrown when there is an issue with the database
+     *
+     * @param throwable The root of th exception
      */
-    DeserializationException(final Throwable throwable) {
+    public DatabaseException(final Throwable throwable) {
         super(throwable);
     }
 
@@ -55,4 +54,5 @@ final class DeserializationException extends RuntimeException {
     private void ensureClassInvariant() {
         // No checks to perform
     }
+
 }

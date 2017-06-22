@@ -206,7 +206,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            final Intent intent = new Intent(this, BluetoothConnectActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         }
@@ -241,7 +241,7 @@ public final class MainActivity extends AppCompatActivity {
         if (view.getId() == R.id.pairing_menu_bluetooth || textOnLabel.equals(this.getResources().getString(R.string.bluetooth))) {
             final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
-                intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
+                intent.setComponent(new ComponentName(this, BluetoothConnectActivity.class));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             } else {
                 this.enableBluetooth(true);
@@ -250,14 +250,14 @@ public final class MainActivity extends AppCompatActivity {
         } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
             final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             if (nfcAdapter.isEnabled()) {
-                intent.setComponent(new ComponentName(this, NFCActivity.class));
+                intent.setComponent(new ComponentName(this, NFCExchangeActivity.class));
             } else {
                 this.enableNFC();
                 return; // Prevent `this.startActivity()`
             }
 
         } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
-            intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
+            intent.setComponent(new ComponentName(this, QRExchangeActivity.class));
         } else {
             LOGGER.error("Unknown pairing button clicked: {}", view.getId());
             throw new IllegalArgumentException("Only existing buttons can be clicked");
@@ -308,7 +308,7 @@ public final class MainActivity extends AppCompatActivity {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            final Intent intent = new Intent(this, BluetoothConnectActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
@@ -323,7 +323,7 @@ public final class MainActivity extends AppCompatActivity {
         final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (nfcAdapter.isEnabled()) {
-            final Intent intent = new Intent(this, NFCActivity.class);
+            final Intent intent = new Intent(this, NFCExchangeActivity.class);
             this.startActivity(intent);
         } else {
             this.popups.showEnableNFCPopup();

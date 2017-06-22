@@ -5,6 +5,7 @@ package com.nervousfish.nervousfish.modules.pairing;
  * @param <T> The type of the Module that the ModuleWrapper is wrapping
  */
 public final class PairingWrapper<T> {
+
     private final T module;
 
     /**
@@ -24,5 +25,6 @@ public final class PairingWrapper<T> {
     T get() {
         return this.module;
     }
+
 }
 

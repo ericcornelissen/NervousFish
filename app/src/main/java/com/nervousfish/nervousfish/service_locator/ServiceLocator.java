@@ -12,10 +12,8 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
 import org.apache.commons.lang3.Validate;
@@ -31,8 +29,8 @@ import org.slf4j.LoggerFactory;
 // ConstructorCallsOverridableMethod suppressed because we actually do want the subclasses to change the behaviour of the constructor!
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.ConstructorCallsOverridableMethod"})
 public class ServiceLocator implements IServiceLocator {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocator");
-    private static final long serialVersionUID = 1408616442873653749L;
 
     private final String androidFilesDir;
     private final IDatabase database;
@@ -42,7 +40,6 @@ public class ServiceLocator implements IServiceLocator {
     private final IConstants constants;
     private final IBluetoothHandler bluetoothHandler;
     private final INfcHandler nfcHandler;
-    private final IQRHandler qrHandler;
 
     /**
      * Package-private constructor of the service locator
@@ -58,7 +55,6 @@ public class ServiceLocator implements IServiceLocator {
         this.database = this.initDatabase();
         this.bluetoothHandler = this.initBluetoothHandler();
         this.nfcHandler = this.initNfcHandler();
-        this.qrHandler = this.initQrHandler();
     }
 
     /**
@@ -76,8 +72,7 @@ public class ServiceLocator implements IServiceLocator {
                    final IFileSystem fileSystem,
                    final IConstants constants,
                    final IBluetoothHandler bluetoothHandler,
-                   final INfcHandler nfcHandler,
-                   final IQRHandler qrHandler) {
+                   final INfcHandler nfcHandler) {
         Validate.notBlank(androidFilesDir);
         Validate.notNull(database);
         Validate.notNull(keyGenerator);
@@ -86,7 +81,6 @@ public class ServiceLocator implements IServiceLocator {
         Validate.notNull(constants);
         Validate.notNull(bluetoothHandler);
         Validate.notNull(nfcHandler);
-        Validate.notNull(qrHandler);
 
         this.androidFilesDir = androidFilesDir;
         this.database = database;
@@ -96,7 +90,6 @@ public class ServiceLocator implements IServiceLocator {
         this.constants = constants;
         this.bluetoothHandler = bluetoothHandler;
         this.nfcHandler = nfcHandler;
-        this.qrHandler = qrHandler;
     }
 
     /**
@@ -153,14 +146,6 @@ public class ServiceLocator implements IServiceLocator {
     @DesignedForExtension
     INfcHandler initNfcHandler() {
         return NFCHandler.newInstance(this).getModule();
-    }
-
-    /**
-     * @return The QR module used for this servicelocator
-     */
-    @DesignedForExtension
-    IQRHandler initQrHandler() {
-        return DummyQRHandler.newInstance(this).getModule();
     }
 
     /**
@@ -239,15 +224,6 @@ public class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public final IQRHandler getQRHandler() {
-        ServiceLocator.assertExists(this.qrHandler, "qrHandler");
-        return this.qrHandler;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void registerToEventBus(final Object object) {
         Validate.notNull(object);
         EventBus.getDefault().register(object);
@@ -300,5 +276,7 @@ public class ServiceLocator implements IServiceLocator {
         ModuleNotFoundException(final String message) {
             super(message);
         }
+
     }
+
 }

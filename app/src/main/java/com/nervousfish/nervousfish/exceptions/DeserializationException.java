@@ -1,31 +1,32 @@
-package com.nervousfish.nervousfish.modules.database;
+package com.nervousfish.nervousfish.exceptions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Thrown when there is an issue with the database
+ * Thrown when there is an issue with deserialization.
  */
-public final class DatabaseException extends RuntimeException {
+final class DeserializationException extends RuntimeException {
 
-    private static final long serialVersionUID = -5464890114687852303L;
+    private static final long serialVersionUID = -1930461199728515311L;
 
     /**
-     * Constructs a new Database Exception, thrown when there is an issue with the database
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
      *
-     * @param msg A message describing the event that happened
+     * @param msg A string describing the event
      */
-    public DatabaseException(final String msg) {
+    DeserializationException(final String msg) {
         super(msg);
     }
 
     /**
-     * Constructs a new Datbase Exception, thrown when there is an issue with the database
-     *
-     * @param throwable The root of th exception
+     * Constructs a new DeserializationException that's thrown when there is an issue with
+     * deserialization.
+     * @param throwable The exception that occurred that caused this throwable to happen
      */
-    public DatabaseException(final Throwable throwable) {
+    DeserializationException(final Throwable throwable) {
         super(throwable);
     }
 
