@@ -45,7 +45,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
     private static boolean firstLoad = true;
     private static volatile IServiceLocator serviceLocator;
-    private static IDatabase database;
+    private static volatile IDatabase database;
 
     /**
      * A preference value change listener that updates the preference's summary
