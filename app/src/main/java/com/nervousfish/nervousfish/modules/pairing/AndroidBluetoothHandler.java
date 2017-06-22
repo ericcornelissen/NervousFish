@@ -68,8 +68,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void restart() throws IOException {
-        this.getService().stop();
-        this.getService().start();
+        this.stop();
+        this.start();
     }
 
     /**

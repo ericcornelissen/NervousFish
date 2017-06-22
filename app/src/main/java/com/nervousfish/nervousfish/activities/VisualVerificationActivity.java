@@ -77,6 +77,7 @@ public final class VisualVerificationActivity extends Activity {
      */
     private void nextActivity() {
         LOGGER.info("Done tapping the VisualVerification");
+
         try {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);

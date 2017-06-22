@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -47,12 +46,14 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     private static boolean firstLoad = true;
     private static volatile IServiceLocator serviceLocator;
     private static IDatabase database;
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
     private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
             new Preference.OnPreferenceChangeListener() {
+
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object newValue) {
             LOGGER.info("Preference changed");
@@ -124,6 +125,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                             ? listPreference.getEntries()[index]
                             : "");
         }
+
     };
 
     /**
@@ -265,6 +267,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static final class ProfilePreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -289,5 +292,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
     }
+
 }

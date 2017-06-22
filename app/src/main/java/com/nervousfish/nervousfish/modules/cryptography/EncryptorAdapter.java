@@ -39,7 +39,7 @@ import javax.crypto.spec.SecretKeySpec;
  * An adapter to the default Java class for encrypting messages
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
-// 1 & 2) The java.security and javax.crypto libraries require a lot of imports unfortunately
+// 1 & 2) The java.security and javax.crypto libraries, used for proper encryption, require a lot of imports
 public final class EncryptorAdapter implements IEncryptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");

@@ -73,7 +73,6 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         final Intent intent = this.getIntent();
         final Boolean rhythmFailure = (Boolean) intent.getSerializableExtra(ConstantKeywords.RHYTHM_FAILURE);
-
         if (rhythmFailure != null && rhythmFailure) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(this.getString(R.string.not_the_same_rhythm_title))
@@ -81,6 +80,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .show();
         }
+
         LOGGER.info("Activity created");
     }
 

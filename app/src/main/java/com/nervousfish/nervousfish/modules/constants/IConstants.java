@@ -53,4 +53,5 @@ public interface IConstants extends IModule {
      * @return The charset used in the app for writing / reading to streams
      */
     Charset getCharset();
+
 }

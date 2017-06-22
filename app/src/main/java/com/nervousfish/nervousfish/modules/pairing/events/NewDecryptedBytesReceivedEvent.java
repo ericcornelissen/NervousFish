@@ -6,6 +6,7 @@ package com.nervousfish.nervousfish.modules.pairing.events;
  * Sent when new bytes are received, decrypted by some key
  */
 public final class NewDecryptedBytesReceivedEvent {
+
     private final byte[] bytes;
 
     /**
@@ -23,4 +24,5 @@ public final class NewDecryptedBytesReceivedEvent {
     public byte[] getBytes() {
         return this.bytes.clone();
     }
+
 }

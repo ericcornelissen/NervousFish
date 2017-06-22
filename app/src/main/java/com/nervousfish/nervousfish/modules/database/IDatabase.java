@@ -36,7 +36,6 @@ public interface IDatabase extends IModule {
      */
     void updateContact(Contact oldContact, Contact newContact) throws IllegalArgumentException, IOException;
 
-
     /**
      * Get a list of all contacts in the database.
      *
@@ -67,7 +66,6 @@ public interface IDatabase extends IModule {
      */
     Profile getProfile();
 
-
     /**
      * Update an existing profile in the database.
      *
@@ -82,12 +80,14 @@ public interface IDatabase extends IModule {
 
     /**
      * Loads up the database in an object using the provided password.
+     *
      * @param password The password of the database.
      */
     void loadDatabase(String password) throws IOException;
 
     /**
      * Creates a database for a new profile.
+     *
      * @param profile   -   The user profile to create a database for.
      * @param password - The password for the database
      */
@@ -95,13 +95,16 @@ public interface IDatabase extends IModule {
 
     /**
      * Checks if there's already a databasefile created.
+     *
      * @return  Whether or not it isn't the first time using the app.
      */
     boolean checkFirstUse();
 
     /**
      * Deletes the database.
+     *
      * @return Whether the database was successfully deleted.
      */
     boolean deleteDatabase();
+
 }
