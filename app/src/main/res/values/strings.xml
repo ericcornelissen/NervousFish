@@ -97,6 +97,8 @@
     <string name="enter_name_contact">Enter the name of the new contact</string>
     <string name="not_the_same_rhythm_title">Rhythm not the same</string>
     <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
+    <string name="not_the_same_visual_title">Tapping order was not the same</string>
+    <string name="not_the_same_visual_explanation">Make sure that the locations tapped and the order are the same on both devices.</string>
 
     <!-- Select verification method -->
     <string name="select_verification_method">How do you want to secure your connection?</string>

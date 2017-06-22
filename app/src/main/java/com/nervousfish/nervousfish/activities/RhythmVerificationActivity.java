@@ -72,7 +72,7 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
         this.doneButton = (Button) this.findViewById(R.id.done_tapping_button);
 
         final Intent intent = this.getIntent();
-        final Boolean rhythmFailure = (Boolean) intent.getSerializableExtra(ConstantKeywords.RHYTHM_FAILURE);
+        final Boolean rhythmFailure = (Boolean) intent.getSerializableExtra(ConstantKeywords.TAPPING_FAILURE);
         if (rhythmFailure != null && rhythmFailure) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(this.getString(R.string.not_the_same_rhythm_title))
@@ -159,6 +159,7 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
         intent.putExtra(ConstantKeywords.KEY, key);
+        intent.putExtra(ConstantKeywords.CLASS_STARTED_FROM, this.getClass());
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 

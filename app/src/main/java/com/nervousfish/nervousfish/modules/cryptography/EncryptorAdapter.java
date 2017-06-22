@@ -28,6 +28,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -160,11 +161,12 @@ public final class EncryptorAdapter implements IEncryptor {
     public byte[] decryptWithPassword(final byte[] toDecrypt, final long key) throws GeneralSecurityException {
         LOGGER.info("Started decrypting byte array with password");
 
-        final ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
+        final ByteBuffer buffer = ByteBuffer.allocate(2 * Long.SIZE / Byte.SIZE);
         buffer.putLong(key);
         final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
         final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+        cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
         return cipher.doFinal(toDecrypt);
     }
 

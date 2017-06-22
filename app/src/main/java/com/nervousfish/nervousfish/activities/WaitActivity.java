@@ -44,6 +44,7 @@ public final class WaitActivity extends Activity {
     private IEncryptor encryptor;
     private byte[] dataReceived;
     private Long key;
+    private Class classStartedFrom;
 
     /**
      * {@inheritDoc}
@@ -58,6 +59,7 @@ public final class WaitActivity extends Activity {
         final Intent intent = this.getIntent();
         this.dataReceived = (byte[]) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
         this.key = (Long) intent.getSerializableExtra(ConstantKeywords.KEY);
+        this.classStartedFrom = (Class) intent.getSerializableExtra(ConstantKeywords.CLASS_STARTED_FROM);
 
         LOGGER.info("dataReceived is not null: {}, key is: {}", this.dataReceived != null, this.key);
 
@@ -165,8 +167,8 @@ public final class WaitActivity extends Activity {
             this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
         } catch (BadPaddingException e) {
             LOGGER.warn("Keys didn't match! Going back to the rhythm activity");
-            final Intent intent = new Intent(this, RhythmCreateActivity.class);
-            intent.putExtra(ConstantKeywords.RHYTHM_FAILURE, true);
+            final Intent intent = new Intent(this, this.classStartedFrom);
+            intent.putExtra(ConstantKeywords.TAPPING_FAILURE, true);
             this.startActivity(intent);
         } catch (GeneralSecurityException e) {
             LOGGER.error("An error occurred when validating the encrypted data", e);

@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 //  3)  Uses many utility imports.
 public final class QRExchangeActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeActivity");
+    private static final Pattern COMPILE_SEMICOLON = Pattern.compile(" ; ");
     private IDatabase database;
     private Profile profile;
 

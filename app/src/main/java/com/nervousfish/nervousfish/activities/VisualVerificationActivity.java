@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * An {@link Activity} that is used to let the user verify his identity by tapping on certain places in an image.
  */
@@ -46,6 +48,16 @@ public final class VisualVerificationActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_visual_verification);
         this.serviceLocator = NervousFish.getServiceLocator();
+
+        final Intent intent = this.getIntent();
+        final Boolean tappingFailure = (Boolean) intent.getSerializableExtra(ConstantKeywords.TAPPING_FAILURE);
+        if (tappingFailure != null && tappingFailure) {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(this.getString(R.string.not_the_same_visual_title))
+                    .setContentText(this.getString(R.string.not_the_same_visual_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .show();
+        }
 
         LOGGER.info("Activity created");
     }
@@ -93,6 +105,7 @@ public final class VisualVerificationActivity extends Activity {
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
         intent.putExtra(ConstantKeywords.KEY, this.securityCode);
+        intent.putExtra(ConstantKeywords.CLASS_STARTED_FROM, this.getClass());
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
     }
 

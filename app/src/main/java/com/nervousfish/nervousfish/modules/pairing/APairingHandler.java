@@ -21,6 +21,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.StreamCorruptedException;
+import java.security.InvalidAlgorithmParameterException;
 import java.util.Arrays;
 
 import java.nio.ByteBuffer;
@@ -29,6 +30,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -151,19 +153,21 @@ abstract class APairingHandler implements IPairingHandler {
         }
 
         try {
-            final ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
+            final ByteBuffer buffer = ByteBuffer.allocate(2 * Long.SIZE / Byte.SIZE);
             buffer.putLong(key);
             final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
             final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
 
             // encrypt the text
-            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec);
             final byte[] encrypted = cipher.doFinal(bytes);
 
             final ByteWrapper byteWrapper = new ByteWrapper(encrypted);
             LOGGER.info("Sending data encrypted");
             this.send(this.objectToBytes(byteWrapper));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException
+                | InvalidKeyException | InvalidAlgorithmParameterException e) {
             LOGGER.info("An error occured encrypting the data", e);
         }
     }
