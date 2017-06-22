@@ -105,10 +105,11 @@ public final class QRExchangeKeyActivity extends AppCompatActivity {
         } else if (resultCode == RESULT_OK) {
             final String result = scanResult.getContents();
             LOGGER.info("Adding new contact to database");
+            final String[] splittedResult = COMPILE_SEMICOLON.split(result);
             //Name is the first part
-            final String name = COMPILE_SEMICOLON.split(result)[0];
+            final String name = splittedResult[0];
             //Key is the second part
-            final IKey key = QRGenerator.deconstructToKey(COMPILE_SEMICOLON.split(result)[1]);
+            final IKey key = QRGenerator.deconstructToKey(splittedResult[1]);
 
             final Contact contact = new Contact(name, key);
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
