@@ -368,36 +368,4 @@ public final class GsonDatabaseAdapter implements IDatabase {
             throw new DatabaseException(DATABASE_NOT_CREATED);
         }
     }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        assert this.fileSystem != null;
-        assert this.databasePath != null;
-        assert this.passwordPath != null;
-        assert this.helper != null;
-        assert this.encryptor != null;
-        assert this.databaseMap != null;
-    }
-
 }

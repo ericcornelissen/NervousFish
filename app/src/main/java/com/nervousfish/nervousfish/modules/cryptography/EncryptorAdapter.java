@@ -39,7 +39,7 @@ import javax.crypto.spec.SecretKeySpec;
  * An adapter to the default Java class for encrypting messages
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
-// 1 & 2) Relies on many other classes for proper encryption, which is a trade of worth making
+// 1 & 2) The java.security and javax.crypto libraries require a lot of imports unfortunately
 public final class EncryptorAdapter implements IEncryptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
@@ -223,31 +223,5 @@ public final class EncryptorAdapter implements IEncryptor {
             LOGGER.error(UTF_8_NO_LONGER_SUPPORTED, e);
             throw new EncryptionException(CANNOT_HAPPEN_UTF_8, e);
         }
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        // No checks to perform
     }
 }
