@@ -36,6 +36,7 @@ public class QRGeneratorTest {
         publicKeyString = publicKey.getType() + space + publicKey.getName()
                 + space + publicKey.getKey();
     }
+
     @Test
     public void testEncodeNotNull() throws Exception {
         final Bitmap qrCode = QRGenerator.encode(publicKeyString);
@@ -47,14 +48,15 @@ public class QRGeneratorTest {
         IKey keyTest = QRGenerator.deconstructToKey(publicKeyString);
         assertEquals(publicKey, keyTest);
     }
+
     @Test
-    public void testWidthIsAsExpected() throws Exception{
+    public void testWidthIsAsExpected() throws Exception {
         final Bitmap QRcode = QRGenerator.encode(publicKeyString);
         assertEquals(QRCODE_IMAGE_WIDTH, QRcode.getWidth());
     }
 
     @Test
-    public void testHeightIsAsExpected() throws Exception{
+    public void testHeightIsAsExpected() throws Exception {
         final Bitmap QRcode = QRGenerator.encode(publicKeyString);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }

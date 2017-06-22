@@ -57,23 +57,6 @@ public class MainSteps {
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, true, false);
 
-    @Before
-    public void createDatabase() throws Exception {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<>());
-        profile.addKeyPair(keyPair);
-        database.createDatabase(profile, "Testpass");
-        database.loadDatabase("Testpass");
-    }
-
-    @After
-    public void deleteDatabase() {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        database.deleteDatabase();
-    }
-
     @Given("^I am viewing the main activity$")
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
