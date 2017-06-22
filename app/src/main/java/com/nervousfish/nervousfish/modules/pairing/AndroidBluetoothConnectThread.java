@@ -9,6 +9,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectingEve
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectionFailedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,9 @@ class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
      */
     AndroidBluetoothConnectThread(final IServiceLocator serviceLocator, final BluetoothDevice device) {
         super();
+
+        Validate.notNull(serviceLocator);
+        Validate.notNull(device);
 
         this.serviceLocator = serviceLocator;
         BluetoothSocket tmp = null;
@@ -69,7 +73,7 @@ class AndroidBluetoothConnectThread extends Thread implements IBluetoothThread {
             try {
                 this.socket.close();
             } catch (final IOException esocketCloseException) {
-                LOGGER.error("Connection failed/couldn't close the socket", esocketCloseException);
+                LOGGER.error("Connection failed because the socket couldn't be closed", esocketCloseException);
             }
             this.serviceLocator.postOnEventBus(new BluetoothConnectionFailedEvent());
             return;

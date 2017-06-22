@@ -42,7 +42,6 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -83,8 +82,8 @@ public class CreateProfileSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = this.serviceLocator.getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, this.serviceLocator);
+        final IDatabase database = serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
@@ -94,7 +93,7 @@ public class CreateProfileSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database = this.serviceLocator.getDatabase();
+        final IDatabase database = serviceLocator.getDatabase();
 
         database.deleteDatabase();
     }
@@ -108,8 +107,8 @@ public class CreateProfileSteps {
 
     @When("^I click on the submit profile button$")
     public void iClickOnSubmitProfile() {
-        this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.submitProfile)).perform(scrollTo()).perform(click());
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.submitProfile)).perform(click());
     }
 
     @When("^I click ok on the popup with the success message about creating a profile$")
@@ -124,47 +123,47 @@ public class CreateProfileSteps {
 
     @When("^I enter a valid (.*?) as name$")
     public void iEnterValidName(final String name) {
-        this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.profile_enter_name)).perform(scrollTo()).perform(replaceText(name));
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.profile_enter_name)).perform(replaceText(name));
     }
 
     @When("^I enter a valid (.*?) as password$")
     public void iEnterValidPassword(final String password) {
-        this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.profile_enter_password)).perform(scrollTo()).perform(typeText(password));
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a valid repeat (.*?) as repeat password$")
     public void iEnterValidRepeatPassword(final String password) {
-        this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-        onView(withId(R.id.profile_repeat_password)).perform(scrollTo()).perform(typeText(password));
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
     }
 
     @When("^I enter a (.*?) with a length smaller than 6 characters$")
     public void enterPasswordSmallerThanSix(final String password) {
-        this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_enter_password)).perform(typeText(password));
     }
 
     @When("^I enter a different (.*?) than the password field$")
     public void iEnterDifferentRepeatPassword(final String password) {
-        this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
         onView(withId(R.id.profile_repeat_password)).perform(typeText(password));
     }
 
     @When("^I (true|false) a RSA keypair$")
     public void iSelectARSAKeyPair(final Boolean select) {
         if (select) {
-            this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-            onView(withId(R.id.checkbox_ed25519_key)).perform(scrollTo()).perform(click());
+            inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+            onView(withId(R.id.checkbox_ed25519_key)).perform(click());
         }
     }
 
     @When("^I (true|false) a Ed25519 keypair$")
     public void iSelectAEd25519KeyPair(final Boolean select) {
         if (select) {
-            this.inputMethodManager.hideSoftInputFromWindow(this.mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-            onView(withId(R.id.checkbox_rsa_key)).perform(scrollTo()).perform(click());
+            inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
+            onView(withId(R.id.checkbox_rsa_key)).perform(click());
         }
     }
 
@@ -181,24 +180,24 @@ public class CreateProfileSteps {
     @Then("^the name input field should become red$")
     public void nameInputFieldShouldBeRed() {
         onView(withId(R.id.profile_enter_name)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
-                this.mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
+                mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
     }
 
     @Then("^the password input field should become red$")
     public void passwordInputFieldShouldBeRed() {
         onView(withId(R.id.profile_enter_password)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
-                this.mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
+                mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
     }
 
     @Then("^the repeat password input field should become red$")
     public void repeatPasswordInputFieldShouldBeRed() {
         onView(withId(R.id.profile_repeat_password)).check(matches(withBackgroundColor(ResourcesCompat.getColor(
-                this.mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
+                mActivityRule.getActivity().getResources(), R.color.red_fail, null))));
     }
 
     @Then("^the profile with (.*?) should be saved in the database$")
     public void profileWithNameShouldBeInDatabase(final String name) throws IOException {
-        final Profile profile = this.serviceLocator.getDatabase().getProfile();
+        final Profile profile = serviceLocator.getDatabase().getProfile();
         assertEquals(name, profile.getName());
     }
 

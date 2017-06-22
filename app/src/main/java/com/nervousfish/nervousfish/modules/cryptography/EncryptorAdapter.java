@@ -6,9 +6,13 @@ import com.nervousfish.nervousfish.exceptions.EncryptionException;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -30,6 +34,8 @@ import javax.crypto.spec.PBEParameterSpec;
 /**
  * An adapter to the default Java class for encrypting messages
  */
+@SuppressWarnings("checkstyle:ClassFanOutComplexity")
+// 1) Suppressed because the java crypto and security libraries require a lot of objects to use correctly
 public final class EncryptorAdapter implements IEncryptor {
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
@@ -48,6 +54,7 @@ public final class EncryptorAdapter implements IEncryptor {
     // We suppress UnusedFormalParameter because the chance is big that a service locator will be used in the future
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private EncryptorAdapter(final IServiceLocator serviceLocator) {
+        assert serviceLocator != null;
         LOGGER.info("Initialized");
     }
 
@@ -63,12 +70,54 @@ public final class EncryptorAdapter implements IEncryptor {
         return new ModuleWrapper<>(new EncryptorAdapter(serviceLocator));
     }
 
+    /**
+     * Method that returns a configured {@link Cipher}.<br>
+     * It sets the ivSpec and the encryption to
+     * PBEWithMD5AndDES
+     *
+     * @param key    The SecretKey used to encrypt
+     * @param ivSpec The initializations vector for the encryption
+     * @param mode   Whether we're encrypting or decrypting
+     * @return the configured {@link Cipher}.
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
+    // 1) Suppressed because only the numbers 1, 2, 3 and 4 are allowed as modes by Cipher
+    private static Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) throws EncryptionException {
+        LOGGER.info("Getting cipher for decrypting");
+        assert key != null;
+        assert ivSpec != null;
+        assert mode == 1 || mode == 2 || mode == 3 || mode == 4;
+
+        try {
+            //Create parameters from the salt and an arbitrary number of iterations:
+            final PBEParameterSpec pbeParamSpec = new PBEParameterSpec(ivSpec, 42);
+
+            //Set up the cipher:
+            final Cipher cipher = Cipher.getInstance(PBE_WITH_MD5_AND_DES);
+            cipher.init(mode, key, pbeParamSpec);
+            return cipher;
+        } catch (final NoSuchAlgorithmException e) {
+            LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
+            throw new EncryptionException("Cannot happen, no algorithm as PBEWithMD5AndDES", e);
+
+        } catch (final NoSuchPaddingException e) {
+            LOGGER.error("There isn't a padding as PBEWithMD5AndDES", e);
+            throw new EncryptionException("Cannot happen, no padding as PBEWithMD5AndDES", e);
+        } catch (final InvalidKeyException e) {
+            LOGGER.error("The key is invalid", e);
+            throw new EncryptionException("The key was invalid while getting the cipher", e);
+        } catch (final InvalidAlgorithmParameterException e) {
+            LOGGER.error("The algorithm parameter is invalid", e);
+            throw new EncryptionException("The algorithm paramater was invalid while initializing the cipher", e);
+        }
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public String hashString(final String string) throws EncryptionException {
+        Validate.notBlank(string);
         try {
             final MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.reset();
@@ -90,6 +139,7 @@ public final class EncryptorAdapter implements IEncryptor {
     @Override
     public SecretKey makeKeyFromPassword(final String password) throws InvalidKeySpecException, EncryptionException {
         LOGGER.info("Making key for encryption");
+        Validate.notBlank(password);
         try {
             final PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
             final SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(PBE_WITH_MD5_AND_DES);
@@ -102,7 +152,6 @@ public final class EncryptorAdapter implements IEncryptor {
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -110,7 +159,8 @@ public final class EncryptorAdapter implements IEncryptor {
     public String decryptWithPassword(final String toDecrypt, final SecretKey key) throws EncryptionException,
             IllegalBlockSizeException, BadPaddingException {
         LOGGER.info("Started decrypting with password");
-
+        Validate.notBlank(toDecrypt);
+        Validate.notNull(key);
 
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
@@ -136,7 +186,8 @@ public final class EncryptorAdapter implements IEncryptor {
     public String encryptWithPassword(final String toEncrypt, final SecretKey key) throws EncryptionException,
             IllegalBlockSizeException, BadPaddingException {
         LOGGER.info("Started encrypting with password");
-
+        Validate.notBlank(toEncrypt);
+        Validate.notNull(key);
 
         final byte[] ivSpec = new byte[IV_SPEC_SIZE];
         final Random random = new Random(SEED);
@@ -156,39 +207,28 @@ public final class EncryptorAdapter implements IEncryptor {
     }
 
     /**
-     * Method that returns a configured {@link Cipher}.<br>
-     * It sets the ivSpec and the encryption to
-     * PBEWithMD5AndDES
+     * Deserialize the instance using readObject to ensure invariants and security.
      *
-     * @param key    The SecretKey used to encrypt
-     * @param ivSpec The initializations vector for the encryption
-     * @param mode   Whether we're encrypting or decrypting
-     * @return the configured {@link Cipher}.
+     * @param stream The serialized object to be deserialized
      */
-    private Cipher getCipher(final SecretKey key, final byte[] ivSpec, final int mode) throws EncryptionException {
-        LOGGER.info("Getting cipher for decrypting");
-        try {
-            //Create parameters from the salt and an arbitrary number of iterations:
-            final PBEParameterSpec pbeParamSpec = new PBEParameterSpec(ivSpec, 42);
-
-            //Set up the cipher:
-            final Cipher cipher = Cipher.getInstance(PBE_WITH_MD5_AND_DES);
-            cipher.init(mode, key, pbeParamSpec);
-            return cipher;
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("There isn't an algorithm as PBEWithMD5AndDES", e);
-            throw new EncryptionException("Cannot happen, no algorithm as PBEWithMD5AndDES", e);
-
-        } catch (NoSuchPaddingException e) {
-            LOGGER.error("There isn't a padding as PBEWithMD5AndDES", e);
-            throw new EncryptionException("Cannot happen, no padding as PBEWithMD5AndDES", e);
-        } catch (InvalidKeyException e) {
-            LOGGER.error("The key is invalid", e);
-            throw new EncryptionException("The key was invalid while getting the cipher", e);
-        } catch (InvalidAlgorithmParameterException e) {
-            LOGGER.error("The algorithm parameter is invalid", e);
-            throw new EncryptionException("The algorithm paramater was invalid while initializing the cipher", e);
-        }
+    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        this.ensureClassInvariant();
     }
 
+    /**
+     * Used to improve performance / efficiency
+     *
+     * @param stream The stream to which this object should be serialized to
+     */
+    private void writeObject(final ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+    }
+
+    /**
+     * Ensure that the instance meets its class invariant
+     */
+    private void ensureClassInvariant() {
+        // No checks to perform
+    }
 }

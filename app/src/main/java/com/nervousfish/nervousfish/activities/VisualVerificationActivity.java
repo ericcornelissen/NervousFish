@@ -14,6 +14,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -79,13 +80,14 @@ public final class VisualVerificationActivity extends Activity {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
-                    + keyPair.getPublicKey());
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
+            }
 
             final Contact myProfileAsContact = new Contact(profile.getName(), keyPair.getPublicKey());
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
-        } catch (IOException e) {
-            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+        } catch (final IOException e) {
+            LOGGER.error("Could not send my contact to other device {}", e.getMessage());
         }
 
         final Intent intent = new Intent(this, WaitActivity.class);
@@ -101,12 +103,13 @@ public final class VisualVerificationActivity extends Activity {
      * @param v The view of the button being clicked.
      */
     public void buttonAction(final View v) {
+        Validate.notNull(v);
         final int button = Integer.parseInt(v.getContentDescription().toString());
         LOGGER.info("button {} clicked", button);
 
-        if (this.numTaps > SECURITY_CODE_LENGTH) {
+        if (this.numTaps > VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             LOGGER.warn("Security code already long enough");
-        } else if (this.numTaps + 1 == SECURITY_CODE_LENGTH) {
+        } else if (this.numTaps + 1 == VisualVerificationActivity.SECURITY_CODE_LENGTH) {
             this.securityCode += button;
             LOGGER.info("final code is: {}", this.securityCode);
             this.nextActivity();
@@ -126,6 +129,7 @@ public final class VisualVerificationActivity extends Activity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
             this.contactReceived = (Contact) event.getData();
         }

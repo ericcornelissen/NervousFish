@@ -20,6 +20,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,78 +49,86 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static final Preference.OnPreferenceChangeListener S_BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
-        new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(final Preference preference, final Object value) {
-                LOGGER.info("Preference changed");
-                final String stringValue = value.toString();
+    private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
+            new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+            LOGGER.info("Preference changed");
+            Validate.notNull(preference);
+            Validate.notNull(newValue);
+            final String stringValue = newValue.toString();
 
-                if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
-                    LOGGER.info("Preference changed at the display name");
-                    this.updateDisplayName(preference, stringValue);
-                    return true;
-                } else if (preference instanceof ListPreference) {
-                    LOGGER.info("Preference changed for a ListPreference");
-                    this.updateListPreference(preference, stringValue);
-                    return true;
-                } else {
-                    LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
-                    // For all other preferences, set the summary to the value's
-                    // simple string representation.
-                    preference.setSummary(stringValue);
-                    return true;
+            if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
+                LOGGER.info("Preference changed at the display name");
+                this.updateDisplayName(preference, stringValue);
+                return true;
+            } else if (preference instanceof ListPreference) {
+                LOGGER.info("Preference changed for a ListPreference");
+                this.updateListPreference(preference, stringValue);
+                return true;
+            } else {
+                LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
+                // For all other preferences, set the summary to the value's
+                // simple string representation.
+                preference.setSummary(stringValue);
+                return true;
+            }
+        }
+
+        /**
+         * If the key is display_name this method is called to update the summary
+         * and the Profile in the database.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateDisplayName(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
+            if (firstLoad) {
+                firstLoad = false;
+
+                try {
+                    preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
+                    return;
+                } catch (final IOException e) {
+                    LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
                 }
-            }
 
-            /**
-             * If the key is display_name this method is called to update the summary
-             * and the Profile in the database.
-             *
-             * @param preference The preference which is changed
-             * @param stringValue The string value which is new
-             */
-            private void updateDisplayName(final Preference preference, final String stringValue) {
-                if (firstLoad) {
-                    firstLoad = false;
-                    try {
-                        preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
-                        return;
-                    } catch (IOException e) {
-                        LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
-                    }
-                    preference.setSummary(stringValue);
-                } else {
-                    try {
-                        LOGGER.info("Updating profile name");
-                        final Profile profile = serviceLocator.getDatabase().getProfile();
-                        serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
-                    } catch (IOException e) {
-                        LOGGER.error("Couldn't get profiles from database", e);
-                    }
-
-                    preference.setSummary(stringValue);
+                preference.setSummary(stringValue);
+            } else {
+                try {
+                    LOGGER.info("Updating profile name");
+                    final Profile profile = serviceLocator.getDatabase().getProfile();
+                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                } catch (final IOException e) {
+                    LOGGER.error("Couldn't get profiles from database", e);
                 }
-            }
 
-            /**
-             * If the preference is a list preference this method is called to update the summary.
-             *
-             * @param preference The preference which is changed
-             * @param stringValue The string value which is new
-             */
-            private void updateListPreference(final Preference preference, final String stringValue) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                final ListPreference listPreference = (ListPreference) preference;
-                final int index = listPreference.findIndexOfValue(stringValue);
-
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : "");
+                preference.setSummary(stringValue);
             }
+        }
+
+        /**
+         * If the preference is a list preference this method is called to update the summary.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateListPreference(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
+            // For list preferences, look up the correct display value in
+            // the preference's 'entries' list.
+            final ListPreference listPreference = (ListPreference) preference;
+            final int index = listPreference.findIndexOfValue(stringValue);
+
+            // Set the summary to reflect the new value.
+            preference.setSummary(
+                    index >= 0
+                            ? listPreference.getEntries()[index]
+                            : "");
+        }
     };
 
     /**
@@ -129,15 +138,16 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
-     * @see #S_BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER
+     * @see #BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER
      */
     private static void bindPreferenceSummaryToValue(final Preference preference) {
+        assert preference != null;
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(S_BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER);
+        preference.setOnPreferenceChangeListener(BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        S_BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER.onPreferenceChange(preference,
+        BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
@@ -158,7 +168,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     .edit()
                     .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
                     .apply();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);
         }
         LOGGER.info("SettingsActivity created");

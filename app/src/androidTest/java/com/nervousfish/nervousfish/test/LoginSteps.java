@@ -17,7 +17,6 @@ import cucumber.api.java.en.When;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -45,7 +44,7 @@ public class LoginSteps {
 
     @When("^I press the login button$")
     public void iPressTheLoginButton() {
-        onView(withId(R.id.submit)).perform(scrollTo()).perform(click());
+        onView(withId(R.id.submit)).perform(click());
     }
 
     @Then("^I should stay in the LoginActivity$")

@@ -35,7 +35,7 @@ public final class EntryActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator(); 
         final Intent intent = new Intent();
 
         if (serviceLocator.getDatabase().checkFirstUse()) {

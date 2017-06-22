@@ -18,6 +18,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,6 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFi
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
-
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
@@ -49,6 +49,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private IServiceLocator serviceLocator;
+    private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
@@ -81,11 +82,22 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        if (this.customKeyboard.isVisible()) {
+            this.customKeyboard.hide();
+        }
+    }
+
+    /**
      * Gets triggered when the Submit button is clicked.
      *
      * @param view The {@link View} clicked
      */
     public void onSubmitClick(final View view) {
+        Validate.notNull(view);
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
@@ -122,10 +134,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
                 break;
-
             default:
                 break;
-
         }
     }
 

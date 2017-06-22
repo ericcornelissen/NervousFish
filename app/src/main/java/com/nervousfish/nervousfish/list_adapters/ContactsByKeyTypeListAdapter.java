@@ -2,6 +2,7 @@ package com.nervousfish.nervousfish.list_adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -11,6 +12,8 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
+
+import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +43,8 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
      */
     public ContactsByKeyTypeListAdapter(final Activity context, final List<Contact> contacts) {
         super();
+        Validate.notNull(context);
+        Validate.notNull(contacts);
         this.context = context;
         this.types = new ArrayList<>();
         final Set<String> typeSet = new HashSet<>();
