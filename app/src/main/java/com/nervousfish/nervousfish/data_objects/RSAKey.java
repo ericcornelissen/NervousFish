@@ -3,6 +3,8 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -31,6 +33,9 @@ public final class RSAKey implements IKey {
      * @param exponent The exponent of the RSA key.
      */
     public RSAKey(final String name, final String modulus, final String exponent) {
+        Validate.notBlank(name);
+        Validate.notBlank(modulus);
+        Validate.notBlank(exponent);
         this.name = name;
         this.modulus = modulus;
         this.exponent = exponent;
@@ -41,7 +46,7 @@ public final class RSAKey implements IKey {
      *
      * @param map A {@link Map} mapping {@link RSAKey} attribute names to values.
      */
-    public RSAKey(final Map<String, String> map) throws IllegalArgumentException {
+    public RSAKey(final Map<String, String> map) {
         this.name = map.get(RSAKey.JSON_CONSTANT_NAME);
         this.modulus = map.get(RSAKey.JSON_CONSTANT_MODULUS);
         this.exponent = map.get(RSAKey.JSON_CONSTANT_EXPONENT);
@@ -97,15 +102,14 @@ public final class RSAKey implements IKey {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object o) {
-        if (o == null || this.getClass() != o.getClass()) {
+    public boolean equals(final Object obj) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
 
-        final RSAKey that = (RSAKey) o;
-        return this.name.equals(that.name)
-                && this.modulus.equals(that.modulus)
-                && this.exponent.equals(that.exponent);
+        final RSAKey other = (RSAKey) obj;
+        return this.name.equals(other.getName())
+                && this.getKey().equals(other.getKey());
     }
 
     /**
@@ -120,7 +124,7 @@ public final class RSAKey implements IKey {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new RSAKey.SerializationProxy(this);
     }
 
     /**

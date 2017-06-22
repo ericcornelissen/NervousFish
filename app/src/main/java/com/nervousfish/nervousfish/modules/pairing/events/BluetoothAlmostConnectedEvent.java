@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.modules.pairing.events;
 
 import android.bluetooth.BluetoothSocket;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * Greenrobot's EventBus message event
  * <p>
@@ -17,6 +19,7 @@ public final class BluetoothAlmostConnectedEvent {
      * @param socket The socket to the server
      */
     public BluetoothAlmostConnectedEvent(final BluetoothSocket socket) {
+        Validate.notNull(socket);
         this.socket = socket;
     }
 

@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ final class DataWrapper implements Serializable {
      * @param data The {@link Serializable} object the wrapper wraps
      */
     DataWrapper(final Serializable data) {
+        Validate.notNull(data);
         this.data = data;
         this.clazz = data.getClass();
     }
