@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * A Profile POJO to store a contact representing the user and the user's keypairs.
  */
-public class Profile implements Serializable {
+public final class Profile implements Serializable {
 
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
@@ -26,17 +28,21 @@ public class Profile implements Serializable {
      * @param keyPairs the public/private key-pairs of the user.
      */
     public Profile(final String name, final List<KeyPair> keyPairs) {
-        this.keyPairs = keyPairs;
+        Validate.notBlank(name);
+        Validate.noNullElements(keyPairs);
+        this.keyPairs = new ArrayList<>(keyPairs);
         this.name = name;
     }
 
     /**
      * Adds a new keyPair to the profile
+     * <p>
      *
      * @param keyPair the keyPair to add.
      */
     public void addKeyPair(final KeyPair keyPair) {
-        keyPairs.add(keyPair);
+        Validate.notNull(keyPair);
+        this.keyPairs.add(keyPair);
     }
 
     /**
@@ -44,12 +50,13 @@ public class Profile implements Serializable {
      *
      * @return - The Contact POJO.
      */
+
     public Contact getContact() {
         final List<IKey> publicKeys = new ArrayList<>();
-        for (final KeyPair pair : keyPairs) {
+        for (final KeyPair pair : this.keyPairs) {
             publicKeys.add(pair.getPublicKey());
         }
-        return new Contact(name, publicKeys);
+        return new Contact(this.name, publicKeys);
     }
 
     /**
@@ -58,7 +65,7 @@ public class Profile implements Serializable {
      * @return The list of keypairs of the user.
      */
     public List<KeyPair> getKeyPairs() {
-        return keyPairs;
+        return this.keyPairs;
     }
 
     /**
@@ -75,14 +82,15 @@ public class Profile implements Serializable {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object o) {
-        if (o == null || this.getClass() != o.getClass()) {
+
+    public boolean equals(final Object obj) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
 
-        final Profile that = (Profile) o;
+        final Profile other = (Profile) obj;
 
-        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs);
+        return this.name.equals(other.getName()) && this.keyPairs.equals(other.getKeyPairs());
     }
 
     /**

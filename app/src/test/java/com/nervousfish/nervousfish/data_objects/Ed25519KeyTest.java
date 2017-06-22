@@ -42,13 +42,13 @@ public class Ed25519KeyTest {
         assertNotNull(key);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testCanBeInstantiatedWithMapMustHaveAllFields() {
         Map<String, String> map = new ConcurrentHashMap<>();
         new Ed25519Key(map);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testKeyNull() {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("name", "foo");

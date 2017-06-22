@@ -8,7 +8,7 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
+import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
 import org.apache.commons.lang3.Validate;
@@ -49,7 +49,7 @@ enum ContactReceivedHelper {
         Validate.notNull(database);
         Validate.notNull(activity);
         Validate.notNull(contact);
-
+      
         switch (checkExists(database, contact)) {
             case NOT:
                 LOGGER.info("Adding contact to database...");
@@ -96,6 +96,8 @@ enum ContactReceivedHelper {
      * @param contact The new {@link Contact}.
      */
     private static void handleExistingContact(final IDatabase database, final Activity activity, final Contact contact) {
+        assert database != null;
+        assert contact != null;
         new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
                 .setContentText(String.format(activity.getString(R.string.contact_already_exists_with_name), contact.getName()))
@@ -114,6 +116,9 @@ enum ContactReceivedHelper {
      * @param contact The new {@link Contact}.
      */
     private static void handleDuplicateContact(final Activity activity, final Contact contact) {
+        assert activity != null;
+        assert contact != null;
+      
         new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
                 .setContentText(String.format(activity.getString(R.string.contact_exists_nothing_done), contact.getName()))
@@ -128,6 +133,8 @@ enum ContactReceivedHelper {
      * @return true when a contact with the same exists in the database
      */
     private static ContactReceivedHelper.ContactExists checkExists(final IDatabase database, final Contact contact) {
+        assert database != null;
+        assert contact != null;
         final String name = contact.getName();
         try {
             final List<Contact> list = database.getAllContacts();
@@ -153,6 +160,8 @@ enum ContactReceivedHelper {
      * @return A boolean indicating if all the {@link IKey}s in the first list are also in the second list.
      */
     private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
+        assert keys1 != null;
+        assert keys2 != null;
         final Set<IKey> keysSet1 = new HashSet<>(keys1);
         for (final IKey key : keys2) {
             if (!keysSet1.contains(key)) {
@@ -178,6 +187,9 @@ enum ContactReceivedHelper {
          * @param contact The {@link Contact} to add.
          */
         CreateNewContactClickListener(final Activity activity, final IDatabase database, final Contact contact) {
+            Validate.notNull(activity);
+            Validate.notNull(database);
+            Validate.notNull(contact);
             this.activity = activity;
             this.database = database;
             this.contact = contact;
@@ -268,6 +280,8 @@ enum ContactReceivedHelper {
          * @param contact The {@link Contact} to add the key to.
          */
         AddPublicKeyToContactsClickListener(final IDatabase database, final Contact contact) {
+            Validate.notNull(database);
+            Validate.notNull(contact);
             this.database = database;
             this.contact = contact;
         }

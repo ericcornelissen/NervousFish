@@ -1,5 +1,5 @@
 Feature: WaitingActivity
-  Cancel the pairing with the slave as a master
+  The wait activity in the Bluetooth connection process
 
   Scenario: Click on the cancel button
     Given I am viewing the waiting for slave activity

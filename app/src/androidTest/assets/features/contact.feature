@@ -1,5 +1,5 @@
 Feature: Contact activity
-  Do several things on the contact activity page
+  Using the contact activity to interact with a specific contact
 
   Scenario: Click on the back button
     Given I am viewing the contact activity

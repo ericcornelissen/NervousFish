@@ -1,5 +1,5 @@
 Feature: Login activity
-  Perform login when a password is entered
+  Tyring to login into the application
 
   Scenario Outline: Entering an incorrect password gives an error
     Given I am viewing the login activity
