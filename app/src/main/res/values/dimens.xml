@@ -35,7 +35,6 @@
     <dimen name="enter_password_text_size">20sp</dimen>
     <dimen name="error_password_text_size">18sp</dimen>
     <dimen name="submit_password_text_size">20sp</dimen>
-    <dimen name="login_margin_bottom">60dp</dimen>
 
     <dimen name="waiting_for_slave_text_offset">40dp</dimen>
 
@@ -76,4 +75,7 @@
     <dimen name="no_users_text_margin_bottom">40dp</dimen>
     <dimen name="no_users_icon_size">150dp</dimen>
     <dimen name="no_users_icon_margin_bottom">20dp</dimen>
+
+    <!-- Custom keyboard -->
+    <dimen name="keyboard_button_radius">4dp</dimen>
 </resources>

@@ -35,7 +35,6 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFi
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
-
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
@@ -46,6 +45,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private IServiceLocator serviceLocator;
+    private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
@@ -71,6 +71,16 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
 
         LOGGER.info("Activity created");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        if (this.customKeyboard.isVisible()) {
+            this.customKeyboard.hide();
+        }
     }
 
     /**
