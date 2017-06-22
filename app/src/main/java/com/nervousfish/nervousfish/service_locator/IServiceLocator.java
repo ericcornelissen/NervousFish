@@ -7,7 +7,6 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 
 /**
  * Provides the interface that should be implemented by all Service Locators.
@@ -34,8 +33,6 @@ public interface IServiceLocator {
 
     INfcHandler getNFCHandler();
 
-    IQRHandler getQRHandler();
-
     /**
      * Registers the class specified to the EventBus
      *
@@ -56,4 +53,5 @@ public interface IServiceLocator {
      * @param message The message that should be posted
      */
     void postOnEventBus(Object message);
+
 }

@@ -36,9 +36,9 @@ import static android.nfc.NdefRecord.createMime;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
-public final class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
+public final class NFCExchangeActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("NFCExchangeActivity");
     private IServiceLocator serviceLocator;
     private byte[] bytes;
     private NfcAdapter nfcAdapter;
@@ -155,7 +155,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     @Override
     public void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Stopped NFCActivity");
+        LOGGER.info("Stopped NFCExchangeActivity");
         super.onStop();
     }
 

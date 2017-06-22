@@ -8,7 +8,7 @@ import android.widget.EditText;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
+import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
 import org.apache.commons.lang3.Validate;

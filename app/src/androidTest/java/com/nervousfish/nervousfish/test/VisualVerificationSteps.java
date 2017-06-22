@@ -42,7 +42,6 @@ public class VisualVerificationSteps {
     public ActivityTestRule<VisualVerificationActivity> mActivityRule =
             new ActivityTestRule<>(VisualVerificationActivity.class, true, false);
 
-
     @Given("^I am viewing the visual verification activity$")
     public void iAmViewingTheVisualVerificationActivity() {
         final Intent intent = new Intent();

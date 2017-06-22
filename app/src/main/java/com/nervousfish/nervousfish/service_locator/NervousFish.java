@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * {@link com.nervousfish.nervousfish.modules.pairing.IBluetoothHandlerService} and holds the
  * current global state of the application.
  */
-public final class NervousFish extends Application implements INervousFish {
+public final class NervousFish extends Application {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("NervousFish");
 

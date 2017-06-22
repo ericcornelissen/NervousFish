@@ -7,7 +7,8 @@ import java.io.IOException;
 /**
  * Defines an object that can communicate over Bluetooth.
  */
-public interface IBluetoothCommunicator {
+interface IBluetoothCommunicator {
+
     /**
      * Start the bluetooth service. Specifically start AndroidAcceptThread to begin a
      * session in listening (server) mode.
@@ -30,4 +31,5 @@ public interface IBluetoothCommunicator {
      * Stop all threads
      */
     void stop();
+
 }

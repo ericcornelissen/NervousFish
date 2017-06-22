@@ -1,5 +1,5 @@
-Feature: Create a rhythm
-  Simulates the situation when you create a rhythm
+Feature: Rhythm verification
+  Using the rhythm verification methods for Bluetooth
 
   Scenario Outline: Tapping too few times
     Given I am viewing the create rhythm activity

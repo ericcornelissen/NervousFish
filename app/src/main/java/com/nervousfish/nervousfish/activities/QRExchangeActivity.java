@@ -35,11 +35,8 @@ import java.util.regex.Pattern;
 //  2)  This warning doesn't make sense since I can't instantiate the object in the constructor as I
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
 //  3)  Uses many utility imports.
-public final class QRExchangeKeyActivity extends AppCompatActivity {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeKeyActivity");
-    private static final Pattern COMPILE_SEMICOLON = Pattern.compile(";");
-
+public final class QRExchangeActivity extends AppCompatActivity {
+    private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeActivity");
     private IDatabase database;
     private Profile profile;
 
