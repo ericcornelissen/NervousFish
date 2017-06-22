@@ -33,8 +33,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".activities.ContactActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -53,7 +53,7 @@
             android:windowSoftInputMode="stateVisible|adjustPan" />
 
         <activity
-            android:name=".activities.BluetoothConnectionActivity"
+            android:name=".activities.BluetoothConnectActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SelectVerificationMethodActivity"
@@ -63,7 +63,7 @@
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.RhythmCreateActivity"
+            android:name=".activities.RhythmVerificationActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -72,11 +72,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.NFCActivity"
+            android:name=".activities.NFCExchangeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.QRExchangeKeyActivity"
+            android:name=".activities.QRExchangeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

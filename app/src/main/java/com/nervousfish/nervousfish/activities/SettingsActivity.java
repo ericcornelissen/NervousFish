@@ -20,6 +20,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * A {@link PreferenceActivity} that presents a set of application settings. This
  * is the place where your profile is changed.
  */
-@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 //Because of the structure with the static methods, a static attribute has to be set.
 @SuppressWarnings({"checkstyle:AnonInnerLength", "PMD.AvoidUsingVolatile"})
 //1. In this class large anonymous classes are needed. It does not infer with readability.
@@ -48,19 +49,22 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
+            new Preference.OnPreferenceChangeListener() {
         @Override
-        public boolean onPreferenceChange(final Preference preference, final Object value) {
+        public boolean onPreferenceChange(final Preference preference, final Object newValue) {
             LOGGER.info("Preference changed");
-            final String stringValue = value.toString();
+            Validate.notNull(preference);
+            Validate.notNull(newValue);
+            final String stringValue = newValue.toString();
 
             if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
                 LOGGER.info("Preference changed at the display name");
-                updateDisplayName(preference, stringValue);
+                this.updateDisplayName(preference, stringValue);
                 return true;
             } else if (preference instanceof ListPreference) {
                 LOGGER.info("Preference changed for a ListPreference");
-                updateListPreference(preference, stringValue);
+                this.updateListPreference(preference, stringValue);
                 return true;
             } else {
                 LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
@@ -79,13 +83,15 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
          * @param stringValue The string value which is new
          */
         private void updateDisplayName(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
             if (firstLoad) {
                 firstLoad = false;
 
                 try {
                     preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
                     return;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
                 }
 
@@ -95,7 +101,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
                     serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
 
@@ -110,6 +116,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
          * @param stringValue The string value which is new
          */
         private void updateListPreference(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
             // For list preferences, look up the correct display value in
             // the preference's 'entries' list.
             final ListPreference listPreference = (ListPreference) preference;
@@ -130,15 +138,16 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
-     * @see #sBindPreferenceSummaryToValueListener
+     * @see #BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER
      */
     private static void bindPreferenceSummaryToValue(final Preference preference) {
+        assert preference != null;
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+        preference.setOnPreferenceChangeListener(BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+        BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
@@ -147,7 +156,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
+        this.setupActionBar();
 
         if (serviceLocator == null) {
             serviceLocator = NervousFish.getServiceLocator();
@@ -159,14 +168,14 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     .edit()
                     .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
                     .apply();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);
         }
         LOGGER.info("SettingsActivity created");
     }
 
     @Override
-    public void onHeaderClick(final Header header, final int position) {
+    public void onHeaderClick(final PreferenceActivity.Header header, final int position) {
         super.onHeaderClick(header, position);
         if (header.id == R.id.key_management_header) {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
@@ -178,7 +187,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     private void setupActionBar() {
-        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -189,7 +198,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         final int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            this.finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -200,8 +209,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      */
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(final List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
+    public void onBuildHeaders(final List<PreferenceActivity.Header> target) {
+        this.loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
     /**
@@ -211,10 +220,11 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      * @param fragmentName The name of the fragment
      * @return A boolean which is true when the fragment is valid
      */
+    @Override
     protected boolean isValidFragment(final String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || ProfilePreferenceFragment.class.getName().equals(fragmentName);
+                || SettingsActivity.GeneralPreferenceFragment.class.getName().equals(fragmentName)
+                || SettingsActivity.ProfilePreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -226,14 +236,14 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
+            this.addPreferencesFromResource(R.xml.pref_general);
+            this.setHasOptionsMenu(true);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.CHOOSE_VERIFICATION_PREFERENCE));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.CHOOSE_VERIFICATION_PREFERENCE));
         }
 
         @Override
@@ -242,7 +252,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             if (id == android.R.id.home) {
                 final Activity activity = this.getActivity();
                 final Intent intent = new Intent(activity, SettingsActivity.class); // Needed bacause we're in a Fragment
-                startActivity(intent);
+                this.startActivity(intent);
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -257,14 +267,14 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_profile);
-            setHasOptionsMenu(true);
+            this.addPreferencesFromResource(R.xml.pref_profile);
+            this.setHasOptionsMenu(true);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.DISPLAY_NAME));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.DISPLAY_NAME));
         }
 
         @Override
@@ -273,7 +283,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             if (id == android.R.id.home) {
                 final Activity activity = this.getActivity();
                 final Intent intent = new Intent(activity, SettingsActivity.class); // Needed bacause we're in a Fragment
-                startActivity(intent);
+                this.startActivity(intent);
                 return true;
             }
             return super.onOptionsItemSelected(item);

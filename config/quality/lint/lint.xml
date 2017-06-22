@@ -180,4 +180,8 @@
 
     <!-- It's really a lot more work to split up a gif into parts of jpg/png's and animate them -->
     <issue id="GifUsage" severity="ignore" />
+
+    <!-- According to a highly voted post on StackOverflow (see https://stackoverflow.com/questions/1957645/when-to-use-an-assertion-and-when-to-use-an-exception)
+        they're good practice to verify the correctness of the program -->
+    <issue id="Assert" severity="ignore" />
 </lint>

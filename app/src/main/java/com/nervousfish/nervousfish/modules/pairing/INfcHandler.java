@@ -9,7 +9,9 @@ public interface INfcHandler extends IPairingHandler, IModule {
 
     /**
      * Makes sure that the data received is handled properly
+     *
      * @param bytes the bytes received
      */
     void dataReceived(byte[] bytes);
+
 }

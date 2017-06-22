@@ -12,6 +12,8 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +40,9 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
      */
     public ContactsByKeyTypeListAdapter(final Activity context, final List<String> types, final List<Contact> contacts) {
         super();
+        Validate.notNull(context);
+        Validate.notNull(types);
+        Validate.notNull(contacts);
         this.context = context;
         this.types = new ArrayList<>(types);
         this.groupedContacts = new HashMap<>();

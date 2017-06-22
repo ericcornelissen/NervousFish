@@ -17,6 +17,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,6 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFi
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
-
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
@@ -45,6 +45,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private IServiceLocator serviceLocator;
+    private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
@@ -73,21 +74,32 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        if (this.customKeyboard.isVisible()) {
+            this.customKeyboard.hide();
+        }
+    }
+
+    /**
      * Gets triggered when the Submit button is clicked.
      *
      * @param view The {@link View} clicked
      */
     public void onSubmitClick(final View view) {
+        Validate.notNull(view);
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = nameInput.getText().toString();
-                final String password = passwordInput.getText().toString();
+                final String name = this.nameInput.getText().toString();
+                final String password = this.passwordInput.getText().toString();
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
+                    final List<KeyPair> keyPairs = this.helper.generateKeyPairs(IKey.Types.RSA);
                     final Profile userProfile = new Profile(name, keyPairs);
 
                     database.createDatabase(userProfile, password);
@@ -114,10 +126,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case PASSWORDS_NOT_EQUAL:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_passwords_not_equal));
                 break;
-
             default:
                 break;
-
         }
     }
 

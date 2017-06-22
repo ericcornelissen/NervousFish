@@ -11,20 +11,20 @@ Feature: Create a profile
     And the repeat password input field should become red
 
   Scenario Outline: Clicking submit with valid input
-      Given I am viewing the create profile activity
-      When I enter a valid <name> as name
-      And I enter a valid <password> as password
-      And I enter a valid repeat <password> as repeat password
-      And I click on the submit profile button
-      And I click ok on the popup with the success message about creating a profile
-      Then I should progress directly to the main activity
-      And the profile with <name> should be saved in the database
+    Given I am viewing the create profile activity
+    When I enter a valid <name> as name
+    And I enter a valid <password> as password
+    And I enter a valid repeat <password> as repeat password
+    And I click on the submit profile button
+    And I click ok on the popup with the success message about creating a profile
+    Then I should progress directly to the main activity
+    And the profile with <name> should be saved in the database
 
-      Examples:
-         | name     | password      |
-         | Jaap     | 5950577       |
-         | Cl3nr0€k | ^&*)(_-34-    |
-         | p        | apasswordd    |
+    Examples:
+     | name     | password      |
+     | Jaap     | 5950577       |
+     | Cl3nr0€k | ^&*)(_-34-    |
+     | p        | apasswordd    |
 
   Scenario Outline: Password not longer than 6 characters
     Given I am viewing the create profile activity
@@ -37,10 +37,10 @@ Feature: Create a profile
     And the password input field should become red
 
     Examples:
-         | name         | password  |
-         | Drake        | a         |
-         | CJ           | ^&*)(     |
-         | Darth Vader  | 6782      |
+     | name         | password  |
+     | Drake        | a         |
+     | CJ           | ^&*)(     |
+     | Darth Vader  | 6782      |
 
   Scenario Outline: Password and repeat password not the same
     Given I am viewing the create profile activity

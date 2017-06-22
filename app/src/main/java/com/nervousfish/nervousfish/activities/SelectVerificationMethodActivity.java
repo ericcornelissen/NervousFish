@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
      * @param view The view on which the click was performed
      */
     public void onVerificationMethodClick(final View view) {
+        Validate.notNull(view);
         final Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.btn_select_visual_verification:
@@ -72,7 +74,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
                 } catch (final IOException e) {
                     LOGGER.error("Sending the Verification RHYTHM went wrong: ", e);
                 }
-                intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                intent.setComponent(new ComponentName(this, RhythmVerificationActivity.class));
                 break;
             default:
                 LOGGER.warn("unknown verification method selected, view: {}", view);
@@ -130,7 +132,7 @@ public final class SelectVerificationMethodActivity extends AppCompatActivity {
             switch (verificationMethod) {
                 case RHYTHM:
                     //Go to RhythmActivity
-                    intent.setComponent(new ComponentName(this, RhythmCreateActivity.class));
+                    intent.setComponent(new ComponentName(this, RhythmVerificationActivity.class));
                     break;
                 case VISUAL:
                     //Go to VisualVerificationActivity

@@ -33,15 +33,15 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * The RhythmCreateActivity is an Activity where you can tap a sequence.
+ * The RhythmVerificationActivity is an Activity where you can tap a sequence.
  */
 @SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized", "PMD.ExcessiveImports"})
 // 1) List is cast to an ArrayList, but that is needed to put in an intent.
 // 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
 // 3) We cannot easily reduce the number of imports because most of them are plain data objects to events
-public final class RhythmCreateActivity extends AppCompatActivity {
+public final class RhythmVerificationActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmVerificationActivity");
     private static final int MINIMUM_TAPS = 3;
     private static final int DECIMAL_SIZE = 10;
     private static final int MAX_RHYTHM_ENCODING = 10;
@@ -126,6 +126,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
+        Validate.notNull(v);
         if (this.taps != null && this.startButton.getVisibility() == View.GONE) {
             this.taps.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
         }
@@ -138,13 +139,14 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
+        Validate.notNull(v);
         try {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}, public key: {}", profile.getName(), keyPair.getPublicKey().toString());
-            final Contact myProfileAsContact = new Contact(profile.getName(), keyPair.getPublicKey());
-            final long encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+            final Contact myProfileAsContact = profile.getContact();
+            final long encryptionKey = new RhythmVerificationActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
@@ -164,6 +166,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
+        Validate.notNull(v);
         this.taps = new ArrayList<>();
         this.startButton.setVisibility(View.GONE);
         this.stopButton.setVisibility(View.VISIBLE);
@@ -177,6 +180,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
+        Validate.notNull(v);
         this.startButton.setVisibility(View.VISIBLE);
         this.stopButton.setVisibility(View.GONE);
         if (this.taps.size() < MINIMUM_TAPS) {
@@ -200,6 +204,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
             this.contactReceived = (Contact) event.getData();
         }
@@ -227,10 +232,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         /**
          * Get a list of the time between the taps (= intervals)
-         * @param taps The taps that have obviously intervals in between
+         * @param taps The taps that have obviously intervals in between. Should be at least two taps
          * @return A list containing the time between the taps
          */
         private static List<Long> getIntervals(final List<SingleTap> taps) {
+            assert taps != null;
+            assert taps.size() >= 2;
             final List<Long> intervals = new ArrayList<>(taps.size() - 1);
             for (int i = 0; i < taps.size() - 1; i++) {
                 intervals.add(taps.get(i + 1).getTimestamp().getTime() - taps.get(i).getTimestamp().getTime());
@@ -293,10 +300,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          */
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
-            final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
-            if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
+            assert centerMean1 >= 0;
+            assert centerMean2 >= 0;
+            final ImmutablePair<RhythmVerificationActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
+            if (closestPoint.getLeft() == RhythmVerificationActivity.Cluster.SHORT) {
                 this.clusterCenter1.add(closestPoint.getRight());
-            } else if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.LONG) {
+            } else if (closestPoint.getLeft() == RhythmVerificationActivity.Cluster.LONG) {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
                 LOGGER.error("A timestamp does neither belong to the short or long interval");
@@ -311,22 +320,24 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
          */
-        private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+        private ImmutablePair<RhythmVerificationActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+            assert centerMean1 >= 0;
+            assert centerMean2 >= 0;
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
-            RhythmCreateActivity.Cluster targetCluster = null;
+            RhythmVerificationActivity.Cluster targetCluster = null;
             for (final Long interval : this.intervals) {
                 final long dist1 = interval - centerMean1;
                 if (dist1 < distance) {
                     closestPoint = interval;
                     distance = dist1;
-                    targetCluster = RhythmCreateActivity.Cluster.SHORT;
+                    targetCluster = RhythmVerificationActivity.Cluster.SHORT;
                 }
                 final long dist2 = centerMean2 - interval;
                 if (dist2 < distance) {
                     closestPoint = interval;
                     distance = dist2;
-                    targetCluster = RhythmCreateActivity.Cluster.LONG;
+                    targetCluster = RhythmVerificationActivity.Cluster.LONG;
                 }
             }
             return new ImmutablePair<>(targetCluster, closestPoint);
@@ -360,9 +371,10 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * Short, Long, Long = 6
          * Long, Long, Long = 7
          * @param breakpoint The boundary between a short and long interval
-         * @return The key as an integer
+         * @return The key as a Long
          */
         private long generateKey(final long breakpoint) {
+            assert breakpoint >= 0;
             long key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
