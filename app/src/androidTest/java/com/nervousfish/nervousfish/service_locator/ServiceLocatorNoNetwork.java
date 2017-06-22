@@ -9,7 +9,6 @@ import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.DummyBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
 import java.io.IOException;
@@ -51,9 +50,8 @@ public class ServiceLocatorNoNetwork extends ServiceLocator {
                             final IFileSystem fileSystem,
                             final IConstants constants,
                             final IBluetoothHandler bluetoothHandler,
-                            final INfcHandler nfcHandler,
-                            final IQRHandler qrHandler) {
-        super(androidFilesDir, database, keyGenerator, encryptor, fileSystem, constants, bluetoothHandler, nfcHandler, qrHandler);
+                            final INfcHandler nfcHandler) {
+        super(androidFilesDir, database, keyGenerator, encryptor, fileSystem, constants, bluetoothHandler, nfcHandler);
     }
 
     /**
