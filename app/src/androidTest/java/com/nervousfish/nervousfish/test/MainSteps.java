@@ -1,15 +1,17 @@
 package com.nervousfish.nervousfish.test;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
+import android.view.View;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
+import com.nervousfish.nervousfish.activities.NFCExchangeActivity;
+import com.nervousfish.nervousfish.activities.QRExchangeActivity;
 import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -44,12 +46,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 
 @CucumberOptions(features = "features")
 public class MainSteps {
-
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
@@ -69,7 +71,6 @@ public class MainSteps {
     @After
     public void deleteDatabase() {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-
         database.deleteDatabase();
     }
 
@@ -77,14 +78,10 @@ public class MainSteps {
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
-        allowPermissionsIfNeeded();
       
         try {
             onView(withText(R.string.no)).perform(click());
-        } catch (NoMatchingViewException ignore) {
-        }
-
-        allowPermissionsIfNeeded();
+        } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
     }
 
     @Given("^there is a contact with the name (.*?) in the database$")
@@ -117,10 +114,20 @@ public class MainSteps {
         onView(withId(R.id.settings_button)).perform(click());
     }
 
-    @When("^I click open buttons with the plus$")
-    public void clickPlusButton() {
+    @When("^I click on the new connection button$")
+    public void iClickOnTheNewConnectionButton() {
         onView(allOf(withParent(withId(R.id.pairing_button)), withClassName(endsWith("ImageView")), isDisplayed()))
                 .perform(click());
+    }
+
+    @When("^I click the button with the Bluetooth icon$")
+    public void iClickBluetoothButton() {
+        onView(withId(R.id.pairing_menu_bluetooth)).perform(click());
+    }
+
+    @When("^I click the button with the NFC icon$")
+    public void iClickNFCButton() {
+        onView(withId(R.id.pairing_menu_nfc)).perform(click());
     }
 
     @When("^I click the button with the QR icon$")
@@ -129,8 +136,18 @@ public class MainSteps {
     }
 
     @When("^I click on the contact with the name (.*?)$")
-    public void iClockOnTheContactWithTheName(final String name) {
+    public void iClickOnTheContactWithTheName(final String name) {
         onView(withText(name)).perform(click());
+    }
+
+    @When("^I click the button with the Bluetooth text label$")
+    public void iClickBluetoothLabel() {
+        onView(withText(R.string.bluetooth)).perform(click());
+    }
+
+    @When("^I click the button with the NFC text label$")
+    public void iClickNFCLabel() {
+        onView(withText(R.string.nfc)).perform(click());
     }
 
     @When("^I click the button with the QR text label$")
@@ -138,7 +155,7 @@ public class MainSteps {
         onView(withText(R.string.qr)).perform(click());
     }
 
-    @Then("^I should stay in the main activity after pressing back$")
+    @Then("^I should stay in the main activity from the main activity$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
     }
@@ -153,9 +170,31 @@ public class MainSteps {
         intended(hasComponent(SettingsActivity.class.getName()));
     }
 
+    @Then("^the app shouldn't crash because of Bluetooth$")
+    public void theAppShouldCrashBecauseOfBluetooth() {
+        assertTrue(true);
+    }
+
+    @Then("^I should go to the NFC activity from main$")
+    public void iShouldGoToTheNFCActivity() {
+        final Activity activity = this.mActivityRule.getActivity();
+        final View nfcButton = activity.findViewById(R.id.pairing_menu_nfc);
+        if (nfcButton.isEnabled()) {
+            try {
+                onView(withText(R.string.no)).perform(click());
+
+                // If a popup showed up, we should stay in the MainActivity (since we clicked "no")
+                intended(hasComponent(MainActivity.class.getName()));
+            } catch (NoMatchingViewException ignore) {
+                // If no popup showed up, the NFC activity should be displayed
+                intended(hasComponent(NFCExchangeActivity.class.getName()));
+            }
+        }
+    }
+
     @Then("^I should go to the QR activity from main$")
     public void iShouldGoToTheQRActivity() {
-        intended(hasComponent(QRExchangeKeyActivity.class.getName()));
+        intended(hasComponent(QRExchangeActivity.class.getName()));
     }
 
     @Then("^I should go to the contact activity from main$")
@@ -163,11 +202,4 @@ public class MainSteps {
         intended(hasComponent(ContactActivity.class.getName()));
     }
 
-    private void allowPermissionsIfNeeded()  {
-        if (Build.VERSION.SDK_INT >= 23) {
-            try {
-                onView(withText("Allow")).perform(click());
-            } catch (NoMatchingViewException ignore) { }
-        }
-    }
 }

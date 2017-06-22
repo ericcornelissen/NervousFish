@@ -47,4 +47,5 @@ interface IPairingHandler extends IModule {
      * @return The object responsible for newly received data
      */
     PairingWrapper getDataReceiver();
+
 }

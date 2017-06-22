@@ -11,6 +11,7 @@ import org.apache.commons.lang3.Validate;
  * {@link BluetoothConnectedEvent} should be posted after that is done.
  */
 public final class BluetoothAlmostConnectedEvent {
+
     private final BluetoothSocket socket;
 
     /**
@@ -26,4 +27,5 @@ public final class BluetoothAlmostConnectedEvent {
     public BluetoothSocket getSocket() {
         return this.socket;
     }
+
 }

@@ -13,6 +13,7 @@ import java.io.Serializable;
  * class that should be sent directly over the network.
  */
 final class DataWrapper implements Serializable {
+
     private static final long serialVersionUID = -1704556072876435760L;
     private final Serializable data;
     private final Class<?> clazz;
@@ -68,6 +69,7 @@ final class DataWrapper implements Serializable {
     // 1) A private constructor is safer than a hidden constructor
     // 2) SerializationProxy doesn't need the write method, because it creates the class by calling the contstructor in readResolve
     private static final class SerializationProxy implements Serializable {
+
         private static final long serialVersionUID = -1704556072876435760L;
         private final Serializable data;
 
@@ -86,5 +88,7 @@ final class DataWrapper implements Serializable {
         private Object readResolve() {
             return new DataWrapper(this.data);
         }
+
     }
+
 }
