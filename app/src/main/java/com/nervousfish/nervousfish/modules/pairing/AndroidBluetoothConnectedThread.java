@@ -18,7 +18,8 @@ import java.util.Arrays;
  * This thread runs during a connection with a remote device.
  * It handles all incoming and outgoing transmissions.
  */
-public final class AndroidBluetoothConnectedThread extends Thread implements IBluetoothThread {
+final class AndroidBluetoothConnectedThread extends Thread implements IBluetoothThread {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothConnectedThread");
     private static final int BUFFER_SIZE = 4096;
 
@@ -109,4 +110,5 @@ public final class AndroidBluetoothConnectedThread extends Thread implements IBl
             LOGGER.error("Closing socket", e);
         }
     }
+
 }

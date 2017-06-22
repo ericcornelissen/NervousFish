@@ -10,6 +10,7 @@ import org.apache.commons.lang3.Validate;
  * Sent when the device successfully paired with a Bluetooth device
  */
 public final class BluetoothConnectedEvent {
+
     private final IBluetoothThread thread;
 
     /**
@@ -23,7 +24,8 @@ public final class BluetoothConnectedEvent {
         this.thread = thread;
     }
 
-    public IBluetoothThread getThread() {
+    IBluetoothThread getThread() {
         return this.thread;
     }
+
 }

@@ -27,7 +27,6 @@ public class QRGeneratorTest {
     private IKey publicKey;
     private String publicKeyString;
 
-
     @Before
     public void setUp() throws Exception {
         System.out.println("hoi!!");
