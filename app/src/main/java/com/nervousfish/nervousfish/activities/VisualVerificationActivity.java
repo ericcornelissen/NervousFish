@@ -140,7 +140,7 @@ public final class VisualVerificationActivity extends Activity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
-        LOGGER.info("onNewEncryptedBytesReceivedEvent called");
+        LOGGER.info("onNewDataReceivedEvent called, type is " + event.getClazz());
         Validate.notNull(event);
 
         try {

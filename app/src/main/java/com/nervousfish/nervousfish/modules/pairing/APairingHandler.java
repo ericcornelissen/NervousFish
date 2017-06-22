@@ -140,7 +140,6 @@ abstract class APairingHandler implements IPairingHandler {
         Validate.isTrue(key >= 0);
 
         final byte[] bytes;
-        this.send(this.objectToBytes(object));
 
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {

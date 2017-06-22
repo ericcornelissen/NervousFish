@@ -99,6 +99,8 @@
     <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
     <string name="not_the_same_rhythm_title">Ritmes zijn niet hetzelfde</string>
     <string name="not_the_same_rhythm_explanation">Je ritme was niet hetzelfde als dat van je partner.</string>
+    <string name="not_the_same_visual_title">Geklikte elementen niet gelijk</string>
+    <string name="not_the_same_visual_explanation">Zorg ervoor dat de plaatjes én de volgorde op beide apparaten hetzelfde zijn.</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
