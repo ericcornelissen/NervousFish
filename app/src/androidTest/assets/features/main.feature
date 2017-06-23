@@ -65,3 +65,14 @@ Feature: Main Activity
     Given I am viewing the main activity
     When I click the three dots in the main activity
     Then I should go to the settings screen
+
+  Scenario: Clicking the sort button
+    Given I am viewing the main activity
+    When I click the sort button in the main activity
+    Then The app shouldn't crash
+
+  Scenario: Clicking the sort button with different key types
+    Given I am viewing the main activity
+    When There are contacts with different keys in the database
+    And I click the sort button in the main activity
+    Then The app shouldn't crash
