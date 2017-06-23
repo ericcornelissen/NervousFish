@@ -70,3 +70,8 @@ Feature: Main Activity
     Given I am viewing the main activity
     When I click the sort button in the main activity
     Then The app shouldn't crash
+
+  Scenario: Clicking the sort button with different key types
+    Given I am viewing the main activity
+    When I click the sort button in the main activity while there are contacts with different keys in the database
+    Then The app shouldn't crash
