@@ -33,8 +33,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings("checkstyle:ReturnCount")
-//Suppresses return count to allow multiple returncodes while checking input fields.
+@SuppressWarnings({"checkstyle:ReturnCount", "PMD.ExcessiveImports"})
+// 1) Suppresses return count to allow multiple returncodes while checking input fields.
+// 2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
+//    to outsource to another class
 public final class CreateProfileActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private final CreateProfileCustomKeyHelper customKeyHelper = new CreateProfileCustomKeyHelper(this, new CustomKeyPairSetter());
@@ -44,6 +46,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private CheckBox rsaCheckBox;
+    private CheckBox ed25519CheckBox;
 
     /**
      * {@inheritDoc}
@@ -63,6 +67,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
+        this.rsaCheckBox = (CheckBox) this.findViewById(R.id.checkbox_rsa_key);
+        this.ed25519CheckBox = (CheckBox) this.findViewById(R.id.checkbox_ed25519_key);
 
         LOGGER.info("Activity created");
     }
@@ -90,10 +96,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 if (((CheckBox) this.findViewById(R.id.checkbox_use_existing_keypair)).isChecked()) {
                     this.customKeyHelper.askForCustomKeypair();
                 } else {
-                    this.finishCreatingProfile(this.helper.generateKeyPairs(IKey.Types.RSA));
+                    this.finishCreatingProfile(this.generateKeyPairList());
                 }
                 break;
-            case ALl_FIELDS_EMPTY:
+            case ALL_FIELDS_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
                 break;
             case NAME_EMPTY:
@@ -134,6 +140,28 @@ public final class CreateProfileActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Generates a list of key pairs, given the checked boxes.
+     *
+     * @return A list of keypairs with the types checked in the boxes.
+     */
+    private List<KeyPair> generateKeyPairList() {
+        final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
+        if (this.rsaCheckBox.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.RSA);
+        }
+        if (this.ed25519CheckBox.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.Ed25519);
+        }
+        final List<KeyPair> keyPairs = new ArrayList<>();
+        for (final IKey.Types type : keytypesToGenerate) {
+            keyPairs.addAll(this.helper.generateKeyPairs(type));
+        }
+
+        return keyPairs;
+
+    }
+
     /**
      * Validates if the input fields are not empty and if the input is valid.
      * This also means that the password and the repeat password should be the same,
@@ -148,7 +176,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
         if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD && passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD
                 && repeatPasswordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
-            return Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
+            return Constants.ExplicitFieldResultCodes.ALL_FIELDS_EMPTY;
         } else if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
             return Constants.ExplicitFieldResultCodes.NAME_EMPTY;
         } else if (passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {

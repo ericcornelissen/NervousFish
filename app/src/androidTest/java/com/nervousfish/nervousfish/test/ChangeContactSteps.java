@@ -54,8 +54,8 @@ public class ChangeContactSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = serviceLocator.getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
+        final IDatabase database = this.serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, this.serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
@@ -65,7 +65,7 @@ public class ChangeContactSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         database.deleteDatabase();
     }
 
@@ -116,7 +116,7 @@ public class ChangeContactSteps {
 
     @Then("^I should go to the activity I visited before the change contact activity$")
     public void iShouldGoToTheActivityIVisitedBeforeTheChangeContactActivity() {
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        assertTrue(this.mActivityRule.getActivity().isFinishing());
     }
 
     @Then("^I should stay in the contact activity$")
@@ -126,7 +126,7 @@ public class ChangeContactSteps {
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         assertNotNull(database.getContactWithName(this.newName));
     }
 
@@ -134,7 +134,7 @@ public class ChangeContactSteps {
      * Initialize the database for the ChangeContactSteps.
      */
     private void initDatabase() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());
         }

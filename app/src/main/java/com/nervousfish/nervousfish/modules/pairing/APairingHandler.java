@@ -16,17 +16,31 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.StreamCorruptedException;
+import java.security.InvalidAlgorithmParameterException;
 import java.util.Arrays;
+
+import java.nio.ByteBuffer;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Contains common methods shared by all pairing modules to reduce code duplication.
  */
-@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "checkstyle:AnonInnerLength"})
+@SuppressWarnings({"checkstyle:classdataabstractioncoupling", "checkstyle:ClassFanOutComplexity"})
+// 1 / 2) Suppressed the code base if cluttered if we split this class that's already quite small in even smaller classes
 abstract class APairingHandler implements IPairingHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
-    private static final long serialVersionUID = 1656974573024980860L;
 
     private final IServiceLocator serviceLocator;
     private byte[] readBuffer = new byte[0];
@@ -46,29 +60,28 @@ abstract class APairingHandler implements IPairingHandler {
     @Override
     @DesignedForExtension
     public PairingWrapper<IDataReceiver> getDataReceiver() {
-        return new PairingWrapper<IDataReceiver>(new IDataReceiver() {
-            @Override
-            public void dataReceived(final byte[] bytes) {
-                final byte[] srcBytes = trim(bytes);
-                
-                final byte[] newBuffer = new byte[readBuffer.length + srcBytes.length];
-                System.arraycopy(readBuffer, 0, newBuffer, 0, readBuffer.length);
-                System.arraycopy(srcBytes, 0, newBuffer, readBuffer.length, srcBytes.length);
+        return new PairingWrapper<>(bytes -> {
+            final byte[] srcBytes = trim(bytes);
+            LOGGER.info("Byte array received = " + Arrays.toString(bytes));
 
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
-                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+            final byte[] newBuffer = new byte[this.readBuffer.length + srcBytes.length];
+            System.arraycopy(this.readBuffer, 0, newBuffer, 0, this.readBuffer.length);
+            System.arraycopy(srcBytes, 0, newBuffer, this.readBuffer.length, srcBytes.length);
 
-                    final DataWrapper object = (DataWrapper) ois.readObject();
-                    APairingHandler.this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(
-                            object.getData(), object.getClazz()));
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(newBuffer);
+                 ObjectInputStream ois = new ObjectInputStream(bis)) {
 
-                    readBuffer = new byte[0];
-                } catch (final ClassNotFoundException | IOException e) {
-                    if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
-                        readBuffer = newBuffer;
-                    } else {
-                        LOGGER.error(" Couldn't start deserialization!", e);
-                    }
+                final DataWrapper object = (DataWrapper) ois.readObject();
+                LOGGER.info("Read object in data received");
+                this.serviceLocator.postOnEventBus(new NewDataReceivedEvent(object.getData(), object.getClazz()));
+
+                this.readBuffer = new byte[0];
+            } catch (final ClassNotFoundException | IOException e) {
+                if (e.getClass().equals(EOFException.class) || e.getClass().equals(StreamCorruptedException.class)) {
+                    this.readBuffer = newBuffer;
+                    LOGGER.info("Put in readbuffer");
+                } else {
+                    LOGGER.error(" Couldn't start deserialization!", e);
                 }
             }
         });
@@ -121,14 +134,48 @@ abstract class APairingHandler implements IPairingHandler {
      * {@inheritDoc}
      */
     @Override
-    public final void send(final Serializable object, final long key) {
+    public final void send(final Serializable object, final Long key) throws BadPaddingException, IllegalBlockSizeException {
         LOGGER.info("Begin writing object encoded with key: {}", key);
         Validate.notNull(object);
         Validate.isTrue(key >= 0);
-        this.send(this.objectToBytes(object));
+
+        final byte[] bytes;
+
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(new DataWrapper(object));
+            oos.flush();
+            bytes = bos.toByteArray();
+        } catch (final IOException e) {
+            LOGGER.error("Couldn't serialize the object", e);
+            throw new SerializationException(e);
+        }
+
+        try {
+            final ByteBuffer buffer = ByteBuffer.allocate(2 * Long.SIZE / Byte.SIZE);
+            buffer.putLong(key);
+            final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
+            final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            final IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
+
+            // encrypt the text
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec);
+            final byte[] encrypted = cipher.doFinal(bytes);
+
+            final ByteWrapper byteWrapper = new ByteWrapper(encrypted);
+            LOGGER.info("Sending data encrypted");
+            this.send(this.objectToBytes(byteWrapper));
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException
+                | InvalidKeyException | InvalidAlgorithmParameterException e) {
+            LOGGER.info("An error occured encrypting the data", e);
+        }
     }
 
-    protected final IServiceLocator getServiceLocator() {
+    /**
+     * @return The service locator
+     */
+    IServiceLocator getServiceLocator() {
         return this.serviceLocator;
     }
+
 }
