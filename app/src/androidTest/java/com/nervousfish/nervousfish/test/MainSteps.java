@@ -16,7 +16,9 @@ import com.nervousfish.nervousfish.activities.QRExchangeActivity;
 import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -44,12 +46,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 
 @CucumberOptions(features = "features")
 public class MainSteps {
+
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
@@ -163,6 +167,20 @@ public class MainSteps {
     @When("^I click the button with the QR text label$")
     public void iClickQRLabel() {
         onView(withText(R.string.qr)).perform(click());
+    }
+
+    @When("^I click the sort button in the main activity$")
+    public void iClickSortButton() {
+        onView(withId(R.id.sort_button)).perform(click());
+    }
+
+    @When("^There are contacts with different keys in the database$")
+    public void iClickSortButtonDifferentKeys() throws Exception {
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
+        final KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        database.addContact(new Contact("Person1", keyPair.getPublicKey()));
+        database.addContact(new Contact("Person2", keyPair.getPublicKey()));
     }
 
     @Then("^I should stay in the main activity from the main activity$")

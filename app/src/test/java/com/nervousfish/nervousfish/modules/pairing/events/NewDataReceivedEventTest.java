@@ -15,19 +15,19 @@ public class NewDataReceivedEventTest {
 
     @Before
     public void init() {
-        data = mock(Object.class);
-        clazz = data.getClass();
-        event = new NewDataReceivedEvent(data, clazz);
+        this.data = mock(Object.class);
+        this.clazz = this.data.getClass();
+        this.event = new NewDataReceivedEvent(this.data, this.clazz);
     }
 
     @Test
     public void getData() throws Exception {
-        assertThat(event.getData(), is(equalTo(data)));
+        assertThat(this.event.getData(), is(equalTo(this.data)));
     }
 
     @Test
     public void getClazz() throws Exception {
-        assertThat(event.getClazz(), is(equalTo(clazz)));
+        assertThat(this.event.getClazz(), is(equalTo(this.clazz)));
     }
 
 }

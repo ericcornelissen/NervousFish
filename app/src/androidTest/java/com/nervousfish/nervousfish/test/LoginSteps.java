@@ -18,7 +18,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -31,6 +30,7 @@ import static junit.framework.Assert.assertFalse;
 
 @CucumberOptions(features = "features")
 public class LoginSteps {
+
     private static boolean firstRun = true;
     private static LoginActivity activity;
 

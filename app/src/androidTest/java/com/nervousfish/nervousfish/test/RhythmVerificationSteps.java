@@ -41,7 +41,7 @@ public class RhythmVerificationSteps {
     @Given("^I am viewing the create rhythm activity$")
     public void iAmViewingTheCreateRhythmActivity() throws IOException {
         final Intent intent = new Intent();
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I tap the start button$")
