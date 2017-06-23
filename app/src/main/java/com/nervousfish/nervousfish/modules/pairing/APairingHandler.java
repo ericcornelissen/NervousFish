@@ -171,4 +171,11 @@ abstract class APairingHandler implements IPairingHandler {
         }
     }
 
+    /**
+     * @return The service locator
+     */
+    IServiceLocator getServiceLocator() {
+        return this.serviceLocator;
+    }
+
 }

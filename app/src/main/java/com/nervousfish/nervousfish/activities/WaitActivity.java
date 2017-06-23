@@ -165,12 +165,12 @@ public final class WaitActivity extends Activity {
             final byte[] decryptedData = this.encryptor.decryptWithPassword(this.dataReceived, this.key);
             LOGGER.info("Decrypted data");
             this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             LOGGER.warn("Keys didn't match! Going back to the rhythm activity");
             final Intent intent = new Intent(this, this.classStartedFrom);
             intent.putExtra(ConstantKeywords.TAPPING_FAILURE, true);
             this.startActivity(intent);
-        } catch (GeneralSecurityException e) {
+        } catch (final GeneralSecurityException e) {
             LOGGER.error("An error occurred when validating the encrypted data", e);
         }
     }
@@ -182,12 +182,6 @@ public final class WaitActivity extends Activity {
      */
     private void goToMainActivity(final Contact contact) {
         LOGGER.info("Going to the main activity");
-
-        try {
-            this.serviceLocator.getBluetoothHandler().restart();
-        } catch (final IOException e) {
-            LOGGER.error("Restarting the threads went wrong", e);
-        }
 
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);

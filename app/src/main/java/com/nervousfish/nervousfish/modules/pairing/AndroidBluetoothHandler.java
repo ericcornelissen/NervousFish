@@ -7,6 +7,7 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.apache.commons.lang3.Validate;
@@ -33,7 +34,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     private AndroidBluetoothHandler(final IServiceLocator serviceLocator) {
         super(serviceLocator);
-        serviceLocator.registerToEventBus(this);
     }
 
     /**
@@ -53,7 +53,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void start() throws IOException {
-        this.getService().start();
+        getService().start();
+        if (!this.getServiceLocator().isRegisteredToEventBus(this)) {
+            this.getServiceLocator().registerToEventBus(this);
+        }
     }
 
     /**
@@ -61,7 +64,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void connect(final BluetoothDevice device) {
-        this.getService().connect(device);
+        getService().connect(device);
     }
 
     /**
@@ -78,18 +81,19 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void stop() {
-        this.getService().stop();
+        getService().stop();
+        this.getServiceLocator().unregisterFromEventBus(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void send(final byte[] bytes) {
-        Validate.isTrue(bytes.length > 0);
-        this.getService().write(bytes);
+    public void send(final byte[] buffer) {
+        Validate.isTrue(buffer.length > 0);
+        getService().write(buffer);
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Bytes written: {}", Arrays.toString(bytes));
+            LOGGER.info("Bytes written: {}", Arrays.toString(buffer));
         }
     }
 
@@ -104,7 +108,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         this.getDataReceiver().get().dataReceived(event.getBytes());
     }
 
-    private IBluetoothHandlerService getService() {
+    private static IBluetoothHandlerService getService() {
         return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
     }
 
