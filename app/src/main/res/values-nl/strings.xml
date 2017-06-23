@@ -26,6 +26,8 @@
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
     <string name="yes">Ja</string>
+    <string name="modulus">Modulus</string>
+    <string name="exponent">Exponent</string>
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
@@ -57,7 +59,14 @@
     <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
     <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
-
+    <string name="use_existing_keypair">Gebruik bestaande keypair</string>
+    <string name="enter_public_key">Voer je public key in:</string>
+    <string name="enter_private_key">Voer je private key in:</string>
+    <string name="enter_public_key_too_short">De key is te kort!\nVoer je public key in:</string>
+    <string name="enter_private_key_too_short">De key is te kort!\nVoer je private key in:</string>
+    <string name="choose_your_keytype">Kies het type van je huidige keypair:</string>
+    <string name="not_yet_implemented">Dit is nog niet mogelijk</string>
+    <string name="custom_ed25519_key_not_yet_implemented">Je eigen ED25519 key invoeren in helaas nog niet mogelijk</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
