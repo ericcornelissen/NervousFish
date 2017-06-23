@@ -53,3 +53,14 @@ Feature: Main Activity
     Given I am viewing the main activity
     When I click the three dots in the main activity
     Then I should go to the settings screen
+
+  Scenario Outline: Popup successfully received
+    Given there is a contact with the name <name> in the database
+    And I am viewing the main activity after exchanging successfully and receiving <name>
+    Then a popup with a success message should be shown
+
+    Examples:
+      | name                |
+      | Beyoncé             |
+      | Mac Miller          |
+      | Chance the rapper   |

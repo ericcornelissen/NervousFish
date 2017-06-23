@@ -6,6 +6,7 @@ import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
@@ -59,6 +60,20 @@ public class MainSteps {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
       
+        try {
+            onView(withText(R.string.no)).perform(click());
+        } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
+    }
+
+    @Given("^I am viewing the main activity after exchanging successfully and receiving (.*?)$")
+    public void iAmViewingMainActivityAfterExchange(final String name) throws Exception {
+        final IKey key = new RSAKey("Email", "42", "13");
+        final Contact contact = new Contact(name, key);
+
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
+        this.mActivityRule.launchActivity(intent);
+
         try {
             onView(withText(R.string.no)).perform(click());
         } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
