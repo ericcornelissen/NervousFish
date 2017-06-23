@@ -44,7 +44,7 @@ public class EntrySteps {
         this.mActivityRule.launchActivity(intent);
     }
 
-    @Given("^I am using the app not for the first time$")
+    @Given("^I am not using the app for the first time$")
     public void iAmUsingAppNotFirstTime() throws Exception {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
