@@ -6,6 +6,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
@@ -32,6 +35,7 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFi
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
 import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
+import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.INVALID_IBAN;
 import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
 
@@ -39,8 +43,11 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings("checkstyle:ReturnCount")
-//Suppresses return count to allow multiple returncodes while checking input fields.
+@SuppressWarnings({"checkstyle:ReturnCount", "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+    "PMD.ExcessiveImports"})
+//1. Suppresses return count to allow multiple returncodes while checking input fields.
+//2 and 3. The complexity does not make the code unreadible at this moment.
+//4. We want to have so much imports so we dont have to write Constants.ExplicitFieldResultCodes every time.
 public final class CreateProfileActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
@@ -49,6 +56,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private EditText ibanInput;
 
     /**
      * {@inheritDoc}
@@ -68,6 +76,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
+        this.ibanInput = (EditText) this.findViewById(R.id.iban_create_profile);
 
         LOGGER.info("Activity created");
     }
@@ -83,12 +92,16 @@ public final class CreateProfileActivity extends AppCompatActivity {
             case INPUT_CORRECT:
                 final String name = nameInput.getText().toString();
                 final String password = passwordInput.getText().toString();
+                IBAN iban = null;
+                if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
+                    iban = new IBAN(ibanInput.getText().toString());
+                }
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(IKey.Types.RSA);
-                    final Profile userProfile = new Profile(name, keyPairs);
+                    final List<KeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
+                    final Profile userProfile = new Profile(name, keyPairs, iban);
 
                     database.createDatabase(userProfile, password);
                     database.loadDatabase(password);
@@ -104,6 +117,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 break;
             case NAME_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_name));
+                break;
+            case INVALID_IBAN:
+                this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_invalid_iban));
                 break;
             case PASSWORD_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_empty_password));
@@ -132,6 +148,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.InputFieldResultCodes nameValidation = this.helper.validateName(this.nameInput);
         final Constants.InputFieldResultCodes passwordValidation = this.helper.validatePassword(this.passwordInput);
         final Constants.InputFieldResultCodes repeatPasswordValidation = this.helper.validatePassword(this.repeatPasswordInput);
+        final Constants.InputFieldResultCodes ibanValidation = this.helper.validateIban(this.ibanInput);
 
         if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
                 && repeatPasswordValidation == EMPTY_FIELD) {
@@ -142,6 +159,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
             return PASSWORD_EMPTY;
         } else if (passwordValidation == TOO_SHORT_FIELD) {
             return PASSWORD_TOO_SHORT;
+        } else if (ibanValidation == INVALID_IBAN) {
+            return Constants.ExplicitFieldResultCodes.INVALID_IBAN;
         } else if (this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
             return INPUT_CORRECT;
         } else {
@@ -183,4 +202,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Gets from the radio buttons in this activity the one checked.
+     *
+     * @return The {@link IKey.Types} of the key that is checked
+     */
+    public IKey.Types getKeyTypeFromInput() {
+        final RadioButton rsaRadioButton = (RadioButton) this.findViewById(R.id.checkbox_rsa_key);
+        final RadioButton ed25519RadioButton = (RadioButton) this.findViewById(R.id.checkbox_ed25519_key);
+        if (rsaRadioButton.isChecked()) {
+            return IKey.Types.RSA;
+        } else if (ed25519RadioButton.isChecked()) {
+            return IKey.Types.Ed25519;
+        }
+        throw new IllegalArgumentException("No radio button selected");
+    }
 }

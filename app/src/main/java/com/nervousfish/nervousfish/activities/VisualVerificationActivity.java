@@ -81,17 +81,18 @@ public final class VisualVerificationActivity extends Activity {
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
 
-            LOGGER.info("Sending my profile with name: " + profile.getName() + ", public key: "
-                    + keyPair.getPublicKey().toString());
+            LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
+                    profile.getName(), keyPair.getPublicKey(), profile.getIban());
 
-            final Contact myProfileAsContact = new Contact(profile.getName(), new Ed25519Key("Ed25519 key", "73890ien"));
+            final Contact myProfileAsContact = new Contact(profile.getName(),
+                    new Ed25519Key("Ed25519 key", "73890ien"), profile.getIban());
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
         } catch (IOException e) {
             LOGGER.error("Could not send my contact to other device " + e.getMessage());
         }
 
         final Intent intent = new Intent(this, WaitActivity.class);
-        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_rhythm_tapping));
+        intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
         intent.putExtra(ConstantKeywords.TAP_DATA, this.securityCode);
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);

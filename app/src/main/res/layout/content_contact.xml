@@ -57,6 +57,59 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/contact_page_side_padding"
+                android:text="@string/contact_information"
+                android:textColor="@color/white"
+                android:background="@color/color_primary_dark"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/contact_page_side_padding"
+                android:paddingRight="@dimen/contact_page_side_padding"
+                android:paddingBottom="@dimen/contact_page_side_padding"
+                android:background="@color/color_primary_dark">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/iban"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/contact_information_page_iban"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/dash"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/general_divider_height"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/contact_page_side_padding"
+                android:text="@string/contact_public_keys"
+                android:textColor="@color/dark_grey"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/general_divider_height"
+                android:background="@android:color/darker_gray"/>
+
             <ListView
                 android:id="@+id/list_view_contact"
                 android:layout_width="match_parent"

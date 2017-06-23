@@ -25,6 +25,7 @@
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
     <string name="yes">Ja</string>
+    <string name="iban">IBAN</string>
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
@@ -32,10 +33,10 @@
     <string name="get_started">Laten we beginnen!</string>
     <string name="go_back">Ga terug</string>
     <string name="invalid_name">Ongeldige naam</string>
+    <string name="invalid_iban">Ongeldige IBAN</string>
     <string name="key_type">Type sleutel: %1$s</string>
     <string name="no_devices_found">Geen apparaten gevonden…</string>
     <string name="remember_my_choice">Onthoud mijn keuze</string>
-    <string name="repeat_password">Herhaal wachtwoord</string>
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
@@ -56,7 +57,11 @@
     <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
     <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
+    <string name="create_profile_invalid_iban">Het IBAN nummer is ongeldig, vul alsjeblieft een geldige waarde in. Zorg er ook voor dat de letters hoofdletters zijn.</string>
 
+    <string name="name_create_profile">Naam*</string>
+    <string name="repeat_password">Herhaal wachtwoord*</string>
+    <string name="password_create_profile">Wachtwoord*</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
@@ -97,6 +102,10 @@
     <string name="create_new_contact">Creëer een nieuw contact</string>
     <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
     <string name="confirm">Bevestigen</string>
+    <string name="contact_information">Contact gegevens:</string>
+    <string name="contact_public_keys">Public keys:</string>
+
+    <string name="invalid_iban_explanation">Het IBAN nummer dat is ingevoerd is niet geldig, voer een geldige in alsjeblieft.</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
@@ -116,7 +125,7 @@
     <string name="popup_enable_nfc_settings">Activeer a.u.b. NFC in de instellingen en click de terug knop om terug te gaan naar de app</string>
 
     <!-- WaitActivity -->
-    <string name="wait_message_partner_rhythm_tapping">Wachten tot het andere apparaat klaar is met ritme tappen…</string>
+    <string name="wait_message_partner_tapping">Wachten tot het andere apparaat klaar is met tappen…</string>
     <string name="wait_message_slave_verification_method">Wachten tot het andere apparaat een verificatie methode heeft gekozen…</string>
     <string name="by_tapping_a_rhythm">Door een ritme te tikken</string>
     <string name="by_tapping_on_an_image">Door op een aantal plaatjes te drukken</string>

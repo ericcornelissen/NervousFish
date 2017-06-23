@@ -28,7 +28,7 @@
 
         <View
             android:layout_width="@dimen/first_use_divider_width"
-            android:layout_height="@dimen/first_use_divider_height"
+            android:layout_height="@dimen/general_divider_height"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/first_use_divider_margin_top"
             android:background="@color/color_accent"/>

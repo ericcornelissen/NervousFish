@@ -15,6 +15,7 @@ public final class ConstantKeywords {
     public static final String TAP_DATA = "Tap data";
     public static final String CHOOSE_VERIFICATION_PREFERENCE = "choose_verification_method_every_time";
     public static final String DISPLAY_NAME = "display_name";
+    public static final String IBAN_NUMBER = "iban_number";
 
     public static final String SUCCESSFUL_EXCHANGE = "Successful exchange";
 

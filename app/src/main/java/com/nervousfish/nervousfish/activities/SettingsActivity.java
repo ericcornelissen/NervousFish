@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,8 +27,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. This
@@ -41,7 +45,8 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
-    private static boolean firstLoad = true;
+    private static boolean firstLoadName = true;
+    private static boolean firstLoadIban = true;
     private static volatile IServiceLocator serviceLocator;
 
     /**
@@ -57,6 +62,10 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
                 LOGGER.info("Preference changed at the display name");
                 updateDisplayName(preference, stringValue);
+                return true;
+            } else if (preference.getKey().equals(ConstantKeywords.IBAN_NUMBER)) {
+                LOGGER.info("Preference changed at the iban number");
+                updateIban(preference, stringValue);
                 return true;
             } else if (preference instanceof ListPreference) {
                 LOGGER.info("Preference changed for a ListPreference");
@@ -79,13 +88,13 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
          * @param stringValue The string value which is new
          */
         private void updateDisplayName(final Preference preference, final String stringValue) {
-            if (firstLoad) {
-                firstLoad = false;
+            if (firstLoadName) {
+                firstLoadName = false;
 
                 try {
                     preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
                     return;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
                 }
 
@@ -95,11 +104,57 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
                     serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
 
                 preference.setSummary(stringValue);
+            }
+        }
+
+        /**
+         * If the key is iban_number this method is called to update the summary
+         * and the Profile in the database.
+         *
+         * @param preference The preference which is changed
+         * @param stringValue The string value which is new
+         */
+        private void updateIban(final Preference preference, final String stringValue) {
+            assert preference != null;
+            assert stringValue != null;
+            if (firstLoadIban) {
+                firstLoadIban = false;
+
+                try {
+                    final String iban = serviceLocator.getDatabase().getProfile().getIbanAsString();
+                    preference.setSummary(iban);
+                    return;
+                } catch (final IOException e) {
+                    LOGGER.error("Couldn't get profiles from database while loading IBAN for the first time", e);
+                }
+
+                preference.setSummary(stringValue);
+            } else {
+                try {
+                    final Profile profile = serviceLocator.getDatabase().getProfile();
+                    if (IBANVerifier.isValidIBAN(stringValue)) {
+                        LOGGER.info("Updating profile iban");
+                        serviceLocator.getDatabase().updateProfile(
+                                new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
+                        preference.setSummary(stringValue);
+                    } else {
+                        preference.setSummary("INVALID IBAN");
+                        final Context context = preference.getContext();
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(context.getString(R.string.invalid_iban))
+                                .setContentText(context.getString(R.string.invalid_iban_explanation))
+                                .setConfirmText(context.getString(R.string.dialog_ok))
+                                .setConfirmClickListener(null)
+                                .show();
+                    }
+                } catch (final IOException e) {
+                    LOGGER.error("Couldn't get profiles from database for IBAN", e);
+                }
             }
         }
 
@@ -158,8 +213,9 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     .getDefaultSharedPreferences(this)
                     .edit()
                     .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
+                    .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIbanAsString())
                     .apply();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Couldn't get profiles from database at the onCreate", e);
         }
         LOGGER.info("SettingsActivity created");
@@ -265,6 +321,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(ConstantKeywords.DISPLAY_NAME));
+            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.IBAN_NUMBER));
         }
 
         @Override

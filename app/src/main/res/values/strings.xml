@@ -24,6 +24,8 @@
     <string name="submit">Submit</string>
     <string name="type">Type</string>
     <string name="yes">Yes</string>
+    <string name="dash" translatable="false">-</string>
+    <string name="iban">IBAN</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
@@ -31,10 +33,10 @@
     <string name="get_started">Get started!</string>
     <string name="go_back">Go back</string>
     <string name="invalid_name">Invalid name</string>
+    <string name="invalid_iban">Invalid IBAN</string>
     <string name="key_type">Key type: %1$s</string>
     <string name="no_devices_found">No devices found…</string>
     <string name="remember_my_choice">Remember my choice</string>
-    <string name="repeat_password">Repeat password</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
@@ -55,6 +57,11 @@
     <string name="create_profile_error_adding_to_database">Error while adding profile to database</string>
     <string name="create_profile_passwords_not_equal">Please make sure you typed the same password twice.</string>
     <string name="create_profile_all_fields_empty">Please fill in the fields</string>
+    <string name="create_profile_invalid_iban">The IBAN number is invalid, please enter a valid one.</string>
+
+    <string name="name_create_profile">Name*</string>
+    <string name="repeat_password">Repeat password*</string>
+    <string name="password_create_profile">Password*</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>
@@ -80,6 +87,9 @@
     <string name="contact_deleted_description">The contact has been deleted!</string>
     <string name="contact_doesnt_exist">The contact doesn\'t exist</string>
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
+    <string name="contact_information">Contact information:</string>
+    <string name="contact_public_keys">Public keys:</string>
+    <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one. Also make sure the letters are capitalized.</string>
 
     <!-- RhythmActivity -->
     <string name="tap_me">Tap me!</string>
@@ -111,7 +121,7 @@
 
     <!-- WaitActivity -->
     <string name="wait_message_slave_verification_method">Waiting for the other device to choose a verification method…</string>
-    <string name="wait_message_partner_rhythm_tapping">Waiting for your partner to finish tapping…</string>
+    <string name="wait_message_partner_tapping">Waiting for your partner to finish tapping…</string>
 
     <!-- NFC -->
     <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>

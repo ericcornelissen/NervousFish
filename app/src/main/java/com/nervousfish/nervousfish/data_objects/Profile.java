@@ -2,21 +2,30 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * A Profile POJO to store a contact representing the user and the user's keypairs.
  */
-public class Profile implements Serializable {
+@SuppressWarnings({"PMD.UselessParentheses", "PMD.NullAssignment"})
+//1. The parentheses on line 104 are not useless.
+//2. We want iban to be immutable, but not a required field.
+public final class Profile implements Serializable {
 
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
     private final List<KeyPair> keyPairs;
+    private final IBAN iban;
 
 
     /**
@@ -26,8 +35,27 @@ public class Profile implements Serializable {
      * @param keyPairs the public/private key-pairs of the user.
      */
     public Profile(final String name, final List<KeyPair> keyPairs) {
+        Validate.notBlank(name);
+        Validate.noNullElements(keyPairs);
         this.keyPairs = keyPairs;
         this.name = name;
+        this.iban = null;
+    }
+
+    /**
+     * The constructor for the {@link Profile} class. This one
+     * includes the IBAN.
+     *
+     * @param name     The contact belonging to the user.
+     * @param keyPairs The public/private key-pairs of the user.
+     * @param iban     The iban of the user.
+     */
+    public Profile(final String name, final List<KeyPair> keyPairs, final IBAN iban) {
+        Validate.notBlank(name);
+        Validate.noNullElements(keyPairs);
+        this.keyPairs = keyPairs;
+        this.name = name;
+        this.iban = iban;
     }
 
     /**
@@ -61,13 +89,24 @@ public class Profile implements Serializable {
         return keyPairs;
     }
 
-    /**
-     * Returns the name of the profile.
-     *
-     * @return Name of the profile.
-     */
     public String getName() {
         return this.name;
+    }
+
+    public IBAN getIban() {
+        return this.iban;
+    }
+
+    /**
+     * Retuns the string of the IBAN, and an empty string if the object is null.
+     *
+     * @return String of the IBAN, and an empty string if the object is null;
+     */
+    public String getIbanAsString() {
+        if (this.getIban() != null) {
+            return this.getIban().toString();
+        }
+        return "";
     }
 
 
@@ -82,7 +121,8 @@ public class Profile implements Serializable {
 
         final Profile that = (Profile) o;
 
-        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs);
+        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs)
+                && (this.iban == null ? that.getIban() == null : this.iban.equals(that.getIban()));
     }
 
     /**
@@ -90,7 +130,7 @@ public class Profile implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keyPairs.hashCode();
+        return this.name.hashCode() + this.keyPairs.hashCode() + Objects.hashCode(this.iban);
     }
 
     /**
@@ -116,6 +156,7 @@ public class Profile implements Serializable {
         private static final long serialVersionUID = 8191245914949893284L;
         private final String name;
         private final KeyPair[] keyPairs;
+        private final IBAN iban;
 
         /**
          * Constructs a new SerializationProxy
@@ -125,6 +166,7 @@ public class Profile implements Serializable {
         SerializationProxy(final Profile profile) {
             this.name = profile.name;
             this.keyPairs = profile.keyPairs.toArray(new KeyPair[profile.keyPairs.size()]);
+            this.iban = profile.getIban();
         }
 
         /**
@@ -133,7 +175,7 @@ public class Profile implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Profile(this.name, Arrays.asList(this.keyPairs));
+            return new Profile(this.name, Arrays.asList(this.keyPairs), this.iban);
         }
     }
 
