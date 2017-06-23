@@ -54,9 +54,15 @@ Feature: Main Activity
     When I click the three dots in the main activity
     Then I should go to the settings screen
 
-  Scenario: Clicking the sorting button
+  Scenario: Clicking the sorting button once
     Given I am viewing the main activity
-    When I click the sortingbutton two times
+    When I click the sorting button
+    Then I should stay in the main activity from the main activity
+
+  Scenario: Clicking the sorting button twice
+    Given I am viewing the main activity
+    When I click the sorting button
+    And I click the sorting button again
     Then I should stay in the main activity from the main activity
 
   Scenario: Popup successfully received

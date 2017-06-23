@@ -114,9 +114,9 @@ public class MainSteps {
         onView(withText(R.string.dialog_ok)).perform(click());
     }
 
-    @When("^I click the sortingbutton two times$")
+    @When("^I click the sorting button")
     public void iClickSortTwice() {
-        onView(withId(R.id.sort_button)).perform(click()).perform(click());
+        onView(withId(R.id.sort_button)).perform(click());
     }
 
     @When("^I verify that I do not want to log out$")
