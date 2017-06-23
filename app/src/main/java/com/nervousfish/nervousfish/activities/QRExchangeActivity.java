@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
@@ -91,7 +91,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
      */
     @SuppressLint("InflateParams")
     private void drawQRCode() {
-        final KeyPair keyPair = this.profile.getKeyPairs().get(0);
+        final AKeyPair keyPair = this.profile.getKeyPairs().get(0);
         final IKey publicKey = keyPair.getPublicKey();
         final Bitmap qrCode = QRGenerator.encode(String.format("%s ; %s ; %s, %s, %s",
                 this.profile.getName(), this.profile.getIbanAsString(), publicKey.getType(),

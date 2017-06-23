@@ -18,7 +18,7 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -80,7 +80,7 @@ public final class MainActivity extends AppCompatActivity {
         this.popups = new MainActivityPopups(this);
 
         try {
-            database.addContact(new Contact("Corn", new RSAKey("test", "a", "a"), new IBAN("NL02RABO0155534378")));
+            database.addContact(new Contact("Corn", new RSAKeyWrapper("test", "a", "a"), new IBAN("NL02RABO0155534378")));
         } catch (IOException e) {
             e.printStackTrace();
         }

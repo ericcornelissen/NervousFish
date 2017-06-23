@@ -15,19 +15,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class RSAKeyTest {
+public class Ed25519PrivateKeyWrapperTest {
 
     @Test
     public void testCanBeInstantiatedWithArbitraryValues() {
-        IKey key = new RSAKey("Webmail", "foo", "bar");
+        IKey key = new Ed25519PrivateKeyWrapper("Webmail", "foobar");
         assertNotNull(key);
     }
 
@@ -35,126 +37,96 @@ public class RSAKeyTest {
     public void testCanBeInstantiatedWithMap() {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("name", "name");
-        map.put("modulus", "modulus");
-        map.put("exponent", "exponent");
-        IKey key = new RSAKey(map);
+        map.put("key", "key");
+        IKey key = new Ed25519PrivateKeyWrapper(map);
         assertNotNull(key);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testCanBeInstantiatedWithMapMustHaveAllFields() {
         Map<String, String> map = new ConcurrentHashMap<>();
-        new RSAKey(map);
+        new Ed25519PrivateKeyWrapper(map);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNameNull() {
+    @Test(expected = NullPointerException.class)
+    public void testKeyNull() {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("name", "foo");
-        new RSAKey(map);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testModulusNull() {
-        Map<String, String> map = new ConcurrentHashMap<>();
-        map.put("modulus", "foo");
-        new RSAKey(map);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testExponentNull() {
-        Map<String, String> map = new ConcurrentHashMap<>();
-        map.put("exponent", "foo");
-        new RSAKey(map);
-    }
-
-    @Test
-    public void testGetNameReturnsNotNull() {
-        IKey key = new RSAKey("FTP", "foo", "bar");
-        assertNotNull(key.getName());
+        new Ed25519PrivateKeyWrapper(map);
     }
 
     @Test
     public void testGetNameReturnsProvidedName() {
-        IKey key = new RSAKey("Webserver", "foo", "bar");
+        IKey key = new Ed25519PrivateKeyWrapper("Webserver", "foobar");
         assertEquals("Webserver", key.getName());
     }
 
     @Test
-    public void testGetKeyReturnsNotNull() {
-        IKey key = new RSAKey("FTP", "foo", "bar");
-        assertNotNull(key.getKey());
-    }
-
-    @Test
     public void testGetKeyReturnsNonEmptyString() {
-        IKey key = new RSAKey("Webmail", "foo", "bar");
+        IKey key = new Ed25519PrivateKeyWrapper("Webmail", "foobar");
         assertNotEquals("", key.getKey());
     }
 
     @Test
-    public void testGetTypeReturnsRSA() {
-        IKey key = new RSAKey("Personal", "foo", "bar");
-        assertEquals(ConstantKeywords.RSA_KEY, key.getType());
+    public void testGetTypeReturnsSimple() {
+        IKey key = new Ed25519PrivateKeyWrapper("Webserver", "foobar");
+        assertEquals(ConstantKeywords.ED25519_KEY, key.getType());
     }
 
     @Test
     public void testEqualsWorksWithNull() {
-        IKey key = new RSAKey("Webmail", "foo", "bar");
+        IKey key = new Ed25519PrivateKeyWrapper("Webmail", "foobar");
         assertFalse(key.equals(null));
     }
 
     @Test
     public void testEqualsWorksWithArbitraryObject() {
-        IKey key = new RSAKey("FTP", "foo", "bar");
+        IKey key = new Ed25519PrivateKeyWrapper("FTP", "foobar");
         assertFalse(key.equals("foobar"));
     }
 
     @Test
     public void testEqualsReturnsFalseForDifferentKeyTypes() {
-        IKey keyA = new RSAKey("Personal", "foo", "bar");
-        IKey keyB = new Ed25519Key("Computer", "Hello world!");
-        assertFalse(keyA.equals(keyB));
-    }
-
-    @Test
-    public void testEqualsModulusNotEquals() {
-        IKey keyA = new RSAKey("foo", "bar", "baz");
-        IKey keyB = new RSAKey("foo", "baz", "baz");
-        assertFalse(keyA.equals(keyB));
-    }
-
-    @Test
-    public void testEqualsExponentNotEquals() {
-        IKey keyA = new RSAKey("foo", "bar", "baz");
-        IKey keyB = new RSAKey("foo", "bar", "bar");
+        IKey keyA = new Ed25519PrivateKeyWrapper("Webserver", "Hello world!");
+        IKey keyB = new RSAKeyWrapper("Webmail", "foo", "bar");
         assertFalse(keyA.equals(keyB));
     }
 
     @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
-        IKey keyA = new RSAKey("Personal", "foo", "bar");
-        IKey keyB = new RSAKey("Email", "hello", "world");
+        IKey keyA = new Ed25519PrivateKeyWrapper("FTP", "foobar");
+        IKey keyB = new Ed25519PrivateKeyWrapper("Zoidberg", "Hello world!");
         assertFalse(keyA.equals(keyB));
     }
 
     @Test
     public void testEqualsReturnsTrueForEqualKeys() {
-        IKey keyA = new RSAKey("FTP", "foo", "bar");
-        IKey keyB = new RSAKey("FTP", "foo", "bar");
+        IKey keyA = new Ed25519PrivateKeyWrapper("Webmail", "foobar");
+        IKey keyB = new Ed25519PrivateKeyWrapper("Webmail", "foobar");
         assertTrue(keyA.equals(keyB));
     }
 
     @Test
     public void testHashCodeNotNull() {
-        IKey key = new RSAKey("Webmail", "foo", "bar");
+        IKey key = new Ed25519PrivateKeyWrapper("Webmail", "foobar");
         assertNotNull(key.hashCode());
     }
 
+    @Test
+    public void testToJson() throws IOException {
+        IKey key = new Ed25519PrivateKeyWrapper("foo", "bar");
+        JsonWriter writer = mock(JsonWriter.class);
+        when(writer.name(anyString())).thenReturn(writer);
+        key.toJson(writer);
+        verify(writer).name("name");
+        verify(writer).name("key");
+        verify(writer).value("foo");
+        verify(writer).value("bar");
+    }
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        IKey key = new RSAKey("foo", "bar", "baz");
+        final IKey key = new Ed25519PrivateKeyWrapper("foo", "bar");
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
@@ -165,7 +137,7 @@ public class RSAKeyTest {
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 IKey key1 = (IKey) ois.readObject();
                 assertTrue(key1.getName().equals("foo"));
-                assertTrue(key1.getKey().equals("bar baz"));
+                assertTrue(key1.getKey().equals("bar"));
             }
         }
     }

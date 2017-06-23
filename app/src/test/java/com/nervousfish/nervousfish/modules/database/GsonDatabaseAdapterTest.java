@@ -1,12 +1,8 @@
 package com.nervousfish.nervousfish.modules.database;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.nervousfish.nervousfish.BaseTest;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Database;
-import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
@@ -58,8 +54,8 @@ public class GsonDatabaseAdapterTest {
         database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
 
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        profile = new Profile("name", new ArrayList<KeyPair>());
+        AKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(keyPair);
         databaseObject = new Database(new ArrayList<Contact>(), profile);
 

@@ -6,7 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.CreateProfileActivity;
 import com.nervousfish.nervousfish.activities.WelcomeActivity;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -42,8 +42,8 @@ public class WelcomeSteps {
     public void createDatabase() throws Exception {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        AKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");

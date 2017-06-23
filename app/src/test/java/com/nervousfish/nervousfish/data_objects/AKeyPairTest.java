@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class KeyPairTest {
+public class AKeyPairTest {
 
     private IKey publicKey;
     private IKey privateKey;
@@ -23,63 +23,63 @@ public class KeyPairTest {
 
     @Test
     public void testCanBeInstantiatedWithArbitraryValues() {
-        KeyPair keyPair = new KeyPair("Webmail", this.publicKey, this.privateKey);
+        AKeyPair keyPair = new AKeyPair("Webmail", this.publicKey, this.privateKey);
         assertNotNull(keyPair);
     }
 
     @Test
     public void testGetNameReturnsNotNull() {
-        KeyPair key = new KeyPair("FTP", this.publicKey, this.privateKey);
+        AKeyPair key = new AKeyPair("FTP", this.publicKey, this.privateKey);
         assertNotNull(key.getName());
     }
 
     @Test
     public void testGetNameReturnsProvidedName() {
-        KeyPair key = new KeyPair("Webserver", this.publicKey, this.privateKey);
+        AKeyPair key = new AKeyPair("Webserver", this.publicKey, this.privateKey);
         assertEquals("Webserver", key.getName());
     }
 
     @Test
     public void testGetPublicKeyReturnsThePublicKey() {
-        KeyPair keyPair = new KeyPair("FTP", this.publicKey, this.privateKey);
+        AKeyPair keyPair = new AKeyPair("FTP", this.publicKey, this.privateKey);
         assertEquals(this.publicKey, keyPair.getPublicKey());
     }
 
     @Test
     public void testGetPrivateKeyReturnsThePrivateKey() {
-        KeyPair keyPair = new KeyPair("Webmail", this.publicKey, this.privateKey);
+        AKeyPair keyPair = new AKeyPair("Webmail", this.publicKey, this.privateKey);
         assertEquals(this.privateKey, keyPair.getPrivateKey());
     }
 
     @Test
     public void testEqualsWorksWithNull() {
-        KeyPair keyPair = new KeyPair("Webserver", this.publicKey, this.privateKey);
+        AKeyPair keyPair = new AKeyPair("Webserver", this.publicKey, this.privateKey);
         assertFalse(keyPair.equals(null));
     }
 
     @Test
     public void testEqualsWorksWithArbitraryObject() {
-        KeyPair keyPair = new KeyPair("Webmail", this.publicKey, this.privateKey);
+        AKeyPair keyPair = new AKeyPair("Webmail", this.publicKey, this.privateKey);
         assertFalse(keyPair.equals("foobar"));
     }
 
     @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
-        KeyPair keyPairA = new KeyPair("FTP", this.publicKey, this.privateKey);
-        KeyPair keyPairB = new KeyPair("Webmail", mock(IKey.class), mock(IKey.class));
+        AKeyPair keyPairA = new AKeyPair("FTP", this.publicKey, this.privateKey);
+        AKeyPair keyPairB = new AKeyPair("Webmail", mock(IKey.class), mock(IKey.class));
         assertFalse(keyPairA.equals(keyPairB));
     }
 
     @Test
     public void testEqualsReturnsTrueForEqualKeys() {
-        KeyPair keyPairA = new KeyPair("Webmail", this.publicKey, this.privateKey);
-        KeyPair keyPairB = new KeyPair("Webmail", this.publicKey, this.privateKey);
+        AKeyPair keyPairA = new AKeyPair("Webmail", this.publicKey, this.privateKey);
+        AKeyPair keyPairB = new AKeyPair("Webmail", this.publicKey, this.privateKey);
         assertTrue(keyPairA.equals(keyPairB));
     }
 
     @Test
     public void testHashCodeNotNull() {
-        KeyPair keyPair = new KeyPair("Webserver", this.publicKey, this.privateKey);
+        AKeyPair keyPair = new AKeyPair("Webserver", this.publicKey, this.privateKey);
         assertNotNull(keyPair.hashCode());
     }
 

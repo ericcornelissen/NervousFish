@@ -1,5 +1,8 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
+import com.google.gson.stream.JsonWriter;
+import com.nervousfish.nervousfish.data_objects.IKey;
+
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
@@ -7,13 +10,14 @@ import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 
 /**
  * A generator for Ed25519 public/private key-pairs.
  * For more information on Ed25519, see: https://ed25519.cr.yp.to/
  */
-final class Ed25519 {
+public final class Ed25519 implements IKey {
 
     private static final int SEED_LENGTH = 32;
     private static final EdDSAParameterSpec PARAMETER_SPEC = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.CURVE_ED25519_SHA512);
@@ -58,12 +62,36 @@ final class Ed25519 {
         return new Ed25519(publicKey, privateKey);
     }
 
-    String getPublicKey() {
-        return this.publicKey.toString();
+    EdDSAPublicKey getPublicKey() {
+        return this.publicKey;
     }
 
-    String getPrivateKey() {
-        return this.privateKey.toString();
+    EdDSAPrivateKey getPrivateKey() {
+        return this.privateKey;
     }
 
+    @Override
+    public String getKey() {
+        return null;
+    }
+
+    @Override
+    public String getFormattedKey() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getType() {
+        return null;
+    }
+
+    @Override
+    public void toJson(JsonWriter writer) throws IOException {
+
+    }
 }

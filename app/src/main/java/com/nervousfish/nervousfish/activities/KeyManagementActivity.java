@@ -12,8 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -61,7 +61,7 @@ public final class KeyManagementActivity extends Activity {
 
         final List<IKey> list = new ArrayList<>();
         //noinspection Convert2streamapi Because if we want to refactor this to a stream, we have to use at least API 24
-        for (final KeyPair kp : myProfile.getKeyPairs()) {
+        for (final AKeyPair kp : myProfile.getKeyPairs()) {
             list.add(kp.getPublicKey());
         }
 

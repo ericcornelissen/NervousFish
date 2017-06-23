@@ -9,9 +9,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
+import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -83,10 +83,10 @@ public final class QRGenerator {
         final String[] messageComponents = qrMessage.split(", ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
+                return new RSAKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
                         messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
             case ConstantKeywords.ED25519_KEY:
-                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
+                return new Ed25519PrivateKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }

@@ -9,8 +9,8 @@ import android.widget.Button;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
@@ -32,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static android.R.attr.src;
 
 /**
  * The RhythmVerificationActivity is an Activity where you can tap a sequence.
@@ -135,12 +133,12 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
         Validate.notNull(v);
         try {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
-            final KeyPair keyPair = profile.getKeyPairs().get(0);
+            final AKeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
                     profile.getName(), keyPair.getPublicKey(), profile.getIban());
             final Contact myProfileAsContact = new Contact(profile.getName(),
-                    new Ed25519Key("Ed25519 key", "73890ien"), profile.getIban());
+                    new Ed25519PrivateKeyWrapper("Ed25519 key", "73890ien"), profile.getIban());
             final long encryptionKey = new RhythmVerificationActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
         } catch (final IOException e) {

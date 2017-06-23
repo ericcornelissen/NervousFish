@@ -3,14 +3,11 @@ package com.nervousfish.nervousfish.test;
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.nervousfish.nervousfish.BaseTest;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +27,7 @@ public class QRGeneratorTest {
     @Before
     public void setUp() throws Exception {
         final IKeyGenerator keyGenerator = NervousFish.getServiceLocator().getKeyGenerator();
-        final KeyPair pair = keyGenerator.generateRSAKeyPair("test");
+        final AKeyPair pair = keyGenerator.generateRSAKeyPair("test");
         publicKey = pair.getPublicKey();
         final String space = " ";
         publicKeyString = publicKey.getType() + space + publicKey.getName()

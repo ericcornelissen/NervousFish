@@ -13,36 +13,36 @@ import static org.mockito.Mockito.mock;
 
 public class ProfileTest {
 
-    private KeyPair keyPair;
+    private AKeyPair keyPair;
 
     @Before
     public void setup() {
-        this.keyPair = new KeyPair("Webserver", mock(IKey.class), mock(IKey.class));
+        this.keyPair = new AKeyPair("Webserver", mock(IKey.class), mock(IKey.class));
     }
 
     @Test
     public void testCanBeInstantiatedWithArbitraryValues() {
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(this.keyPair);
         assertNotNull(profile);
     }
 
     @Test
     public void testGetNameReturnsTheName() {
-        Profile profileA = new Profile("name", new ArrayList<KeyPair>());
+        Profile profileA = new Profile("name", new ArrayList<AKeyPair>());
         profileA.addKeyPair(this.keyPair);
         assertEquals("name", profileA.getName());
 
-        Profile profileB = new Profile("bar", new ArrayList<KeyPair>());
+        Profile profileB = new Profile("bar", new ArrayList<AKeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertEquals("bar", profileB.getName());
     }
 
     @Test
     public void testGetKeyPairReturnsTheKeyPair() {
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(this.keyPair);
-        ArrayList<KeyPair> test = new ArrayList<>();
+        ArrayList<AKeyPair> test = new ArrayList<>();
         test.add(this.keyPair);
         assertEquals(test.get(0), profile.getKeyPairs().get(0));
         assertEquals(test.size(), profile.getKeyPairs().size());
@@ -51,47 +51,47 @@ public class ProfileTest {
 
     @Test
     public void testGetPrivateKeyReturnsThePrivateKey() {
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(this.keyPair);
         assertEquals(this.keyPair.getPrivateKey(), profile.getKeyPairs().get(0).getPrivateKey());
     }
 
     @Test
     public void testEqualsWorksWithNull() {
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(this.keyPair);
         assertFalse(profile.equals(null));
     }
 
     @Test
     public void testEqualsWorksWithArbitraryObject() {
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(this.keyPair);
         assertFalse(profile.equals("foobar"));
     }
 
     @Test
     public void testEqualsReturnsFalseForUnequalKeys() {
-        Profile profileA = new Profile("Eric", new ArrayList<KeyPair>());
+        Profile profileA = new Profile("Eric", new ArrayList<AKeyPair>());
         profileA.addKeyPair(this.keyPair);
 
-        Profile profileB = new Profile("Kilian", new ArrayList<KeyPair>());
+        Profile profileB = new Profile("Kilian", new ArrayList<AKeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertFalse(profileA.equals(profileB));
     }
 
     @Test
     public void testEqualsReturnsTrueForEqualKeys() {
-        Profile profileA = new Profile("Cornel", new ArrayList<KeyPair>());
+        Profile profileA = new Profile("Cornel", new ArrayList<AKeyPair>());
         profileA.addKeyPair(this.keyPair);
-        Profile profileB = new Profile("Cornel", new ArrayList<KeyPair>());
+        Profile profileB = new Profile("Cornel", new ArrayList<AKeyPair>());
         profileB.addKeyPair(this.keyPair);
         assertTrue(profileA.equals(profileB));
     }
 
     @Test
     public void testHashCodeNotNull() {
-        Profile profile = new Profile("Stas", new ArrayList<KeyPair>());
+        Profile profile = new Profile("Stas", new ArrayList<AKeyPair>());
         profile.addKeyPair(this.keyPair);
         assertNotNull(profile.hashCode());
     }

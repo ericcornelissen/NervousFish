@@ -8,7 +8,7 @@ import android.view.View;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -78,7 +78,7 @@ public final class VisualVerificationActivity extends Activity {
 
         try {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
-            final KeyPair keyPair = profile.getKeyPairs().get(0);
+            final AKeyPair keyPair = profile.getKeyPairs().get(0);
 
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",

@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.R;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
@@ -112,7 +112,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
                 try {
                     // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
+                    final List<AKeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
                     final Profile userProfile = new Profile(name, keyPairs, iban);
 
                     database.createDatabase(userProfile, password);

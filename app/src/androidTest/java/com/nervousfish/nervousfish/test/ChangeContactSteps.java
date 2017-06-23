@@ -8,10 +8,10 @@ import android.view.inputmethod.InputMethodManager;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
+import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -33,7 +33,6 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -46,7 +45,7 @@ import static junit.framework.Assert.assertTrue;
 public class ChangeContactSteps {
 
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-    private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
+    private final IKey key = new Ed25519PrivateKeyWrapper("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
     private InputMethodManager inputMethodManager;
     private static final String testpass = "Testpass";
@@ -60,8 +59,8 @@ public class ChangeContactSteps {
     public void createDatabase() throws Exception {
         final IDatabase database = serviceLocator.getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        AKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, testpass);
         database.loadDatabase(testpass);

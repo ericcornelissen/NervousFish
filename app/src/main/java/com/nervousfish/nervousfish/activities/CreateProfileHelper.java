@@ -3,8 +3,8 @@ package com.nervousfish.nervousfish.activities;
 import android.graphics.Color;
 import android.widget.EditText;
 
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
@@ -47,14 +47,14 @@ final class CreateProfileHelper {
     }
 
     /**
-     * Generates a KeyPair based on the type selected.
+     * Generates a AKeyPair based on the type selected.
      *
      * @param keyType The type of key to generate.
-     * @return a {@link KeyPair} with the key type selected
+     * @return a {@link AKeyPair} with the key type selected
      */
-    List<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+    List<AKeyPair> generateKeyPairs(final IKey.Types keyType) {
         Validate.notNull(keyType);
-        final List<KeyPair> keyPairs = new ArrayList<>();
+        final List<AKeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
                 keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));

@@ -26,7 +26,7 @@ public class ContactTest {
     @Before
     public void setup() {
         // We don't use a mock here, because the equals function does not work correctly otherwise
-        this.key = new RSAKey("foo", "bar", "baz");
+        this.key = new RSAKeyWrapper("foo", "bar", "baz");
     }
 
     @Test(expected = NullPointerException.class)
@@ -131,8 +131,8 @@ public class ContactTest {
     @Test
     public void testAddKeys() {
         Contact contact = new Contact("Kilian", this.key);
-        IKey key2 = new RSAKey("1", "2", "3");
-        IKey key3 = new RSAKey("4", "5", "6");
+        IKey key2 = new RSAKeyWrapper("1", "2", "3");
+        IKey key3 = new RSAKeyWrapper("4", "5", "6");
         List<IKey> newKeys = new ArrayList<>();
         newKeys.add(key2);
         newKeys.add(key3);
@@ -152,7 +152,7 @@ public class ContactTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final IKey key = new Ed25519Key("bar", "baz");
+        final IKey key = new Ed25519PrivateKeyWrapper("bar", "baz");
         Contact contact = new Contact("foo", key);
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();

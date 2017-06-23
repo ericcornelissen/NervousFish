@@ -15,8 +15,9 @@ import com.bumptech.glide.Glide;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.Ed25519KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKeyPair;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
@@ -60,12 +61,12 @@ public final class NFCExchangeActivity extends Activity implements NfcAdapter.Cr
         final IDatabase database = this.serviceLocator.getDatabase();
         try {
             final Profile profile = database.getProfile();
-            final KeyPair keyPair = profile.getKeyPairs().get(0);
+            final RSAKeyPair rsaKeyPair = profile.getRSAKeyPairs().get(0);
+            final Ed25519KeyPair ed25519KeyPair = profile.getEd25519KeyPairs().get(0);
 
-            LOGGER.info("Sending my profile with name: {} , public key: {} ", profile.getName(),
-                    keyPair.getPublicKey());
+            LOGGER.info("Sending my profile with name: {}", profile.getName());
 
-            final Contact contact = new Contact(profile.getName(), keyPair.getPublicKey());
+            final Contact contact = new Contact(profile.getName(), rsaKeyPair.getPublicKey(), ed25519KeyPair.getPublicKey());
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
             this.bytes = nfcHandler.objectToBytes(contact);
         } catch (final IOException e) {

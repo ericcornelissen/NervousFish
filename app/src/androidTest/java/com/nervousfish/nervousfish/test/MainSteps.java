@@ -15,9 +15,9 @@ import com.nervousfish.nervousfish.activities.QRExchangeActivity;
 import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -61,7 +61,7 @@ public class MainSteps {
     public void createDatabase() throws Exception {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        AKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Profile profile = new Profile("name", new ArrayList<>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
@@ -86,7 +86,7 @@ public class MainSteps {
 
     @Given("^there is a contact with the name (.*?) in the database$")
     public void thereIsAContactInTheDatabaseWithTheName(final String name) throws IOException {
-        final IKey key = new RSAKey("Email", "42", "13");
+        final IKey key = new RSAKeyWrapper("Email", "42", "13");
         final Contact contact = new Contact(name, key);
 
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();

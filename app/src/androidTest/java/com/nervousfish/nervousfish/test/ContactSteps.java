@@ -8,11 +8,11 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
 import com.nervousfish.nervousfish.activities.ContactActivity;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
+import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -44,7 +44,7 @@ import static junit.framework.Assert.assertTrue;
 public class ContactSteps {
 
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-    private final IKey key = new Ed25519Key("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
+    private final IKey key = new Ed25519PrivateKeyWrapper("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
     private final Contact contact = new Contact("Yashuo", this.key);
 
     @Rule
@@ -55,8 +55,8 @@ public class ContactSteps {
     public void createDatabase() throws Exception {
         final IDatabase database = serviceLocator.getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
+        AKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, "Testpass");
         database.loadDatabase("Testpass");

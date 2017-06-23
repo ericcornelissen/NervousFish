@@ -7,6 +7,7 @@ import org.apache.commons.lang3.Validate;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,8 @@ public final class Profile implements Serializable {
 
     private static final long serialVersionUID = 8191245914949893284L;
     private final String name;
-    private final List<KeyPair> keyPairs;
+    private final List<RSAKeyPair> rsaKeypairs = new ArrayList<>();
+    private final List<Ed25519KeyPair> ed25519Keypairs = new ArrayList<>();
     private final IBAN iban;
 
 
@@ -34,10 +36,12 @@ public final class Profile implements Serializable {
      * @param name     The contact belonging to the user.
      * @param keyPairs the public/private key-pairs of the user.
      */
-    public Profile(final String name, final List<KeyPair> keyPairs) {
+    public Profile(final String name, final List<RSAKeyPair> keyPairs) {
         Validate.notBlank(name);
         Validate.noNullElements(keyPairs);
-        this.keyPairs = keyPairs;
+        for (final RSAKeyPair keyPair : keyPairs) {
+            this.rsaKeypairs.add(keyPair);
+        }
         this.name = name;
         this.iban = null;
     }
@@ -50,10 +54,34 @@ public final class Profile implements Serializable {
      * @param keyPairs The public/private key-pairs of the user.
      * @param iban     The iban of the user.
      */
-    public Profile(final String name, final List<KeyPair> keyPairs, final IBAN iban) {
+    public Profile(final String name, final List<Ed25519KeyPair> keyPairs, final IBAN iban) {
         Validate.notBlank(name);
         Validate.noNullElements(keyPairs);
-        this.keyPairs = new ArrayList<>(keyPairs);
+        for (final Ed25519KeyPair keyPair : keyPairs) {
+            this.ed25519Keypairs.add(keyPair);
+        }
+        this.name = name;
+        this.iban = iban;
+    }
+
+    /**
+     * The constructor for the {@link Profile} class. This one
+     * includes the IBAN.
+     *
+     * @param name     The contact belonging to the user.
+     * @param keyPairs The public/private key-pairs of the user.
+     * @param iban     The iban of the user.
+     */
+    public Profile(final String name, final List<RSAKeyPair> rsaKeyPairs, final List<Ed25519KeyPair> ed25519Keypairs, final IBAN iban) {
+        Validate.notBlank(name);
+        Validate.noNullElements(rsaKeyPairs);
+        Validate.noNullElements(ed25519Keypairs);
+        for (final RSAKeyPair keyPair : rsaKeyPairs) {
+            this.rsaKeypairs.add(keyPair);
+        }
+        for (final Ed25519KeyPair keyPair : ed25519Keypairs) {
+            this.ed25519Keypairs.add(keyPair);
+        }
         this.name = name;
         this.iban = iban;
     }
@@ -64,9 +92,20 @@ public final class Profile implements Serializable {
      *
      * @param keyPair the keyPair to add.
      */
-    public void addKeyPair(final KeyPair keyPair) {
+    public void addKeyPair(final RSAKeyPair keyPair) {
         Validate.notNull(keyPair);
-        this.keyPairs.add(keyPair);
+        this.rsaKeypairs.add(keyPair);
+    }
+
+    /**
+     * Adds a new keyPair to the profile
+     * <p>
+     *
+     * @param keyPair the keyPair to add.
+     */
+    public void addKeyPair(final Ed25519KeyPair keyPair) {
+        Validate.notNull(keyPair);
+        this.ed25519Keypairs.add(keyPair);
     }
 
     /**
@@ -76,11 +115,15 @@ public final class Profile implements Serializable {
      */
 
     public Contact getContact() {
-        final List<IKey> publicKeys = new ArrayList<>();
-        for (final KeyPair pair : this.keyPairs) {
-            publicKeys.add(pair.getPublicKey());
+        final List<RSAKeyWrapper> rsaKeys = new ArrayList<>();
+        final List<Ed25519PublicKeyWrapper> ed25519Keys = new ArrayList<>();
+        for (final RSAKeyPair pair : this.rsaKeypairs) {
+            rsaKeys.add(pair.getPublicKey());
         }
-        return new Contact(this.name, publicKeys);
+        for (final Ed25519KeyPair pair : this.ed25519Keypairs) {
+            ed25519Keys.add(pair.getPublicKey());
+        }
+        return new Contact(this.name, rsaKeys, ed25519Keys, this.iban);
     }
 
     /**
@@ -88,8 +131,17 @@ public final class Profile implements Serializable {
      *
      * @return The list of keypairs of the user.
      */
-    public List<KeyPair> getKeyPairs() {
-        return this.keyPairs;
+    public List<RSAKeyPair> getRSAKeyPairs() {
+        return this.rsaKeypairs;
+    }
+
+    /**
+     * Returns the Keypairs of the user.
+     *
+     * @return The list of keypairs of the user.
+     */
+    public List<Ed25519KeyPair> getEd25519KeyPairs() {
+        return this.ed25519Keypairs;
     }
 
     public String getName() {
@@ -125,7 +177,7 @@ public final class Profile implements Serializable {
 
         final Profile other = (Profile) obj;
 
-        return this.name.equals(other.name) && this.keyPairs.equals(other.keyPairs)
+        return this.name.equals(other.name) && this.rsaKeypairs.equals(other.rsaKeypairs) && this.ed25519Keypairs.equals(other.ed25519Keypairs)
                 && (this.iban == null ? other.getIban() == null : this.iban.equals(other.getIban()));
     }
 
@@ -134,7 +186,7 @@ public final class Profile implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.keyPairs.hashCode() + Objects.hashCode(this.iban);
+        return this.name.hashCode() + this.rsaKeypairs.hashCode() + this.ed25519Keypairs.hashCode() + Objects.hashCode(this.iban);
     }
 
     /**
@@ -159,7 +211,8 @@ public final class Profile implements Serializable {
     private static final class SerializationProxy implements Serializable {
         private static final long serialVersionUID = 8191245914949893284L;
         private final String name;
-        private final KeyPair[] keyPairs;
+        private final RSAKeyPair[] rsaKeyPairs;
+        private final Ed25519KeyPair[] ed25519KeyPairs;
         private final IBAN iban;
 
         /**
@@ -169,7 +222,8 @@ public final class Profile implements Serializable {
          */
         SerializationProxy(final Profile profile) {
             this.name = profile.name;
-            this.keyPairs = profile.keyPairs.toArray(new KeyPair[profile.keyPairs.size()]);
+            this.rsaKeyPairs = profile.rsaKeypairs.toArray(new RSAKeyPair[profile.rsaKeypairs.size()]);
+            this.ed25519KeyPairs = profile.ed25519Keypairs.toArray(new Ed25519KeyPair[profile.ed25519Keypairs.size()]);
             this.iban = profile.getIban();
         }
 
@@ -179,7 +233,7 @@ public final class Profile implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Profile(this.name, Arrays.asList(this.keyPairs), this.iban);
+            return new Profile(this.name, Arrays.asList(this.rsaKeyPairs), Arrays.asList(this.ed25519KeyPairs), this.iban);
         }
     }
 

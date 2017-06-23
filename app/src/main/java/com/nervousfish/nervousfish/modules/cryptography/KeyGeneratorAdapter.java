@@ -1,8 +1,11 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
-import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.data_objects.AKeyPair;
+import com.nervousfish.nervousfish.data_objects.Ed25519KeyPair;
+import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
+import com.nervousfish.nervousfish.data_objects.Ed25519PublicKeyWrapper;
+import com.nervousfish.nervousfish.data_objects.RSAKeyPair;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -57,7 +60,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * {@inheritDoc}
      */
     @Override
-    public KeyPair generateRSAKeyPair(final String name) {
+    public RSAKeyPair generateRSAKeyPair(final String name) {
         Validate.notBlank(name);
         try {
             final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
@@ -70,10 +73,10 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
             final RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(keyPair.getPrivate(),
                     RSAPrivateKeySpec.class);
 
-            final RSAKey rsaPublicKey = new RSAKey(name, publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
-            final RSAKey rsaPrivateKey = new RSAKey(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
+            final RSAKeyWrapper rsaPublicKey = new RSAKeyWrapper(name, publicKeySpec.getModulus().toString(), publicKeySpec.getPublicExponent().toString());
+            final RSAKeyWrapper rsaPrivateKey = new RSAKeyWrapper(name, privateKeySpec.getModulus().toString(), privateKeySpec.getPrivateExponent().toString());
 
-            return new KeyPair(name, rsaPublicKey, rsaPrivateKey);
+            return new RSAKeyPair(name, rsaPublicKey, rsaPrivateKey);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new KeyGenerationException(e);
         }
@@ -83,37 +86,11 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
      * {@inheritDoc}
      */
     @Override
-    public KeyPair generateEd25519KeyPair(final String name) {
+    public Ed25519KeyPair generateEd25519KeyPair(final String name) {
         Validate.notBlank(name);
         final Ed25519 keyPairGenerator = Ed25519.generatePair();
-        final Ed25519Key publicKey = new Ed25519Key(name, keyPairGenerator.getPublicKey());
-        final Ed25519Key privateKey = new Ed25519Key(name, keyPairGenerator.getPrivateKey());
-        return new KeyPair(name, publicKey, privateKey);
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        // No checks to perform
+        final Ed25519PublicKeyWrapper publicKey = new Ed25519PublicKeyWrapper(name, keyPairGenerator.getPublicKey());
+        final Ed25519PrivateKeyWrapper privateKey = new Ed25519PrivateKeyWrapper(name, keyPairGenerator.getPrivateKey());
+        return new Ed25519KeyPair(name, publicKey, privateKey);
     }
 }
