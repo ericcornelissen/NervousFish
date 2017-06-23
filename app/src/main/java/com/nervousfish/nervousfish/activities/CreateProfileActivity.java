@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -22,34 +24,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.NAME_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
 
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings("checkstyle:ReturnCount")
-//Suppresses return count to allow multiple returncodes while checking input fields.
+@SuppressWarnings({"checkstyle:ReturnCount", "PMD.ExcessiveImports"})
+// 1) Suppresses return count to allow multiple returncodes while checking input fields.
+// 2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
+//    to outsource to another class
 public final class CreateProfileActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
+    private final CreateProfileCustomKeyHelper customKeyHelper = new CreateProfileCustomKeyHelper(this, new CustomKeyPairSetter());
     private IServiceLocator serviceLocator;
     private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
+    private CheckBox rsaCheckBox;
+    private CheckBox ed25519CheckBox;
 
     /**
      * {@inheritDoc}
@@ -69,6 +67,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
+        this.rsaCheckBox = (CheckBox) this.findViewById(R.id.checkbox_rsa_key);
+        this.ed25519CheckBox = (CheckBox) this.findViewById(R.id.checkbox_ed25519_key);
 
         LOGGER.info("Activity created");
     }
@@ -93,25 +93,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = this.nameInput.getText().toString();
-                final String password = this.passwordInput.getText().toString();
-                final IDatabase database = this.serviceLocator.getDatabase();
-
-                try {
-                    // Create the new profile
-                    final List<KeyPair> keyPairs = this.helper.generateKeyPairs(IKey.Types.RSA);
-                    final Profile userProfile = new Profile(name, keyPairs);
-
-                    database.createDatabase(userProfile, password);
-                    database.loadDatabase(password);
-
-                    this.showProfileCreatedDialog();
-                } catch (final IOException e) {
-                    LOGGER.error("Something went wrong when creating a profile", e);
-                    this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+                if (((CheckBox) this.findViewById(R.id.checkbox_use_existing_keypair)).isChecked()) {
+                    this.customKeyHelper.askForCustomKeypair();
+                } else {
+                    this.finishCreatingProfile(this.generateKeyPairList());
                 }
                 break;
-            case ALl_FIELDS_EMPTY:
+            case ALL_FIELDS_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
                 break;
             case NAME_EMPTY:
@@ -132,6 +120,49 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
+     * Creates the new {@link Profile}, adds it to the database and goes to {@link MainActivity}
+     */
+    private void finishCreatingProfile(final List<KeyPair> keyPairs) {
+        final String name = this.nameInput.getText().toString();
+        final String password = this.passwordInput.getText().toString();
+        final IDatabase database = this.serviceLocator.getDatabase();
+
+        try {
+            final Profile userProfile = new Profile(name, keyPairs);
+
+            database.createDatabase(userProfile, password);
+            database.loadDatabase(password);
+
+            this.showProfileCreatedDialog();
+        } catch (final IOException e) {
+            LOGGER.error("Something went wrong when creating a profile", e);
+            this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+        }
+    }
+
+    /*
+     * Generates a list of key pairs, given the checked boxes.
+     *
+     * @return A list of keypairs with the types checked in the boxes.
+     */
+    private List<KeyPair> generateKeyPairList() {
+        final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
+        if (this.rsaCheckBox.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.RSA);
+        }
+        if (this.ed25519CheckBox.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.Ed25519);
+        }
+        final List<KeyPair> keyPairs = new ArrayList<>();
+        for (final IKey.Types type : keytypesToGenerate) {
+            keyPairs.addAll(this.helper.generateKeyPairs(type));
+        }
+
+        return keyPairs;
+
+    }
+
+    /**
      * Validates if the input fields are not empty and if the input is valid.
      * This also means that the password and the repeat password should be the same,
      * and the password length is larger or equal to 6.
@@ -143,19 +174,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.InputFieldResultCodes passwordValidation = this.helper.validatePassword(this.passwordInput);
         final Constants.InputFieldResultCodes repeatPasswordValidation = this.helper.validatePassword(this.repeatPasswordInput);
 
-        if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
-                && repeatPasswordValidation == EMPTY_FIELD) {
-            return ALl_FIELDS_EMPTY;
-        } else if (nameValidation == EMPTY_FIELD) {
-            return NAME_EMPTY;
-        } else if (passwordValidation == EMPTY_FIELD) {
-            return PASSWORD_EMPTY;
-        } else if (passwordValidation == TOO_SHORT_FIELD) {
-            return PASSWORD_TOO_SHORT;
+        if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD && passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD
+                && repeatPasswordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.ALL_FIELDS_EMPTY;
+        } else if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.NAME_EMPTY;
+        } else if (passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
+        } else if (passwordValidation == Constants.InputFieldResultCodes.TOO_SHORT_FIELD) {
+            return Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
         } else if (this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
-            return INPUT_CORRECT;
+            return Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
         } else {
-            return PASSWORDS_NOT_EQUAL;
+            return Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
         }
     }
 
@@ -193,4 +224,21 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Can be given by {@link CreateProfileActivity} to classes that are allowed to finish the creation of the new profile
+     * by supplying a new RSAKey
+     */
+    final class CustomKeyPairSetter {
+
+        /**
+         * Sets the custom key of the user to the RSA key pair specified
+         * @param publicKey The public part of the RSA key pair
+         * @param privateKey The private part of the RSA key pair
+         */
+        void setRSAKeyPair(final RSAKey publicKey, final RSAKey privateKey) {
+            final List<KeyPair> keyPairs = new ArrayList<>();
+            keyPairs.add(new KeyPair("Custom key", publicKey, privateKey));
+            CreateProfileActivity.this.finishCreatingProfile(keyPairs);
+        }
+    }
 }

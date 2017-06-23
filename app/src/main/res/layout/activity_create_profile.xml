@@ -42,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@+id/icon_name_create_profile"
                 android:hint="@string/name"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:maxLines="1" />
         </RelativeLayout>
 
@@ -118,10 +118,16 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/rsa_key" />
+
             <CheckBox android:id="@+id/checkbox_ed25519_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ed25519_key" />
+
+            <CheckBox android:id="@+id/checkbox_use_existing_keypair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/use_existing_keypair" />
         </LinearLayout>
 
         <Button
@@ -135,6 +141,7 @@
             android:onClick="onSubmitClick"
             android:text="@string/done"
             android:textSize="@dimen/submit_text_size" />
+
     </LinearLayout>
 
     <include layout="@layout/custom_keyboard" />

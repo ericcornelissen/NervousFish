@@ -5,6 +5,9 @@ import com.nervousfish.nervousfish.modules.IModule;
 import java.io.IOException;
 import java.io.Serializable;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+
 /**
  * Defines the interface implemented by all pairing handlers
  */
@@ -24,9 +27,10 @@ interface IPairingHandler extends IModule {
      *
      * @param object The object to serialize
      * @param key    The key to encrypt the message with. Must be positive
-     * @throws IOException When deserialization goes wrong
+     * @throws BadPaddingException When deserialization goes wrong
+     * @throws IllegalBlockSizeException When deserialization goes wrong
      */
-    void send(Serializable object, long key) throws IOException;
+    void send(Serializable object, Long key) throws BadPaddingException, IllegalBlockSizeException;
 
     /**
      * Write the buffer to the world

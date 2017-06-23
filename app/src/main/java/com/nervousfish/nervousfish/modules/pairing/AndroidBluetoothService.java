@@ -124,6 +124,15 @@ public final class AndroidBluetoothService extends Service implements IBluetooth
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void restart() throws IOException {
+        this.stop();
+        this.start();
+    }
+
+    /**
      * Called when device is almost connected over Bluetooth
      *
      * @param event Contains additional data over the event

@@ -37,31 +37,25 @@ public class GsonDatabaseAdapterTest {
 
     private static final String DB_DATABASE_PATH = "database.txt";
     private static final String DB_PASSWORD_PATH = "databaseKey.txt";
-    private static final String TEST_PASSWORD = "TESTPASS";
 
     private IServiceLocator serviceLocator = mock(IServiceLocator.class);
     private IConstants constants = mock(IConstants.class);
 
-    private IDatabase database;
-    private Database databaseObject;
     private Profile profile;
-    private boolean encryptionCalled = false;
 
     @Before
     public void setup() {
 
         when(serviceLocator.getConstants()).thenReturn(constants);
-        when(serviceLocator.getFileSystem()).thenReturn((AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator));
+        AndroidFileSystemAdapter filesystem = (AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator);
+        when(serviceLocator.getFileSystem()).thenReturn(filesystem);
         when(constants.getDatabasePath()).thenReturn(DB_DATABASE_PATH);
         when(constants.getPasswordPath()).thenReturn(DB_PASSWORD_PATH);
 
-        database = (GsonDatabaseAdapter) accessConstructor(GsonDatabaseAdapter.class, serviceLocator);
-
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        profile = new Profile("name", new ArrayList<KeyPair>());
+        profile = new Profile("name", new ArrayList<>());
         profile.addKeyPair(keyPair);
-        databaseObject = new Database(new ArrayList<Contact>(), profile);
 
     }
 
@@ -82,7 +76,8 @@ public class GsonDatabaseAdapterTest {
     @Test
     public void testConstructorNotFailsWhenFileInitializationFails() {
         IServiceLocator serviceLocator = mock(IServiceLocator.class);
-        when(serviceLocator.getFileSystem()).thenReturn((AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator));
+        AndroidFileSystemAdapter filesystem = (AndroidFileSystemAdapter) accessConstructor(AndroidFileSystemAdapter.class, serviceLocator);
+        when(serviceLocator.getFileSystem()).thenReturn(filesystem);
         IConstants constants = mock(IConstants.class);
 
         when(serviceLocator.getConstants()).thenReturn(constants);

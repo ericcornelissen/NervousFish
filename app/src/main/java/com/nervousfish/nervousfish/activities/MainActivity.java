@@ -255,7 +255,6 @@ public final class MainActivity extends AppCompatActivity {
                 this.enableNFC();
                 return; // Prevent `this.startActivity()`
             }
-
         } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
             intent.setComponent(new ComponentName(this, QRExchangeActivity.class));
         } else {

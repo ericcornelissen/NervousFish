@@ -2,11 +2,14 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothDevice;
 
+import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.apache.commons.lang3.Validate;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +47,19 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
         return new ModuleWrapper<>(new AndroidBluetoothHandler(serviceLocator));
     }
 
+    private static IBluetoothHandlerService getService() {
+        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void start() throws IOException {
-        this.getService().start();
+        getService().start();
+        if (!this.getServiceLocator().isRegisteredToEventBus(this)) {
+            this.getServiceLocator().registerToEventBus(this);
+        }
     }
 
     /**
@@ -57,7 +67,16 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void connect(final BluetoothDevice device) {
-        this.getService().connect(device);
+        getService().connect(device);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void restart() throws IOException {
+        this.stop();
+        this.start();
     }
 
     /**
@@ -65,22 +84,31 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void stop() {
-        this.getService().stop();
+        getService().stop();
+        this.getServiceLocator().unregisterFromEventBus(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void send(final byte[] bytes) {
-        Validate.isTrue(bytes.length > 0);
-        this.getService().write(bytes);
-
-        LOGGER.info("Bytes written: {}", Arrays.toString(bytes));
+    public void send(final byte[] buffer) {
+        Validate.isTrue(buffer.length > 0);
+        getService().write(buffer);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Bytes written: {}", Arrays.toString(buffer));
+        }
     }
 
-    private IBluetoothHandlerService getService() {
-        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
+    /**
+     * Called by Greenrobot's Eventbus whenever a received byte array is decrypted
+     *
+     * @param event Contains the decrypted bytes
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDecryptedBytesReceivedEvent(final NewDecryptedBytesReceivedEvent event) {
+        LOGGER.info("onNewDecryptedBytesReceivedEvent received");
+        this.getDataReceiver().get().dataReceived(event.getBytes());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.modules.filesystem;
 
+import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
@@ -26,9 +27,11 @@ import java.nio.charset.StandardCharsets;
  * it's just not possible to work without all the imports, they are small but necessairy for safe file
  * writing and reading.
  */
-@SuppressWarnings("checkstyle:ClassDataAbstractionCoupling")
+@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "ClassFanOutComplexity"})
+// 1 / 2) Suppressed because the java.io library is very verbose
 public final class AndroidFileSystemAdapter implements IFileSystem {
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidFileSystemAdapter");
+    private final IConstants constants;
 
     /**
      * Prevents construction from outside the class.
@@ -40,6 +43,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     private AndroidFileSystemAdapter(final IServiceLocator serviceLocator) {
         assert serviceLocator != null;
         LOGGER.info("Initialized");
+        this.constants = serviceLocator.getConstants();
     }
 
     /**
@@ -61,7 +65,7 @@ public final class AndroidFileSystemAdapter implements IFileSystem {
     public Writer getWriter(final String path) throws FileNotFoundException {
         Validate.notBlank(path);
         final OutputStream outputStream = new FileOutputStream(path);
-        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+        final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, this.constants.getCharset());
         return new BufferedWriter(outputStreamWriter);
     }
 

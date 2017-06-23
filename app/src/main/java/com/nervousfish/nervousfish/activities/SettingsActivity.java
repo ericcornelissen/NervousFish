@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -36,14 +36,16 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  */
 @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 //Because of the structure with the static methods, a static attribute has to be set.
-@SuppressWarnings({"checkstyle:AnonInnerLength", "PMD.AvoidUsingVolatile"})
+@SuppressWarnings({"checkstyle:AnonInnerLength", "checkstyle:MultipleStringLiterals", "PMD.AvoidUsingVolatile"})
 //1. In this class large anonymous classes are needed. It does not infer with readability.
-//2. The volatile identifier is needed because this class uses static methods, which are essential.
+//2. The same string is used multiple times and we can't get strings using .getString() here...
+//3. The volatile identifier is needed because this class uses static methods, which are essential.
 public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
     private static boolean firstLoad = true;
     private static volatile IServiceLocator serviceLocator;
+    private static volatile IDatabase database;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -51,6 +53,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      */
     private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
             new Preference.OnPreferenceChangeListener() {
+
         @Override
         public boolean onPreferenceChange(final Preference preference, final Object newValue) {
             LOGGER.info("Preference changed");
@@ -88,19 +91,12 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             if (firstLoad) {
                 firstLoad = false;
 
-                try {
-                    preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
-                    return;
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
-                }
-
-                preference.setSummary(stringValue);
+                preference.setSummary(database.getProfile().getName());
             } else {
                 try {
                     LOGGER.info("Updating profile name");
-                    final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                    final Profile profile = database.getProfile();
+                    database.updateProfile(new Profile(stringValue, profile.getKeyPairs()));
                 } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
@@ -129,6 +125,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                             ? listPreference.getEntries()[index]
                             : "");
         }
+
     };
 
     /**
@@ -153,6 +150,9 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,19 +161,22 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         if (serviceLocator == null) {
             serviceLocator = NervousFish.getServiceLocator();
         }
-
-        try {
-            PreferenceManager
-                    .getDefaultSharedPreferences(this)
-                    .edit()
-                    .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
-                    .apply();
-        } catch (final IOException e) {
-            LOGGER.error("Couldn't get profiles from database at the onCreate", e);
+        if (database == null) {
+            database = serviceLocator.getDatabase();
         }
+
+        PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .edit()
+                .putString(ConstantKeywords.DISPLAY_NAME, database.getProfile().getName())
+                .apply();
+
         LOGGER.info("SettingsActivity created");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onHeaderClick(final PreferenceActivity.Header header, final int position) {
         super.onHeaderClick(header, position);
@@ -264,6 +267,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static final class ProfilePreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -288,5 +292,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
     }
+
 }
