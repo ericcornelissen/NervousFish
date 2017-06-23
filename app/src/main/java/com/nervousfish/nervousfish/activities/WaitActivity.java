@@ -14,8 +14,8 @@ import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
-import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 import java.security.GeneralSecurityException;
 
 import javax.crypto.BadPaddingException;
-
-import java.io.IOException;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner

@@ -7,10 +7,9 @@ import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
-import org.greenrobot.eventbus.EventBus;
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +45,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     public static ModuleWrapper<AndroidBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
         Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new AndroidBluetoothHandler(serviceLocator));
+    }
+
+    private static IBluetoothHandlerService getService() {
+        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
     }
 
     /**
@@ -106,10 +109,6 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
     public void onNewDecryptedBytesReceivedEvent(final NewDecryptedBytesReceivedEvent event) {
         LOGGER.info("onNewDecryptedBytesReceivedEvent received");
         this.getDataReceiver().get().dataReceived(event.getBytes());
-    }
-
-    private static IBluetoothHandlerService getService() {
-        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
     }
 
 }
