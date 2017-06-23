@@ -119,23 +119,4 @@ enum ContactReceivedHelper {
         }
         return ContactReceivedHelper.ContactExists.NOT;
     }
-
-    /**
-     * Check if the keys of two users are equal.
-     *
-     * @param keys1 The first {@link List} of {@link IKey}s.
-     * @param keys2 The second {@link List} of {@link IKey}s.
-     * @return A boolean indicating if all the {@link IKey}s in the first list are also in the second list.
-     */
-    private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
-        assert keys1 != null;
-        assert keys2 != null;
-        final Set<IKey> keysSet1 = new HashSet<>(keys1);
-        for (final IKey key : keys2) {
-            if (!keysSet1.contains(key)) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
