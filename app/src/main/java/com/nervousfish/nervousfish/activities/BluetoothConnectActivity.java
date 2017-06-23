@@ -213,7 +213,7 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
             this.isMaster = false;
         } else {
             final Intent intent = new Intent(this, WaitActivity.class);
-            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         }
     }

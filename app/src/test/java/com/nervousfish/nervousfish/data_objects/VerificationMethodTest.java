@@ -18,7 +18,7 @@ public class VerificationMethodTest {
 
     @Before
     public void testInstantiate() {
-        verificationMethod = new VerificationMethod(VerificationMethodEnum.RHYTHM);
+        this.verificationMethod = new VerificationMethod(VerificationMethodEnum.RHYTHM);
     }
 
     @Test(expected = NullPointerException.class)
@@ -28,7 +28,7 @@ public class VerificationMethodTest {
 
     @Test
     public void testGetVerificationMethod() {
-        assertEquals(verificationMethod.getVerificationMethod(), VerificationMethodEnum.RHYTHM);
+        assertEquals(this.verificationMethod.getVerificationMethod(), VerificationMethodEnum.RHYTHM);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class VerificationMethodTest {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(bos)
         ) {
-            oos.writeObject(verificationMethod);
+            oos.writeObject(this.verificationMethod);
             byte[] bytes = bos.toByteArray();
             try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
