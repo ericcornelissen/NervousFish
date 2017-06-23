@@ -162,14 +162,13 @@ public class MainSteps {
         onView(withId(R.id.sort_button)).perform(click());
     }
 
-    @When("^I click the sort button in the main activity while there are contacts with different keys in the database$")
+    @When("^There are contacts with different keys in the database$")
     public void iClickSortButtonDifferentKeys() throws Exception {
         final IDatabase database = NervousFish.getServiceLocator().getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
         final KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         database.addContact(new Contact("Person1", keyPair.getPublicKey()));
         database.addContact(new Contact("Person2", keyPair.getPublicKey()));
-        onView(withId(R.id.sort_button)).perform(click());
     }
 
     @Then("^I should stay in the main activity from the main activity$")
