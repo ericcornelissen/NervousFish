@@ -46,12 +46,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 
 @CucumberOptions(features = "features")
 public class MainSteps {
+
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
@@ -78,7 +80,7 @@ public class MainSteps {
     public void iAmViewingMainActivity() {
         final Intent intent = new Intent();
         this.mActivityRule.launchActivity(intent);
-      
+
         try {
             onView(withText(R.string.no)).perform(click());
         } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
@@ -155,6 +157,20 @@ public class MainSteps {
         onView(withText(R.string.qr)).perform(click());
     }
 
+    @When("^I click the sort button in the main activity$")
+    public void iClickSortButton() {
+        onView(withId(R.id.sort_button)).perform(click());
+    }
+
+    @When("^There are contacts with different keys in the database$")
+    public void iClickSortButtonDifferentKeys() throws Exception {
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
+        final KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        database.addContact(new Contact("Person1", keyPair.getPublicKey()));
+        database.addContact(new Contact("Person2", keyPair.getPublicKey()));
+    }
+
     @Then("^I should stay in the main activity from the main activity$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
@@ -200,6 +216,11 @@ public class MainSteps {
     @Then("^I should go to the contact activity from main$")
     public void iShouldGoToTheContactActivity() {
         intended(hasComponent(ContactActivity.class.getName()));
+    }
+
+    @Then("^The app shouldn't crash$")
+    public void appShouldntCrash() {
+        assertFalse(this.mActivityRule.getActivity().isFinishing());
     }
 
 }

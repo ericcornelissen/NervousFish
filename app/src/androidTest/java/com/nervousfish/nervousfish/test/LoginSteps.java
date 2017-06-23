@@ -49,7 +49,7 @@ public class LoginSteps {
 
     @Then("^I should stay in the LoginActivity$")
     public void iShouldStayInLoginActivity() {
-        assertFalse(mActivityRule.getActivity().isDestroyed());
+        assertFalse(this.mActivityRule.getActivity().isDestroyed());
     }
 
     @Then("^I should see an authentication error$")

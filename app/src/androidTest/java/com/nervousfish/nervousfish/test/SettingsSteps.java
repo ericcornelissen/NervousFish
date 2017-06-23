@@ -33,7 +33,7 @@ public class SettingsSteps {
     @Given("^I am viewing the settings activity$")
     public void iAmViewingSettingsActivity() throws IOException {
         final Intent intent = new Intent();
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I click the back button in the settings activity to go back to main$")
@@ -53,7 +53,7 @@ public class SettingsSteps {
 
     @Then("^I should go back to the main activity from settings$")
     public void iShouldGoBackToMainFromSettings() {
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        assertTrue(this.mActivityRule.getActivity().isFinishing());
     }
 
     @Then("^I should go to the general settings fragment$")
