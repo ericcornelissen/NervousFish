@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
-
 import org.junit.Before;
 import org.junit.Test;
 

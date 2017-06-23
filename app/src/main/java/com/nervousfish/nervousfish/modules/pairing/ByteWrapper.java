@@ -1,39 +1,39 @@
-package com.nervousfish.nervousfish.data_objects.tap;
+package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
- * This class contains the bare minimum functionality of a tap event.
+ * This class contains a byte array and is used as a wrapped object from
  */
-public final class SingleTap extends ATapData {
-    private static final long serialVersionUID = 6955333968356740403L;
+public final class ByteWrapper implements Serializable {
+    private static final long serialVersionUID = -1704556072876435760L;
+    private final byte[] bytes;
+
     /**
-     * Constructs a new tap data object that denotes a single tap event.
-     * The time on which the tap event happened is assumed to be the moment that this
-     * constructor is called.
+     * Creates a new ByteWrapper
+     *
+     * @param bytes The byte array the wrapper wraps
      */
-    public SingleTap() {
-        super();
+    ByteWrapper(final byte[] bytes) {
+        this.bytes = bytes.clone();
     }
 
     /**
-     * Constructs a new tap data object that denotes a single tap event.
-     * @param timestamp The time on which the tap event happened
+     * @return The data object {@link DataWrapper} wraps
      */
-    public SingleTap(final Timestamp timestamp) {
-        super(timestamp);
+    public byte[] getBytes() {
+        return this.bytes.clone();
     }
 
     /**
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SingleTap.SerializationProxy();
+        return new ByteWrapper.SerializationProxy(this);
     }
 
     /**
@@ -51,23 +51,29 @@ public final class SingleTap extends ATapData {
      * We suppress here the AccessorClassGeneration warning because the only alternative to this pattern -
      * ordinary serialization - is far more dangerous
      */
-    @SuppressWarnings("PMD.AccessorClassGeneration")
+    @SuppressWarnings({"PMD.AccessorClassGeneration", "SerializableHasSerializationMethods"})
+    // 1) A private constructor is safer than a hidden constructor
+    // 2) SerializationProxy doesn't need the write method, because it creates the class by calling the contstructor in readResolve
     private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 6955333968356740403L;
+        private static final long serialVersionUID = -1704556072876435760L;
+        private final byte[] bytes;
 
         /**
          * Constructs a new SerializationProxy
+         *
+         * @param wrapper The current instance of the proxy
          */
-        SerializationProxy() {
-            // Nothing to do here
+        SerializationProxy(final ByteWrapper wrapper) {
+            this.bytes = wrapper.getBytes();
         }
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new SingleTap();
+            return new ByteWrapper(this.bytes);
         }
     }
 }
