@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import nl.tudelft.ewi.ds.bankver.BankVer;
+
 import static android.nfc.NdefRecord.createMime;
 
 /**
@@ -41,6 +43,8 @@ public final class IbanVerificationActivity extends Activity {
     private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");
     private IServiceLocator serviceLocator;
     private Contact contact;
+    private Profile profile;
+    private BankVer bankVer;
 
     /**
      * {@inheritDoc}
@@ -53,6 +57,12 @@ public final class IbanVerificationActivity extends Activity {
         this.serviceLocator = NervousFish.getServiceLocator();
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+
+        try {
+            this.profile = this.serviceLocator.getDatabase().getProfile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.verification_page_name);
         ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.verification_page_iban);

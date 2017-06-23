@@ -3,6 +3,8 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import net.i2p.crypto.eddsa.EdDSAKey;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -21,16 +23,16 @@ public final class Ed25519Key implements IKey {
     private static final String KEYWORD_NAME = "name";
     private static final String KEYWORD_KEY = "key";
 
-    private final String key;
+    private final EdDSAKey key;
     private final String name;
 
     /**
      * Constructor for a Ed25519-based key.
      *
      * @param name The name for the key.
-     * @param key  The key string.
+     * @param key  The key as an {@link EdDSAKey}.
      */
-    public Ed25519Key(final String name, final String key) {
+    public Ed25519Key(final String name, final EdDSAKey key) {
         this.name = name;
         this.key = key;
     }
