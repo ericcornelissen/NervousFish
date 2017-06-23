@@ -25,18 +25,6 @@ Feature: Main Activity
       | Zoidberg |
       | Dr. Evil |
 
-  Scenario: Clicking the Bluetooth button
-    Given I am viewing the main activity
-    When I click on the new connection button
-    And I click the button with the Bluetooth icon
-    Then the app shouldn't crash because of Bluetooth
-
-  Scenario: Clicking the Bluetooth button label
-    Given I am viewing the main activity
-    When I click on the new connection button
-    And I click the button with the Bluetooth text label
-    Then the app shouldn't crash because of Bluetooth
-
   Scenario: Clicking the NFC button
     Given I am viewing the main activity
     When I click on the new connection button

@@ -100,11 +100,6 @@ public class MainSteps {
                 .perform(click());
     }
 
-    @When("^I click the button with the Bluetooth icon$")
-    public void iClickBluetoothButton() {
-        onView(withId(R.id.pairing_menu_bluetooth)).perform(click());
-    }
-
     @When("^I click the button with the NFC icon$")
     public void iClickNFCButton() {
         onView(withId(R.id.pairing_menu_nfc)).perform(click());
@@ -148,11 +143,6 @@ public class MainSteps {
     @Then("^I should go to the settings screen$")
     public void iShouldGoToSettingsScreen() {
         intended(hasComponent(SettingsActivity.class.getName()));
-    }
-
-    @Then("^the app shouldn't crash because of Bluetooth$")
-    public void theAppShouldCrashBecauseOfBluetooth() {
-        assertTrue(true);
     }
 
     @Then("^I should go to the NFC activity from main$")
