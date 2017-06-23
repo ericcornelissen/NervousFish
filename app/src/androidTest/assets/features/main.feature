@@ -56,7 +56,7 @@ Feature: Main Activity
 
   Scenario: Clicking the sorting button
     Given I am viewing the main activity
-    When I click the sortingbutton
+    When I click the sortingbutton two times
     Then I should stay in the main activity from the main activity
 
   Scenario: Popup successfully received
