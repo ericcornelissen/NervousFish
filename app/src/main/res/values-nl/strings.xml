@@ -5,7 +5,6 @@
     <!-- Woorden -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
-    <string name="confirm">Bevestigen</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
     <string name="ed25519_key">Ed25519 sleutel</string>
@@ -92,11 +91,7 @@
     <string name="yes_delete">Ja, verwijder!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
     <string name="contact_already_exists">Dit contact bestaat al</string>
-    <string name="contact_already_exists_with_name">Er bestaat al een contact met de naam "%1$s"</string>
     <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
-    <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
-    <string name="create_new_contact">Creëer een nieuw contact</string>
-    <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
     <string name="not_the_same_rhythm_title">Ritmes zijn niet hetzelfde</string>
     <string name="not_the_same_rhythm_explanation">Je ritme was niet hetzelfde als dat van je partner.</string>
     <string name="not_the_same_visual_title">Geklikte elementen niet gelijk</string>

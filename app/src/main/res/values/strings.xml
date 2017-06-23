@@ -4,7 +4,6 @@
     <!-- Words -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Cancel</string>
-    <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
     <string name="ed25519_key">Ed25519 key</string>
@@ -90,11 +89,7 @@
     <string name="too_few_taps_description">You have to tap at least 3 times</string>
     <string name="contact_image">Contact image</string>
     <string name="contact_already_exists">Contact already exists</string>
-    <string name="contact_already_exists_with_name">A contact with the name "%1$s" exists already</string>
     <string name="contact_exists_nothing_done">A contact with the same name and keys exists already, so adding the same contact "%1$s" again was not needed</string>
-    <string name="add_public_key_to_contact">Add public key to contact</string>
-    <string name="create_new_contact">Create a new contact</string>
-    <string name="enter_name_contact">Enter the name of the new contact</string>
     <string name="not_the_same_rhythm_title">Rhythm was not the same</string>
     <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
     <string name="not_the_same_visual_title">Tapping order was the same</string>
