@@ -100,7 +100,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_marginEnd="@dimen/field_margin_right"
             android:layout_marginStart="@dimen/field_margin_left"
             android:layout_marginTop="@dimen/field_margin_top">

@@ -18,6 +18,7 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -33,6 +34,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
@@ -75,6 +78,12 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = NervousFish.getServiceLocator();
         this.database = this.serviceLocator.getDatabase();
         this.popups = new MainActivityPopups(this);
+
+        try {
+            database.addContact(new Contact("Corn", new RSAKey("test", "a", "a"), new IBAN("NL02RABO0155534378")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);

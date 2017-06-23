@@ -30,7 +30,7 @@ public class BlockchainWrapper implements Blockchain {
     @NonNull
     @Override
     public PrivateKey getPrivateKey() {
-        return this.profile.getKeyPairs().;
+        return null;
     }
 
     /**
@@ -56,10 +56,6 @@ public class BlockchainWrapper implements Blockchain {
      */
     @Override
     public void setIbanVerified(PublicKey publicKey, IBAN iban, String s) {
-
-    }
-
-    public Ed25519Key getFirstEd25519Key() {
 
     }
 }
