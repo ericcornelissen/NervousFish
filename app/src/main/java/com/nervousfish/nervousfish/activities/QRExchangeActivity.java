@@ -25,7 +25,7 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * An {@link Activity} that is used for pairing using QR codes
@@ -36,11 +36,9 @@ import java.io.IOException;
 //      need the qr message to create the editnameclicklistener in the addnewcontact method
 //  3)  Uses many utility imports.
 public final class QRExchangeActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeActivity");
-    private static final String SEMI_COLON = " ; ";
-
-    private IServiceLocator serviceLocator;
+    private static final Pattern COMPILE_SEMICOLON = Pattern.compile(" ; ");
+    private IDatabase database;
     private Profile profile;
 
     /**
@@ -50,14 +48,9 @@ public final class QRExchangeActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
-        this.serviceLocator = NervousFish.getServiceLocator();
-
-        try {
-            this.profile = this.serviceLocator.getDatabase().getProfile();
-        } catch (final IOException e) {
-            LOGGER.error("Loading the public key went wrong", e);
-        }
-
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        this.database = serviceLocator.getDatabase();
+        this.profile = this.database.getProfile();
         this.drawQRCode();
     }
 
@@ -102,22 +95,22 @@ public final class QRExchangeActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult == null) {
             LOGGER.error("No scan result in QR Scanner");
         } else if (resultCode == RESULT_OK) {
             final String result = scanResult.getContents();
             LOGGER.info("Adding new contact to database");
+            final String[] splittedResult = COMPILE_SEMICOLON.split(result);
             //Name is the first part
-            final String name = result.split(SEMI_COLON)[0];
+            final String name = splittedResult[0];
             //Key is the second part
-            final IKey key = QRGenerator.deconstructToKey(result.split(SEMI_COLON)[1]);
+            final IKey key = QRGenerator.deconstructToKey(splittedResult[1]);
 
-            final IDatabase database = this.serviceLocator.getDatabase();
             final Contact contact = new Contact(name, key);
-            ContactReceivedHelper.newContactReceived(database, this, contact);
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
         }
     }
 

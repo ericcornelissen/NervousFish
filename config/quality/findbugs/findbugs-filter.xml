@@ -48,4 +48,18 @@
         <Method name="generateKey" />
         <Bug pattern="ICAST_IDIV_CAST_TO_DOUBLE" />
     </Match>
+
+    <!-- Suppressed because we actually need this double because the division will be rounded off otherwise! -->
+    <Match>
+        <Class name="com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper" />
+        <Method name="addNumIntervalsToKey" />
+        <Bug pattern="ICAST_IDIV_CAST_TO_DOUBLE" />
+    </Match>
+
+    <!-- Suppressed because we need a long because we'll get a buffer overflow otherwise -->
+    <Match>
+        <Class name="com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper" />
+        <Method name="addNumIntervalsToKey" />
+        <Bug pattern="ICAST_INTEGER_MULTIPLY_CAST_TO_LONG" />
+    </Match>
 </FindBugsFilter>
