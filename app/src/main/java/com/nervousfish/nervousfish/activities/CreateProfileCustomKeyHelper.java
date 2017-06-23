@@ -25,6 +25,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 @SuppressWarnings("PMD.ImmutableField")
 // 1) Suppressed because PMD incorrectly thinks that the code int he lambda's is executed in the constructor directly
 final class CreateProfileCustomKeyHelper {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileCustomKeyHelper");
     private static final String CUSTOM_PUBLIC_KEY = "Custom public key";
     private static final String CUSTOM_PRIVATE_KEY = "Custom private key";
