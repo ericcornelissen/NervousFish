@@ -11,13 +11,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class KMeansClusterHelperTest {
     @Test
     public void testGetEncryptionKey() throws Exception {
-        RhythmVerificationActivity activity = new RhythmVerificationActivity();
-
         final List<SingleTap> taps = new ArrayList<>();
         taps.add(new SingleTap(new Timestamp(0)));
         taps.add(new SingleTap(new Timestamp(5)));
@@ -83,7 +81,7 @@ public class KMeansClusterHelperTest {
         final List<SingleTap> taps = new ArrayList<>();
         taps.add(new SingleTap(new Timestamp(0)));
         taps.add(new SingleTap(new Timestamp(5)));
-        taps.add(new SingleTap(new Timestamp(11)));
+        taps.add(new SingleTap(new Timestamp(13)));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -188,5 +186,25 @@ public class KMeansClusterHelperTest {
         Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
         method.setAccessible(true);
         method.invoke(kMeansClusterHelper, taps);
+    }
+
+    @Test
+    public void testGetEncryptionKeySameSize() throws Exception {
+        final List<SingleTap> taps = new ArrayList<>();
+        taps.add(new SingleTap(new Timestamp(0)));
+        taps.add(new SingleTap(new Timestamp(50)));
+        taps.add(new SingleTap(new Timestamp(98)));
+        taps.add(new SingleTap(new Timestamp(148)));
+        taps.add(new SingleTap(new Timestamp(201)));
+
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
+        Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object kMeansClusterHelper = constructor.newInstance();
+        Method method = kMeansClusterHelperClass.getDeclaredMethod("getEncryptionKey", List.class);
+        method.setAccessible(true);
+        long key = (long) method.invoke(kMeansClusterHelper, taps);
+
+        assertEquals(4 * (long) StrictMath.pow(10, 10 + 0), key);
     }
 }
