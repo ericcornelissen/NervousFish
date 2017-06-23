@@ -5,6 +5,7 @@
     <!-- Woorden -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
+    <string name="confirm">Bevestigen</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
     <string name="ed25519_key">Ed25519 sleutel</string>
@@ -96,7 +97,10 @@
     <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
     <string name="create_new_contact">Creëer een nieuw contact</string>
     <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
-    <string name="confirm">Bevestigen</string>
+    <string name="not_the_same_rhythm_title">Ritmes zijn niet hetzelfde</string>
+    <string name="not_the_same_rhythm_explanation">Je ritme was niet hetzelfde als dat van je partner.</string>
+    <string name="not_the_same_visual_title">Geklikte elementen niet gelijk</string>
+    <string name="not_the_same_visual_explanation">Zorg ervoor dat de plaatjes én de volgorde op beide apparaten hetzelfde zijn.</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
@@ -127,12 +131,10 @@
 
     <!-- General settings -->
     <string name="pref_header_general">Algemeen</string>
-
     <string name="pref_verification_method_to_use">Verificatie methode om te gebruiken</string>
 
     <!-- Profile Settings -->
     <string name="pref_header_profile">Profiel informatie</string>
-
     <string name="display_name">Publieke naam</string>
 
     <!-- KeyManagementActivity -->
