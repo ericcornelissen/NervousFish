@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
 import org.apache.commons.lang3.Validate;
@@ -12,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
