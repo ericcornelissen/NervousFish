@@ -83,8 +83,7 @@ final class MainActivitySorter {
 
         });
 
-        final List<Contact> contacts = this.mainActivity.getContacts();
-        Collections.sort(contacts, NAME_SORTER);
+        Collections.sort(this.mainActivity.contacts, NAME_SORTER);
 
         if (contactsByNameListAdapter.isEmpty()) {
             this.showNoContactsContent();
