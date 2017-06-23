@@ -4,12 +4,9 @@ import com.nervousfish.nervousfish.modules.constants.IConstants;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
+import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
-import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
-
-import java.io.Serializable;
 
 /**
  * Provides the interface that should be implemented by all Service Locators.
@@ -18,7 +15,7 @@ import java.io.Serializable;
  * to any service the service locator provides.</p>
  */
 @SuppressWarnings("checkstyle:javadocmethod")
-public interface IServiceLocator extends Serializable {
+public interface IServiceLocator {
 
     String getAndroidFilesDir();
 
@@ -36,8 +33,6 @@ public interface IServiceLocator extends Serializable {
 
     INfcHandler getNFCHandler();
 
-    IQRHandler getQRHandler();
-
     /**
      * Registers the class specified to the EventBus
      *
@@ -54,7 +49,9 @@ public interface IServiceLocator extends Serializable {
 
     /**
      * Posts a message on the EventBus
+     *
      * @param message The message that should be posted
      */
     void postOnEventBus(Object message);
+
 }

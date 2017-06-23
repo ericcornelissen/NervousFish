@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -11,6 +13,7 @@ import java.io.Serializable;
  * class that should be sent directly over the network.
  */
 final class DataWrapper implements Serializable {
+
     private static final long serialVersionUID = -1704556072876435760L;
     private final Serializable data;
     private final Class<?> clazz;
@@ -21,6 +24,7 @@ final class DataWrapper implements Serializable {
      * @param data The {@link Serializable} object the wrapper wraps
      */
     DataWrapper(final Serializable data) {
+        Validate.notNull(data);
         this.data = data;
         this.clazz = data.getClass();
     }
@@ -65,6 +69,7 @@ final class DataWrapper implements Serializable {
     // 1) A private constructor is safer than a hidden constructor
     // 2) SerializationProxy doesn't need the write method, because it creates the class by calling the contstructor in readResolve
     private static final class SerializationProxy implements Serializable {
+
         private static final long serialVersionUID = -1704556072876435760L;
         private final Serializable data;
 
@@ -83,5 +88,7 @@ final class DataWrapper implements Serializable {
         private Object readResolve() {
             return new DataWrapper(this.data);
         }
+
     }
+
 }

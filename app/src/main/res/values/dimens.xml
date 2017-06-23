@@ -26,7 +26,6 @@
     <dimen name="contacts_list_divider_left_margin">60dp</dimen>
     <dimen name="contacts_list_divider_right_margin">15dp</dimen>
 
-    <dimen name="enter_password_padding_top">40dp</dimen>
     <dimen name="error_password_margin_top">10dp</dimen>
     <dimen name="enter_password_field_margin_top">30dp</dimen>
     <dimen name="field_margin_left">20dp</dimen>
@@ -79,4 +78,7 @@
     <dimen name="no_users_text_margin_bottom">40dp</dimen>
     <dimen name="no_users_icon_size">150dp</dimen>
     <dimen name="no_users_icon_margin_bottom">20dp</dimen>
+
+    <!-- Custom keyboard -->
+    <dimen name="keyboard_button_radius">4dp</dimen>
 </resources>

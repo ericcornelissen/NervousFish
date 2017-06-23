@@ -23,8 +23,8 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 //1. The parentheses on line 125 are not useless.
 //2. We want iban to be immutable, but not a required field.
 public final class Contact implements Serializable {
-
     private static final long serialVersionUID = -4715364587956219157L;
+
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
     private final IBAN iban;

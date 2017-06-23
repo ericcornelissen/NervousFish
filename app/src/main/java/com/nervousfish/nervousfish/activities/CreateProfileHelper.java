@@ -41,6 +41,7 @@ final class CreateProfileHelper {
      * @param alertColor   The {@link Color} to set as alert for incorrect values.
      */
     CreateProfileHelper(final IKeyGenerator keyGenerator, final int alertColor) {
+        Validate.notNull(keyGenerator);
         this.keyGenerator = keyGenerator;
         this.alertColor = alertColor;
     }
@@ -52,6 +53,7 @@ final class CreateProfileHelper {
      * @return a {@link KeyPair} with the key type selected
      */
     List<KeyPair> generateKeyPairs(final IKey.Types keyType) {
+        Validate.notNull(keyType);
         final List<KeyPair> keyPairs = new ArrayList<>();
         switch (keyType) {
             case RSA:
@@ -72,6 +74,7 @@ final class CreateProfileHelper {
      * @return The resultcode of isvalidname.
      */
     Constants.InputFieldResultCodes validateName(final EditText input) {
+        Validate.notNull(input);
         final String name = input.getText().toString();
         if (this.isValidName(name) == CORRECT_FIELD) {
             input.setBackgroundColor(Color.TRANSPARENT);
@@ -105,6 +108,7 @@ final class CreateProfileHelper {
      * @return The result code of the password validation.
      */
     Constants.InputFieldResultCodes validatePassword(final EditText input) {
+        Validate.notNull(input);
         final String password = input.getText().toString();
         switch (this.isValidPassword(password)) {
             case CORRECT_FIELD:
@@ -127,6 +131,8 @@ final class CreateProfileHelper {
      * @return True when the password matches the repeated password.
      */
     boolean passwordsEqual(final EditText passwordInput, final EditText repeatInput) {
+        Validate.notNull(passwordInput);
+        Validate.notNull(repeatInput);
         final String initialPassword = passwordInput.getText().toString();
         final String repeatPassword = repeatInput.getText().toString();
         if (!initialPassword.equals(repeatPassword)) {

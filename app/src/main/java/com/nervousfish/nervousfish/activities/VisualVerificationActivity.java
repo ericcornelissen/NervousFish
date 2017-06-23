@@ -10,11 +10,11 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -80,15 +80,14 @@ public final class VisualVerificationActivity extends Activity {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
-
-            LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
-                    profile.getName(), keyPair.getPublicKey(), profile.getIban());
-
-            final Contact myProfileAsContact = new Contact(profile.getName(),
-                    new Ed25519Key("Ed25519 key", "73890ien"), profile.getIban());
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
+                        profile.getName(), keyPair.getPublicKey(), profile.getIban());
+            }
+            final Contact myProfileAsContact = new Contact(profile.getName(), keyPair.getPublicKey());
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
-        } catch (IOException e) {
-            LOGGER.error("Could not send my contact to other device " + e.getMessage());
+        } catch (final IOException e) {
+            LOGGER.error("Could not send my contact to other device {}", e.getMessage());
         }
 
         final Intent intent = new Intent(this, WaitActivity.class);
@@ -104,6 +103,7 @@ public final class VisualVerificationActivity extends Activity {
      * @param v The view of the button being clicked.
      */
     public void buttonAction(final View v) {
+        Validate.notNull(v);
         final int button = Integer.parseInt(v.getContentDescription().toString());
         LOGGER.info("button {} clicked", button);
 
@@ -129,17 +129,9 @@ public final class VisualVerificationActivity extends Activity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.serviceLocator.getDatabase().addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
+            this.dataReceived = (Contact) event.getData();
         }
     }
 

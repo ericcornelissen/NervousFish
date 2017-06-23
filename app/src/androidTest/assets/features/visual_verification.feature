@@ -1,5 +1,5 @@
 Feature: Visual verification
-  Do several things on the VisualVerificationActivity
+  Using the visual verification method for Bluetooth
 
   Scenario Outline: Fill out a correct pattern
     Given I am viewing the visual verification activity

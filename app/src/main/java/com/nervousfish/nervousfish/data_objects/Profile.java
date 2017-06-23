@@ -53,18 +53,20 @@ public final class Profile implements Serializable {
     public Profile(final String name, final List<KeyPair> keyPairs, final IBAN iban) {
         Validate.notBlank(name);
         Validate.noNullElements(keyPairs);
-        this.keyPairs = keyPairs;
+        this.keyPairs = new ArrayList<>(keyPairs);
         this.name = name;
         this.iban = iban;
     }
 
     /**
      * Adds a new keyPair to the profile
+     * <p>
      *
      * @param keyPair the keyPair to add.
      */
     public void addKeyPair(final KeyPair keyPair) {
-        keyPairs.add(keyPair);
+        Validate.notNull(keyPair);
+        this.keyPairs.add(keyPair);
     }
 
     /**
@@ -72,12 +74,13 @@ public final class Profile implements Serializable {
      *
      * @return - The Contact POJO.
      */
+
     public Contact getContact() {
         final List<IKey> publicKeys = new ArrayList<>();
-        for (final KeyPair pair : keyPairs) {
+        for (final KeyPair pair : this.keyPairs) {
             publicKeys.add(pair.getPublicKey());
         }
-        return new Contact(name, publicKeys);
+        return new Contact(this.name, publicKeys);
     }
 
     /**
@@ -86,7 +89,7 @@ public final class Profile implements Serializable {
      * @return The list of keypairs of the user.
      */
     public List<KeyPair> getKeyPairs() {
-        return keyPairs;
+        return this.keyPairs;
     }
 
     public String getName() {
@@ -114,15 +117,16 @@ public final class Profile implements Serializable {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(final Object o) {
-        if (o == null || this.getClass() != o.getClass()) {
+
+    public boolean equals(final Object obj) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
 
-        final Profile that = (Profile) o;
+        final Profile other = (Profile) obj;
 
-        return this.name.equals(that.name) && this.keyPairs.equals(that.keyPairs)
-                && (this.iban == null ? that.getIban() == null : this.iban.equals(that.getIban()));
+        return this.name.equals(other.name) && this.keyPairs.equals(other.keyPairs)
+                && (this.iban == null ? other.getIban() == null : this.iban.equals(other.getIban()));
     }
 
     /**

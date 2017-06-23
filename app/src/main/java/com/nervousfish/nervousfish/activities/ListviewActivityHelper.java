@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +48,9 @@ final class ListviewActivityHelper {
      * @param id the {@code R.id} of the target {@link ListView}.
      */
     static void setKeys(final Activity activity, final Collection<IKey> keys, final int id) {
+        Validate.notNull(activity);
+        Validate.notNull(keys);
+        Validate.isTrue(id > 0);
         final List<String> keyNames = new ArrayList<>();
         for (final IKey key : keys) {
             keyNames.add(key.getName());

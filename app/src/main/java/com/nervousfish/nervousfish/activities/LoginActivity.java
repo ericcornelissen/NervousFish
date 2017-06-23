@@ -12,6 +12,7 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ public final class LoginActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LoginActivity");
     private IServiceLocator serviceLocator;
-
+    private CustomKeyboardHelper customKeyboard;
 
     /**
      * {@inheritDoc}
@@ -32,9 +33,12 @@ public final class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.login);
-
+        this.setContentView(R.layout.activity_login);
         this.serviceLocator = NervousFish.getServiceLocator();
+
+        // Use a custom keyboard
+        this.customKeyboard = new CustomKeyboardHelper(this);
+        this.customKeyboard.addInput((EditText) this.findViewById(R.id.login_password_input));
 
         LOGGER.info("LoginActivity created");
     }
@@ -44,19 +48,24 @@ public final class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
+        if (this.customKeyboard.isVisible()) {
+            this.customKeyboard.hide();
+        } else {
+            final Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        }
     }
 
     /**
-     * Validate a login attempt.
+     * Validate a activity_login attempt.
      *
      * @param view The submit button that was clicked
      */
     public void validateLoginAttempt(final View view) {
         LOGGER.info("Submit button clicked");
+        Validate.notNull(view);
 
         final View mError = this.findViewById(R.id.error_message_login);
         final EditText passwordInput = (EditText) this.findViewById(R.id.login_password_input);
@@ -73,7 +82,6 @@ public final class LoginActivity extends AppCompatActivity {
             LOGGER.error("Something went wrong when loading the database", e);
             mError.setVisibility(View.VISIBLE);
         }
-
     }
 
     /**
