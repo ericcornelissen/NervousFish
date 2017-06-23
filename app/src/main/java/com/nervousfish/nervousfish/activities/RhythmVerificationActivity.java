@@ -47,6 +47,7 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
     private static final int MINIMUM_TAPS = 3;
     private static final int DECIMAL_SIZE = 10;
     private static final int MAX_RHYTHM_ENCODING = 10;
+    private static final double INTERVALS_SAME_SIZE_THRESHOLD = 0.75;
 
     private Button startButton;
     private Button stopButton;
@@ -250,6 +251,18 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
             return intervals;
         }
 
+        private static boolean intervalsSameSize(final List<Long> intervals) {
+            long shortest = Long.MAX_VALUE;
+            long longest = Long.MIN_VALUE;
+
+            for (final long interval : intervals) {
+                shortest = Math.min(interval, shortest);
+                longest = Math.max(interval, longest);
+            }
+
+            return (double) shortest / (double) longest > INTERVALS_SAME_SIZE_THRESHOLD;
+        }
+
         /**
          * Returns the unique key that corresponds to the taps specified.
          * The key is a binary number.
@@ -266,6 +279,9 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
+            if (intervalsSameSize(this.intervals)) {
+                return addNumIntervalsToKey(0L);
+            }
             long clusterCenterMean1 = this.makeAndReturnFirstClusterMean();
             long clusterCenterMean2 = this.makeAndReturnSecondClusterMean();
 
@@ -396,6 +412,11 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
                     counter++;
                 }
             }
+            return addNumIntervalsToKey(key);
+        }
+
+        private long addNumIntervalsToKey(final long keyIn) {
+            long key = keyIn;
             long tmpIntervalSize = this.intervals.size();
             int startValue = 1;
             while (tmpIntervalSize >= startValue * DECIMAL_SIZE) {
