@@ -65,10 +65,10 @@ public class MainSteps {
         } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
     }
 
-    @Given("^I am viewing the main activity after exchanging successfully and receiving (.*?)$")
-    public void iAmViewingMainActivityAfterExchange(final String name) throws Exception {
+    @Given("^I am viewing the main activity after exchanging successfully and receiving the contact$")
+    public void iAmViewingMainActivityAfterExchange() throws Exception {
         final IKey key = new RSAKey("Email", "42", "13");
-        final Contact contact = new Contact(name, key);
+        final Contact contact = new Contact("Mac Miller", key);
 
         final Intent intent = new Intent();
         intent.putExtra(ConstantKeywords.CONTACT, contact);
@@ -89,6 +89,16 @@ public class MainSteps {
         database.addContact(contact);
     }
 
+    @Given("^there is a contact in the database$")
+    public void thereIsAContactInTheDatabaseWithTheName() throws IOException {
+        final IKey key = new RSAKey("Email", "42", "13");
+        final Contact contact = new Contact("Mac Miller", key);
+
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        final IDatabase database = serviceLocator.getDatabase();
+        database.addContact(contact);
+    }
+
     @When("^I click the back button in main and go to the LoginActivity$")
     public void iPressTheChangeContactBackButton() {
         pressBack();
@@ -97,6 +107,16 @@ public class MainSteps {
     @When("^I verify that I want to log out$")
     public void iVerifyThatIWantToLogOut() {
         onView(withText(R.string.yes)).perform(click());
+    }
+
+    @When("^I click on OK button$")
+    public void iClickOnOK() {
+        onView(withText(R.string.dialog_ok)).perform(click());
+    }
+
+    @When("^I click the sortingbutton$")
+    public void iClickSort() {
+        onView(withId(R.id.sort_button)).perform(click());
     }
 
     @When("^I verify that I do not want to log out$")

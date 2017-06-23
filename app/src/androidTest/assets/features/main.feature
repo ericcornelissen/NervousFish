@@ -54,13 +54,18 @@ Feature: Main Activity
     When I click the three dots in the main activity
     Then I should go to the settings screen
 
-  Scenario Outline: Popup successfully received
-    Given there is a contact with the name <name> in the database
-    And I am viewing the main activity after exchanging successfully and receiving <name>
-    Then a popup with a success message should be shown
+  Scenario: Clicking the sorting button
+    Given I am viewing the main activity
+    When I click the sortingbutton
+    Then I should stay in the main activity from the main activity
 
-    Examples:
-      | name                |
-      | Beyoncé             |
-      | Mac Miller          |
-      | Chance the rapper   |
+  Scenario: Popup successfully received
+    Given I am viewing the main activity after exchanging successfully and receiving the contact
+    When I click on OK button
+    Then I should stay in the main activity from the main activity
+
+  Scenario: Popup contact already in database received
+    Given there is a contact in the database
+    And I am viewing the main activity after exchanging successfully and receiving the contact
+    When I click on OK button
+    Then I should stay in the main activity from the main activity
