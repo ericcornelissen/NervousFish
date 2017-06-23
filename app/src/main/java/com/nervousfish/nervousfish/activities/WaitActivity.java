@@ -12,7 +12,10 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
+import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
+import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -22,7 +25,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import javax.crypto.BadPaddingException;
 
 /**
  * Used to let the Bluetooth-initiating user know that he should wait for his partner
@@ -34,8 +39,10 @@ public final class WaitActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("WaitActivity");
     private IServiceLocator serviceLocator;
-    private Contact contactReceived;
-    private Object tapCombination;
+    private IEncryptor encryptor;
+    private byte[] dataReceived;
+    private Long key;
+    private Class classStartedFrom;
 
     /**
      * {@inheritDoc}
@@ -45,12 +52,14 @@ public final class WaitActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_wait);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.encryptor = this.serviceLocator.getEncryptor();
 
         final Intent intent = this.getIntent();
-        this.contactReceived = (Contact) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
-        this.tapCombination = intent.getSerializableExtra(ConstantKeywords.TAP_DATA);
+        this.dataReceived = (byte[]) intent.getSerializableExtra(ConstantKeywords.DATA_RECEIVED);
+        this.key = (Long) intent.getSerializableExtra(ConstantKeywords.KEY);
+        this.classStartedFrom = (Class) intent.getSerializableExtra(ConstantKeywords.CLASS_STARTED_FROM);
 
-        LOGGER.info("dataReceived is not null: {}, tapCombination is not null: {}", this.contactReceived != null, this.tapCombination != null);
+        LOGGER.info("dataReceived is not null: {}, key is: {}", this.dataReceived != null, this.key);
 
         final String message = (String) intent.getSerializableExtra(ConstantKeywords.WAIT_MESSAGE);
         final TextView waitingMessage = (TextView) this.findViewById(R.id.waiting_message);
@@ -82,8 +91,8 @@ public final class WaitActivity extends Activity {
         super.onStart();
         this.serviceLocator.registerToEventBus(this);
 
-        if (this.contactReceived != null && this.tapCombination != null) {
-            this.goToMainActivity(this.contactReceived);
+        if (this.dataReceived != null && this.key != null) {
+            this.validateEncryptedData();
         }
 
         LOGGER.info("Activity started");
@@ -126,6 +135,9 @@ public final class WaitActivity extends Activity {
                     throw new IllegalArgumentException("Only existing verification methods can be used");
             }
             this.startActivityForResult(intent, 0);
+        } else if (event.getClazz().equals(ByteWrapper.class)) {
+            this.dataReceived = ((ByteWrapper) event.getData()).getBytes();
+            this.validateEncryptedData();
         } else if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
             this.goToMainActivity(contact);
@@ -144,18 +156,31 @@ public final class WaitActivity extends Activity {
     }
 
     /**
+     * Will validate and save the contact saved in the bytearray.
+     */
+    public void validateEncryptedData() {
+        try {
+            final byte[] decryptedData = this.encryptor.decryptWithPassword(this.dataReceived, this.key);
+            LOGGER.info("Decrypted data");
+            this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
+        } catch (final BadPaddingException e) {
+            LOGGER.warn("Keys didn't match! Going back to the rhythm activity");
+            final Intent intent = new Intent(this, this.classStartedFrom);
+            intent.putExtra(ConstantKeywords.TAPPING_FAILURE, true);
+            this.startActivity(intent);
+        } catch (final GeneralSecurityException e) {
+            LOGGER.error("An error occurred when validating the encrypted data", e);
+        }
+    }
+
+    /**
      * Launch the mainActivity at the top.
      *
      * @param contact The contact to give to the {@link MainActivity}.
      */
     private void goToMainActivity(final Contact contact) {
         LOGGER.info("Going to the main activity");
-        try {
-            this.serviceLocator.getBluetoothHandler().stop();
-            this.serviceLocator.getBluetoothHandler().start();
-        } catch (IOException e) {
-            LOGGER.error("Restarting the threads went wrong", e);
-        }
+
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ConstantKeywords.CONTACT, contact);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);

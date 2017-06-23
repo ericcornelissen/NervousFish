@@ -1,17 +1,15 @@
 package com.nervousfish.nervousfish.exceptions;
 
-import java.io.IOException;
-
 /**
  * Thrown when there's an issue while encrypting.
  */
-public class EncryptionException extends IOException {
+public class EncryptionException extends RuntimeException {
 
     private static final long serialVersionUID = -1930461199728515311L;
 
     /**
      * Constructs a new EncryptionException that's thrown when there is an issue while
-     * encrypting.
+     * encrypting / decrypting.
      *
      * @param msg A string describing the event
      */

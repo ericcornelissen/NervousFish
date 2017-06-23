@@ -1,7 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
-
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -16,12 +14,12 @@ import static org.junit.Assert.assertEquals;
 public class KMeansClusterHelperTest {
     @Test
     public void testGetEncryptionKey() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(5)));
-        taps.add(new SingleTap(new Timestamp(20)));
-        taps.add(new SingleTap(new Timestamp(24)));
-        taps.add(new SingleTap(new Timestamp(40)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(5));
+        taps.add(new Timestamp(20));
+        taps.add(new Timestamp(24));
+        taps.add(new Timestamp(40));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -36,7 +34,7 @@ public class KMeansClusterHelperTest {
 
     @Test(expected = InvocationTargetException.class)
     public void testGetEncryptionKeyNoTaps() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
+        final List<Timestamp> taps = new ArrayList<>();
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -49,8 +47,8 @@ public class KMeansClusterHelperTest {
 
     @Test(expected = InvocationTargetException.class)
     public void testGetEncryptionKeySingleTap() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -63,9 +61,9 @@ public class KMeansClusterHelperTest {
 
     @Test(expected = InvocationTargetException.class)
     public void testGetEncryptionKeyDoubleTap() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(5)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(5));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -78,10 +76,10 @@ public class KMeansClusterHelperTest {
 
     @Test
     public void testGetEncryptionKeyTripleTap() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(5)));
-        taps.add(new SingleTap(new Timestamp(13)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(5));
+        taps.add(new Timestamp(13));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -96,10 +94,10 @@ public class KMeansClusterHelperTest {
 
     @Test
     public void testGetEncryptionKeyTripleTap2() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(6)));
-        taps.add(new SingleTap(new Timestamp(10)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(6));
+        taps.add(new Timestamp(10));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -114,11 +112,11 @@ public class KMeansClusterHelperTest {
 
     @Test
     public void testGetEncryptionKeyTripleTap3() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(6)));
-        taps.add(new SingleTap(new Timestamp(7)));
-        taps.add(new SingleTap(new Timestamp(8)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(6));
+        taps.add(new Timestamp(7));
+        taps.add(new Timestamp(8));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -133,23 +131,23 @@ public class KMeansClusterHelperTest {
 
     @Test
     public void testGetEncryptionKey15Tap() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(6)));
-        taps.add(new SingleTap(new Timestamp(7)));
-        taps.add(new SingleTap(new Timestamp(8)));
-        taps.add(new SingleTap(new Timestamp(10)));
-        taps.add(new SingleTap(new Timestamp(14)));
-        taps.add(new SingleTap(new Timestamp(18)));
-        taps.add(new SingleTap(new Timestamp(30)));
-        taps.add(new SingleTap(new Timestamp(31)));
-        taps.add(new SingleTap(new Timestamp(35)));
-        taps.add(new SingleTap(new Timestamp(40)));
-        taps.add(new SingleTap(new Timestamp(50)));
-        taps.add(new SingleTap(new Timestamp(60)));
-        taps.add(new SingleTap(new Timestamp(65)));
-        taps.add(new SingleTap(new Timestamp(70)));
-        taps.add(new SingleTap(new Timestamp(71)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(6));
+        taps.add(new Timestamp(7));
+        taps.add(new Timestamp(8));
+        taps.add(new Timestamp(10));
+        taps.add(new Timestamp(14));
+        taps.add(new Timestamp(18));
+        taps.add(new Timestamp(30));
+        taps.add(new Timestamp(31));
+        taps.add(new Timestamp(35));
+        taps.add(new Timestamp(40));
+        taps.add(new Timestamp(50));
+        taps.add(new Timestamp(60));
+        taps.add(new Timestamp(65));
+        taps.add(new Timestamp(70));
+        taps.add(new Timestamp(71));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
@@ -176,7 +174,7 @@ public class KMeansClusterHelperTest {
 
     @Test(expected = InvocationTargetException.class)
     public void testGetEncryptionKeyNullTaps() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
+        final List<Timestamp> taps = new ArrayList<>();
         taps.add(null);
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
@@ -190,12 +188,12 @@ public class KMeansClusterHelperTest {
 
     @Test
     public void testGetEncryptionKeySameSize() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(50)));
-        taps.add(new SingleTap(new Timestamp(98)));
-        taps.add(new SingleTap(new Timestamp(148)));
-        taps.add(new SingleTap(new Timestamp(201)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(50));
+        taps.add(new Timestamp(98));
+        taps.add(new Timestamp(148));
+        taps.add(new Timestamp(201));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
