@@ -188,12 +188,12 @@ public class KMeansClusterHelperTest {
 
     @Test
     public void testGetEncryptionKeySameSize() throws Exception {
-        final List<SingleTap> taps = new ArrayList<>();
-        taps.add(new SingleTap(new Timestamp(0)));
-        taps.add(new SingleTap(new Timestamp(50)));
-        taps.add(new SingleTap(new Timestamp(98)));
-        taps.add(new SingleTap(new Timestamp(148)));
-        taps.add(new SingleTap(new Timestamp(201)));
+        final List<Timestamp> taps = new ArrayList<>();
+        taps.add(new Timestamp(0));
+        taps.add(new Timestamp(50));
+        taps.add(new Timestamp(98));
+        taps.add(new Timestamp(148));
+        taps.add(new Timestamp(201));
 
         Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
