@@ -5,11 +5,14 @@
     <!-- Woorden -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
+    <string name="confirm">Bevestig</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
     <string name="ed25519_key">Ed25519 sleutel</string>
     <string name="edit">Bewerken</string>
+    <string name="exponent">Exponent</string>
     <string name="logo">Logo</string>
+    <string name="modulus">Modulus</string>
     <string name="more">Meer</string>
     <string name="name">Naam</string>
     <string name="nfc">NFC</string>
@@ -25,8 +28,6 @@
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
     <string name="yes">Ja</string>
-    <string name="modulus">Modulus</string>
-    <string name="exponent">Exponent</string>
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>

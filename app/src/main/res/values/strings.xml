@@ -4,11 +4,14 @@
     <!-- Words -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
     <string name="ed25519_key">Ed25519 key</string>
     <string name="edit">Edit</string>
+    <string name="exponent">Exponent</string>
     <string name="logo">Logo</string>
+    <string name="modulus">Modulus</string>
     <string name="more">More</string>
     <string name="name">Name</string>
     <string name="nfc">NFC</string>
@@ -24,8 +27,6 @@
     <string name="submit">Submit</string>
     <string name="type">Type</string>
     <string name="yes">Yes</string>
-    <string name="modulus">Modulus</string>
-    <string name="exponent">Exponent</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
