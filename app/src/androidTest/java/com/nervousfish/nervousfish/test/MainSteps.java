@@ -117,6 +117,7 @@ public class MainSteps {
     @When("^I click the sortingbutton$")
     public void iClickSort() {
         onView(withId(R.id.sort_button)).perform(click());
+        onView(withId(R.id.sort_button)).perform(click());
     }
 
     @When("^I verify that I do not want to log out$")
