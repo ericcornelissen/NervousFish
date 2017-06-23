@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
 import com.nervousfish.nervousfish.R;
-import com.nervousfish.nervousfish.activities.RhythmCreateActivity;
+import com.nervousfish.nervousfish.activities.RhythmVerificationActivity;
 import com.nervousfish.nervousfish.activities.SelectVerificationMethodActivity;
 import com.nervousfish.nervousfish.activities.VisualVerificationActivity;
 
@@ -44,7 +44,7 @@ public class SelectVerificationMethodSteps {
 
     @Then("I should go to the rhythm activity to provide a pattern")
     public void iShouldGoToTheRhythmActivityToProvideAPattern() {
-        intended(hasComponent(RhythmCreateActivity.class.getName()));
+        intended(hasComponent(RhythmVerificationActivity.class.getName()));
     }
 
     @Then("I should go to the visual pattern activity to provide a pattern")

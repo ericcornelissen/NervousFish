@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
  * An handler for NFC communication without implementation, needed because NFC is unavailable on the emulator
  */
 public final class NFCHandler extends APairingHandler implements INfcHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("NFCHandler");
 
     /**
@@ -39,7 +40,7 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
     @Override
     public void send(final byte[] buffer) {
         // The NFC Handler handles the exchange of bytes in the activity
-        LOGGER.error("NFC Handler's send method has been called!!!");
+        LOGGER.error("NFC Handler's send method has been called");
         throw new UnsupportedOperationException("Shouldn't be used");
     }
 
@@ -50,4 +51,5 @@ public final class NFCHandler extends APairingHandler implements INfcHandler {
     public void dataReceived(final byte[] bytes) {
         this.getDataReceiver().get().dataReceived(bytes);
     }
+
 }

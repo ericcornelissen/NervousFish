@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 
 import org.junit.Test;
@@ -17,7 +16,7 @@ import static org.junit.Assert.*;
 public class KMeansClusterHelperTest {
     @Test
     public void testGetEncryptionKey() throws Exception {
-        RhythmCreateActivity activity = new RhythmCreateActivity();
+        RhythmVerificationActivity activity = new RhythmVerificationActivity();
 
         final List<SingleTap> taps = new ArrayList<>();
         taps.add(new SingleTap(new Timestamp(0)));
@@ -26,7 +25,7 @@ public class KMeansClusterHelperTest {
         taps.add(new SingleTap(new Timestamp(24)));
         taps.add(new SingleTap(new Timestamp(40)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -41,7 +40,7 @@ public class KMeansClusterHelperTest {
     public void testGetEncryptionKeyNoTaps() throws Exception {
         final List<SingleTap> taps = new ArrayList<>();
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -55,7 +54,7 @@ public class KMeansClusterHelperTest {
         final List<SingleTap> taps = new ArrayList<>();
         taps.add(new SingleTap(new Timestamp(0)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -70,7 +69,7 @@ public class KMeansClusterHelperTest {
         taps.add(new SingleTap(new Timestamp(0)));
         taps.add(new SingleTap(new Timestamp(5)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -86,7 +85,7 @@ public class KMeansClusterHelperTest {
         taps.add(new SingleTap(new Timestamp(5)));
         taps.add(new SingleTap(new Timestamp(11)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -104,7 +103,7 @@ public class KMeansClusterHelperTest {
         taps.add(new SingleTap(new Timestamp(6)));
         taps.add(new SingleTap(new Timestamp(10)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -123,7 +122,7 @@ public class KMeansClusterHelperTest {
         taps.add(new SingleTap(new Timestamp(7)));
         taps.add(new SingleTap(new Timestamp(8)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -154,7 +153,7 @@ public class KMeansClusterHelperTest {
         taps.add(new SingleTap(new Timestamp(70)));
         taps.add(new SingleTap(new Timestamp(71)));
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -168,7 +167,7 @@ public class KMeansClusterHelperTest {
     @Test(expected = InvocationTargetException.class)
     public void testGetEncryptionKeyNullList() throws Exception {
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();
@@ -182,7 +181,7 @@ public class KMeansClusterHelperTest {
         final List<SingleTap> taps = new ArrayList<>();
         taps.add(null);
 
-        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmCreateActivity$KMeansClusterHelper");
+        Class<?> kMeansClusterHelperClass = Class.forName("com.nervousfish.nervousfish.activities.RhythmVerificationActivity$KMeansClusterHelper");
         Constructor<?> constructor = kMeansClusterHelperClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         Object kMeansClusterHelper = constructor.newInstance();

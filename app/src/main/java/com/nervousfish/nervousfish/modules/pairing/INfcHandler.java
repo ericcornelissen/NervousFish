@@ -11,4 +11,5 @@ public interface INfcHandler extends IPairingHandler {
      * @param bytes the bytes received
      */
     void dataReceived(byte[] bytes);
+
 }

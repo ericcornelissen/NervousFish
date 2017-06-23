@@ -23,8 +23,9 @@ import static com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothServic
  * (or until cancelled).
  */
 final class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThread {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothAcceptThread");
-    // The local server socket
+
     private final BluetoothServerSocket serverSocket;
     private final IServiceLocator serviceLocator;
 
@@ -82,4 +83,5 @@ final class AndroidBluetoothAcceptThread extends Thread implements IBluetoothThr
             LOGGER.warn("Server failed or closed", e);
         }
     }
+
 }
