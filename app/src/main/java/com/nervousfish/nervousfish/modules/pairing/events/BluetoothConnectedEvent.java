@@ -2,12 +2,15 @@ package com.nervousfish.nervousfish.modules.pairing.events;
 
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothThread;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * Greenrobot's EventBus message event
  * <p>
  * Sent when the device successfully paired with a Bluetooth device
  */
 public final class BluetoothConnectedEvent {
+
     private final IBluetoothThread thread;
 
     /**
@@ -17,13 +20,12 @@ public final class BluetoothConnectedEvent {
      * @throws IllegalArgumentException when thread is null
      */
     public BluetoothConnectedEvent(final IBluetoothThread thread) {
-        if (thread == null) {
-            throw new IllegalArgumentException("Thread cannot be null");
-        }
+        Validate.notNull(thread);
         this.thread = thread;
     }
 
-    public IBluetoothThread getThread() {
+    IBluetoothThread getThread() {
         return this.thread;
     }
+
 }

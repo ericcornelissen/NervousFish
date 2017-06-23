@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="match_parent"
@@ -40,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@+id/icon_name_create_profile"
                 android:hint="@string/name_create_profile"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:maxLines="1" />
         </RelativeLayout>
 
@@ -117,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@+id/icon_iban_create_profile"
-                android:hint="@string/contact_iban"
+                android:hint="@string/iban"
                 android:inputType="text"
                 android:maxLines="1" />
         </RelativeLayout>
@@ -160,4 +162,6 @@
             android:text="@string/done"
             android:textSize="@dimen/submit_text_size" />
     </LinearLayout>
-</ScrollView>
+
+    <include layout="@layout/custom_keyboard" />
+</RelativeLayout>

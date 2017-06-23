@@ -28,6 +28,8 @@ final class Ed25519 {
      * @param privateKey The generated private key.
      */
     private Ed25519(final EdDSAPublicKey publicKey, final EdDSAPrivateKey privateKey) {
+        assert publicKey != null;
+        assert privateKey != null;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
     }

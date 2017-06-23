@@ -3,24 +3,23 @@ package com.nervousfish.nervousfish.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.tap.SingleTap;
 import com.nervousfish.nervousfish.exceptions.UnknownIntervalException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,23 +33,27 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static android.R.attr.src;
+
 /**
- * The RhythmCreateActivity is an Activity where you can tap a sequence.
+ * The RhythmVerificationActivity is an Activity where you can tap a sequence.
  */
-@SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized"})
+@SuppressWarnings({"PMD.LooseCoupling", "InstanceVariableMayNotBeInitialized", "PMD.ExcessiveImports"})
 // 1) List is cast to an ArrayList, but that is needed to put in an intent.
 // 2) We cannot pre-initialize for example the buttons because activities don't have a constructor
-public final class RhythmCreateActivity extends AppCompatActivity {
+// 3) We cannot easily reduce the number of imports because most of them are plain data objects to events
+public final class RhythmVerificationActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmCreateActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("RhythmVerificationActivity");
     private static final int MINIMUM_TAPS = 3;
+    private static final int DECIMAL_SIZE = 10;
+    private static final int MAX_RHYTHM_ENCODING = 10;
 
     private Button startButton;
     private Button stopButton;
     private Button doneButton;
     private ArrayList<SingleTap> taps;
     private IServiceLocator serviceLocator;
-    private IDatabase database;
     private IBluetoothHandler bluetoothHandler;
     private Contact dataReceived;
 
@@ -63,11 +66,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_rhythm_create);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
-
-        final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_create_rhythm);
-        this.setSupportActionBar(toolbar);
 
         this.startButton = (Button) this.findViewById(R.id.start_recording_button);
         this.stopButton = (Button) this.findViewById(R.id.stop_recording_button);
@@ -120,6 +119,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onTapClick(final View v) {
         LOGGER.info("Tapped");
+        Validate.notNull(v);
         if (this.taps != null && this.startButton.getVisibility() == View.GONE) {
             this.taps.add(new SingleTap(new Timestamp(System.currentTimeMillis())));
         }
@@ -132,6 +132,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onDoneCreatingRhythmClick(final View v) {
         LOGGER.info("Done tapping button clicked");
+        Validate.notNull(v);
         try {
             final Profile profile = this.serviceLocator.getDatabase().getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
@@ -140,11 +141,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
                     profile.getName(), keyPair.getPublicKey(), profile.getIban());
             final Contact myProfileAsContact = new Contact(profile.getName(),
                     new Ed25519Key("Ed25519 key", "73890ien"), profile.getIban());
-            final int encryptionKey = new RhythmCreateActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
+            final long encryptionKey = new RhythmVerificationActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
             this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }
+
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_partner_tapping));
         intent.putExtra(ConstantKeywords.DATA_RECEIVED, this.dataReceived);
@@ -157,9 +159,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      *
      * @param v - the {@link View} clicked
      */
-
     public void onStartRecordingClick(final View v) {
         LOGGER.info("Start Recording clicked");
+        Validate.notNull(v);
         this.taps = new ArrayList<>();
         this.startButton.setVisibility(View.GONE);
         this.stopButton.setVisibility(View.VISIBLE);
@@ -173,6 +175,7 @@ public final class RhythmCreateActivity extends AppCompatActivity {
      */
     public void onStopRecordingClick(final View v) {
         LOGGER.info("Stop Recording clicked");
+        Validate.notNull(v);
         this.startButton.setVisibility(View.VISIBLE);
         this.stopButton.setVisibility(View.GONE);
         if (this.taps.size() < MINIMUM_TAPS) {
@@ -196,12 +199,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
-            final Contact contact = (Contact) event.getData();
-            ContactReceivedHelper.newContactReceived(this.database, this, contact);
-
-            //This needs to be outside of the try catch block
-            this.dataReceived = contact;
+            this.dataReceived = (Contact) event.getData();
         }
     }
 
@@ -227,10 +227,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
 
         /**
          * Get a list of the time between the taps (= intervals)
-         * @param taps The taps that have obviously intervals in between
+         * @param taps The taps that have obviously intervals in between. Should be at least two taps
          * @return A list containing the time between the taps
          */
         private static List<Long> getIntervals(final List<SingleTap> taps) {
+            assert taps != null;
+            assert taps.size() >= 2;
             final List<Long> intervals = new ArrayList<>(taps.size() - 1);
             for (int i = 0; i < taps.size() - 1; i++) {
                 intervals.add(taps.get(i + 1).getTimestamp().getTime() - taps.get(i).getTimestamp().getTime());
@@ -248,7 +250,9 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param taps The taps that should be encoded to a key
          * @return The unique key that corresponds to the taps
          */
-        int getEncryptionKey(final List<SingleTap> taps) {
+        long getEncryptionKey(final List<SingleTap> taps) {
+            Validate.noNullElements(taps);
+            Validate.isTrue(taps.size() >= MINIMUM_TAPS);
             this.clusterCenter1 = new ArrayList<>(taps.size());
             this.clusterCenter2 = new ArrayList<>(taps.size());
             this.intervals = getIntervals(taps);
@@ -291,10 +295,12 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          */
         private void addClosestTimestampToCluster(final long centerMean1, final long centerMean2) {
-            final ImmutablePair<RhythmCreateActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
-            if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.SHORT) {
+            assert centerMean1 >= 0;
+            assert centerMean2 >= 0;
+            final ImmutablePair<RhythmVerificationActivity.Cluster, Long> closestPoint = this.searchClosestPoint(centerMean1, centerMean2);
+            if (closestPoint.getLeft() == RhythmVerificationActivity.Cluster.SHORT) {
                 this.clusterCenter1.add(closestPoint.getRight());
-            } else if (closestPoint.getLeft() == RhythmCreateActivity.Cluster.LONG) {
+            } else if (closestPoint.getLeft() == RhythmVerificationActivity.Cluster.LONG) {
                 this.clusterCenter2.add(closestPoint.getRight());
             } else {
                 LOGGER.error("A timestamp does neither belong to the short or long interval");
@@ -309,22 +315,24 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * @param centerMean2 The mean of the length of the intervals in the "Long" cluster
          * @return A pair of which the left value denotes the cluster the interval belongs to and the right value denotes the length of the cluster
          */
-        private ImmutablePair<RhythmCreateActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+        private ImmutablePair<RhythmVerificationActivity.Cluster, Long> searchClosestPoint(final long centerMean1, final long centerMean2) {
+            assert centerMean1 >= 0;
+            assert centerMean2 >= 0;
             Long closestPoint = null;
             long distance = Long.MAX_VALUE;
-            RhythmCreateActivity.Cluster targetCluster = null;
+            RhythmVerificationActivity.Cluster targetCluster = null;
             for (final Long interval : this.intervals) {
                 final long dist1 = interval - centerMean1;
                 if (dist1 < distance) {
                     closestPoint = interval;
                     distance = dist1;
-                    targetCluster = RhythmCreateActivity.Cluster.SHORT;
+                    targetCluster = RhythmVerificationActivity.Cluster.SHORT;
                 }
                 final long dist2 = centerMean2 - interval;
                 if (dist2 < distance) {
                     closestPoint = interval;
                     distance = dist2;
-                    targetCluster = RhythmCreateActivity.Cluster.LONG;
+                    targetCluster = RhythmVerificationActivity.Cluster.LONG;
                 }
             }
             return new ImmutablePair<>(targetCluster, closestPoint);
@@ -358,18 +366,29 @@ public final class RhythmCreateActivity extends AppCompatActivity {
          * Short, Long, Long = 6
          * Long, Long, Long = 7
          * @param breakpoint The boundary between a short and long interval
-         * @return The key as an integer
+         * @return The key as a Long
          */
-        private int generateKey(final long breakpoint) {
-            int key = 0;
+        private long generateKey(final long breakpoint) {
+            assert breakpoint >= 0;
+            long key = 0;
             int counter = 0;
             for (final long interval : this.intervals) {
-                if (interval < breakpoint) {
+                if (interval <= breakpoint) {
                     counter++;
                 } else {
                     key += StrictMath.pow(2, counter);
                     counter++;
                 }
+            }
+            long tmpIntervalSize = this.intervals.size();
+            int startValue = 1;
+            while (tmpIntervalSize >= startValue * DECIMAL_SIZE) {
+                startValue *= DECIMAL_SIZE;
+            }
+            for (int i = startValue; i >= 1; i /= DECIMAL_SIZE) {
+                final long l = (long) Math.floor((double) tmpIntervalSize / i) * (long) StrictMath.pow(DECIMAL_SIZE, MAX_RHYTHM_ENCODING) * i;
+                key += l;
+                tmpIntervalSize -= i * Math.floor(tmpIntervalSize / i);
             }
             return key;
         }

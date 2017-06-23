@@ -15,6 +15,7 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         this.serviceLocator = NervousFish.getServiceLocator();
 
         if (this.getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            this.getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
         final Intent intent = this.getIntent();
@@ -69,8 +70,9 @@ public final class ChangeContactActivity extends AppCompatActivity {
      * @param v The view clicked on
      */
     public void saveContact(final View v) {
+        Validate.notNull(v);
         // Don't show keyboard anymore
-        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
@@ -97,7 +99,6 @@ public final class ChangeContactActivity extends AppCompatActivity {
             } catch (final IOException e) {
                 LOGGER.error("IOException while updating contactname", e);
             }
-
             setResult(RESULT_FIRST_USER,
                     new Intent().putExtra(ConstantKeywords.CONTACT, contact));
             finish();
@@ -110,9 +111,9 @@ public final class ChangeContactActivity extends AppCompatActivity {
                     .show();
         } else {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.invalid_name))
-                    .setContentText(getString(R.string.invalid_name_explanation))
-                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setTitleText(this.getString(R.string.invalid_name))
+                    .setContentText(this.getString(R.string.invalid_name_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
                     .setConfirmClickListener(null)
                     .show();
         }
@@ -138,16 +139,18 @@ public final class ChangeContactActivity extends AppCompatActivity {
         public void onClick(final View v) {
             final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
             final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
-            if (editTextName.getText().toString().equals(contact.getName())
-                    && (editTextIBAN.getText().toString().equals(contact.getIban())
-                    || editTextIBAN.getText().toString().equals(ChangeContactActivity.this.getString(R.string.dash)))) {
+            final String name = editTextName.getText().toString();
+            final String iban = editTextIBAN.getText().toString();
+            if (name.equals(contact.getName()) && (iban.equals(contact.getIbanAsString())
+                    || iban.equals(ChangeContactActivity.this.getString(R.string.dash))
+                    || iban.equals(EMPTY_STRING))) {
                 finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.are_you_sure))
-                        .setContentText(getString(R.string.go_back_changes_lost))
-                        .setCancelText(getString(R.string.cancel))
-                        .setConfirmText(getString(R.string.yes_go_back))
+                        .setTitleText(ChangeContactActivity.this.getString(R.string.are_you_sure))
+                        .setContentText(ChangeContactActivity.this.getString(R.string.go_back_changes_lost))
+                        .setCancelText(ChangeContactActivity.this.getString(R.string.cancel))
+                        .setConfirmText(ChangeContactActivity.this.getString(R.string.yes_go_back))
                         .setConfirmClickListener(new DiscardChangesClickListener())
                         .show();
             }
@@ -163,7 +166,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
         @Override
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
             sweetAlertDialog.dismiss();
-            finish();
+            ChangeContactActivity.this.finish();
         }
 
     }

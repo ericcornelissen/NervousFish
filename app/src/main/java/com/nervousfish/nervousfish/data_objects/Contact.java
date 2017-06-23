@@ -3,6 +3,7 @@ package com.nervousfish.nervousfish.data_objects;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.Validate;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -22,8 +23,8 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 //1. The parentheses on line 125 are not useless.
 //2. We want iban to be immutable, but not a required field.
 public final class Contact implements Serializable {
-
     private static final long serialVersionUID = -4715364587956219157L;
+
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
     private final IBAN iban;
@@ -35,6 +36,8 @@ public final class Contact implements Serializable {
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final IKey key) {
+        Validate.notBlank(name);
+        Validate.notNull(key);
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
         this.iban = null;
@@ -49,6 +52,8 @@ public final class Contact implements Serializable {
      * @param iban  The IBAN of the {@link Contact}
      */
     public Contact(final String name, final IKey key, final IBAN iban) {
+        Validate.notBlank(name);
+        Validate.notNull(key);
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
         this.iban = iban;
@@ -61,6 +66,8 @@ public final class Contact implements Serializable {
      * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
      */
     public Contact(final String name, final Collection<IKey> keys) {
+        Validate.notBlank(name);
+        Validate.noNullElements(keys);
         this.name = name;
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));

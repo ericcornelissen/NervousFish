@@ -23,6 +23,7 @@ import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -35,13 +36,12 @@ import static android.nfc.NdefRecord.createMime;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
-public final class NFCActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
+public final class NFCExchangeActivity extends Activity implements NfcAdapter.CreateNdefMessageCallback {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("NFCActivity");
+    private static final Logger LOGGER = LoggerFactory.getLogger("NFCExchangeActivity");
     private IServiceLocator serviceLocator;
     private byte[] bytes;
     private NfcAdapter nfcAdapter;
-    private IDatabase database;
 
     /**
      * {@inheritDoc}
@@ -50,16 +50,16 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_nfc);
-
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
 
         // Check for available NFC Adapter
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        this.nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         LOGGER.info("Start creating an NDEF message to beam");
         Glide.with(this).load(R.drawable.s_contact_animado).into((ImageView) this.findViewById(R.id.nfc_gif));
+
+        final IDatabase database = this.serviceLocator.getDatabase();
         try {
-            final Profile profile = this.database.getProfile();
+            final Profile profile = database.getProfile();
             final KeyPair keyPair = profile.getKeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {} , public key: {} ", profile.getName(),
@@ -68,11 +68,12 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
             final Contact contact = new Contact(profile.getName(), keyPair.getPublicKey());
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
             this.bytes = nfcHandler.objectToBytes(contact);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.error("Could not serialize my contact to other device ", e);
         }
+
         // Register callback
-        nfcAdapter.setNdefPushMessageCallback(this, this);
+        this.nfcAdapter.setNdefPushMessageCallback(this, this);
     }
 
     /**
@@ -103,9 +104,11 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     public void onResume() {
         super.onResume();
         LOGGER.info("NFC onResume");
+
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+                new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        this.nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+      
         // Check to see that the Activity started due to an Android Beam
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(this.getIntent().getAction())) {
             this.processIntent(this.getIntent());
@@ -114,12 +117,10 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
 
     /**
      * {@inheritDoc}
-     * @param intent NFC connection intent
      */
     @Override
     public void onNewIntent(final Intent intent) {
         // onResume gets called after this to handle the intent
-        //this.setIntent(intent);
         this.processIntent(intent);
     }
 
@@ -135,7 +136,6 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
         final NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
         this.serviceLocator.getNFCHandler().dataReceived(msg.getRecords()[0].getPayload());
-        //this.descriptionText.setText(Arrays.toString(msg.getRecords()[0].getPayload()));
     }
 
     /**
@@ -155,7 +155,7 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     @Override
     public void onStop() {
         this.serviceLocator.unregisterFromEventBus(this);
-        LOGGER.info("Stopped NFCActivity");
+        LOGGER.info("Stopped NFCExchangeActivity");
         super.onStop();
     }
 
@@ -167,25 +167,21 @@ public final class NFCActivity extends Activity implements NfcAdapter.CreateNdef
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewDataReceivedEvent(final NewDataReceivedEvent event) {
         LOGGER.info("onNewDataReceivedEvent called");
+        Validate.notNull(event);
         if (event.getClazz().equals(Contact.class)) {
             final Contact contact = (Contact) event.getData();
-            try {
-                LOGGER.info("Adding contact to database...");
-                this.database.addContact(contact);
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("Couldn't get contacts from database", e);
-            }
-            this.goToMainActivity();
+            this.goToMainActivity(contact);
         }
     }
 
     /**
      * Evaluate the data received for Bluetooth.
      */
-    private void goToMainActivity() {
-        LOGGER.info("Going to Main Activity");
+    private void goToMainActivity(final Contact contact) {
+        LOGGER.info("Going to MainActivity");
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE, true);
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
         this.startActivity(intent);
     }
+
 }

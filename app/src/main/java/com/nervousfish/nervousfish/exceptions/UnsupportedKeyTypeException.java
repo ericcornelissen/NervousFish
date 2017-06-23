@@ -21,6 +21,15 @@ public class UnsupportedKeyTypeException extends RuntimeException {
     }
 
     /**
+     * Constructs a new UnsupportedKeyTypeException with an exception (a throwable)
+     *
+     * @param throwable The exception that occurred the layer above
+     */
+    public UnsupportedKeyTypeException(final Throwable throwable) {
+        super(throwable);
+    }
+
+    /**
      * Deserialize the instance using readObject to ensure invariants and security.
      *
      * @param stream The serialized object to be deserialized

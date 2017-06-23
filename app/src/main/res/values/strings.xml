@@ -25,6 +25,7 @@
     <string name="type">Type</string>
     <string name="yes">Yes</string>
     <string name="dash" translatable="false">-</string>
+    <string name="iban">IBAN</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
@@ -86,7 +87,6 @@
     <string name="contact_deleted_description">The contact has been deleted!</string>
     <string name="contact_doesnt_exist">The contact doesn\'t exist</string>
     <string name="contact_already_deleted">It looks like the contact was already deleted.</string>
-    <string name="contact_iban">IBAN</string>
     <string name="contact_information">Contact information:</string>
     <string name="contact_public_keys">Public keys:</string>
     <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one. Also make sure the letters are capitalized.</string>
@@ -125,7 +125,7 @@
 
     <!-- NFC -->
     <string name="nfc_image_description">This should be a gif representing the use of NFC.</string>
-    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange contacts with.</string>
+    <string name="nfc_explanation">Please bring your device as close as possible to another device you want to exchange keys with.</string>
     <string name="popup_enable_nfc_title">Enable NFC?</string>
     <string name="popup_enable_nfc_settings">Please activate NFC and press Back to return to the application!</string>
 

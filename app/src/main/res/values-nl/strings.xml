@@ -25,6 +25,7 @@
     <string name="submit">Verzend</string>
     <string name="type">Type</string>
     <string name="yes">Ja</string>
+    <string name="iban">IBAN</string>
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
@@ -101,7 +102,6 @@
     <string name="create_new_contact">Creëer een nieuw contact</string>
     <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
     <string name="confirm">Bevestigen</string>
-    <string name="contact_iban">IBAN</string>
     <string name="contact_information">Contact gegevens:</string>
     <string name="contact_public_keys">Public keys:</string>
 
@@ -120,7 +120,7 @@
 
     <!-- NFC -->
     <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>
-    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om contacten uit te wisselen.</string>
+    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om sleutels uit te wisselen.</string>
     <string name="popup_enable_nfc_title">NFC aanzetten?</string>
     <string name="popup_enable_nfc_settings">Activeer a.u.b. NFC in de instellingen en click de terug knop om terug te gaan naar de app</string>
 

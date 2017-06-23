@@ -4,6 +4,7 @@ import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
 import net.i2p.crypto.eddsa.EdDSAKey;
+import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -23,7 +24,7 @@ public final class Ed25519Key implements IKey {
     private static final String KEYWORD_NAME = "name";
     private static final String KEYWORD_KEY = "key";
 
-    private final EdDSAKey key;
+    private final String key;
     private final String name;
 
     /**
@@ -32,7 +33,8 @@ public final class Ed25519Key implements IKey {
      * @param name The name for the key.
      * @param key  The key as an {@link EdDSAKey}.
      */
-    public Ed25519Key(final String name, final EdDSAKey key) {
+    public Ed25519Key(final String name, final String key) {
+        Validate.notBlank(name);
         this.name = name;
         this.key = key;
     }
@@ -42,13 +44,13 @@ public final class Ed25519Key implements IKey {
      *
      * @param map A {@link Map} mapping {@link Ed25519Key} attribute names to values.
      */
-    public Ed25519Key(final Map<String, String> map) throws IllegalArgumentException {
+    public Ed25519Key(final Map<String, String> map) {
+        Validate.notNull(map);
         this.name = map.get(KEYWORD_NAME);
         this.key = map.get(KEYWORD_KEY);
 
-        if (this.name == null || this.key == null) {
-            throw new IllegalArgumentException("Name or key could not be found in the map");
-        }
+        Validate.notBlank(this.name);
+        Validate.notBlank(this.key);
     }
 
     /**

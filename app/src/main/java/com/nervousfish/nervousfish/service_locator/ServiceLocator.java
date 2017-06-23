@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.service_locator;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.annotations.DesignedForExtension;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.constants.IConstants;
@@ -13,19 +12,14 @@ import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.filesystem.AndroidFileSystemAdapter;
 import com.nervousfish.nervousfish.modules.filesystem.IFileSystem;
 import com.nervousfish.nervousfish.modules.pairing.AndroidBluetoothHandler;
-import com.nervousfish.nervousfish.modules.pairing.DummyQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
-import com.nervousfish.nervousfish.modules.pairing.IQRHandler;
 import com.nervousfish.nervousfish.modules.pairing.NFCHandler;
 
+import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 
 /**
  * Manages all modules and provides access to them. This class should be dependency injected into all
@@ -35,8 +29,8 @@ import java.io.Serializable;
 // ConstructorCallsOverridableMethod suppressed because we actually do want the subclasses to change the behaviour of the constructor!
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.ConstructorCallsOverridableMethod"})
 public class ServiceLocator implements IServiceLocator {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("ServiceLocator");
-    private static final long serialVersionUID = 1408616442873653749L;
 
     private final String androidFilesDir;
     private final IDatabase database;
@@ -46,7 +40,6 @@ public class ServiceLocator implements IServiceLocator {
     private final IConstants constants;
     private final IBluetoothHandler bluetoothHandler;
     private final INfcHandler nfcHandler;
-    private final IQRHandler qrHandler;
 
     /**
      * Package-private constructor of the service locator
@@ -62,7 +55,6 @@ public class ServiceLocator implements IServiceLocator {
         this.database = this.initDatabase();
         this.bluetoothHandler = this.initBluetoothHandler();
         this.nfcHandler = this.initNfcHandler();
-        this.qrHandler = this.initQrHandler();
     }
 
     /**
@@ -80,8 +72,16 @@ public class ServiceLocator implements IServiceLocator {
                    final IFileSystem fileSystem,
                    final IConstants constants,
                    final IBluetoothHandler bluetoothHandler,
-                   final INfcHandler nfcHandler,
-                   final IQRHandler qrHandler) {
+                   final INfcHandler nfcHandler) {
+        Validate.notBlank(androidFilesDir);
+        Validate.notNull(database);
+        Validate.notNull(keyGenerator);
+        Validate.notNull(encryptor);
+        Validate.notNull(fileSystem);
+        Validate.notNull(constants);
+        Validate.notNull(bluetoothHandler);
+        Validate.notNull(nfcHandler);
+
         this.androidFilesDir = androidFilesDir;
         this.database = database;
         this.keyGenerator = keyGenerator;
@@ -90,7 +90,6 @@ public class ServiceLocator implements IServiceLocator {
         this.constants = constants;
         this.bluetoothHandler = bluetoothHandler;
         this.nfcHandler = nfcHandler;
-        this.qrHandler = qrHandler;
     }
 
     /**
@@ -150,19 +149,11 @@ public class ServiceLocator implements IServiceLocator {
     }
 
     /**
-     * @return The QR module used for this servicelocator
-     */
-    @DesignedForExtension
-    IQRHandler initQrHandler() {
-        return DummyQRHandler.newInstance(this).getModule();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public final String getAndroidFilesDir() {
-        this.assertExists(this.androidFilesDir, "androidFilesDir");
+        ServiceLocator.assertExists(this.androidFilesDir, "androidFilesDir");
         return this.androidFilesDir;
     }
 
@@ -171,7 +162,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IDatabase getDatabase() {
-        this.assertExists(this.database, "database");
+        ServiceLocator.assertExists(this.database, "database");
         return this.database;
     }
 
@@ -180,7 +171,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IKeyGenerator getKeyGenerator() {
-        this.assertExists(this.keyGenerator, "keyGenerator");
+        ServiceLocator.assertExists(this.keyGenerator, "keyGenerator");
         return this.keyGenerator;
     }
 
@@ -189,7 +180,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IEncryptor getEncryptor() {
-        this.assertExists(this.encryptor, "encryptor");
+        ServiceLocator.assertExists(this.encryptor, "encryptor");
         return this.encryptor;
     }
 
@@ -198,7 +189,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IFileSystem getFileSystem() {
-        this.assertExists(this.fileSystem, "fileSystem");
+        ServiceLocator.assertExists(this.fileSystem, "fileSystem");
         return this.fileSystem;
     }
 
@@ -207,7 +198,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IConstants getConstants() {
-        this.assertExists(this.constants, "constants");
+        ServiceLocator.assertExists(this.constants, "constants");
         return this.constants;
     }
 
@@ -216,7 +207,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final IBluetoothHandler getBluetoothHandler() {
-        this.assertExists(this.bluetoothHandler, "bluetoothHandler");
+        ServiceLocator.assertExists(this.bluetoothHandler, "bluetoothHandler");
         return this.bluetoothHandler;
     }
 
@@ -225,7 +216,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public final INfcHandler getNFCHandler() {
-        this.assertExists(this.nfcHandler, "nfcHandler");
+        ServiceLocator.assertExists(this.nfcHandler, "nfcHandler");
         return this.nfcHandler;
     }
 
@@ -233,16 +224,8 @@ public class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public final IQRHandler getQRHandler() {
-        this.assertExists(this.qrHandler, "qrHandler");
-        return this.qrHandler;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void registerToEventBus(final Object object) {
+        Validate.notNull(object);
         EventBus.getDefault().register(object);
     }
 
@@ -251,6 +234,7 @@ public class ServiceLocator implements IServiceLocator {
      */
     @Override
     public void unregisterFromEventBus(final Object object) {
+        Validate.notNull(object);
         EventBus.getDefault().unregister(object);
     }
 
@@ -258,8 +242,10 @@ public class ServiceLocator implements IServiceLocator {
      * {@inheritDoc}
      */
     @Override
-    public void postOnEventBus(final Object object) {
-        EventBus.getDefault().post(object);
+    @DesignedForExtension
+    public void postOnEventBus(final Object message) {
+        Validate.notNull(message);
+        EventBus.getDefault().post(message);
     }
 
     /**
@@ -268,9 +254,9 @@ public class ServiceLocator implements IServiceLocator {
      * @param object The object to check
      * @param name   The name of the object
      */
-    private void assertExists(final Object object, final String name) {
+    private static void assertExists(final Object object, final String name) {
         if (object == null) {
-            LOGGER.error("The module \"%s\" is used before it is defined", name);
+            LOGGER.error("The module \"{}\" is used before it is defined", name);
             throw new ServiceLocator.ModuleNotFoundException("The module \"" + name + "\" is used before it is defined");
         }
     }
@@ -289,51 +275,6 @@ public class ServiceLocator implements IServiceLocator {
          */
         ModuleNotFoundException(final String message) {
             super(message);
-        }
-
-        /**
-         * Serialize the created proxy instead of the {@link ServiceLocator.ModuleNotFoundException} instance.
-         */
-        private Object writeReplace() {
-            return new ServiceLocator.ModuleNotFoundException.SerializationProxy(this);
-        }
-
-        /**
-         * Ensure no instance of {@link ServiceLocator.ModuleNotFoundException} is created when present in the stream.
-         */
-        private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-            throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
-        }
-
-        /**
-         * A proxy representing the logical state of {@link ServiceLocator.ModuleNotFoundException}. Copies the data
-         * from that class without any consistency checking or defensive copying.
-         */
-        private static final class SerializationProxy implements Serializable {
-
-            private static final long serialVersionUID = -1930759144828515311L;
-
-            private final String message;
-            private final Throwable throwable;
-
-            /**
-             * Constructs a new SerializationProxy
-             *
-             * @param exception The current instance of the proxy
-             */
-            SerializationProxy(final ServiceLocator.ModuleNotFoundException exception) {
-                this.message = exception.getMessage();
-                this.throwable = exception.getCause();
-            }
-
-            /**
-             * Not to be called by the user - resolves a new object of this proxy
-             *
-             * @return The object resolved by this proxy
-             */
-            private Object readResolve() {
-                return new ServiceLocator.ModuleNotFoundException(this.message).initCause(this.throwable);
-            }
         }
 
     }
