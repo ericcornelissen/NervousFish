@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.IllegalBlockSizeException;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -23,6 +25,11 @@ public class DatabaseTest {
     @Test(expected = NullPointerException.class)
     public void testInstantiateWithNullContactListNormalProfile() {
         new Database(null, profile);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testInstantiateWithNormalContactListNullProfile() {
+        new Database(new ArrayList<>(), null);
     }
 
 }
