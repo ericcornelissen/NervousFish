@@ -3,14 +3,11 @@ package com.nervousfish.nervousfish.test;
 import android.graphics.Bitmap;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
-import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +33,7 @@ public class QRGeneratorTest {
         this.publicKeyString = this.publicKey.getType() + space + this.publicKey.getName()
                 + space + this.publicKey.getKey();
     }
+
     @Test
     public void testEncodeNotNull() throws Exception {
         final Bitmap qrCode = QRGenerator.encode(this.publicKeyString);
@@ -47,14 +45,15 @@ public class QRGeneratorTest {
         IKey keyTest = QRGenerator.deconstructToKey(this.publicKeyString);
         assertEquals(this.publicKey, keyTest);
     }
+
     @Test
-    public void testWidthIsAsExpected() throws Exception{
+    public void testWidthIsAsExpected() throws Exception {
         final Bitmap QRcode = QRGenerator.encode(this.publicKeyString);
         assertEquals(QRCODE_IMAGE_WIDTH, QRcode.getWidth());
     }
 
     @Test
-    public void testHeightIsAsExpected() throws Exception{
+    public void testHeightIsAsExpected() throws Exception {
         final Bitmap QRcode = QRGenerator.encode(this.publicKeyString);
         assertEquals(QRCODE_IMAGE_HEIGHT, QRcode.getHeight());
     }

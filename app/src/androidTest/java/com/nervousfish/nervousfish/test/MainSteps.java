@@ -6,6 +6,7 @@ import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
@@ -16,7 +17,6 @@ import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -59,26 +59,23 @@ public class MainSteps {
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, true, false);
 
-    @Before
-    public void createDatabase() throws Exception {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<>());
-        profile.addKeyPair(keyPair);
-        database.createDatabase(profile, "Testpass");
-        database.loadDatabase("Testpass");
-    }
-
-    @After
-    public void deleteDatabase() {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        database.deleteDatabase();
-    }
-
     @Given("^I am viewing the main activity$")
-    public void iAmViewingMainActivity() {
+    public void iAmViewingMainActivity() throws Exception {
         final Intent intent = new Intent();
+        this.mActivityRule.launchActivity(intent);
+      
+        try {
+            onView(withText(R.string.no)).perform(click());
+        } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
+    }
+
+    @Given("^I am viewing the main activity after exchanging successfully and receiving the contact$")
+    public void iAmViewingMainActivityAfterExchange() throws Exception {
+        final IKey key = new RSAKey("Email", "42", "13");
+        final Contact contact = new Contact("Mac Miller", key);
+
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
         this.mActivityRule.launchActivity(intent);
 
         try {
@@ -96,6 +93,16 @@ public class MainSteps {
         database.addContact(contact);
     }
 
+    @Given("^there is a contact in the database$")
+    public void thereIsAContactInTheDatabaseWithTheName() throws IOException {
+        final IKey key = new RSAKey("Email", "42", "13");
+        final Contact contact = new Contact("Mac Miller", key);
+
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        final IDatabase database = serviceLocator.getDatabase();
+        database.addContact(contact);
+    }
+
     @When("^I click the back button in main and go to the LoginActivity$")
     public void iPressTheChangeContactBackButton() {
         pressBack();
@@ -104,6 +111,16 @@ public class MainSteps {
     @When("^I verify that I want to log out$")
     public void iVerifyThatIWantToLogOut() {
         onView(withText(R.string.yes)).perform(click());
+    }
+
+    @When("^I click on OK button$")
+    public void iClickOnOK() {
+        onView(withText(R.string.dialog_ok)).perform(click());
+    }
+
+    @When("^I click the sorting button")
+    public void iClickSortTwice() {
+        onView(withId(R.id.sort_button)).perform(click());
     }
 
     @When("^I verify that I do not want to log out$")
@@ -120,11 +137,6 @@ public class MainSteps {
     public void iClickOnTheNewConnectionButton() {
         onView(allOf(withParent(withId(R.id.pairing_button)), withClassName(endsWith("ImageView")), isDisplayed()))
                 .perform(click());
-    }
-
-    @When("^I click the button with the Bluetooth icon$")
-    public void iClickBluetoothButton() {
-        onView(withId(R.id.pairing_menu_bluetooth)).perform(click());
     }
 
     @When("^I click the button with the NFC icon$")
@@ -186,11 +198,6 @@ public class MainSteps {
         intended(hasComponent(SettingsActivity.class.getName()));
     }
 
-    @Then("^the app shouldn't crash because of Bluetooth$")
-    public void theAppShouldCrashBecauseOfBluetooth() {
-        assertTrue(true);
-    }
-
     @Then("^I should go to the NFC activity from main$")
     public void iShouldGoToTheNFCActivity() {
         final Activity activity = this.mActivityRule.getActivity();
@@ -216,11 +223,6 @@ public class MainSteps {
     @Then("^I should go to the contact activity from main$")
     public void iShouldGoToTheContactActivity() {
         intended(hasComponent(ContactActivity.class.getName()));
-    }
-
-    @Then("^The app shouldn't crash$")
-    public void appShouldntCrash() {
-        assertFalse(this.mActivityRule.getActivity().isFinishing());
     }
 
 }

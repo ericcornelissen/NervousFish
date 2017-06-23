@@ -31,7 +31,7 @@ public class QRExchangeSteps {
         this.mActivityRule.launchActivity(intent);
     }
 
-    @When("^I press the back button$")
+    @When("^I press the back button in QRExchange activity$")
     public void iPressTheBackButton(){
         onView(withId(R.id.back_button_QR_exchange)).perform(click());
     }
