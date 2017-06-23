@@ -65,4 +65,24 @@ public class DatabaseTest {
         assertEquals(db.getContacts().get(1).getName(), "TestPerson2");
     }
 
+    @Test
+    public void testSetContacts() {
+        List<Contact> contactList = new ArrayList<>();
+        contactList.add(new Contact("TestPerson1", new RSAKey("This", "is", "for testing")));
+        contactList.add(new Contact("TestPerson2", new RSAKey("This", "is", "also for testing")));
+        List<Contact> contactList2 = new ArrayList<>();
+        contactList2.add(new Contact("TestPerson3", new RSAKey("This", "is", "for testing")));
+        contactList2.add(new Contact("TestPerson4", new RSAKey("This", "is", "also for testing")));
+        Database db = new Database(contactList, profile);
+        assertEquals(contactList, db.getContacts());
+        db.setContacts(contactList2);
+        assertEquals(contactList2, db.getContacts());
+    }
+
+    @Test
+    public void testGetProfile() {
+        Database db = new Database(new ArrayList<>(), profile);
+        assertEquals(db.getProfile(), profile);
+    }
+
 }
