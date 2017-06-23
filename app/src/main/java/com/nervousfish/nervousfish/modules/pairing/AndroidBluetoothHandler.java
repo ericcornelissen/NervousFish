@@ -2,17 +2,18 @@ package com.nervousfish.nervousfish.modules.pairing;
 
 import android.bluetooth.BluetoothDevice;
 
+import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import org.apache.commons.lang3.Validate;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 /**
@@ -24,7 +25,6 @@ import java.util.Arrays;
 public final class AndroidBluetoothHandler extends APairingHandler implements IBluetoothHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AndroidBluetoothHandler");
-    private static final long serialVersionUID = -6465987636766819498L;
 
     /**
      * Prevents construction from outside the class.
@@ -43,35 +43,12 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      * @return A wrapper around a newly created instance of this class
      */
     public static ModuleWrapper<AndroidBluetoothHandler> newInstance(final IServiceLocator serviceLocator) {
+        Validate.notNull(serviceLocator);
         return new ModuleWrapper<>(new AndroidBluetoothHandler(serviceLocator));
     }
 
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     *
-     * @throws InvalidObjectException Thrown when the state of the class is unstable
-     */
-    private void ensureClassInvariant() throws InvalidObjectException {
-        // No checks to perform
+    private static IBluetoothHandlerService getService() {
+        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
     }
 
     /**
@@ -79,7 +56,10 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void start() throws IOException {
-        this.getService().start();
+        getService().start();
+        if (!this.getServiceLocator().isRegisteredToEventBus(this)) {
+            this.getServiceLocator().registerToEventBus(this);
+        }
     }
 
     /**
@@ -87,7 +67,16 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void connect(final BluetoothDevice device) {
-        this.getService().connect(device);
+        getService().connect(device);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void restart() throws IOException {
+        this.stop();
+        this.start();
     }
 
     /**
@@ -95,21 +84,31 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void stop() {
-        this.getService().stop();
+        getService().stop();
+        this.getServiceLocator().unregisterFromEventBus(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void send(final byte[] bytes) {
-        this.getService().write(bytes);
-
-        LOGGER.info("Bytes written: " + Arrays.toString(bytes));
+    public void send(final byte[] buffer) {
+        Validate.isTrue(buffer.length > 0);
+        getService().write(buffer);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Bytes written: {}", Arrays.toString(buffer));
+        }
     }
 
-    private IBluetoothHandlerService getService() {
-        return ((NervousFish) NervousFish.getInstance()).getBluetoothService().get();
+    /**
+     * Called by Greenrobot's Eventbus whenever a received byte array is decrypted
+     *
+     * @param event Contains the decrypted bytes
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewDecryptedBytesReceivedEvent(final NewDecryptedBytesReceivedEvent event) {
+        LOGGER.info("onNewDecryptedBytesReceivedEvent received");
+        this.getDataReceiver().get().dataReceived(event.getBytes());
     }
 
 }

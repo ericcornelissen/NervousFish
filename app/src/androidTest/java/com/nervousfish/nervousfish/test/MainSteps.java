@@ -1,19 +1,22 @@
 package com.nervousfish.nervousfish.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
+import android.view.View;
 
+import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ContactActivity;
 import com.nervousfish.nervousfish.activities.LoginActivity;
 import com.nervousfish.nervousfish.activities.MainActivity;
-import com.nervousfish.nervousfish.activities.QRExchangeKeyActivity;
+import com.nervousfish.nervousfish.activities.NFCExchangeActivity;
+import com.nervousfish.nervousfish.activities.QRExchangeActivity;
 import com.nervousfish.nervousfish.activities.SettingsActivity;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
-import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -43,6 +46,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.nervousfish.nervousfish.BaseTest.accessConstructor;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 
@@ -54,39 +59,44 @@ public class MainSteps {
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, true, false);
 
-    @Before
-    public void createDatabase() throws Exception {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
-        profile.addKeyPair(keyPair);
-        database.createDatabase(profile, "Testpass");
-        database.loadDatabase("Testpass");
-    }
-
-    @After
-    public void deleteDatabase() {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-
-        database.deleteDatabase();
-    }
-
     @Given("^I am viewing the main activity$")
-    public void iAmViewingMainActivity() {
+    public void iAmViewingMainActivity() throws Exception {
         final Intent intent = new Intent();
+        this.mActivityRule.launchActivity(intent);
+      
+        try {
+            onView(withText(R.string.no)).perform(click());
+        } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
+    }
+
+    @Given("^I am viewing the main activity after exchanging successfully and receiving the contact$")
+    public void iAmViewingMainActivityAfterExchange() throws Exception {
+        final IKey key = new RSAKey("Email", "42", "13");
+        final Contact contact = new Contact("Mac Miller", key);
+
+        final Intent intent = new Intent();
+        intent.putExtra(ConstantKeywords.CONTACT, contact);
         this.mActivityRule.launchActivity(intent);
 
         try {
             onView(withText(R.string.no)).perform(click());
-        } catch (NoMatchingViewException ignore) {
-        }
+        } catch (NoMatchingViewException ignore) { /* If no popup is displayed, that is OK */ }
     }
 
     @Given("^there is a contact with the name (.*?) in the database$")
     public void thereIsAContactInTheDatabaseWithTheName(final String name) throws IOException {
         final IKey key = new RSAKey("Email", "42", "13");
         final Contact contact = new Contact(name, key);
+
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
+        final IDatabase database = serviceLocator.getDatabase();
+        database.addContact(contact);
+    }
+
+    @Given("^there is a contact in the database$")
+    public void thereIsAContactInTheDatabaseWithTheName() throws IOException {
+        final IKey key = new RSAKey("Email", "42", "13");
+        final Contact contact = new Contact("Mac Miller", key);
 
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
@@ -103,6 +113,16 @@ public class MainSteps {
         onView(withText(R.string.yes)).perform(click());
     }
 
+    @When("^I click on OK button$")
+    public void iClickOnOK() {
+        onView(withText(R.string.dialog_ok)).perform(click());
+    }
+
+    @When("^I click the sorting button")
+    public void iClickSortTwice() {
+        onView(withId(R.id.sort_button)).perform(click());
+    }
+
     @When("^I verify that I do not want to log out$")
     public void iVerifyThatIDoNotWantToLogOut() {
         onView(withText(R.string.no)).perform(click());
@@ -113,10 +133,15 @@ public class MainSteps {
         onView(withId(R.id.settings_button)).perform(click());
     }
 
-    @When("^I click open buttons with the plus$")
-    public void clickPlusButton() {
+    @When("^I click on the new connection button$")
+    public void iClickOnTheNewConnectionButton() {
         onView(allOf(withParent(withId(R.id.pairing_button)), withClassName(endsWith("ImageView")), isDisplayed()))
                 .perform(click());
+    }
+
+    @When("^I click the button with the NFC icon$")
+    public void iClickNFCButton() {
+        onView(withId(R.id.pairing_menu_nfc)).perform(click());
     }
 
     @When("^I click the button with the QR icon$")
@@ -125,8 +150,18 @@ public class MainSteps {
     }
 
     @When("^I click on the contact with the name (.*?)$")
-    public void iClockOnTheContactWithTheName(final String name) {
+    public void iClickOnTheContactWithTheName(final String name) {
         onView(withText(name)).perform(click());
+    }
+
+    @When("^I click the button with the Bluetooth text label$")
+    public void iClickBluetoothLabel() {
+        onView(withText(R.string.bluetooth)).perform(click());
+    }
+
+    @When("^I click the button with the NFC text label$")
+    public void iClickNFCLabel() {
+        onView(withText(R.string.nfc)).perform(click());
     }
 
     @When("^I click the button with the QR text label$")
@@ -134,7 +169,21 @@ public class MainSteps {
         onView(withText(R.string.qr)).perform(click());
     }
 
-    @Then("^I should stay in the main activity after pressing back$")
+    @When("^I click the sort button in the main activity$")
+    public void iClickSortButton() {
+        onView(withId(R.id.sort_button)).perform(click());
+    }
+
+    @When("^There are contacts with different keys in the database$")
+    public void iClickSortButtonDifferentKeys() throws Exception {
+        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
+        final KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        database.addContact(new Contact("Person1", keyPair.getPublicKey()));
+        database.addContact(new Contact("Person2", keyPair.getPublicKey()));
+    }
+
+    @Then("^I should stay in the main activity from the main activity$")
     public void iShouldStayInTheMainActivity() {
         intended(hasComponent(MainActivity.class.getName()));
     }
@@ -149,9 +198,26 @@ public class MainSteps {
         intended(hasComponent(SettingsActivity.class.getName()));
     }
 
+    @Then("^I should go to the NFC activity from main$")
+    public void iShouldGoToTheNFCActivity() {
+        final Activity activity = this.mActivityRule.getActivity();
+        final View nfcButton = activity.findViewById(R.id.pairing_menu_nfc);
+        if (nfcButton.isEnabled()) {
+            try {
+                onView(withText(R.string.no)).perform(click());
+
+                // If a popup showed up, we should stay in the MainActivity (since we clicked "no")
+                intended(hasComponent(MainActivity.class.getName()));
+            } catch (NoMatchingViewException ignore) {
+                // If no popup showed up, the NFC activity should be displayed
+                intended(hasComponent(NFCExchangeActivity.class.getName()));
+            }
+        }
+    }
+
     @Then("^I should go to the QR activity from main$")
     public void iShouldGoToTheQRActivity() {
-        intended(hasComponent(QRExchangeKeyActivity.class.getName()));
+        intended(hasComponent(QRExchangeActivity.class.getName()));
     }
 
     @Then("^I should go to the contact activity from main$")

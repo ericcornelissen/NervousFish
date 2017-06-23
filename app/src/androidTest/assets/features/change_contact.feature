@@ -1,5 +1,5 @@
 Feature: Change contact activity
-  Editing a contact on the change contact page
+  Using the activity to change an existing contact
 
   Scenario: Press the back button after doing nothing
     Given I am viewing the change contact activity

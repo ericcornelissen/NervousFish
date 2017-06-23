@@ -3,7 +3,6 @@ package com.nervousfish.nervousfish.test;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
@@ -16,7 +15,6 @@ import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -47,19 +45,17 @@ public class ChangeContactSteps {
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
     private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
     private final Contact contact = new Contact("Illio", this.key);
-
-
     private static final String testpass = "Testpass";
+    private String newName;
 
     @Rule
     public ActivityTestRule<ChangeContactActivity> mActivityRule =
             new ActivityTestRule<>(ChangeContactActivity.class, true, false);
-    private String newName;
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = serviceLocator.getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
+        final IDatabase database = this.serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, this.serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
@@ -69,7 +65,7 @@ public class ChangeContactSteps {
 
     @After
     public void deleteDatabase() {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         database.deleteDatabase();
     }
 
@@ -120,7 +116,7 @@ public class ChangeContactSteps {
 
     @Then("^I should go to the activity I visited before the change contact activity$")
     public void iShouldGoToTheActivityIVisitedBeforeTheChangeContactActivity() {
-        assertTrue(mActivityRule.getActivity().isFinishing());
+        assertTrue(this.mActivityRule.getActivity().isFinishing());
     }
 
     @Then("^I should stay in the contact activity$")
@@ -130,7 +126,7 @@ public class ChangeContactSteps {
 
     @Then("^the contact should be updated$")
     public void theContactShouldBeUpdated() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         assertNotNull(database.getContactWithName(this.newName));
     }
 
@@ -138,7 +134,7 @@ public class ChangeContactSteps {
      * Initialize the database for the ChangeContactSteps.
      */
     private void initDatabase() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());
         }

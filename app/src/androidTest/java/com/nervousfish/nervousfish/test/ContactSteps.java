@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
-import com.nervousfish.nervousfish.BaseTest;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.activities.ChangeContactActivity;
@@ -18,8 +17,6 @@ import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-import com.nervousfish.nervousfish.service_locator.ServiceLocator;
-import com.nervousfish.nervousfish.service_locator.ServiceLocatorNoNetwork;
 
 import org.junit.Rule;
 
@@ -56,8 +53,8 @@ public class ContactSteps {
 
     @Before
     public void createDatabase() throws Exception {
-        final IDatabase database = serviceLocator.getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
+        final IDatabase database = this.serviceLocator.getDatabase();
+        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, this.serviceLocator);
         KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
         Profile profile = new Profile("name", new ArrayList<KeyPair>());
         profile.addKeyPair(keyPair);
@@ -67,7 +64,7 @@ public class ContactSteps {
 
     @After
     public void reinitializeDatabase() {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
         database.deleteDatabase();
     }
 
@@ -122,7 +119,7 @@ public class ContactSteps {
 
     @Then("^the contact should be deleted$")
     public void theContactShouldBeDeleted() throws IOException {
-        IDatabase database = serviceLocator.getDatabase();
+        IDatabase database = this.serviceLocator.getDatabase();
         assertFalse(database.contactExists(this.contact.getName()));
         database.deleteDatabase();
     }
@@ -131,7 +128,7 @@ public class ContactSteps {
      * Initialize the database for the ContactSteps.
      */
     private void initDatabase() throws IOException {
-        final IDatabase database = serviceLocator.getDatabase();
+        final IDatabase database = this.serviceLocator.getDatabase();
 
         for (Contact contact : database.getAllContacts()) {
             database.deleteContact(contact.getName());

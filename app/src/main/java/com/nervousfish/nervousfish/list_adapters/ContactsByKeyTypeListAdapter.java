@@ -2,7 +2,6 @@ package com.nervousfish.nervousfish.list_adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -10,12 +9,17 @@ import android.widget.TextView;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
+
+import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class that is a expandable list adapter to sort contacts by key TYPES in a expandable view
@@ -32,22 +36,31 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
 
     /**
      * Constructor for this {@code ContactsByKeyTypeListAdapter } listadapter
-     * @param context The Activity in which the adapter is needed
-     * @param types The list of keytypes
-     * @param contacts  The list of contacts to be sorted
+     *
+     * @param context  The Activity in which the adapter is needed
+     * @param contacts The list of contacts to be sorted
      */
-    public ContactsByKeyTypeListAdapter(final Activity context, final List<String> types, final List<Contact> contacts) {
+    public ContactsByKeyTypeListAdapter(final Activity context, final List<Contact> contacts) {
         super();
+        Validate.notNull(context);
+        Validate.notNull(contacts);
         this.context = context;
-        this.types = new ArrayList<>(types);
+        this.types = new ArrayList<>();
+        final Set<String> typeSet = new HashSet<>();
+        for (final Contact contact : contacts) {
+            for (final IKey key : contact.getKeys()) {
+                typeSet.add(key.getType());
+            }
+        }
+        this.types.addAll(typeSet);
         this.groupedContacts = new HashMap<>();
-        for (final String type : types) {
+        for (final String type : this.types) {
             this.groupedContacts.put(type, new ArrayList<Contact>());
         }
         for (final Contact contact : contacts) {
-            for (final String type : types) {
-                if (!this.groupedContacts.get(type).contains(contact)) {
-                    this.groupedContacts.get(type).add(contact);
+            for (final IKey key : contact.getKeys()) {
+                if (!this.groupedContacts.get(key.getType()).contains(contact)) {
+                    this.groupedContacts.get(key.getType()).add(contact);
                 }
             }
         }
@@ -82,8 +95,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final View v;
 
         if (convertView == null) {
-            final LayoutInflater vi = this.context.getLayoutInflater();
-            v = vi.inflate(R.layout.contact_list_entry, parent);
+            v = View.inflate(this.context, R.layout.contact_list_entry, null);
         } else {
             v = convertView;
         }
@@ -141,8 +153,7 @@ public final class ContactsByKeyTypeListAdapter extends BaseExpandableListAdapte
         final String type = (String) this.getGroup(groupPosition);
         final View view;
         if (convertView == null) {
-            final LayoutInflater vi = this.context.getLayoutInflater();
-            view = vi.inflate(R.layout.key_type, parent);
+            view = View.inflate(this.context, R.layout.key_type, null);
         } else {
             view = convertView;
         }

@@ -5,11 +5,14 @@
     <!-- Woorden -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
+    <string name="confirm">Bevestig</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
     <string name="ed25519_key">Ed25519 sleutel</string>
     <string name="edit">Bewerken</string>
+    <string name="exponent">Exponent</string>
     <string name="logo">Logo</string>
+    <string name="modulus">Modulus</string>
     <string name="more">Meer</string>
     <string name="name">Naam</string>
     <string name="nfc">NFC</string>
@@ -56,7 +59,14 @@
     <string name="create_profile_error_adding_to_database">Fout tijdens het toevoegen van het profiel aan de database.</string>
     <string name="create_profile_passwords_not_equal">Typ aub hetzelfde wachtwoord 2 keer.</string>
     <string name="create_profile_all_fields_empty">Vul aub de velden in.</string>
-
+    <string name="use_existing_keypair">Gebruik bestaande keypair</string>
+    <string name="enter_public_key">Voer je public key in:</string>
+    <string name="enter_private_key">Voer je private key in:</string>
+    <string name="enter_public_key_too_short">De key is te kort!\nVoer je public key in:</string>
+    <string name="enter_private_key_too_short">De key is te kort!\nVoer je private key in:</string>
+    <string name="choose_your_keytype">Kies het type van je huidige keypair:</string>
+    <string name="not_yet_implemented">Dit is nog niet mogelijk</string>
+    <string name="custom_ed25519_key_not_yet_implemented">Je eigen ED25519 key invoeren in helaas nog niet mogelijk</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
@@ -88,15 +98,14 @@
     <string name="delete_popup_no_recovery">Let op: het verwijderen van het contact is definitief</string>
     <string name="go_back_changes_lost">Je zult je wijzigingen verliezen</string>
     <string name="invalid_name_explanation">De nieuwe naam die je hebt ingevuld is ongeldig, deze mag niet volledig uit spaties bestaan of leeg zijn</string>
-    <string name="yes_delete">Ja, verwijder het!</string>
+    <string name="yes_delete">Ja, verwijder!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
     <string name="contact_already_exists">Dit contact bestaat al</string>
-    <string name="contact_already_exists_with_name">Er bestaat al een contact met de naam "%1$s"</string>
     <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
-    <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
-    <string name="create_new_contact">Creëer een nieuw contact</string>
-    <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
-    <string name="confirm">Bevestigen</string>
+    <string name="not_the_same_rhythm_title">Ritmes zijn niet hetzelfde</string>
+    <string name="not_the_same_rhythm_explanation">Je ritme was niet hetzelfde als dat van je partner.</string>
+    <string name="not_the_same_visual_title">Geklikte elementen niet gelijk</string>
+    <string name="not_the_same_visual_explanation">Zorg ervoor dat de plaatjes én de volgorde op beide apparaten hetzelfde zijn.</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
@@ -107,10 +116,11 @@
 
     <!-- QR -->
     <string name="scan_qr_code">Scan QR code</string>
+    <string name="something_went_wrong_QR_popup_explanation">Er ging iets verkeerd bij het scannen van de QR code, probeer het opnieuw.</string>
 
     <!-- NFC -->
     <string name="nfc_image_description">Dit zou een gif moeten zijn die nfc connection uitbeeldt.</string>
-    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om contacten uit te wisselen.</string>
+    <string name="nfc_explanation">Breng uw toestel zo dicht mogelijk bij het gewenste andere toestel om sleutels uit te wisselen.</string>
     <string name="popup_enable_nfc_title">NFC aanzetten?</string>
     <string name="popup_enable_nfc_settings">Activeer a.u.b. NFC in de instellingen en click de terug knop om terug te gaan naar de app</string>
 
@@ -126,12 +136,10 @@
 
     <!-- General settings -->
     <string name="pref_header_general">Algemeen</string>
-
     <string name="pref_verification_method_to_use">Verificatie methode om te gebruiken</string>
 
     <!-- Profile Settings -->
     <string name="pref_header_profile">Profiel informatie</string>
-
     <string name="display_name">Publieke naam</string>
 
     <!-- KeyManagementActivity -->

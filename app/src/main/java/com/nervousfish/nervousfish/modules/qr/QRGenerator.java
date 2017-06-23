@@ -9,10 +9,11 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +28,7 @@ public final class QRGenerator {
     private static final int QRCODE_IMAGE_WIDTH = 400;
     private static final int COMPONENT_KEYTYPE = 0;
     private static final int COMPONENT_KEYNAME = 1;
-    private static final int COMPONENT_SIMPLE_KEY = 2;
-    private static final int COMPONENT_RSA_MODULUS = 2;
-    private static final int COMPONENT_RSA_EXPONENT = 3;
+    private static final int COMPONENT_KEY = 2;
 
     private static final int RESIZE_QR_CODE = 4;
 
@@ -48,6 +47,7 @@ public final class QRGenerator {
      * @return The bitmap being the QR code.
      */
     public static Bitmap encode(final String publicKey) {
+        Validate.notBlank(publicKey);
         final QRCodeWriter qrWriter = new QRCodeWriter();
         final Bitmap bitmap = Bitmap.createBitmap(QRCODE_IMAGE_WIDTH, QRCODE_IMAGE_HEIGHT, Bitmap.Config.RGB_565);
 
@@ -73,17 +73,20 @@ public final class QRGenerator {
 
     /**
      * Deconstructs a decrypted qrmessage to a key.
+     *
      * @param qrMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */
     public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
-        final String[] messageComponents = qrMessage.split(" ");
+        Validate.notBlank(qrMessage);
+        final String spaceBar = " ";
+        final String[] messageComponents = qrMessage.split(", ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_RSA_MODULUS],
-                        messageComponents[COMPONENT_RSA_EXPONENT]);
+                return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
+                        messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
             case ConstantKeywords.ED25519_KEY:
-                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_SIMPLE_KEY]);
+                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }

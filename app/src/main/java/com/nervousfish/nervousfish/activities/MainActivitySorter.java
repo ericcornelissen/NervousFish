@@ -8,30 +8,21 @@ import android.widget.ViewFlipper;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.list_adapters.ContactsByKeyTypeListAdapter;
 import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Is used to sort the list in the MainActivity
  */
-
 final class MainActivitySorter {
+
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
     private static final int NUMBER_OF_SORTING_MODES = 2;
-    private static final Comparator<Contact> NAME_SORTER = new Comparator<Contact>() {
-        @Override
-        public int compare(final Contact o1, final Contact o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
+    private static final Comparator<Contact> NAME_SORTER = (o1, o2) -> o1.getName().compareTo(o2.getName());
 
     private final MainActivity mainActivity;
     private int currentSorting;
@@ -69,20 +60,6 @@ final class MainActivitySorter {
         }
     }
 
-    /**
-     * Gets all Types of keys in the database
-     *
-     * @return a List with the Types of keys.
-     */
-    private List<String> getKeyTypes() {
-        final Set<String> typeSet = new HashSet<>();
-        for (final Contact contact : this.mainActivity.getContacts()) {
-            for (final IKey key : contact.getKeys()) {
-                typeSet.add(key.getType());
-            }
-        }
-        return new ArrayList<>(typeSet);
-    }
 
     /**
      * Sorts contacts by name
@@ -94,21 +71,18 @@ final class MainActivitySorter {
         contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 MainActivitySorter.this.mainActivity.openContact(position);
             }
-
         });
 
+        Collections.sort(this.mainActivity.getContacts(), NAME_SORTER);
+
         if (contactsByNameListAdapter.isEmpty()) {
-            showNoContactsContent();
+            this.showNoContactsContent();
         } else {
-            hideNoContactsContent();
+            this.hideNoContactsContent();
         }
     }
 
@@ -116,42 +90,35 @@ final class MainActivitySorter {
      * Shows the message that the user has no contacts yet.
      */
     private void showNoContactsContent() {
-        mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
-        mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
+        this.mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.GONE);
+        this.mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.VISIBLE);
     }
 
     /**
      * Hides the message that the user has no contacts yet.
      */
     private void hideNoContactsContent() {
-        mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
-        mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
+        this.mainActivity.findViewById(R.id.view_flipper_sorter_main).setVisibility(View.VISIBLE);
+        this.mainActivity.findViewById(R.id.no_users_screen).setVisibility(View.GONE);
     }
 
     /**
      * Sorts contacts by key type
      */
     private void sortOnKeyType() {
-        final ExpandableListView ev = (ExpandableListView) this.mainActivity.findViewById(R.id.expandable_contact_list_by_key_type);
+        final ExpandableListView expandabelView = (ExpandableListView) this.mainActivity.findViewById(R.id.expandable_contact_list_by_key_type);
         final ContactsByKeyTypeListAdapter contactsByKeyTypeListAdapter =
-                new ContactsByKeyTypeListAdapter(this.mainActivity, this.getKeyTypes(), this.mainActivity.getContacts());
-        ev.setAdapter(contactsByKeyTypeListAdapter);
-        ev.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                MainActivitySorter.this.mainActivity.openContact(position);
-            }
-
+                new ContactsByKeyTypeListAdapter(this.mainActivity, this.mainActivity.getContacts());
+        expandabelView.setAdapter(contactsByKeyTypeListAdapter);
+        expandabelView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            this.mainActivity.openContact(childPosition);
+            return false;
         });
 
         if (contactsByKeyTypeListAdapter.isEmpty()) {
-            showNoContactsContent();
+            this.showNoContactsContent();
         } else {
-            hideNoContactsContent();
+            this.hideNoContactsContent();
         }
     }
 

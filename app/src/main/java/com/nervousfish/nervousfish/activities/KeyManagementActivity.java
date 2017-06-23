@@ -15,7 +15,6 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.modules.database.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -24,7 +23,6 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,22 +44,17 @@ public final class KeyManagementActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_key_management);
+
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
-        final Profile myProfile;
-        try {
-            myProfile = database.getProfile();
-        } catch (final IOException e) {
-            LOGGER.error("Could not get my public key from the database ", e);
-            throw new DatabaseException(e);
-        }
+        final Profile myProfile = database.getProfile();
         final String title = myProfile.getKeyPairs().get(0).getName();
         final String key = myProfile.getKeyPairs().get(0).getPublicKey().getFormattedKey();
 
         final List<IKey> list = new ArrayList<>();
         //noinspection Convert2streamapi Because if we want to refactor this to a stream, we have to use at least API 24
-        for (final KeyPair kp : myProfile.getKeyPairs()) {
-            list.add(kp.getPublicKey());
+        for (final KeyPair keyPair : myProfile.getKeyPairs()) {
+            list.add(keyPair.getPublicKey());
         }
 
         ListviewActivityHelper.setKeys(this, list, R.id.list_view_edit_keys);
@@ -107,11 +100,10 @@ public final class KeyManagementActivity extends Activity {
         }
 
         @Override
-        public void onItemClick(final AdapterView<?> parent, final View view, final int position,
-                                final long id) {
+        public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(this.title);
-            builder.setMessage(key);
+            builder.setMessage(this.key);
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final Profile profile = this.profile;

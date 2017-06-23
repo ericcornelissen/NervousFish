@@ -1,12 +1,8 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.nervousfish.nervousfish.ConstantKeywords;
+import org.apache.commons.lang3.Validate;
 
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +21,8 @@ public final class Database implements Serializable {
      * @param profile  The profile of the user.
      */
     public Database(final List<Contact> contacts, final Profile profile) {
+        Validate.notNull(contacts);
+        Validate.notNull(profile);
         this.contacts = contacts;
         this.profile = profile;
     }
@@ -56,51 +54,5 @@ public final class Database implements Serializable {
      */
     public Profile getProfile() {
         return this.profile;
-    }
-
-    /**
-     * Serialize the created proxy instead of this instance.
-     */
-    private Object writeReplace() {
-        return new Database.SerializationProxy(this);
-    }
-
-    /**
-     * Ensure that no instance of this class is created because it was present in the stream. A correct
-     * stream should only contain instances of the proxy.
-     */
-    private void readObject(final ObjectInputStream stream) throws InvalidObjectException {
-        throw new InvalidObjectException(ConstantKeywords.PROXY_REQUIRED);
-    }
-
-    /**
-     * Represents the logical state of this class and copies the data from that class without
-     * any consistency checking or defensive copying.
-     */
-    private static final class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = 6127044556316179233L;
-        private final Contact[] contacts;
-        private final Profile profile;
-
-        /**
-         * Constructs a new SerializationProxy
-         *
-         * @param database The current instance of the proxy
-         */
-        SerializationProxy(final Database database) {
-            this.contacts = database.contacts.toArray(new Contact[database.contacts.size()]);
-            this.profile = database.profile;
-        }
-
-        /**
-         * Not to be called by the user - resolves a new object of this proxy
-         *
-         * @return The object resolved by this proxy
-         */
-        private Object readResolve() {
-            final List<Contact> contactsList = new ArrayList<>();
-            Collections.addAll(contactsList, this.contacts);
-            return new Database(contactsList, this.profile);
-        }
     }
 }

@@ -23,7 +23,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @CucumberOptions(features = "features")
 public class VisualVerificationSteps {
 
-    private final int[] buttons = new int[]{
+    private final int[] buttons = {
             R.id.visual_verification_button00,
             R.id.visual_verification_button01,
             R.id.visual_verification_button02,
@@ -41,7 +41,6 @@ public class VisualVerificationSteps {
     @Rule
     public ActivityTestRule<VisualVerificationActivity> mActivityRule =
             new ActivityTestRule<>(VisualVerificationActivity.class, true, false);
-
 
     @Given("^I am viewing the visual verification activity$")
     public void iAmViewingTheVisualVerificationActivity() {

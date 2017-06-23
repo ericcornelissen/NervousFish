@@ -4,9 +4,11 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
+
+import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,6 +26,8 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
     // 1) Suppressed because key is a lot more descripte than t (the parameter name of the superclass)
     @Override
     public void write(final JsonWriter jsonWriter, final IKey key) throws IOException {
+        Validate.notNull(jsonWriter);
+        Validate.notNull(key);
         jsonWriter.beginArray();
 
         // First write the key type
@@ -44,6 +48,7 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
     @Override
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")  // final IKey key is actually useful here
     public IKey read(final JsonReader jsonReader) throws IOException {
+        Validate.notNull(jsonReader);
         jsonReader.beginArray();
         final String type = jsonReader.nextString();
 
@@ -72,5 +77,4 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
         return key;
     }
-
 }

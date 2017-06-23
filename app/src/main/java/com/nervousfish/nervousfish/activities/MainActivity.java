@@ -1,12 +1,13 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -33,14 +34,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 /**
  * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
  * public keys from other people
  */
 @SuppressWarnings({"checkstyle:ClassFanOutComplexity", "checkstyle:ClassDataAbstractionCoupling",
-        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods", "PMD.CyclomaticComplexity"})
+        "PMD.ExcessiveImports", "PMD.TooFewBranchesForASwitchStatement", "PMD.TooManyMethods",
+        "PMD.AvoidCatchingGenericException", "PMD.AvoidCatchingNPE", "PMD.CyclomaticComplexity"})
 //  1)  This warning is because it relies on too many other classes, yet there's still methods like fill databasewithdemodata
 //      which will be deleted later on
 //  2)  This warning means there are too many instantiations of other classes within this class,
@@ -50,16 +50,18 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 //      to be extended when necessary to more sorting Types.
 //  5)  Suppressed because this rule is not meant for Android classes like this, that have no other choice
 //      than to add methods for overriding the activity state machine and providing View click listeners
-//  6)  There are a lot of if checks involved in determining which pairing button was clicked and when
+//  6 and 7)  Because the Service is sometimes null after scanning the QR code, we want to give a nice popup for it.
+//  8)  There are a lot of if checks involved in determining which pairing button was clicked and when
 public final class MainActivity extends AppCompatActivity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
-    private static final int ENABLE_BLUETOOTH_ON_START = 100;
-    private static final int ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
+    static final int ENABLE_BLUETOOTH_ON_START = 100;
+    static final int ENABLE_BLUETOOTH_ON_BUTTON_CLICK = 200;
+    static final Logger LOGGER = LoggerFactory.getLogger("MainActivity");
 
     private IServiceLocator serviceLocator;
     private IDatabase database;
     private MainActivitySorter sorter;
+    private MainActivityPopups popups;
     private List<Contact> contacts;
 
     /**
@@ -69,8 +71,10 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
+
         this.serviceLocator = NervousFish.getServiceLocator();
         this.database = this.serviceLocator.getDatabase();
+        this.popups = new MainActivityPopups(this);
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
@@ -85,25 +89,10 @@ public final class MainActivity extends AppCompatActivity {
             LOGGER.error("Failed to retrieve contacts from database", e);
         }
 
-        final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
         // Start Bluetooth
-        try {
-            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
-            bluetoothHandler.start();
-        } catch (final NoBluetoothException e) {
-            LOGGER.info("Bluetooth not available on device, disabling button", e);
-            final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
-            button.setEnabled(false);
-        } catch (final IOException e) {
-            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled", e);
-            this.enableBluetooth(false);
-        }
+        this.startBluetooth();
 
-        // Bluetooth exchange result
-        final Intent intent = this.getIntent();
-        final Object successfulBluetooth = intent.getSerializableExtra(ConstantKeywords.SUCCESSFUL_EXCHANGE);
-        this.showSuccessfulBluetoothPopup(successfulBluetooth);
-
+        // Check if NFC is available
         if (NfcAdapter.getDefaultAdapter(this) == null) {
             LOGGER.info("NFC not available on device, disabling button");
             final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_nfc);
@@ -114,26 +103,53 @@ public final class MainActivity extends AppCompatActivity {
         this.sorter = new MainActivitySorter(this);
 
         // Fab button listeners, inserted programmatically to support older devices
-        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
-        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
-        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onPairingButtonClicked(v);
-            }
-        });
+        this.findViewById(R.id.pairing_menu_bluetooth).setOnClickListener(this::onPairingButtonClicked);
+        this.findViewById(R.id.pairing_menu_nfc).setOnClickListener(this::onPairingButtonClicked);
+        this.findViewById(R.id.pairing_menu_qr).setOnClickListener(this::onPairingButtonClicked);
+
+        // Bluetooth exchange result
+        final Intent intent = this.getIntent();
+        final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
+        if (contact != null) {
+            ContactReceivedHelper.newContactReceived(this.database, this, contact);
+        }
 
         LOGGER.info("Activity created");
+    }
+
+    /**
+     * Asks if the users wants to give permission to use their location.
+     */
+    private void askBluetoothLocationPermission() {
+        LOGGER.info("Location permission for Bluetooth asked");
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+    }
+  
+    /**
+     * Tries to start bluetooth:
+     * - If Bluetooth is already enabled, do nothing
+     * - If Bluetooth is not enabled yet, prompt the user to enable it
+     * - If the device has no Bluetooth, disable the Bluetooth button
+     */
+    private void startBluetooth() {
+        final IBluetoothHandler bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+        try {
+            this.askBluetoothLocationPermission();
+            //noinspection LawOfDemeter because we don't want to clutter the service locator by adding a method like "startBluetoothHandler"
+            bluetoothHandler.start();
+        } catch (final NoBluetoothException e) {
+            LOGGER.info("Bluetooth not available on device, disabling button", e);
+            final FloatingActionButton button = (FloatingActionButton) this.findViewById(R.id.pairing_menu_bluetooth);
+            button.setEnabled(false);
+        } catch (final IOException e) {
+            LOGGER.info("Bluetooth handler not started, most likely Bluetooth is not enabled", e);
+            this.enableBluetooth(false);
+        } catch (NullPointerException e) {
+            LOGGER.error("Could not start the Bluetooth service", e);
+            this.popups.showSomethingWentWrong();
+        }
     }
 
     /**
@@ -180,19 +196,7 @@ public final class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText(this.getString(R.string.popup_log_out_title))
-                .setContentText(this.getString(R.string.popup_log_out_description))
-                .setCancelText(this.getString(R.string.no))
-                .setConfirmText(this.getString(R.string.yes))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog sDialog) {
-                        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                    }
-                })
-                .show();
+        this.popups.showAreYouSureToLogOut();
     }
 
     /**
@@ -202,7 +206,8 @@ public final class MainActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            final Intent intent = new Intent(this, BluetoothConnectActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         }
     }
@@ -213,7 +218,7 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The sort floating action button that was clicked
      */
     public void onSortButtonClicked(final View view) {
-        sorter.onSortButtonClicked(view);
+        this.sorter.onSortButtonClicked(view);
     }
 
     /**
@@ -236,8 +241,8 @@ public final class MainActivity extends AppCompatActivity {
         if (view.getId() == R.id.pairing_menu_bluetooth || textOnLabel.equals(this.getResources().getString(R.string.bluetooth))) {
             final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter.isEnabled()) {
-                intent.setComponent(new ComponentName(this, BluetoothConnectionActivity.class));
-                this.startActivity(intent);
+                intent.setComponent(new ComponentName(this, BluetoothConnectActivity.class));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             } else {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
@@ -245,15 +250,13 @@ public final class MainActivity extends AppCompatActivity {
         } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
             final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             if (nfcAdapter.isEnabled()) {
-                intent.setComponent(new ComponentName(this, NFCActivity.class));
-                this.startActivity(intent);
+                intent.setComponent(new ComponentName(this, NFCExchangeActivity.class));
             } else {
                 this.enableNFC();
                 return; // Prevent `this.startActivity()`
             }
-
         } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
-            intent.setComponent(new ComponentName(this, QRExchangeKeyActivity.class));
+            intent.setComponent(new ComponentName(this, QRExchangeActivity.class));
         } else {
             LOGGER.error("Unknown pairing button clicked: {}", view.getId());
             throw new IllegalArgumentException("Only existing buttons can be clicked");
@@ -298,86 +301,31 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a popup that adding a contact went fine if the boolean
-     * added in the intent is true.
-     *
-     * @param successfulBluetooth The intents value for {@code SUCCESSFUL_BLUETOOTH}.
-     */
-    private void showSuccessfulBluetoothPopup(final Object successfulBluetooth) {
-        if (successfulBluetooth != null) {
-            final boolean success = (boolean) successfulBluetooth;
-            if (success) {
-                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(this.getString(R.string.contact_added_popup_title))
-                        .setContentText(this.getString(R.string.contact_added_popup_explanation))
-                        .setConfirmText(this.getString(R.string.dialog_ok))
-                        .show();
-            }
-        }
-    }
-
-    /**
      * Prompt user to enable Bluetooth if it is disabled.
      */
     private void enableBluetooth(final boolean buttonClicked) {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (buttonClicked && bluetoothAdapter.isEnabled()) {
-            final Intent intent = new Intent(this, BluetoothConnectionActivity.class);
+            final Intent intent = new Intent(this, BluetoothConnectActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.startActivity(intent);
         } else if (!bluetoothAdapter.isEnabled()) {
-            final String description = this.getString(
-                    buttonClicked
-                            ? R.string.popup_enable_bluetooth_exchange : R.string.popup_enable_bluetooth_findable);
-
-            new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                    .setTitleText(this.getString(R.string.popup_enable_bluetooth_title))
-                    .setContentText(description)
-                    .setCancelText(this.getString(R.string.no))
-                    .setConfirmText(this.getString(R.string.yes))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-
-                            LOGGER.info("Requesting to enable Bluetooth");
-                            final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            if (buttonClicked) {
-                                MainActivity.this.startActivityForResult(intent, ENABLE_BLUETOOTH_ON_BUTTON_CLICK);
-                            } else {
-                                MainActivity.this.startActivityForResult(intent, ENABLE_BLUETOOTH_ON_START);
-                            }
-                            LOGGER.info("Request to enable Bluetooth sent");
-                        }
-                    })
-                    .show();
+            this.popups.showEnableBluetoothPopup(buttonClicked);
         }
     }
 
+    /**
+     * Prompt user to enable NFC if it is disabled.
+     */
     private void enableNFC() {
         final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (nfcAdapter.isEnabled()) {
-            final Intent intent = new Intent(this, NFCActivity.class);
+            final Intent intent = new Intent(this, NFCExchangeActivity.class);
             this.startActivity(intent);
         } else {
-            final String description;
-            description = this.getString(R.string.popup_enable_nfc_settings);
-            LOGGER.info("Requesting to enable NFC");
-            new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                    .setTitleText(this.getString(R.string.popup_enable_nfc_title))
-                    .setContentText(description)
-                    .setCancelText(this.getString(R.string.no))
-                    .setConfirmText(this.getString(R.string.yes))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(final SweetAlertDialog dialog) {
-                            dialog.dismiss();
-                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                            LOGGER.info("Request to enable NFC sent, forwarded to settings");
-                        }
-                    })
-                    .show();
+            this.popups.showEnableNFCPopup();
         }
     }
 
