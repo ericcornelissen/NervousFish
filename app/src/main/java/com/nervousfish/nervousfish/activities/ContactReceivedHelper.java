@@ -30,7 +30,7 @@ enum ContactReceivedHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactReceivedHelper.class);
 
     private enum ContactExists {
-        NOT, BY_NAME, BY_NAME_AND_KEYS
+        NOT, BY_NAME
     }
 
     /**
@@ -57,7 +57,6 @@ enum ContactReceivedHelper {
                 }
                 break;
             case BY_NAME:
-            case BY_NAME_AND_KEYS:
                 LOGGER.warn("Contact with equal name and keys already existed...");
                 ContactReceivedHelper.handleDuplicateContact(activity, contact);
                 break;
@@ -112,9 +111,6 @@ enum ContactReceivedHelper {
             final List<Contact> list = database.getAllContacts();
             for (final Contact e : list) {
                 if (e.getName().equals(name)) {
-                    if (checkKeysEqual(contact.getKeys(), e.getKeys())) {
-                        return ContactReceivedHelper.ContactExists.BY_NAME_AND_KEYS;
-                    }
                     return ContactReceivedHelper.ContactExists.BY_NAME;
                 }
             }
