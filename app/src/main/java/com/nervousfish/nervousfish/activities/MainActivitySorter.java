@@ -13,13 +13,12 @@ import com.nervousfish.nervousfish.list_adapters.ContactsByNameListAdapter;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Is used to sort the list in the MainActivity
  */
-
 final class MainActivitySorter {
+
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_KEY_TYPE = 1;
     private static final int NUMBER_OF_SORTING_MODES = 2;
@@ -72,18 +71,13 @@ final class MainActivitySorter {
         contactsByNameListAdapter.sort(NAME_SORTER);
         lv.setAdapter(contactsByNameListAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 MainActivitySorter.this.mainActivity.openContact(position);
             }
-
         });
 
-        Collections.sort(this.mainActivity.contacts, NAME_SORTER);
+        Collections.sort(this.mainActivity.getContacts(), NAME_SORTER);
 
         if (contactsByNameListAdapter.isEmpty()) {
             this.showNoContactsContent();

@@ -62,7 +62,7 @@ public final class MainActivity extends AppCompatActivity {
     private IDatabase database;
     private MainActivitySorter sorter;
     private MainActivityPopups popups;
-    List<Contact> contacts;
+    private List<Contact> contacts;
 
     /**
      * {@inheritDoc}
