@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -117,12 +118,10 @@ public final class CreateProfileActivity extends AppCompatActivity {
                     Profile userProfile = null;
                     if (this.getKeyTypeFromInput() == IKey.Types.RSA) {
                         final List<RSAKeyPair> keyPairs = helper.generateRSAKeyPair();
-                        userProfile = new Profile(name, keyPairs, null, iban);
+                        userProfile = new Profile(name, keyPairs, new ArrayList<>(), iban);
                     } else if (this.getKeyTypeFromInput() == IKey.Types.Ed25519) {
-                        if (this.getKeyTypeFromInput() == IKey.Types.RSA) {
-                            final List<Ed25519KeyPair> keyPairs = helper.generateEd25519KeyPair();
-                            userProfile = new Profile(name, null, keyPairs, iban);
-                        }
+                        final List<Ed25519KeyPair> keyPairs = helper.generateEd25519KeyPair();
+                        userProfile = new Profile(name, new ArrayList<>(), keyPairs, iban);
                     }
 
                     database.createDatabase(userProfile, password);

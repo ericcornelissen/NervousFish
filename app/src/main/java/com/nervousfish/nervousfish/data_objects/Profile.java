@@ -75,8 +75,6 @@ public final class Profile implements Serializable {
      */
     public Profile(final String name, final List<RSAKeyPair> rsaKeyPairs, final List<Ed25519KeyPair> ed25519Keypairs, final IBAN iban) {
         Validate.notBlank(name);
-        Validate.noNullElements(rsaKeyPairs);
-        Validate.noNullElements(ed25519Keypairs);
         for (final RSAKeyPair keyPair : rsaKeyPairs) {
             this.rsaKeypairs.add(keyPair);
         }
