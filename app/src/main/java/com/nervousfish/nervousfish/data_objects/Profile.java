@@ -69,7 +69,8 @@ public final class Profile implements Serializable {
      * includes the IBAN.
      *
      * @param name     The contact belonging to the user.
-     * @param keyPairs The public/private key-pairs of the user.
+     * @param rsaKeyPairs The public/private RSA key-pairs of the user.
+     * @param ed25519Keypairs The public/private Ed25519 key-pairs of the user.
      * @param iban     The iban of the user.
      */
     public Profile(final String name, final List<RSAKeyPair> rsaKeyPairs, final List<Ed25519KeyPair> ed25519Keypairs, final IBAN iban) {

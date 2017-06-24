@@ -10,6 +10,10 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -23,10 +27,13 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 
 public class BlockchainWrapper implements Blockchain {
 
-    final Profile profile;
+    private static final Logger LOGGER = LoggerFactory.getLogger("BlockchainWrapper");
+    private final Profile profile;
+    private final IServiceLocator serviceLocator;
 
     public BlockchainWrapper(final Profile profile) {
         this.profile = profile;
+        this.serviceLocator = NervousFish.getServiceLocator();
     }
 
     /**
@@ -35,7 +42,7 @@ public class BlockchainWrapper implements Blockchain {
     @NonNull
     @Override
     public PrivateKey getPrivateKey() {
-        return this.profile.getEd25519KeyPairs().get(0).getPrivateKey().;
+        return this.profile.getEd25519KeyPairs().get(0).getPrivateKey().getKey();
     }
 
     /**
@@ -44,7 +51,7 @@ public class BlockchainWrapper implements Blockchain {
     @NonNull
     @Override
     public PublicKey getPublicKey() {
-        return null;
+        return this.profile.getEd25519KeyPairs().get(0).getPublicKey().getKey();
     }
 
     /**
@@ -52,7 +59,7 @@ public class BlockchainWrapper implements Blockchain {
      */
     @Nullable
     @Override
-    public PublicKey getPublicKeyForIBAN(IBAN iban) {
+    public PublicKey getPublicKeyForIBAN(final IBAN iban) {
         return null;
     }
 
@@ -60,7 +67,11 @@ public class BlockchainWrapper implements Blockchain {
      * {@inheritDoc}
      */
     @Override
-    public void setIbanVerified(PublicKey publicKey, IBAN iban, String s) {
-
+    public void setIbanVerified(final PublicKey publicKey, final IBAN iban, final String s) {
+        try {
+            this.serviceLocator.getDatabase().setIbanVerified(iban);
+        } catch (IOException e) {
+            LOGGER.error("Could not set iban verified", e);
+        }
     }
 }

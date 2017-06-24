@@ -30,6 +30,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
 /**
  * An adapter class that adapter our {@link IDatabase} to the GSON serialization library, use for data storage
  */
@@ -178,6 +180,21 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
+    public Contact getContactWithIban(final IBAN iban) throws IOException {
+        final List<Contact> contacts = this.getAllContacts();
+        for (final Contact contact : contacts) {
+            if (contact.getIban().equals(iban)) {
+                return contact;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean contactExists(final String name) throws IOException {
         Validate.notBlank(name);
         return this.getContactWithName(name) != null;
@@ -272,6 +289,19 @@ public final class GsonDatabaseAdapter implements IDatabase {
         LOGGER.info("Deleting database");
         return !this.checkFirstUse()
                 || this.fileSystem.deleteFile(this.passwordPath) && this.fileSystem.deleteFile(this.databasePath);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setIbanVerified(IBAN iban) throws IOException {
+        final Contact oldContact = getContactWithIban(iban);
+        //Set the verified parameter to true
+        final Contact newContact = new Contact(oldContact.getName(), oldContact.getRSAKeys(), oldContact.getEd25519Keys(),
+                oldContact.getIban(), true);
+
+        this.updateContact(oldContact, newContact);
     }
 
 

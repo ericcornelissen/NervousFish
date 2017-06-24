@@ -29,12 +29,13 @@ public final class Contact implements Serializable {
     private final List<RSAKeyWrapper> rsaKeys = new ArrayList<>();
     private final List<Ed25519PublicKeyWrapper> ed25519Keys = new ArrayList<>();
     private final IBAN iban;
+    private boolean ibanVerified;
 
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
      *
      * @param name The name of the {@link Contact}
-     * @param key  The {@link IKey} to initialize the {@link Contact} with
+     * @param rsaKey  The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final RSAKeyWrapper rsaKey) {
         Validate.notBlank(name);
@@ -48,7 +49,7 @@ public final class Contact implements Serializable {
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
      *
      * @param name The name of the {@link Contact}
-     * @param key  The {@link IKey} to initialize the {@link Contact} with
+     * @param ed25519Key  The {@link IKey} to initialize the {@link Contact} with
      */
     public Contact(final String name, final Ed25519PublicKeyWrapper ed25519Key, final IBAN iban) {
         Validate.notBlank(name);
@@ -64,10 +65,12 @@ public final class Contact implements Serializable {
      * and an IBAN.
      *
      * @param name The name of the {@link Contact}
-     * @param key  The {@link IKey} to initialize the {@link Contact} with
+     * @param rsaKeys  The {@link List<RSAKeyWrapper>} to initialize the {@link Contact} with
+     * @param ed25519Keys  The {@link List<Ed25519PublicKeyWrapper>} to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
      */
-    public Contact(final String name, final List<RSAKeyWrapper> rsaKeys, final List<Ed25519PublicKeyWrapper> ed25519Keys, final IBAN iban) {
+    public Contact(final String name, final List<RSAKeyWrapper> rsaKeys, final List<Ed25519PublicKeyWrapper> ed25519Keys,
+                   final IBAN iban, final boolean ibanVerified) {
         Validate.notBlank(name);
         Validate.noNullElements(rsaKeys);
         Validate.noNullElements(ed25519Keys);
@@ -79,6 +82,7 @@ public final class Contact implements Serializable {
             this.ed25519Keys.add(ed25519key);
         }
         this.iban = iban;
+        this.ibanVerified = ibanVerified;
     }
 
     public String getName() {
@@ -87,6 +91,13 @@ public final class Contact implements Serializable {
 
     public IBAN getIban() {
         return this.iban;
+    }
+
+    public void setIbanVerified(final boolean ibanVerified) {
+        this.ibanVerified = ibanVerified;
+    }
+    public boolean getIbanVerified() {
+        return this.ibanVerified;
     }
 
     /**
@@ -163,6 +174,7 @@ public final class Contact implements Serializable {
         private final RSAKeyWrapper[] rsaKeys;
         private final Ed25519PublicKeyWrapper[] ed25519Keys;
         private final IBAN iban;
+        private final boolean ibanVerified;
 
         /**
          * Constructs a new SerializationProxy
@@ -174,6 +186,7 @@ public final class Contact implements Serializable {
             this.rsaKeys = contact.rsaKeys.toArray(new RSAKeyWrapper[contact.rsaKeys.size()]);
             this.ed25519Keys = contact.ed25519Keys.toArray(new Ed25519PublicKeyWrapper[contact.ed25519Keys.size()]);
             this.iban = contact.getIban();
+            this.ibanVerified = contact.getIbanVerified();
         }
 
         /**
@@ -182,7 +195,8 @@ public final class Contact implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Contact(this.name, Arrays.asList(this.rsaKeys), Arrays.asList(this.ed25519Keys), this.iban);
+            return new Contact(this.name, Arrays.asList(this.rsaKeys), Arrays.asList(this.ed25519Keys),
+                    this.iban, this.ibanVerified);
         }
     }
 }

@@ -7,6 +7,8 @@ import com.nervousfish.nervousfish.modules.IModule;
 import java.io.IOException;
 import java.util.List;
 
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
 /**
  * Defines a module for interaction with a database that can be used by
  * a {@link com.nervousfish.nervousfish.service_locator.IServiceLocator}.
@@ -51,6 +53,14 @@ public interface IDatabase extends IModule {
      * @return A {@link Contact}.
      */
     Contact getContactWithName(String contactName) throws IOException;
+
+    /**
+     * Get one Contact from the database given the contact's iban as input.
+     *
+     * @param iban - The {@link IBAN} of the contact.
+     * @return A {@link Contact}.
+     */
+    Contact getContactWithIban(IBAN iban) throws IOException;
 
     /**
      * Returns true if the contact exists and fals otherwise.
@@ -104,4 +114,10 @@ public interface IDatabase extends IModule {
      * @return Whether the database was successfully deleted.
      */
     boolean deleteDatabase();
+
+    /**
+     * Sets the boolean for the contact with the parameter iban that he is verified.
+     * @param iban The {@link IBAN} of the contact.
+     */
+    void setIbanVerified(IBAN iban) throws IOException;
 }
