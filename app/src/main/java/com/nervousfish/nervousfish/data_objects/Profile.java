@@ -124,7 +124,7 @@ public final class Profile implements Serializable {
         for (final Ed25519KeyPair pair : this.ed25519Keypairs) {
             ed25519Keys.add(pair.getPublicKey());
         }
-        return new Contact(this.name, rsaKeys, ed25519Keys, this.iban);
+        return new Contact(this.name, rsaKeys, ed25519Keys, this.iban, false);
     }
 
     /**

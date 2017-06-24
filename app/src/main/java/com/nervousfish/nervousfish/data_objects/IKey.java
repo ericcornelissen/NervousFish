@@ -18,6 +18,13 @@ public interface IKey<T> extends Serializable {
     T getKey();
 
     /**
+     * Get a plain representation of a key.
+     *
+     * @return The plain key as a {@link String}.
+     */
+    String getPlainKey();
+
+    /**
      * Get a formatted representation of a key.
      *
      * @return The formatted key as a {@link String}.

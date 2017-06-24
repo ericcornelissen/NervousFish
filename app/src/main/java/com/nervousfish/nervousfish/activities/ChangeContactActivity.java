@@ -87,20 +87,21 @@ public final class ChangeContactActivity extends AppCompatActivity {
         if (validName && validIban) {
             //Update contact
             try {
-                Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys());
+                Contact newContact = new Contact(editTextName.getText().toString(), this.contact.getRSAKeys(),
+                        this.contact.getEd25519Keys(), null, this.contact.getIbanVerified());
                 if (!ibanString.equals(EMPTY_STRING)) {
-                    newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
-                            new IBAN(ibanString));
+                    newContact = new Contact(editTextName.getText().toString(), this.contact.getRSAKeys(),
+                            this.contact.getEd25519Keys(), new IBAN(ibanString), this.contact.getIbanVerified());
                 }
                 if (!contact.equals(newContact)) {
-                    serviceLocator.getDatabase().updateContact(contact, newContact);
+                    serviceLocator.getDatabase().updateContact(this.contact, newContact);
                     contact = newContact;
                 }
             } catch (final IOException e) {
                 LOGGER.error("IOException while updating contactname", e);
             }
             setResult(RESULT_FIRST_USER,
-                    new Intent().putExtra(ConstantKeywords.CONTACT, contact));
+                    new Intent().putExtra(ConstantKeywords.CONTACT, this.contact));
             finish();
         } else if (validName) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)

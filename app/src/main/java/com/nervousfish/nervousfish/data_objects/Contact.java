@@ -127,6 +127,16 @@ public final class Contact implements Serializable {
     }
 
     /**
+     * @return A list of all public rsa keys of the contact
+     */
+    public List<IKey> getKeys() {
+        final List<IKey> keys = new ArrayList<>();
+        keys.addAll(this.rsaKeys);
+        keys.addAll(this.ed25519Keys);
+        return keys;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
