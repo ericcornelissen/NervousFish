@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * AKeyPair POJO which keeps a public and private key.
  */
-public abstract class AKeyPair<T1, T2> implements Serializable {
+public abstract class AKeyPair<T1 extends IKey, T2 extends IKey> implements Serializable {
 
     private static final long serialVersionUID = -9078691377598696344L;
     final String name;
@@ -49,7 +49,7 @@ public abstract class AKeyPair<T1, T2> implements Serializable {
      *
      * @return the public {@link IKey}.
      */
-    public Object getPublicKey() {
+    public T1 getPublicKey() {
         return this.publicKey;
     }
 
@@ -58,7 +58,7 @@ public abstract class AKeyPair<T1, T2> implements Serializable {
      *
      * @return the private {@link IKey}.
      */
-    public Object getPrivateKey() {
+    public T2 getPrivateKey() {
         return this.privateKey;
     }
 

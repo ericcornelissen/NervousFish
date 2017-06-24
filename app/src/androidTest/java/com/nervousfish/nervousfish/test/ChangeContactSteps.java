@@ -13,6 +13,8 @@ import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKeyPair;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -45,7 +47,7 @@ import static junit.framework.Assert.assertTrue;
 public class ChangeContactSteps {
 
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-    private final IKey key = new Ed25519PrivateKeyWrapper("FTP", "ajfoJKFoeiSDFLow");
+    private final RSAKeyWrapper key = new RSAKeyWrapper("FTP", "ajfoJKFoeiSDFLow", "hoi");
     private final Contact contact = new Contact("Illio", this.key);
     private InputMethodManager inputMethodManager;
     private static final String testpass = "Testpass";
@@ -59,8 +61,8 @@ public class ChangeContactSteps {
     public void createDatabase() throws Exception {
         final IDatabase database = serviceLocator.getDatabase();
         KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, serviceLocator);
-        AKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<AKeyPair>());
+        RSAKeyPair keyPair = keyGen.generateRSAKeyPair("Test");
+        Profile profile = new Profile("name", new ArrayList<>());
         profile.addKeyPair(keyPair);
         database.createDatabase(profile, testpass);
         database.loadDatabase(testpass);

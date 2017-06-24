@@ -75,10 +75,10 @@ public final class ChangeContactActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
-        final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
+        final EditText editTextName = (EditText) this.findViewById(R.id.edit_contact_name_input);
+        final EditText editTextIBAN = (EditText) this.findViewById(R.id.contact_page_change_iban);
         String ibanString = editTextIBAN.getText().toString();
-        final boolean validName = isValidName(editTextName.getText().toString());
+        final boolean validName = this.isValidName(editTextName.getText().toString());
         boolean validIban = IBANVerifier.isValidIBAN(ibanString);
         if (!validIban && (EMPTY_STRING.equals(ibanString) || "-".equals(ibanString))) {
             validIban = true;
@@ -86,27 +86,29 @@ public final class ChangeContactActivity extends AppCompatActivity {
         }
         if (validName && validIban) {
             //Update contact
+            Contact.ContactBuilder builder = new Contact.ContactBuilder(editTextName.getText().toString());
+            builder.addRSAKeys(this.contact.getRSAKeys());
+            builder.addEd25519Keys(this.contact.getEd25519Keys());
+            if (!ibanString.equals(EMPTY_STRING)) {
+                builder.setIban(new IBAN(ibanString));
+            }
+            final Contact newContact = builder.build();
             try {
-                Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys());
-                if (!ibanString.equals(EMPTY_STRING)) {
-                    newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
-                            new IBAN(ibanString));
-                }
-                if (!contact.equals(newContact)) {
-                    serviceLocator.getDatabase().updateContact(contact, newContact);
-                    contact = newContact;
+                if (!this.contact.equals(newContact)) {
+                    this.serviceLocator.getDatabase().updateContact(this.contact, newContact);
+                    this.contact = newContact;
                 }
             } catch (final IOException e) {
                 LOGGER.error("IOException while updating contactname", e);
             }
-            setResult(RESULT_FIRST_USER,
-                    new Intent().putExtra(ConstantKeywords.CONTACT, contact));
-            finish();
+            this.setResult(RESULT_FIRST_USER,
+                    new Intent().putExtra(ConstantKeywords.CONTACT, this.contact));
+            this.finish();
         } else if (validName) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.invalid_iban))
-                    .setContentText(getString(R.string.invalid_iban_explanation))
-                    .setConfirmText(getString(R.string.dialog_ok))
+                    .setTitleText(this.getString(R.string.invalid_iban))
+                    .setContentText(this.getString(R.string.invalid_iban_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
                     .setConfirmClickListener(null)
                     .show();
         } else {
@@ -137,14 +139,14 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final View v) {
-            final EditText editTextName = (EditText) findViewById(R.id.edit_contact_name_input);
-            final EditText editTextIBAN = (EditText) findViewById(R.id.contact_page_change_iban);
+            final EditText editTextName = (EditText) ChangeContactActivity.this.findViewById(R.id.edit_contact_name_input);
+            final EditText editTextIBAN = (EditText) ChangeContactActivity.this.findViewById(R.id.contact_page_change_iban);
             final String name = editTextName.getText().toString();
             final String iban = editTextIBAN.getText().toString();
-            if (name.equals(contact.getName()) && (iban.equals(contact.getIbanAsString())
+            if (name.equals(ChangeContactActivity.this.contact.getName()) && (iban.equals(ChangeContactActivity.this.contact.getIbanAsString())
                     || iban.equals(ChangeContactActivity.this.getString(R.string.dash))
                     || iban.equals(EMPTY_STRING))) {
-                finish();
+                ChangeContactActivity.this.finish();
             } else {
                 new SweetAlertDialog(ChangeContactActivity.this, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText(ChangeContactActivity.this.getString(R.string.are_you_sure))

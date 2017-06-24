@@ -61,14 +61,10 @@ public final class NFCExchangeActivity extends Activity implements NfcAdapter.Cr
         final IDatabase database = this.serviceLocator.getDatabase();
         try {
             final Profile profile = database.getProfile();
-            final RSAKeyPair rsaKeyPair = profile.getRSAKeyPairs().get(0);
-            final Ed25519KeyPair ed25519KeyPair = profile.getEd25519KeyPairs().get(0);
 
             LOGGER.info("Sending my profile with name: {}", profile.getName());
-
-            final Contact contact = new Contact(profile.getName(), rsaKeyPair.getPublicKey(), ed25519KeyPair.getPublicKey());
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
-            this.bytes = nfcHandler.objectToBytes(contact);
+            this.bytes = nfcHandler.objectToBytes(profile.getContact());
         } catch (final IOException e) {
             LOGGER.error("Could not serialize my contact to other device ", e);
         }

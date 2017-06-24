@@ -18,6 +18,7 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Ed25519PublicKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -78,12 +79,6 @@ public final class MainActivity extends AppCompatActivity {
         this.serviceLocator = NervousFish.getServiceLocator();
         this.database = this.serviceLocator.getDatabase();
         this.popups = new MainActivityPopups(this);
-
-        try {
-            database.addContact(new Contact("Corn", new RSAKeyWrapper("test", "a", "a"), new IBAN("NL02RABO0155534378")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
@@ -256,7 +251,7 @@ public final class MainActivity extends AppCompatActivity {
                 this.enableBluetooth(true);
                 return; // Prevent `this.startActivity()`
             }
-        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(getResources().getString(R.string.nfc))) {
+        } else if (view.getId() == R.id.pairing_menu_nfc || textOnLabel.equals(this.getResources().getString(R.string.nfc))) {
             final NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             if (nfcAdapter.isEnabled()) {
                 intent.setComponent(new ComponentName(this, NFCExchangeActivity.class));
@@ -264,7 +259,7 @@ public final class MainActivity extends AppCompatActivity {
                 this.enableNFC();
                 return; // Prevent `this.startActivity()`
             }
-        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(getResources().getString(R.string.qr))) {
+        } else if (view.getId() == R.id.pairing_menu_qr || textOnLabel.equals(this.getResources().getString(R.string.qr))) {
             intent.setComponent(new ComponentName(this, QRExchangeActivity.class));
         } else {
             LOGGER.error("Unknown pairing button clicked: {}", view.getId());
@@ -280,8 +275,8 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The view that was clicked
      */
     public void onClickDotsButton(final View view) {
-        final Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-        MainActivity.this.startActivity(intent);
+        final Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
     }
 
     /**

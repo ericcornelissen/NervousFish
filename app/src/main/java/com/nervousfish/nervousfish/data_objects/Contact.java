@@ -9,6 +9,7 @@ import org.apache.commons.lang3.Validate;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,33 +31,39 @@ public final class Contact implements Serializable {
     private final List<Ed25519PublicKeyWrapper> ed25519Keys = new ArrayList<>();
     private final IBAN iban;
 
-    /**
-     * Constructor for the {@link Contact} POJO for a single {@link IKey}.
-     *
-     * @param name The name of the {@link Contact}
-     * @param key  The {@link IKey} to initialize the {@link Contact} with
-     */
-    public Contact(final String name, final RSAKeyWrapper rsaKey) {
-        Validate.notBlank(name);
-        Validate.notNull(rsaKeys);
-        this.name = name;
-        this.rsaKeys.add(rsaKey);
-        this.iban = null;
-    }
+    public static class ContactBuilder {
+        private final String name;
+        private final List<RSAKeyWrapper> rsaKeys = new ArrayList<>();
+        private final List<Ed25519PublicKeyWrapper> ed25519Keys = new ArrayList<>();
+        private IBAN iban = new IBAN("");
 
-    /**
-     * Constructor for the {@link Contact} POJO for a single {@link IKey}.
-     *
-     * @param name The name of the {@link Contact}
-     * @param key  The {@link IKey} to initialize the {@link Contact} with
-     */
-    public Contact(final String name, final Ed25519PublicKeyWrapper ed25519Key, final IBAN iban) {
-        Validate.notBlank(name);
-        Validate.notNull(ed25519Keys);
-        Validate.notNull(iban);
-        this.name = name;
-        this.ed25519Keys.add(ed25519Key);
-        this.iban = iban;
+        public ContactBuilder(final String name) {
+            this.name = name;
+        }
+
+        public void addRSAKey(final RSAKeyWrapper rsaKeyWrapper) {
+            this.rsaKeys.add(rsaKeyWrapper);
+        }
+
+        public void addEd25519Key(final Ed25519PublicKeyWrapper ed25519PublicKeyWrapper) {
+            this.ed25519Keys.add(ed25519PublicKeyWrapper);
+        }
+
+        public void addRSAKeys(final List<RSAKeyWrapper> rsaKeyWrappers) {
+            this.rsaKeys.addAll(rsaKeyWrappers);
+        }
+
+        public void addEd25519Keys(final List<Ed25519PublicKeyWrapper> ed25519PublicKeyWrappers) {
+            this.ed25519Keys.addAll(ed25519PublicKeyWrappers);
+        }
+
+        public void setIban(final IBAN iban) {
+            this.iban = iban;
+        }
+
+        public Contact build() {
+            return new Contact(this.name, this.rsaKeys, this.ed25519Keys, this.iban);
+        }
     }
 
     /**
@@ -67,10 +74,7 @@ public final class Contact implements Serializable {
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
      */
-    public Contact(final String name, final List<RSAKeyWrapper> rsaKeys, final List<Ed25519PublicKeyWrapper> ed25519Keys, final IBAN iban) {
-        Validate.notBlank(name);
-        Validate.noNullElements(rsaKeys);
-        Validate.noNullElements(ed25519Keys);
+    private Contact(final String name, final List<RSAKeyWrapper> rsaKeys, final List<Ed25519PublicKeyWrapper> ed25519Keys, final IBAN iban) {
         this.name = name;
         for (final RSAKeyWrapper rsaKey : rsaKeys) {
             this.rsaKeys.add(rsaKey);
@@ -101,6 +105,12 @@ public final class Contact implements Serializable {
         return "-";
     }
 
+    public List<IKey<?>> getKeys() {
+        final List<IKey<?>> result = new ArrayList<>(this.rsaKeys);
+        result.addAll(this.ed25519Keys);
+        return result;
+    }
+
     /**
      * @return A list of all public rsa keys of the contact
      */
@@ -113,6 +123,14 @@ public final class Contact implements Serializable {
      */
     public List<Ed25519PublicKeyWrapper> getEd25519Keys() {
         return this.ed25519Keys;
+    }
+
+    public void addRSAKeys(final List<RSAKeyWrapper> rsaKeys) {
+        this.rsaKeys.addAll(rsaKeys);
+    }
+
+    public void addEd25519Keys(final List<Ed25519PublicKeyWrapper> ed25519Keys) {
+        this.ed25519Keys.addAll(ed25519Keys);
     }
 
     /**

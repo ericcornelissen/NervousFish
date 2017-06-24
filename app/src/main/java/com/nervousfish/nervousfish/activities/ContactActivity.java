@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -102,7 +103,7 @@ public final class ContactActivity extends AppCompatActivity {
      */
     private static final class KeyListClickListener implements AdapterView.OnItemClickListener {
         private final Activity activity;
-        private final List keys;
+        private final List<IKey<?>> keys;
 
         /**
          * * A Constructor for {@link AdapterView.OnItemClickListener} where we pass an
@@ -111,22 +112,22 @@ public final class ContactActivity extends AppCompatActivity {
          * @param activity {@link Activity} where this listener is located
          * @param keys     A {@Link List} with all the keys of a {@link Contact}
          */
-        KeyListClickListener(final Activity activity, final List<IKey> keys) {
+        KeyListClickListener(final Activity activity, final List<IKey<?>> keys) {
             Validate.notNull(activity);
             this.activity = activity;
-            this.keys = keys;
+            this.keys = new ArrayList<>(keys);
         }
 
         @Override
         public void onItemClick(final AdapterView<?> parent, final View view, final int position,
                                 final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
-            builder.setTitle(((IKey) this.keys.get(position)).getName());
-            builder.setMessage(((IKey) this.keys.get(position)).getFormattedKey());
+            builder.setTitle(this.keys.get(position).getName());
+            builder.setMessage(this.keys.get(position).getFormattedKey());
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, ((IKey) this.keys.get(position)).getKey());
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, this.keys.get(position).getFormattedKey());
                 clipboard.setPrimaryClip(clip);
             });
             builder.show();

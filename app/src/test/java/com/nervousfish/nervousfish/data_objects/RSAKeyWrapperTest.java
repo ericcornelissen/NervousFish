@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -110,7 +112,7 @@ public class RSAKeyWrapperTest {
     @Test
     public void testEqualsReturnsFalseForDifferentKeyTypes() {
         IKey keyA = new RSAKeyWrapper("Personal", "foo", "bar");
-        IKey keyB = new Ed25519PrivateKeyWrapper("Computer", "Hello world!");
+        IKey keyB = new Ed25519PrivateKeyWrapper("Computer", mock(EdDSAPrivateKey.class));
         assertFalse(keyA.equals(keyB));
     }
 

@@ -109,7 +109,15 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 try {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                    final Profile.ProfileBuilder builder = new Profile.ProfileBuilder(stringValue);
+                    if (profile.getRSAKeyPairs().size() > 0) {
+                        builder.addRSAKeyPairs(profile.getRSAKeyPairs());
+                    }
+                    if (profile.getEd25519KeyPairs().size() > 0) {
+                        builder.addEd25519KeyPairs(profile.getEd25519KeyPairs());
+                    }
+                    builder.setIban(profile.getIban());
+                    serviceLocator.getDatabase().updateProfile(builder.build());
                 } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
@@ -145,8 +153,15 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     final Profile profile = serviceLocator.getDatabase().getProfile();
                     if (IBANVerifier.isValidIBAN(stringValue)) {
                         LOGGER.info("Updating profile iban");
-                        serviceLocator.getDatabase().updateProfile(
-                                new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
+                        final Profile.ProfileBuilder builder = new Profile.ProfileBuilder(profile.getName());
+                        if (profile.getRSAKeyPairs().size() > 0) {
+                            builder.addRSAKeyPairs(profile.getRSAKeyPairs());
+                        }
+                        if (profile.getEd25519KeyPairs().size() > 0) {
+                            builder.addEd25519KeyPairs(profile.getEd25519KeyPairs());
+                        }
+                        builder.setIban(new IBAN(stringValue));
+                        serviceLocator.getDatabase().updateProfile(builder.build());
                         preference.setSummary(stringValue);
                     } else {
                         preference.setSummary("INVALID IBAN");

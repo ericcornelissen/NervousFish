@@ -1,6 +1,8 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
 import com.nervousfish.nervousfish.data_objects.AKeyPair;
+import com.nervousfish.nervousfish.data_objects.Ed25519KeyPair;
+import com.nervousfish.nervousfish.data_objects.RSAKeyPair;
 import com.nervousfish.nervousfish.modules.IModule;
 
 /**
@@ -15,7 +17,7 @@ public interface IKeyGenerator extends IModule {
      * @param name The name of the newly generated key
      * @return a randomly generated AKeyPair
      */
-    AKeyPair generateRSAKeyPair(String name) throws KeyGenerationException;
+    RSAKeyPair generateRSAKeyPair(String name) throws KeyGenerationException;
 
     /**
      * Generates a random {@link AKeyPair} with the Ed25519 algorithm. For more
@@ -24,6 +26,6 @@ public interface IKeyGenerator extends IModule {
      * @param name The name of the newly generated key
      * @return a randomly generated AKeyPair
      */
-    AKeyPair generateEd25519KeyPair(String name) throws KeyGenerationException;
+    Ed25519KeyPair generateEd25519KeyPair(String name) throws KeyGenerationException;
 
 }

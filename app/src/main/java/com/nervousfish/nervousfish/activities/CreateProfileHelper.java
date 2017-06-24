@@ -5,6 +5,7 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.IKey;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 
@@ -27,7 +28,6 @@ final class CreateProfileHelper {
 
     private static final int MIN_PASSWORD_LENGTH = 6;
 
-    private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
     private static final String EMPTY_STRING = "";
 
     private final IKeyGenerator keyGenerator;
@@ -44,29 +44,6 @@ final class CreateProfileHelper {
         Validate.notNull(keyGenerator);
         this.keyGenerator = keyGenerator;
         this.alertColor = alertColor;
-    }
-
-    /**
-     * Generates a AKeyPair based on the type selected.
-     *
-     * @param keyType The type of key to generate.
-     * @return a {@link AKeyPair} with the key type selected
-     */
-    List<AKeyPair> generateKeyPairs(final IKey.Types keyType) {
-        Validate.notNull(keyType);
-        final List<AKeyPair> keyPairs = new ArrayList<>();
-        switch (keyType) {
-            case RSA:
-                keyPairs.add(this.keyGenerator.generateRSAKeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
-                break;
-            case Ed25519:
-                keyPairs.add(this.keyGenerator.generateEd25519KeyPair(CreateProfileHelper.DEFAULT_KEY_NAME));
-                break;
-            default:
-                throw new IllegalArgumentException("The selected key is not implemented");
-        }
-
-        return keyPairs;
     }
 
     /**

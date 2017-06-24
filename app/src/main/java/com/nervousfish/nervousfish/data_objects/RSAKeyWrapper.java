@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * RSA variant of {@link IKey}.
  */
-public final class RSAKeyWrapper implements IKey {
+public final class RSAKeyWrapper implements IKey<String> {
     private static final long serialVersionUID = -5286281533321045061L;
 
     private static final String JSON_CONSTANT_EXPONENT = "exponent";

@@ -49,19 +49,19 @@ public final class KeyManagementActivity extends Activity {
 
         final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final IDatabase database = serviceLocator.getDatabase();
-        final Profile myProfile;
+        final Profile profile;
         try {
-            myProfile = database.getProfile();
+            profile = database.getProfile();
         } catch (final IOException e) {
             LOGGER.error("Could not get my public key from the database ", e);
             throw new DatabaseException(e);
         }
-        final String title = myProfile.getKeyPairs().get(0).getName();
-        final String key = myProfile.getKeyPairs().get(0).getPublicKey().getFormattedKey();
+        final String title = profile.getKeyPairs().get(0).getName();
+        final String key = profile.getKeyPairs().get(0).getPublicKey().getFormattedKey();
 
-        final List<IKey> list = new ArrayList<>();
+        final List<IKey<?>> list = new ArrayList<>();
         //noinspection Convert2streamapi Because if we want to refactor this to a stream, we have to use at least API 24
-        for (final AKeyPair kp : myProfile.getKeyPairs()) {
+        for (final AKeyPair<?, ?> kp : profile.getKeyPairs()) {
             list.add(kp.getPublicKey());
         }
 
@@ -69,7 +69,7 @@ public final class KeyManagementActivity extends Activity {
 
         final ListView lv = (ListView) this.findViewById(R.id.list_view_edit_keys);
 
-        lv.setOnItemClickListener(new KeyManagementActivity.KeyListClickListener(this, title, key, myProfile));
+        lv.setOnItemClickListener(new KeyManagementActivity.KeyListClickListener(this, title, key, profile));
 
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_key_management);
         backButton.setOnClickListener(v -> this.finish());
@@ -111,12 +111,12 @@ public final class KeyManagementActivity extends Activity {
         public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(this.title);
-            builder.setMessage(key);
+            builder.setMessage(this.key);
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final Profile profile = this.profile;
                 final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, profile.getKeyPairs().get(0).getPublicKey().getKey());
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, profile.getKeyPairs().get(0).getPublicKey().getFormattedKey());
                 clipboard.setPrimaryClip(clip);
             });
             builder.show();

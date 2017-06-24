@@ -1,12 +1,14 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.modules.cryptography.Ed25519;
 
 import org.apache.commons.lang3.Validate;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.security.KeyPair;
 import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,39 +31,44 @@ public final class Profile implements Serializable {
     private final List<Ed25519KeyPair> ed25519Keypairs = new ArrayList<>();
     private final IBAN iban;
 
+    public static final class ProfileBuilder {
+        private final String name;
+        private final List<RSAKeyPair> rsaKeypairs = new ArrayList<>();
+        private final List<Ed25519KeyPair> ed25519Keypairs = new ArrayList<>();
+        private IBAN iban = new IBAN("");
 
-    /**
-     * The constructor for the {@link Profile} class.
-     *
-     * @param name     The contact belonging to the user.
-     * @param keyPairs the public/private key-pairs of the user.
-     */
-    public Profile(final String name, final List<RSAKeyPair> keyPairs) {
-        Validate.notBlank(name);
-        Validate.noNullElements(keyPairs);
-        for (final RSAKeyPair keyPair : keyPairs) {
+        public ProfileBuilder(final String name) {
+            this.name = name;
+        }
+
+        public ProfileBuilder addRSAKeyPair(final RSAKeyPair keyPair) {
             this.rsaKeypairs.add(keyPair);
+            return this;
         }
-        this.name = name;
-        this.iban = null;
-    }
 
-    /**
-     * The constructor for the {@link Profile} class. This one
-     * includes the IBAN.
-     *
-     * @param name     The contact belonging to the user.
-     * @param keyPairs The public/private key-pairs of the user.
-     * @param iban     The iban of the user.
-     */
-    public Profile(final String name, final List<Ed25519KeyPair> keyPairs, final IBAN iban) {
-        Validate.notBlank(name);
-        Validate.noNullElements(keyPairs);
-        for (final Ed25519KeyPair keyPair : keyPairs) {
+        public ProfileBuilder addEd25519KeyPair(final Ed25519KeyPair keyPair) {
             this.ed25519Keypairs.add(keyPair);
+            return this;
         }
-        this.name = name;
-        this.iban = iban;
+
+        public ProfileBuilder addRSAKeyPairs(final List<RSAKeyPair> keyPairs) {
+            this.rsaKeypairs.addAll(keyPairs);
+            return this;
+        }
+
+        public ProfileBuilder addEd25519KeyPairs(final List<Ed25519KeyPair> keyPairs) {
+            this.ed25519Keypairs.addAll(keyPairs);
+            return this;
+        }
+
+        public ProfileBuilder setIban(final IBAN iban) {
+            this.iban = iban;
+            return this;
+        }
+
+        public Profile build() {
+            return new Profile(this.name, this.rsaKeypairs, this.ed25519Keypairs, this.iban);
+        }
     }
 
     /**
@@ -72,7 +79,7 @@ public final class Profile implements Serializable {
      * @param keyPairs The public/private key-pairs of the user.
      * @param iban     The iban of the user.
      */
-    public Profile(final String name, final List<RSAKeyPair> rsaKeyPairs, final List<Ed25519KeyPair> ed25519Keypairs, final IBAN iban) {
+    private Profile(final String name, final List<RSAKeyPair> rsaKeyPairs, final List<Ed25519KeyPair> ed25519Keypairs, final IBAN iban) {
         Validate.notBlank(name);
         Validate.noNullElements(rsaKeyPairs);
         Validate.noNullElements(ed25519Keypairs);
@@ -115,15 +122,21 @@ public final class Profile implements Serializable {
      */
 
     public Contact getContact() {
-        final List<RSAKeyWrapper> rsaKeys = new ArrayList<>();
-        final List<Ed25519PublicKeyWrapper> ed25519Keys = new ArrayList<>();
+        Contact.ContactBuilder builder = new Contact.ContactBuilder(this.name);
         for (final RSAKeyPair pair : this.rsaKeypairs) {
-            rsaKeys.add(pair.getPublicKey());
+            builder.addRSAKey(pair.getPublicKey());
         }
         for (final Ed25519KeyPair pair : this.ed25519Keypairs) {
-            ed25519Keys.add(pair.getPublicKey());
+            builder.addEd25519Key(pair.getPublicKey());
         }
-        return new Contact(this.name, rsaKeys, ed25519Keys, this.iban);
+        builder.setIban(this.iban);
+        return builder.build();
+    }
+
+    public List<AKeyPair<?, ?>> getKeyPairs() {
+        final List<AKeyPair<?, ?>> result = new ArrayList<>(this.rsaKeypairs);
+        result.addAll(this.ed25519Keypairs);
+        return result;
     }
 
     /**

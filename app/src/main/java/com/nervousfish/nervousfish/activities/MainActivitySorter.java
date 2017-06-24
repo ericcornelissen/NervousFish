@@ -72,7 +72,7 @@ final class MainActivitySorter {
     private List<String> getKeyTypes() {
         final Set<String> typeSet = new HashSet<>();
         for (final Contact contact : this.mainActivity.getContacts()) {
-            for (final IKey key : contact.getKeys()) {
+            for (final IKey<?> key : contact.getKeys()) {
                 typeSet.add(key.getType());
             }
         }

@@ -47,12 +47,12 @@ final class ListviewActivityHelper {
      * @param keys A {@link Collection} of {@link IKey}s.
      * @param id the {@code R.id} of the target {@link ListView}.
      */
-    static void setKeys(final Activity activity, final Collection<IKey> keys, final int id) {
+    static void setKeys(final Activity activity, final Collection<IKey<?>> keys, final int id) {
         Validate.notNull(activity);
         Validate.notNull(keys);
         Validate.isTrue(id > 0);
         final List<String> keyNames = new ArrayList<>();
-        for (final IKey key : keys) {
+        for (final IKey<?> key : keys) {
             keyNames.add(key.getName());
         }
 

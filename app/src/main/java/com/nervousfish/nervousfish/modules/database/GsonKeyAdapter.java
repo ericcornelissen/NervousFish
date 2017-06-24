@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Adaptor for the {@link IKey} interface for the GSON library.
  */
-public final class GsonKeyAdapter extends TypeAdapter<IKey> {
+public final class GsonKeyAdapter extends TypeAdapter<IKey<?>> {
 
     /**
      * {@inheritDoc}
@@ -25,7 +25,7 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
     @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
     // 1) Suppressed because key is a lot more descripte than t (the parameter name of the superclass)
     @Override
-    public void write(final JsonWriter jsonWriter, final IKey key) throws IOException {
+    public void write(final JsonWriter jsonWriter, final IKey<?> key) throws IOException {
         Validate.notNull(jsonWriter);
         Validate.notNull(key);
         jsonWriter.beginArray();
@@ -47,7 +47,7 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
      */
     @Override
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")  // final IKey key is actually useful here
-    public IKey read(final JsonReader jsonReader) throws IOException {
+    public IKey<?> read(final JsonReader jsonReader) throws IOException {
         Validate.notNull(jsonReader);
         jsonReader.beginArray();
         final String type = jsonReader.nextString();
@@ -63,7 +63,7 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
 
         jsonReader.endArray();
 
-        final IKey key;
+        final IKey<?> key;
         switch (type) {
             case ConstantKeywords.RSA_KEY:
                 key = new RSAKeyWrapper(map);

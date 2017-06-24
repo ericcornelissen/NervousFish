@@ -137,10 +137,8 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
 
             LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
                     profile.getName(), keyPair.getPublicKey(), profile.getIban());
-            final Contact myProfileAsContact = new Contact(profile.getName(),
-                    new Ed25519PrivateKeyWrapper("Ed25519 key", "73890ien"), profile.getIban());
             final long encryptionKey = new RhythmVerificationActivity.KMeansClusterHelper().getEncryptionKey(this.taps);
-            this.bluetoothHandler.send(myProfileAsContact, encryptionKey);
+            this.bluetoothHandler.send(profile.getContact(), encryptionKey);
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device ", e);
         }

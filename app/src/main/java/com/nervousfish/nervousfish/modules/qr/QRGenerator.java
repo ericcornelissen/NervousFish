@@ -10,12 +10,21 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
+import com.nervousfish.nervousfish.data_objects.Ed25519PublicKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 
 /**
@@ -77,16 +86,24 @@ public final class QRGenerator {
      * @param qrMessage The decrypted QRCode in a string.
      * @return The key it corresponds to.
      */
-    public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
+    public static Pair<IKey<?>, IKey.Types> deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
         Validate.notBlank(qrMessage);
         final String spaceBar = " ";
         final String[] messageComponents = qrMessage.split(", ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
-                return new RSAKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
-                        messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
+                return new ImmutablePair<>(new RSAKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
+                        messageComponents[COMPONENT_KEY].split(spaceBar)[1]), IKey.Types.RSA);
             case ConstantKeywords.ED25519_KEY:
-                return new Ed25519PrivateKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
+                final EdDSAPublicKey key;
+                try (ByteArrayInputStream bis = new ByteArrayInputStream(messageComponents[COMPONENT_KEY].getBytes("ISO-8859-1"));
+                     ObjectInputStream ois = new ObjectInputStream(bis)) {
+                    key = (EdDSAPublicKey) ois.readObject();
+                } catch (final IOException | ClassNotFoundException e) {
+                    LOGGER.error("Reading EdDSAPrivateKey went wrong", e);
+                    throw new IllegalArgumentException("Could not find EdDSAPrivateKey", e);
+                }
+                return new ImmutablePair<>(new Ed25519PublicKeyWrapper(messageComponents[COMPONENT_KEYNAME], key), IKey.Types.Ed25519);
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }

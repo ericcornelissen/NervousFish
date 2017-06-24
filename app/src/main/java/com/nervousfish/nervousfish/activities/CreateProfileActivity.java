@@ -10,10 +10,13 @@ import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.AKeyPair;
+import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKeyPair;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
+import com.nervousfish.nervousfish.modules.cryptography.KeyGeneratorAdapter;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -23,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -49,9 +53,10 @@ import static com.nervousfish.nervousfish.modules.constants.Constants.InputField
 //2 and 3. The complexity does not make the code unreadible at this moment.
 //4. We want to have so much imports so we dont have to write Constants.ExplicitFieldResultCodes every time.
 public final class CreateProfileActivity extends AppCompatActivity {
-
+    private static final String DEFAULT_KEY_NAME = "NervousFish generated key";
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private IServiceLocator serviceLocator;
+    private IDatabase database;
     private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
@@ -67,6 +72,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_create_profile);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.database = this.serviceLocator.getDatabase();
 
         // Initialize helper class
         final IKeyGenerator keyGenerator = this.serviceLocator.getKeyGenerator();
@@ -102,21 +108,25 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = nameInput.getText().toString();
-                final String password = passwordInput.getText().toString();
-                IBAN iban = null;
-                if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
-                    iban = new IBAN(ibanInput.getText().toString());
+                final String name = this.nameInput.getText().toString();
+                final String password = this.passwordInput.getText().toString();
+                final Profile.ProfileBuilder builder = new Profile.ProfileBuilder(name);
+                if (IBANVerifier.isValidIBAN(this.ibanInput.getText().toString())) {
+                    builder.setIban(new IBAN(this.ibanInput.getText().toString()));
                 }
-                final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {
-                    // Create the new profile
-                    final List<AKeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
-                    final Profile userProfile = new Profile(name, keyPairs, iban);
+                    switch (this.getKeyTypeFromInput()) {
+                        case RSA:
+                            builder.addRSAKeyPair(this.serviceLocator.getKeyGenerator().generateRSAKeyPair(DEFAULT_KEY_NAME));
+                            break;
+                        case Ed25519:
+                            builder.addEd25519KeyPair(this.serviceLocator.getKeyGenerator().generateEd25519KeyPair(DEFAULT_KEY_NAME));
+                            break;
+                    }
 
-                    database.createDatabase(userProfile, password);
-                    database.loadDatabase(password);
+                    this.database.createDatabase(builder.build(), password);
+                    this.database.loadDatabase(password);
 
                     this.showProfileCreatedDialog();
                 } catch (final IOException e) {

@@ -3,16 +3,21 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Ed25519 variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
@@ -20,7 +25,7 @@ import java.io.Serializable;
  * For more info about Ed25519 see: https://ed25519.cr.yp.to/
  */
 public final class Ed25519PublicKeyWrapper implements IKey<EdDSAPublicKey> {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger("Ed25519PrivateKeyWrapper");
     private static final long serialVersionUID = -3865050366412869804L;
 
     private static final String KEYWORD_NAME = "name";
@@ -39,6 +44,27 @@ public final class Ed25519PublicKeyWrapper implements IKey<EdDSAPublicKey> {
         Validate.notNull(key);
         this.name = name;
         this.key = key;
+    }
+
+    /**
+     * Constructor for a RSA key given a {@link Map} of its values.
+     *
+     * @param map A {@link Map} mapping {@link RSAKeyWrapper} attribute names to values.
+     */
+    public Ed25519PublicKeyWrapper(final Map<String, String> map) {
+        this.name = map.get(Ed25519PublicKeyWrapper.KEYWORD_NAME);
+        final String keyEncoding = map.get(Ed25519PublicKeyWrapper.KEYWORD_KEY);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(keyEncoding.getBytes("ISO-8859-1"));
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
+            this.key = (EdDSAPublicKey) ois.readObject();
+        } catch (final IOException | ClassNotFoundException e) {
+            LOGGER.error("Reading EdDSAPrivateKey went wrong", e);
+            throw new IllegalArgumentException("Could not find EdDSAPrivateKey", e);
+        }
+
+        if (this.name == null || this.key == null) {
+            throw new IllegalArgumentException("Couldn't find the name, modulus or exponent in the map");
+        }
     }
 
     /**

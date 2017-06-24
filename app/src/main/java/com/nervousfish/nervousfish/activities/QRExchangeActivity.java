@@ -14,18 +14,22 @@ import com.google.zxing.integration.android.IntentResult;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Ed25519PublicKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import nl.tudelft.ewi.ds.bankver.IBAN;
 
@@ -40,9 +44,10 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 public final class QRExchangeActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("QRExchangeActivity");
-    private static final String SEMI_COLON = " ; ";
+    private static final Pattern COMPILE_SEMI_COLON = Pattern.compile(";");
 
     private IServiceLocator serviceLocator;
+    private IDatabase database;
     private Profile profile;
 
     /**
@@ -53,6 +58,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_qrexchange);
         this.serviceLocator = NervousFish.getServiceLocator();
+        this.database = this.serviceLocator.getDatabase();
 
         try {
             this.profile = this.serviceLocator.getDatabase().getProfile();
@@ -91,8 +97,8 @@ public final class QRExchangeActivity extends AppCompatActivity {
      */
     @SuppressLint("InflateParams")
     private void drawQRCode() {
-        final AKeyPair keyPair = this.profile.getKeyPairs().get(0);
-        final IKey publicKey = keyPair.getPublicKey();
+        final AKeyPair<?, ?> keyPair = this.profile.getKeyPairs().get(0);
+        final IKey<?> publicKey = keyPair.getPublicKey();
         final Bitmap qrCode = QRGenerator.encode(String.format("%s ; %s ; %s, %s, %s",
                 this.profile.getName(), this.profile.getIbanAsString(), publicKey.getType(),
                 publicKey.getName(), publicKey.getKey()));
@@ -105,30 +111,35 @@ public final class QRExchangeActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         LOGGER.info("Activity resulted");
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult == null) {
             LOGGER.error("No scan result in QR Scanner");
         } else if (resultCode == RESULT_OK) {
             final String result = scanResult.getContents();
             LOGGER.info("Adding new contact to database");
+            final String[] split = COMPILE_SEMI_COLON.split(result);
             //Name is the first part
-            final String name = result.split(SEMI_COLON)[0];
+            final String name = split[0];
             //IBAN is the second part
-            final String iban = result.split(SEMI_COLON)[1];
+            final String iban = split[1];
             //Key is the third part
-            final IKey key = QRGenerator.deconstructToKey(result.split(SEMI_COLON)[2]);
+            final Pair<IKey<?>, IKey.Types> key = QRGenerator.deconstructToKey(split[2]);
 
-            final IDatabase database = this.serviceLocator.getDatabase();
-            Contact contact;
-            try {
-                contact = new Contact(name, key, new IBAN(iban));
-            } catch (final IllegalArgumentException e) {
-                LOGGER.info("IBAN is not valid", e);
-                contact = new Contact(name, key);
+            final Contact.ContactBuilder builder = new Contact.ContactBuilder(name);
+            switch (key.getRight()) {
+                case RSA:
+                    builder.addRSAKey((RSAKeyWrapper) key.getLeft());
+                    break;
+                case Ed25519:
+                    builder.addEd25519Key((Ed25519PublicKeyWrapper) key.getLeft());
+                    break;
             }
-            ContactReceivedHelper.newContactReceived(database, this, contact);
+            if (!iban.isEmpty()) {
+                builder.setIban(new IBAN(iban));
+            }
+            ContactReceivedHelper.newContactReceived(this.database, this, builder.build());
         }
     }
 

@@ -24,7 +24,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Contains shared functionality between classes to reduce code duplication.
- * This is an enum to prevent instiation of this helper class
+ * This is an enum to prevent instantiation of this helper class
  */
 // Suppressed because we have an empty enum
 @SuppressWarnings("checkstyle:nowhitespacebefore")
@@ -159,11 +159,11 @@ enum ContactReceivedHelper {
      * @param keys2 The second {@link List} of {@link IKey}s.
      * @return A boolean indicating if all the {@link IKey}s in the first list are also in the second list.
      */
-    private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
+    private static boolean checkKeysEqual(final List<IKey<?>> keys1, final List<IKey<?>> keys2) {
         assert keys1 != null;
         assert keys2 != null;
-        final Set<IKey> keysSet1 = new HashSet<>(keys1);
-        for (final IKey key : keys2) {
+        final Set<IKey<?>> keysSet1 = new HashSet<>(keys1);
+        for (final IKey<?> key : keys2) {
             if (!keysSet1.contains(key)) {
                 return false;
             }
@@ -293,7 +293,8 @@ enum ContactReceivedHelper {
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
             try {
                 final Contact existingContact = this.database.getContactWithName(this.contact.getName());
-                existingContact.addKeys(this.contact.getKeys());
+                existingContact.addRSAKeys(this.contact.getRSAKeys());
+                existingContact.addEd25519Keys(this.contact.getEd25519Keys());
             } catch (final IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }

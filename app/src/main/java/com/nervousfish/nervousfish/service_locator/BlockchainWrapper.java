@@ -8,6 +8,7 @@ import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.Profile;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 
 import java.security.PrivateKey;
@@ -34,8 +35,8 @@ public class BlockchainWrapper implements Blockchain {
      */
     @NonNull
     @Override
-    public PrivateKey getPrivateKey() {
-        return this.profile.getEd25519KeyPairs().get(0).getPrivateKey().;
+    public EdDSAPrivateKey getPrivateKey() {
+        return this.profile.getEd25519KeyPairs().get(0).getPrivateKey().getKey();
     }
 
     /**
@@ -43,8 +44,8 @@ public class BlockchainWrapper implements Blockchain {
      */
     @NonNull
     @Override
-    public PublicKey getPublicKey() {
-        return null;
+    public EdDSAPublicKey getPublicKey() {
+        return this.profile.getEd25519KeyPairs().get(0).getPublicKey().getKey();
     }
 
     /**
