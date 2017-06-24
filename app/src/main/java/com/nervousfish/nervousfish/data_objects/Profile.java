@@ -1,15 +1,12 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.modules.cryptography.Ed25519;
 
 import org.apache.commons.lang3.Validate;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.security.KeyPair;
-import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +32,7 @@ public final class Profile implements Serializable {
         private final String name;
         private final List<RSAKeyPair> rsaKeypairs = new ArrayList<>();
         private final List<Ed25519KeyPair> ed25519Keypairs = new ArrayList<>();
-        private IBAN iban = new IBAN("");
+        private IBAN iban;
 
         public ProfileBuilder(final String name) {
             this.name = name;

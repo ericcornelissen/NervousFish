@@ -35,7 +35,7 @@ public final class Contact implements Serializable {
         private final String name;
         private final List<RSAKeyWrapper> rsaKeys = new ArrayList<>();
         private final List<Ed25519PublicKeyWrapper> ed25519Keys = new ArrayList<>();
-        private IBAN iban = new IBAN("");
+        private IBAN iban;
 
         public ContactBuilder(final String name) {
             this.name = name;

@@ -1,10 +1,6 @@
 package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.modules.cryptography.Ed25519;
-
-import net.i2p.crypto.eddsa.EdDSAPrivateKey;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
