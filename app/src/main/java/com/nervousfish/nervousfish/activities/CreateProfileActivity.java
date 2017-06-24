@@ -10,8 +10,10 @@ import android.widget.RadioButton;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.AKeyPair;
+import com.nervousfish.nervousfish.data_objects.Ed25519KeyPair;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKeyPair;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -112,8 +114,16 @@ public final class CreateProfileActivity extends AppCompatActivity {
 
                 try {
                     // Create the new profile
-                    final List<AKeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
-                    final Profile userProfile = new Profile(name, keyPairs, iban);
+                    Profile userProfile = null;
+                    if (this.getKeyTypeFromInput() == IKey.Types.RSA) {
+                        final List<RSAKeyPair> keyPairs = helper.generateRSAKeyPair();
+                        userProfile = new Profile(name, keyPairs, null, iban);
+                    } else if (this.getKeyTypeFromInput() == IKey.Types.Ed25519) {
+                        if (this.getKeyTypeFromInput() == IKey.Types.RSA) {
+                            final List<Ed25519KeyPair> keyPairs = helper.generateEd25519KeyPair();
+                            userProfile = new Profile(name, null, keyPairs, iban);
+                        }
+                    }
 
                     database.createDatabase(userProfile, password);
                     database.loadDatabase(password);

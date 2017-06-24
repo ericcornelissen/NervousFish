@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.data_objects.Ed25519PrivateKeyWrapper;
+import com.nervousfish.nervousfish.data_objects.Ed25519PublicKeyWrapper;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 
@@ -68,9 +69,10 @@ public final class GsonKeyAdapter extends TypeAdapter<IKey> {
             case ConstantKeywords.RSA_KEY:
                 key = new RSAKeyWrapper(map);
                 break;
-            case ConstantKeywords.ED25519_KEY:
-                key = new Ed25519PrivateKeyWrapper(map);
-                break;
+            //TODO: not sure if this has to be fixed, but it should be checked
+//            case ConstantKeywords.ED25519_KEY:
+//                key = new Ed25519PublicKeyWrapper(map);
+//                break;
             default:
                 throw new IOException("Could not read key");
         }

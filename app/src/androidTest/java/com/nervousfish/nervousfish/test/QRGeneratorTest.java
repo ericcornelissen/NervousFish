@@ -28,7 +28,7 @@ public class QRGeneratorTest {
     public void setUp() throws Exception {
         final IKeyGenerator keyGenerator = NervousFish.getServiceLocator().getKeyGenerator();
         final AKeyPair pair = keyGenerator.generateRSAKeyPair("test");
-        publicKey = pair.getPublicKey();
+        publicKey = (IKey) pair.getPublicKey();
         final String space = " ";
         publicKeyString = publicKey.getType() + space + publicKey.getName()
                 + space + publicKey.getKey();

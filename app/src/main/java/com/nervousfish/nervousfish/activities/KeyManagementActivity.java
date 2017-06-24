@@ -57,12 +57,12 @@ public final class KeyManagementActivity extends Activity {
             throw new DatabaseException(e);
         }
         final String title = myProfile.getKeyPairs().get(0).getName();
-        final String key = myProfile.getKeyPairs().get(0).getPublicKey().getFormattedKey();
+        final String key = ((IKey) myProfile.getKeyPairs().get(0).getPublicKey()).getFormattedKey();
 
         final List<IKey> list = new ArrayList<>();
         //noinspection Convert2streamapi Because if we want to refactor this to a stream, we have to use at least API 24
         for (final AKeyPair kp : myProfile.getKeyPairs()) {
-            list.add(kp.getPublicKey());
+            list.add((IKey) kp.getPublicKey());
         }
 
         ListviewActivityHelper.setKeys(this, list, R.id.list_view_edit_keys);
@@ -116,7 +116,8 @@ public final class KeyManagementActivity extends Activity {
                 final Activity activity = this.activity;
                 final Profile profile = this.profile;
                 final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, profile.getKeyPairs().get(0).getPublicKey().getKey());
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN,
+                        ((IKey) profile.getKeyPairs().get(0).getPublicKey()).getPlainKey());
                 clipboard.setPrimaryClip(clip);
             });
             builder.show();

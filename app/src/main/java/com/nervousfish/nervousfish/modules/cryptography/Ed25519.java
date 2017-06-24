@@ -17,7 +17,7 @@ import java.security.SecureRandom;
  * A generator for Ed25519 public/private key-pairs.
  * For more information on Ed25519, see: https://ed25519.cr.yp.to/
  */
-public final class Ed25519 implements IKey {
+public final class Ed25519 {
 
     private static final int SEED_LENGTH = 32;
     private static final EdDSAParameterSpec PARAMETER_SPEC = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.CURVE_ED25519_SHA512);
@@ -68,30 +68,5 @@ public final class Ed25519 implements IKey {
 
     EdDSAPrivateKey getPrivateKey() {
         return this.privateKey;
-    }
-
-    @Override
-    public String getKey() {
-        return null;
-    }
-
-    @Override
-    public String getFormattedKey() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public String getType() {
-        return null;
-    }
-
-    @Override
-    public void toJson(JsonWriter writer) throws IOException {
-
     }
 }

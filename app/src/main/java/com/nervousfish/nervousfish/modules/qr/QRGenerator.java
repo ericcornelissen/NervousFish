@@ -85,8 +85,9 @@ public final class QRGenerator {
             case ConstantKeywords.RSA_KEY:
                 return new RSAKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
                         messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
-            case ConstantKeywords.ED25519_KEY:
-                return new Ed25519PrivateKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
+            //TODO: Fix sending Ed25519 key over QR
+//            case ConstantKeywords.ED25519_KEY:
+//                return new Ed25519PrivateKeyWrapper(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY]);
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }

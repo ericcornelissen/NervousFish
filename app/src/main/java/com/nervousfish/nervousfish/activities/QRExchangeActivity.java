@@ -16,6 +16,7 @@ import com.nervousfish.nervousfish.data_objects.AKeyPair;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKeyWrapper;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.qr.QRGenerator;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -92,7 +93,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
     @SuppressLint("InflateParams")
     private void drawQRCode() {
         final AKeyPair keyPair = this.profile.getKeyPairs().get(0);
-        final IKey publicKey = keyPair.getPublicKey();
+        final IKey publicKey = (IKey) keyPair.getPublicKey();
         final Bitmap qrCode = QRGenerator.encode(String.format("%s ; %s ; %s, %s, %s",
                 this.profile.getName(), this.profile.getIbanAsString(), publicKey.getType(),
                 publicKey.getName(), publicKey.getKey()));
@@ -118,7 +119,8 @@ public final class QRExchangeActivity extends AppCompatActivity {
             //IBAN is the second part
             final String iban = result.split(SEMI_COLON)[1];
             //Key is the third part
-            final IKey key = QRGenerator.deconstructToKey(result.split(SEMI_COLON)[2]);
+            //TODO: remove this cast
+            final RSAKeyWrapper key = (RSAKeyWrapper) QRGenerator.deconstructToKey(result.split(SEMI_COLON)[2]);
 
             final IDatabase database = this.serviceLocator.getDatabase();
             Contact contact;

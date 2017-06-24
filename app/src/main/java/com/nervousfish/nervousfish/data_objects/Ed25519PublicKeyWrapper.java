@@ -53,6 +53,14 @@ public final class Ed25519PublicKeyWrapper implements IKey<EdDSAPublicKey> {
      * {@inheritDoc}
      */
     @Override
+    public String getPlainKey() {
+        return this.key.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getFormattedKey() {
         return this.key.toString();
     }

@@ -61,6 +61,21 @@ public final class Contact implements Serializable {
     }
 
     /**
+     * Constructor for the {@link Contact} POJO for a single {@link IKey}.
+     *
+     * @param name The name of the {@link Contact}
+     * @param rsaKeyWrapper  The {@link IKey} to initialize the {@link Contact} with
+     */
+    public Contact(final String name, final RSAKeyWrapper rsaKeyWrapper, final IBAN iban) {
+        Validate.notBlank(name);
+        Validate.notNull(ed25519Keys);
+        Validate.notNull(iban);
+        this.name = name;
+        this.rsaKeys.add(rsaKeyWrapper);
+        this.iban = iban;
+    }
+
+    /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey},
      * and an IBAN.
      *
@@ -127,13 +142,31 @@ public final class Contact implements Serializable {
     }
 
     /**
-     * @return A list of all public rsa keys of the contact
+     * @return A list of all public rsa and Ed25519 keys of the contact
      */
     public List<IKey> getKeys() {
         final List<IKey> keys = new ArrayList<>();
         keys.addAll(this.rsaKeys);
         keys.addAll(this.ed25519Keys);
         return keys;
+    }
+
+    /**
+     * Adds RSA keys to the current list of RSA keys
+     *
+     * @param keys The keys that have to be added.
+     */
+    public void addRSAKeys(final List<RSAKeyWrapper> keys) {;
+        this.rsaKeys.addAll(keys);
+    }
+
+    /**
+     * Adds Ed25519 keys to the current list of Ed25519 keys
+     *
+     * @param keys The keys that have to be added.
+     */
+    public void addEd25519Keys(final List<Ed25519PublicKeyWrapper> keys) {;
+        this.ed25519Keys.addAll(keys);
     }
 
     /**

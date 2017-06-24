@@ -293,7 +293,8 @@ enum ContactReceivedHelper {
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
             try {
                 final Contact existingContact = this.database.getContactWithName(this.contact.getName());
-                existingContact.addKeys(this.contact.getKeys());
+                existingContact.addRSAKeys(this.contact.getRSAKeys());
+                existingContact.addEd25519Keys(this.contact.getEd25519Keys());
             } catch (final IOException e) {
                 LOGGER.error("Couldn't get contacts from database", e);
             }

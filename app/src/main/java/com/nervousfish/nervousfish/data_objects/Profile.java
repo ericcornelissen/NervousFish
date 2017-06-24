@@ -48,7 +48,7 @@ public final class Profile implements Serializable {
 
     /**
      * The constructor for the {@link Profile} class. This one
-     * includes the IBAN.
+     * includes the IBAN and Ed25519 keys.
      *
      * @param name     The contact belonging to the user.
      * @param keyPairs The public/private key-pairs of the user.
@@ -128,12 +128,28 @@ public final class Profile implements Serializable {
     }
 
     /**
-     * Returns the Keypairs of the user.
+     * Returns the RSA Keypairs of the user.
      *
      * @return The list of keypairs of the user.
      */
     public List<RSAKeyPair> getRSAKeyPairs() {
         return this.rsaKeypairs;
+    }
+
+    /**
+     * Returns the Keypairs of the user.
+     *
+     * @return The list of keypairs of the user.
+     */
+    public List<AKeyPair> getKeyPairs() {
+        final List<AKeyPair> keys = new ArrayList<>();
+        if (this.ed25519Keypairs != null) {
+            keys.addAll(this.ed25519Keypairs);
+        }
+        if (this.rsaKeypairs != null) {
+            keys.addAll(this.rsaKeypairs);
+        }
+        return keys;
     }
 
     /**

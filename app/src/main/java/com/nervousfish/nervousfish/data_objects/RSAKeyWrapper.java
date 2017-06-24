@@ -68,6 +68,14 @@ public final class RSAKeyWrapper implements IKey {
      * {@inheritDoc}
      */
     @Override
+    public String getPlainKey() {
+        return this.getKey();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getFormattedKey() {
         return String.format("Modulus : %s %nExponent : %s", this.modulus, this.exponent);
     }

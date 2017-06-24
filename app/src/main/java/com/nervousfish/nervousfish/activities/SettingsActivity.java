@@ -109,7 +109,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 try {
                     LOGGER.info("Updating profile name");
                     final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getRSAKeyPairs(),
+                            profile.getEd25519KeyPairs(), profile.getIban()));
                 } catch (final IOException e) {
                     LOGGER.error("Couldn't get profiles from database", e);
                 }
@@ -146,7 +147,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                     if (IBANVerifier.isValidIBAN(stringValue)) {
                         LOGGER.info("Updating profile iban");
                         serviceLocator.getDatabase().updateProfile(
-                                new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
+                                new Profile(profile.getName(), profile.getRSAKeyPairs(), profile.getEd25519KeyPairs(),
+                                        new IBAN(stringValue)));
                         preference.setSummary(stringValue);
                     } else {
                         preference.setSummary("INVALID IBAN");

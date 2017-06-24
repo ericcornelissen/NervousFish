@@ -126,7 +126,7 @@ public final class ContactActivity extends AppCompatActivity {
             builder.setPositiveButton("Copy", (dialog, which) -> {
                 final Activity activity = this.activity;
                 final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, ((IKey) this.keys.get(position)).getKey());
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, ((IKey) this.keys.get(position)).getPlainKey());
                 clipboard.setPrimaryClip(clip);
             });
             builder.show();

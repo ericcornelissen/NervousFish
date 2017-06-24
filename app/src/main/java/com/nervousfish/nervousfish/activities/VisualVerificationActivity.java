@@ -84,7 +84,7 @@ public final class VisualVerificationActivity extends Activity {
                 LOGGER.info("Sending my profile with name: {}, public key: {}, iban: {}",
                         profile.getName(), keyPair.getPublicKey(), profile.getIban());
             }
-            final Contact myProfileAsContact = new Contact(profile.getName(), keyPair.getPublicKey());
+            final Contact myProfileAsContact = profile.getContact();
             this.serviceLocator.getBluetoothHandler().send(myProfileAsContact);
         } catch (final IOException e) {
             LOGGER.error("Could not send my contact to other device {}", e.getMessage());
