@@ -8,6 +8,7 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.math.GroupElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
@@ -120,7 +121,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getFormattedKey() {
-        return this.getKey();
+        return StringUtils.replaceEach(this.key, new String[]{"[Ed25519FieldElement val=", "[GroupElement", "]"}, new String[]{"", "", ""});
     }
 
     /**
@@ -177,7 +178,7 @@ public final class Ed25519Key implements IKey {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new Ed25519Key.SerializationProxy(this);
+        return new SerializationProxy(this);
     }
 
     /**
