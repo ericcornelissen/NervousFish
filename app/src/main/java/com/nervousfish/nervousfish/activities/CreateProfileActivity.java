@@ -77,7 +77,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.nameInput = (EditText) this.findViewById(R.id.profile_enter_name);
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
-//        this.ibanInput = (EditText) this.findViewById(R.id.iban_create_profile);
+        this.ibanInput = (EditText) this.findViewById(R.id.iban_create_profile);
 
         LOGGER.info("Activity created");
     }
@@ -105,9 +105,9 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 final String name = nameInput.getText().toString();
                 final String password = passwordInput.getText().toString();
                 IBAN iban = null;
-//                if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
-//                    iban = new IBAN(ibanInput.getText().toString());
-//                }
+                if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
+                    iban = new IBAN(ibanInput.getText().toString());
+                }
                 final IDatabase database = this.serviceLocator.getDatabase();
 
                 try {

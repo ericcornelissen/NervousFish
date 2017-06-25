@@ -91,15 +91,15 @@ final class CreateProfileHelper {
      * @return The resultcode of validateIban.
      */
     Constants.InputFieldResultCodes validateIban(final EditText input) {
-//        Validate.notNull(input);
-//        final String iban = input.getText().toString();
-//        if (EMPTY_STRING.equals(iban) || IBANVerifier.isValidIBAN(iban)) {
-//            input.setBackgroundColor(Color.TRANSPARENT);
-//            return CORRECT_FIELD;
-//        } else if (!IBANVerifier.isValidIBAN(iban)) {
-//            input.setBackgroundColor(this.alertColor);
-//            return INVALID_IBAN;
-//        }
+        Validate.notNull(input);
+        final String iban = input.getText().toString();
+        if (EMPTY_STRING.equals(iban) || IBANVerifier.isValidIBAN(iban)) {
+            input.setBackgroundColor(Color.TRANSPARENT);
+            return CORRECT_FIELD;
+        } else if (!IBANVerifier.isValidIBAN(iban)) {
+            input.setBackgroundColor(this.alertColor);
+            return INVALID_IBAN;
+        }
         return CORRECT_FIELD;
     }
 

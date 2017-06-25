@@ -85,8 +85,7 @@ public final class QRGenerator {
                 return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
                         messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
             case ConstantKeywords.ED25519_KEY:
-                throw new IllegalArgumentException("ED25519_KEY not deconstructable");
-//                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].getBytes());
+                throw new IllegalArgumentException("Ed25519Key not deconstructable");
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }
