@@ -44,7 +44,7 @@ import static junit.framework.Assert.assertTrue;
 public class ContactSteps {
 
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-    private final IKey key = new Ed25519Key("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj");
+    private final IKey key = new Ed25519Key("Webserver", "aDsfOIHiow093h0HGIHSDGi03tj", "foobar".getBytes());
     private final Contact contact = new Contact("Yashuo", this.key);
 
     @Rule
