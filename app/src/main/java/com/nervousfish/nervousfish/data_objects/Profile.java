@@ -80,7 +80,7 @@ public final class Profile implements Serializable {
         for (final KeyPair pair : this.keyPairs) {
             publicKeys.add(pair.getPublicKey());
         }
-        return new Contact(this.name, publicKeys);
+        return new Contact(this.name, publicKeys, this.iban);
     }
 
     /**
