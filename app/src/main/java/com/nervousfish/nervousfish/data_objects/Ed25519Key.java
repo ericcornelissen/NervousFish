@@ -39,6 +39,7 @@ public final class Ed25519Key implements IKey {
      *
      * @param name The name for the key.
      * @param key  The string representing the key.
+     * @param seed The byte array of the keys seed.
      */
     public Ed25519Key(final String name, final String key, final byte[] seed) {
         Validate.notBlank(name);
@@ -46,13 +47,14 @@ public final class Ed25519Key implements IKey {
 
         this.name = name;
         this.key = key;
-        this.seed = seed;
+        this.seed = seed.clone();
     }
 
     /**
      * Constructor for a Ed25519-based key.
      *
      * @param name The name for the key.
+     * @param key  The {@link GroupElement} of the key.
      * @param seed The byte array of the keys seed.
      */
     public Ed25519Key(final String name, final GroupElement key, final byte[] seed) {
@@ -61,19 +63,20 @@ public final class Ed25519Key implements IKey {
 
         this.name = name;
         this.key = key.toString();
-        this.seed = seed;
+        this.seed = seed.clone();
     }
 
     /**
      * Constructor for a Ed25519-based key given a {@link Map} of its values.
      *
      * @param map A {@link Map} mapping {@link Ed25519Key} attribute names to values.
+     * @throws IOException when reading the map failed.
      */
-    public Ed25519Key(final Map<String, String> map) {
+    public Ed25519Key(final Map<String, String> map) throws IOException {
         Validate.notNull(map);
         this.name = map.get(KEYWORD_NAME);
         this.key = map.get(KEYWORD_KEY);
-        this.seed = map.get(KEYWORD_SEED).getBytes();
+        this.seed = map.get(KEYWORD_SEED).getBytes(ConstantKeywords.UTF_8);
 
         Validate.notBlank(this.name);
         Validate.notBlank(this.key);
@@ -143,7 +146,7 @@ public final class Ed25519Key implements IKey {
     public void toJson(final JsonWriter writer) throws IOException {
         writer.name(KEYWORD_NAME).value(this.name);
         writer.name(KEYWORD_KEY).value(this.key);
-        writer.name(KEYWORD_SEED).value(new String(this.seed));
+        writer.name(KEYWORD_SEED).value(new String(this.seed, ConstantKeywords.UTF_8));
     }
 
     /**

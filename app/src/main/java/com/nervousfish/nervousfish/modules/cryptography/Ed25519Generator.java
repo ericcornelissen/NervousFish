@@ -27,6 +27,7 @@ public final class Ed25519Generator {
      *
      * @param publicKey  The generated public key.
      * @param privateKey The generated private key.
+     * @param seed       The seed used to generate the key pair.
      */
     private Ed25519Generator(final EdDSAPublicKey publicKey, final EdDSAPrivateKey privateKey, final byte[] seed) {
         assert publicKey != null;
@@ -55,6 +56,7 @@ public final class Ed25519Generator {
      * Get an instance of a Ed25519Generator, which provides a public/private key-pair
      * based on the Ed25519Generator algorithm.
      *
+     * @param seed The seed to generate the key pair.
      * @return A new {@link Ed25519Generator} instance.
      */
     public static Ed25519Generator generatePair(final byte[] seed) {
