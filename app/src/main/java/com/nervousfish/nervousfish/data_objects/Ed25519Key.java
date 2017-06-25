@@ -2,8 +2,10 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.modules.cryptography.Ed25519Generator;
 
-import net.i2p.crypto.eddsa.EdDSAKey;
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.math.GroupElement;
 
 import org.apache.commons.lang3.Validate;
@@ -12,7 +14,6 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.security.acl.Group;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public final class Ed25519Key implements IKey {
     public Ed25519Key(final String name, final String key, final byte[] seed) {
         Validate.notBlank(name);
         Validate.notBlank(key);
+
         this.name = name;
         this.key = key;
         this.seed = seed;
@@ -56,6 +58,7 @@ public final class Ed25519Key implements IKey {
     public Ed25519Key(final String name, final GroupElement key, final byte[] seed) {
         Validate.notBlank(name);
         Validate.notNull(seed);
+
         this.name = name;
         this.key = key.toString();
         this.seed = seed;
@@ -75,6 +78,30 @@ public final class Ed25519Key implements IKey {
         Validate.notBlank(this.name);
         Validate.notBlank(this.key);
         Validate.notNull(this.seed);
+    }
+
+    /**
+     * Get the {@link EdDSAPublicKey} given a {@link Ed25519Key}.
+     *
+     * @param key The {@link Ed25519Key}.
+     * @return The {@link EdDSAPublicKey}.
+     */
+    public static EdDSAPublicKey getPublicKeyOf(final Ed25519Key key) {
+        Validate.notNull(key);
+        final Ed25519Generator generator = Ed25519Generator.generatePair(key.seed);
+        return generator.getPublicKey();
+    }
+
+    /**
+     * Get the {@link EdDSAPrivateKey} given a {@link Ed25519Key}.
+     *
+     * @param key The {@link Ed25519Key}.
+     * @return The {@link EdDSAPrivateKey}.
+     */
+    public static EdDSAPrivateKey getPrivateKeyOf(final Ed25519Key key) {
+        Validate.notNull(key);
+        final Ed25519Generator generator = Ed25519Generator.generatePair(key.seed);
+        return generator.getPrivateKey();
     }
 
     /**

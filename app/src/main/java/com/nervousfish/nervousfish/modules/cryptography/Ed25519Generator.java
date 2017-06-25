@@ -13,7 +13,7 @@ import java.security.SecureRandom;
  * A generator for Ed25519Generator public/private key-pairs.
  * For more information on Ed25519Generator, see: https://ed25519.cr.yp.to/
  */
-final class Ed25519Generator {
+public final class Ed25519Generator {
 
     private static final int SEED_LENGTH = 32;
     private static final EdDSAParameterSpec PARAMETER_SPEC = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.CURVE_ED25519_SHA512);
@@ -32,6 +32,7 @@ final class Ed25519Generator {
         assert publicKey != null;
         assert privateKey != null;
         assert seed != null;
+
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.seed = seed;
@@ -43,7 +44,7 @@ final class Ed25519Generator {
      *
      * @return A new {@link Ed25519Generator} instance.
      */
-    static Ed25519Generator generatePair() {
+    public static Ed25519Generator generatePair() {
         // Create a random seed
         final SecureRandom generator = new SecureRandom();
         final byte[] seed = generator.generateSeed(SEED_LENGTH);
@@ -56,7 +57,7 @@ final class Ed25519Generator {
      *
      * @return A new {@link Ed25519Generator} instance.
      */
-    static Ed25519Generator generatePair(final byte[] seed) {
+    public static Ed25519Generator generatePair(final byte[] seed) {
         // Create a private key
         final EdDSAPrivateKeySpec privateKeySpec = new EdDSAPrivateKeySpec(seed, PARAMETER_SPEC);
         final EdDSAPrivateKey privateKey = new EdDSAPrivateKey(privateKeySpec);
@@ -70,11 +71,11 @@ final class Ed25519Generator {
         return new Ed25519Generator(publicKey, privateKey, seed);
     }
 
-    EdDSAPublicKey getPublicKey() {
+    public EdDSAPublicKey getPublicKey() {
         return this.publicKey;
     }
 
-    EdDSAPrivateKey getPrivateKey() {
+    public EdDSAPrivateKey getPrivateKey() {
         return this.privateKey;
     }
 
