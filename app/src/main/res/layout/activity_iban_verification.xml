@@ -290,9 +290,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@drawable/button_default"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:contentDescription="@string/bluetooth"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"
                         android:src="@android:drawable/stat_sys_data_bluetooth" />
 
                     <Button
@@ -316,9 +316,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@drawable/button_default"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:contentDescription="@string/nfc"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"
                         android:src="@drawable/nfc" />
 
                     <Button
@@ -342,9 +342,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@drawable/button_default"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:contentDescription="@string/qr"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"
                         android:src="@drawable/qr" />
 
                     <Button

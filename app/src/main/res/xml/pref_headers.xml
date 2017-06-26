@@ -16,8 +16,8 @@
         android:title="@string/pref_key_management_header" />
 
     <header
-        android:id="@+id/iban_verification_header"
-        android:icon="@drawable/iban"
+        android:id="@+id/iban_sign_header"
+        android:icon="@drawable/credit_card"
         android:title="@string/pref_iban_verification_header" />
 
 </preference-headers>

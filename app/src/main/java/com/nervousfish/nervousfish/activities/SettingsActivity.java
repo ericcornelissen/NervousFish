@@ -237,8 +237,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
             this.startActivity(intent);
         }
-        if (header.id == R.id.iban_verification_header) {
-            final Intent intent = new Intent(this, IbanVerificationActivity.class);
+        if (header.id == R.id.iban_sign_header) {
+            final Intent intent = new Intent(this, IbanSignActivity.class);
             this.startActivity(intent);
         }
     }

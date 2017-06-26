@@ -149,7 +149,7 @@
     <string name="pref_key_management_header">Key management</string>
 
     <!-- IbanVerificationSigning -->
-    <string name="pref_iban_verification_header">IBAN verificatie + ondertekening</string>
+    <string name="pref_iban_sign_header">IBAN verificatie + ondertekening</string>
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
