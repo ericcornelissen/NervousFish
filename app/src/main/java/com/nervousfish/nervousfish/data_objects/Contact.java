@@ -100,6 +100,20 @@ public final class Contact implements Serializable {
     }
 
     /**
+     * Returns the first Ed25519 Key of the user.
+     *
+     * @return The first Ed25519 Key of the user.
+     */
+    public IKey getFirstEd25519Key() {
+        for (final IKey key : this.keys) {
+            if (key.getType().equals(ConstantKeywords.ED25519_KEY)) {
+                return key;
+            }
+        }
+        throw new IllegalStateException("No Ed25519 key found");
+    }
+
+    /**
      * Retuns the string of the IBAN, and a dash if the object is null.
      *
      * @return String of the IBAN, and a dash if the object is null;

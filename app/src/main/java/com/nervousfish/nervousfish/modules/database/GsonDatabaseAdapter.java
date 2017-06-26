@@ -30,6 +30,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
 /**
  * An adapter class that adapter our {@link IDatabase} to the GSON serialization library, use for data storage
  */
@@ -174,6 +176,22 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return null;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Contact getContactWithIBAN(final IBAN iban) {
+        final List<Contact> contacts = this.getAllContacts();
+        for (final Contact contact : contacts) {
+            if (contact.getIban().equals(iban)) {
+                return contact;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -273,7 +291,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
         return !this.checkFirstUse()
                 || this.fileSystem.deleteFile(this.passwordPath) && this.fileSystem.deleteFile(this.databasePath);
     }
-
 
     /**
      * Initialize the main database. Does nothing when file is present.

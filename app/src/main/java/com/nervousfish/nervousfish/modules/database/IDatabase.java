@@ -5,7 +5,10 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.IModule;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.List;
+
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * Defines a module for interaction with a database that can be used by
@@ -104,4 +107,12 @@ public interface IDatabase extends IModule {
      * @return Whether the database was successfully deleted.
      */
     boolean deleteDatabase();
+
+    /**
+     * Gets the Contact of the person corresponding to the given IBAN.
+     *
+     * @param iban The iban of the contact.
+     * @return The contact with the given IBAN.
+     */
+    Contact getContactWithIBAN(IBAN iban);
 }
