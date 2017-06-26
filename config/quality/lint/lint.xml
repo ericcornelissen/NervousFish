@@ -119,7 +119,6 @@
     <issue id="SecureRandom" severity="error" />
     <issue id="ServiceCast" severity="error" />
     <issue id="SetJavaScriptEnabled" severity="error" />
-    <issue id="ShowToast" severity="error" />
     <issue id="SimpleDateFormat" severity="error" />
     <issue id="SmallSp" severity="error" />
     <issue id="SpUsage" severity="error" />
@@ -184,4 +183,7 @@
     <!-- According to a highly voted post on StackOverflow (see https://stackoverflow.com/questions/1957645/when-to-use-an-assertion-and-when-to-use-an-exception)
         they're good practice to verify the correctness of the program -->
     <issue id="Assert" severity="ignore" />
+
+    <!-- Toast messages can be a good option when a very minor thing happened that the user should know nevertheless -->
+    <issue id="ShowToast" severity="ignore" />
 </lint>
