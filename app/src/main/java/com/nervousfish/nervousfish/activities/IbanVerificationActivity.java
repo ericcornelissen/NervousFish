@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -86,7 +87,7 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onManualVerificationClick(final View view) throws InvalidKeyException {
         LOGGER.info("Manual verification button was pressed");
-        this.challenge = "hoi";//this.bankVer.createManualChallenge(this.contact.getIban());
+        this.challenge = this.bankVer.createManualChallenge(this.contact.getIban());
         this.informAcceptChallengeButton();
         this.showManualVerificationCodes();
     }
@@ -102,6 +103,10 @@ public final class IbanVerificationActivity extends Activity {
         this.informAcceptChallengeButton();
     }
 
+    /**
+     * Called by the Show IBAN button
+     * @param view The button that called the function
+     */
     public void showIban(final View view) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(R.string.iban_contact);
@@ -110,14 +115,22 @@ public final class IbanVerificationActivity extends Activity {
         alert.show();
     }
 
+    /**
+     * Called by the Copy IBAN button
+     * @param view The button that called the function
+     */
     public void copyIban(final View view) {
-        final ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData clip = ClipData.newPlainText("", this.contact.getIbanAsString());
         clipboard.setPrimaryClip(clip);
 
         Toast.makeText(this, "Copied the IBAN to your clipboard", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Called by the Show Challenge button
+     * @param view The button that called the function
+     */
     public void showChallenge(final View view) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(R.string.challenge_contact);
@@ -126,8 +139,12 @@ public final class IbanVerificationActivity extends Activity {
         alert.show();
     }
 
+    /**
+     * Called by the Copy Challenge button
+     * @param view The button that called the function
+     */
     public void copyChallenge(final View view) {
-        final ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData clip = ClipData.newPlainText("", this.challenge);
         clipboard.setPrimaryClip(clip);
 
@@ -138,6 +155,8 @@ public final class IbanVerificationActivity extends Activity {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         final LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
+        // 1) Suppressed because this dialog does not need a parent
         final View dialogView = inflater.inflate(R.layout.show_manual_verification_codes, null);
         alert.setTitle(this.getString(R.string.iban_manual_verification));
         alert.setMessage(this.getString(R.string.manual_verification_explanation));

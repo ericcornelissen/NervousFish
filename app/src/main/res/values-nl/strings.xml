@@ -163,4 +163,9 @@
     <string name="or_send_by_method">Of ontvang zijn antwoord op een van de volgende manier:</string>
     <string name="iban_button_in_main_screen">De andere persoon kan jouw challenge accepteren in Hoofd-scherm -> Menu -> IBAN-Challenge!</string>
     <string name="please_note">Let op</string>
+    <string name="account_holder">Rekeninghouder:</string>
+    <string name="challenge_contact">De overboeking omschrijving is</string>
+    <string name="iban_contact">De IBAN van je contact is</string>
+    <string name="manual_verification_explanation">Je stuurt je contact de challenge door een kleine hoeveelheid geld van jouw bank acount naar zijn/haar bank account over te maken</string>
+    <string name="transfer_description">Beschrijving overboeking:</string>
 </resources>
