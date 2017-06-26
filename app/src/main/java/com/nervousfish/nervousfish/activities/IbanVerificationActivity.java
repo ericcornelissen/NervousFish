@@ -10,6 +10,7 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.INfcHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
+import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -66,6 +68,12 @@ public final class IbanVerificationActivity extends Activity {
 
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.verification_page_name);
         ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.verification_page_iban);
+
+        final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
+        backButton.setOnClickListener(v -> this.finish());
+
+        final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(this.profile);
+        this.bankVer = new BankVer(this, blockchainWrapper);
     }
 
     /**
@@ -84,6 +92,7 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onManualVerificationClick(final View view) {
         LOGGER.info("Manual verification button was pressed");
+        this.bankVer.
     }
 
     /**

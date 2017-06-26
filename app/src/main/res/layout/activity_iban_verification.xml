@@ -106,7 +106,7 @@
             android:id="@+id/verification_page_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:text="@string/dash"
             android:textColor="@color/white" />
     </LinearLayout>
@@ -131,7 +131,7 @@
             android:id="@+id/verification_page_iban"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:text="@string/dash"
             android:textColor="@color/white" />
     </LinearLayout>

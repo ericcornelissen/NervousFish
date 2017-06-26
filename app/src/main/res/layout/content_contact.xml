@@ -86,7 +86,7 @@
                     android:id="@+id/contact_information_page_iban"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:text="@string/dash"
                     android:textColor="@color/white" />
 
@@ -113,7 +113,7 @@
                     android:id="@+id/verified_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:contentDescription="@string/iban_verified"
                     app:srcCompat="@drawable/cancel" />
 
