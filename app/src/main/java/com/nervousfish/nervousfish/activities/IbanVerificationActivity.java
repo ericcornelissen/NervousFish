@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
@@ -75,8 +76,9 @@ public final class IbanVerificationActivity extends Activity {
      *
      * @param view The button clicked
      */
-    public void onManualVerificationClick(final View view) {
+    public void onManualVerificationClick(final View view) throws InvalidKeyException {
         LOGGER.info("Manual verification button was pressed");
+        this.bankVer.createManualChallenge(this.contact.getIban());
         this.informAcceptChallengeButton();
     }
 
@@ -87,6 +89,7 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onBunqVerificationClick(final View view) {
         LOGGER.info("Bunq verification button was pressed");
+        this.bankVer.createOnlineChallenge(this.contact.getIban());
         this.informAcceptChallengeButton();
     }
 
