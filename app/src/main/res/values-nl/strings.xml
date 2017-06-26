@@ -168,4 +168,6 @@
     <string name="iban_contact">De IBAN van je contact is</string>
     <string name="manual_verification_explanation">Je stuurt je contact de challenge door een kleine hoeveelheid geld van jouw bank acount naar zijn/haar bank account over te maken</string>
     <string name="transfer_description">Beschrijving overboeking:</string>
+    <string name="allow_bunq_challenge">Sta je Bunq toe om 1 cent van je rekening over te maken naar de rekening van je contact?</string>
+    <string name="successfully_initiated_challenge">Succesvol 1 cent overgemaakt met een bijbehorend challenge</string>
 </resources>
