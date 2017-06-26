@@ -169,4 +169,6 @@
     <string name="transfer_description">Transfer description:</string>
     <string name="iban_contact">The IBAN of your contact is</string>
     <string name="challenge_contact">The transfer description is</string>
+    <string name="allow_bunq_challenge">Do you allow Bunq to transfer 1 cent from your bank account to the bank account of your contact?</string>
+    <string name="successfully_initiated_challenge">Successfully transferred 1 cent with a challenge</string>
 </resources>

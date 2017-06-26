@@ -88,8 +88,9 @@ public final class IbanVerificationActivity extends Activity {
     public void onManualVerificationClick(final View view) throws InvalidKeyException {
         LOGGER.info("Manual verification button was pressed");
         this.challenge = this.bankVer.createManualChallenge(this.contact.getIban());
-        this.informAcceptChallengeButton();
         this.showManualVerificationCodes();
+        this.informAcceptChallengeButton();
+        this.finish();
     }
 
     /**
@@ -99,8 +100,29 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onBunqVerificationClick(final View view) {
         LOGGER.info("Bunq verification button was pressed");
-        this.bankVer.createOnlineChallenge(this.contact.getIban());
-        this.informAcceptChallengeButton();
+        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(this.getString(R.string.iban_verification_activity_title))
+                .setContentText(this.getString(R.string.allow_bunq_challenge))
+                .setConfirmText(this.getString(R.string.yes))
+                .setCancelText(this.getString(R.string.no))
+                .showCancelButton(true)
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    sweetAlertDialog.dismiss();
+                    this.bankVer.createOnlineChallenge(this.contact.getIban());
+                    new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(this.getString(R.string.iban_verification_activity_title))
+                            .setContentText(this.getString(R.string.successfully_initiated_challenge))
+                            .setConfirmText(this.getString(R.string.dialog_ok))
+                            .setConfirmClickListener(dialog -> {
+                                dialog.dismissWithAnimation();
+                                this.informAcceptChallengeButton();
+                                this.finish();
+                            })
+                            .show();
+                })
+                .setCancelClickListener(SweetAlertDialog::dismissWithAnimation)
+                .show();
+
     }
 
     /**
