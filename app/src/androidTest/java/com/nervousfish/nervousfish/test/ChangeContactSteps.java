@@ -33,7 +33,6 @@ import cucumber.api.java.en.When;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -46,7 +45,7 @@ import static junit.framework.Assert.assertTrue;
 public class ChangeContactSteps {
 
     private final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
-    private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow");
+    private final IKey key = new Ed25519Key("FTP", "ajfoJKFoeiSDFLow", "foobar".getBytes());
     private final Contact contact = new Contact("Illio", this.key);
     private InputMethodManager inputMethodManager;
     private static final String testpass = "Testpass";

@@ -6,13 +6,13 @@ import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.ModuleWrapper;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -85,35 +85,11 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
     @Override
     public KeyPair generateEd25519KeyPair(final String name) {
         Validate.notBlank(name);
-        final Ed25519 keyPairGenerator = Ed25519.generatePair();
-        final Ed25519Key publicKey = new Ed25519Key(name, keyPairGenerator.getPublicKey());
-        final Ed25519Key privateKey = new Ed25519Key(name, keyPairGenerator.getPrivateKey());
-        return new KeyPair(name, publicKey, privateKey);
+        final Ed25519Generator keyPairGenerator = Ed25519Generator.generatePair();
+        final EdDSAPublicKey publicKey = keyPairGenerator.getPublicKey();
+        final EdDSAPrivateKey privateKey = keyPairGenerator.getPrivateKey();
+        final byte[] seed = keyPairGenerator.getSeed();
+        return new KeyPair(name, new Ed25519Key(name, publicKey.getA(), seed), new Ed25519Key(name, privateKey.getA(), seed));
     }
 
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        // No checks to perform
-    }
 }
