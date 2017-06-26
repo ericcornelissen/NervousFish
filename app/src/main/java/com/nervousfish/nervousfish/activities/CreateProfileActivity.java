@@ -195,7 +195,7 @@ public final class CreateProfileActivity extends AppCompatActivity {
                 .setContentText(this.getString(R.string.profile_created_explanation))
                 .setConfirmText(this.getString(R.string.dialog_ok))
                 .setConfirmClickListener(dialog -> {
-                    dialog.dismiss();
+                    dialog.dismissWithAnimation();
                     this.nextActivity();
                 })
                 .show();

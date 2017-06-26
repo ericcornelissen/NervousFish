@@ -206,7 +206,7 @@ public final class ContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
-            sweetAlertDialog.dismiss();
+            sweetAlertDialog.dismissWithAnimation();
             ContactActivity.this.finish();
         }
     }
