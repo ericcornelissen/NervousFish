@@ -10,6 +10,7 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
 
 /**
@@ -28,9 +30,7 @@ import nl.tudelft.ewi.ds.bankver.BankVer;
 public final class IbanVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");
-    private IServiceLocator serviceLocator;
     private Contact contact;
-    private Profile profile;
     private BankVer bankVer;
 
     /**
@@ -41,14 +41,15 @@ public final class IbanVerificationActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_iban_verification);
 
-        this.serviceLocator = NervousFish.getServiceLocator();
+        final IServiceLocator serviceLocator = NervousFish.getServiceLocator();
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
+        final Profile profile;
         try {
-            this.profile = this.serviceLocator.getDatabase().getProfile();
-        } catch (IOException e) {
-            e.printStackTrace();
+            profile = serviceLocator.getDatabase().getProfile();
+        } catch (final IOException e) {
+            throw new DatabaseException(e);
         }
 
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.verification_page_name);
@@ -57,7 +58,7 @@ public final class IbanVerificationActivity extends Activity {
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_change);
         backButton.setOnClickListener(v -> this.finish());
 
-        final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(this.profile);
+        final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(profile);
         this.bankVer = new BankVer(this, blockchainWrapper);
     }
 
@@ -77,7 +78,8 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onManualVerificationClick(final View view) throws InvalidKeyException {
         LOGGER.info("Manual verification button was pressed");
-        this.bankVer.createManualChallenge(contact.getIban());
+        this.bankVer.createManualChallenge(this.contact.getIban());
+        this.informAcceptChallengeButton();
     }
 
     /**
@@ -87,6 +89,14 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onBunqVerificationClick(final View view) {
         LOGGER.info("Bunq verification button was pressed");
-        this.bankVer.createOnlineChallenge(contact.getIban());
+        this.bankVer.createOnlineChallenge(this.contact.getIban());
+        this.informAcceptChallengeButton();
+    }
+
+    private void informAcceptChallengeButton() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(this.getString(R.string.please_note))
+                .setContentText(this.getString(R.string.iban_button_in_main_screen))
+                .show();
     }
 }
