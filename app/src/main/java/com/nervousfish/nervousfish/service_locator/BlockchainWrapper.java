@@ -19,11 +19,15 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
  * Implements the Blockchain class.
  */
 
-public class BlockchainWrapper implements Blockchain {
+public final class BlockchainWrapper implements Blockchain {
 
-    final private Profile profile;
-    final private IDatabase database;
+    private final Profile profile;
+    private final IDatabase database;
 
+    /**
+     * Initialize the BlockchainWrapper
+     * @param profile The profile of the user
+     */
     public BlockchainWrapper(final Profile profile) {
         this.profile = profile;
         this.database = NervousFish.getServiceLocator().getDatabase();
@@ -62,7 +66,7 @@ public class BlockchainWrapper implements Blockchain {
     @Nullable
     @Override
     public PublicKey getPublicKeyForIBAN(final IBAN iban) {
-        final Contact contact = this.database.getContactWithIBAN(iban);
+        final Contact contact = this.database.getContactWithIban(iban);
         return Ed25519Key.getPublicKeyOf((Ed25519Key) contact.getFirstEd25519Key());
     }
 
