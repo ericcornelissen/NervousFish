@@ -107,7 +107,7 @@ public final class IbanVerificationActivity extends Activity {
                 .setCancelText(this.getString(R.string.no))
                 .showCancelButton(true)
                 .setConfirmClickListener(sweetAlertDialog -> {
-                    sweetAlertDialog.dismiss();
+                    sweetAlertDialog.dismissWithAnimation();
                     this.bankVer.createOnlineChallenge(this.contact.getIban());
                     new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText(this.getString(R.string.iban_verification_activity_title))

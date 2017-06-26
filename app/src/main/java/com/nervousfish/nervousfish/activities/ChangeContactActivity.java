@@ -165,7 +165,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
          */
         @Override
         public void onClick(final SweetAlertDialog sweetAlertDialog) {
-            sweetAlertDialog.dismiss();
+            sweetAlertDialog.dismissWithAnimation();
             ChangeContactActivity.this.finish();
         }
 
