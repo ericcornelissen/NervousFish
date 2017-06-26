@@ -271,8 +271,8 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The view that was clicked
      */
     public void onClickDotsButton(final View view) {
-        final Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-        MainActivity.this.startActivity(intent);
+        final Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
     }
 
     /**

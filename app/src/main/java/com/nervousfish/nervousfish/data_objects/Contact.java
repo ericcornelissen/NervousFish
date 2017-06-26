@@ -106,7 +106,7 @@ public final class Contact implements Serializable {
         return this.iban;
     }
 
-    public boolean getIbanVerified() {
+    public boolean isIbanVerified() {
         return this.ibanVerified;
     }
 
@@ -215,7 +215,7 @@ public final class Contact implements Serializable {
             this.name = contact.name;
             this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
             this.iban = contact.getIban();
-            this.ibanVerified = contact.getIbanVerified();
+            this.ibanVerified = contact.isIbanVerified();
         }
 
         /**
