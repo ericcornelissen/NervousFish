@@ -126,7 +126,7 @@ public final class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
     }
-  
+
     /**
      * Tries to start bluetooth:
      * - If Bluetooth is already enabled, do nothing

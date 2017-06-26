@@ -28,6 +28,7 @@ public final class Contact implements Serializable {
     private final String name;
     private final List<IKey> keys = new ArrayList<>();
     private final IBAN iban;
+    private final boolean ibanVerified;
 
     /**
      * Constructor for the {@link Contact} POJO for a single {@link IKey}.
@@ -41,6 +42,7 @@ public final class Contact implements Serializable {
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
         this.iban = null;
+        this.ibanVerified = false;
     }
 
     /**
@@ -50,13 +52,15 @@ public final class Contact implements Serializable {
      * @param name The name of the {@link Contact}
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
+     * @param ibanVerified The boolean if the IBAN is verified or not.
      */
-    public Contact(final String name, final IKey key, final IBAN iban) {
+    public Contact(final String name, final IKey key, final IBAN iban, final boolean ibanVerified) {
         Validate.notBlank(name);
         Validate.notNull(key);
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
         this.iban = iban;
+        this.ibanVerified = ibanVerified;
     }
 
     /**
@@ -73,6 +77,7 @@ public final class Contact implements Serializable {
             this.keys.add(SerializationUtils.clone(key));
         }
         this.iban = null;
+        this.ibanVerified = false;
     }
 
     /**
@@ -82,13 +87,15 @@ public final class Contact implements Serializable {
      * @param name The name of the {@link Contact}
      * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
+     * @param ibanVerified The boolean if the IBAN is verified or not.
      */
-    public Contact(final String name, final Collection<IKey> keys, final IBAN iban) {
+    public Contact(final String name, final Collection<IKey> keys, final IBAN iban, final boolean ibanVerified) {
         this.name = name;
         for (final IKey key : keys) {
             this.keys.add(SerializationUtils.clone(key));
         }
         this.iban = iban;
+        this.ibanVerified = ibanVerified;
     }
 
     public String getName() {
@@ -97,6 +104,24 @@ public final class Contact implements Serializable {
 
     public IBAN getIban() {
         return this.iban;
+    }
+
+    public boolean isIbanVerified() {
+        return this.ibanVerified;
+    }
+
+    /**
+     * Returns the first Ed25519 Key of the user.
+     *
+     * @return The first Ed25519 Key of the user.
+     */
+    public IKey getFirstEd25519Key() {
+        for (final IKey key : this.keys) {
+            if (key.getType().equals(ConstantKeywords.ED25519_KEY)) {
+                return key;
+            }
+        }
+        throw new IllegalStateException("No Ed25519 key found");
     }
 
     /**
@@ -179,6 +204,7 @@ public final class Contact implements Serializable {
         private final String name;
         private final IKey[] keys;
         private final IBAN iban;
+        private final boolean ibanVerified;
 
         /**
          * Constructs a new SerializationProxy
@@ -189,6 +215,7 @@ public final class Contact implements Serializable {
             this.name = contact.name;
             this.keys = contact.keys.toArray(new IKey[contact.keys.size()]);
             this.iban = contact.getIban();
+            this.ibanVerified = contact.isIbanVerified();
         }
 
         /**
@@ -197,7 +224,7 @@ public final class Contact implements Serializable {
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Contact(this.name, Arrays.asList(this.keys), iban);
+            return new Contact(this.name, Arrays.asList(this.keys), this.iban, this.ibanVerified);
         }
     }
 }

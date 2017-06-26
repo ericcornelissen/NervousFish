@@ -2,9 +2,11 @@ package com.nervousfish.nervousfish.activities;
 
 import android.app.Activity;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.IKey;
 
@@ -38,6 +40,22 @@ final class ListviewActivityHelper {
     static void setText(final Activity activity, final String text, final int id) {
         final TextView tv = (TextView) activity.findViewById(id);
         tv.setText(text);
+    }
+
+    /**
+     * Used to set verified icon of a {@link android.widget.ImageView} in the {@link ContactActivity}.
+     *
+     * @param activity The where the icon has to be set.
+     * @param verified The boolean if the contact is verified.
+     * @param id the {@code R.id} of the target {@link android.widget.ImageView}.
+     */
+    static void setVerified(final Activity activity, final boolean verified, final int id) {
+        final ImageView tv = (ImageView) activity.findViewById(id);
+        if (verified) {
+            tv.setImageDrawable(activity.getResources().getDrawable(R.drawable.checked));
+        } else {
+            tv.setImageDrawable(activity.getResources().getDrawable(R.drawable.cancel));
+        }
     }
 
     /**

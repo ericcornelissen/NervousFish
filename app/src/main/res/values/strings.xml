@@ -90,6 +90,8 @@
     <string name="contact_information">Contact information:</string>
     <string name="contact_public_keys">Public keys:</string>
     <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one. Also make sure the letters are capitalized.</string>
+    <string name="iban_verified">IBAN verified</string>
+
 
     <!-- RhythmActivity -->
     <string name="tap_me">Tap me!</string>
@@ -146,4 +148,20 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
+
+    <!-- IBAN Verification -->
+    <string name="iban_verification_activity_title">IBAN verification</string>
+    <string name="iban_verification_explanation">To verify that the contact in your contact list is real, we can verify that through an IBAN transaction.</string>
+    <string name="iban_manual_verification">Manual verification</string>
+    <string name="iban_bunq_verification">Bunq verification</string>
+    <string name="contact_to_verify">Contact to verify:</string>
+    <string name="iban_first_step">First step</string>
+    <string name="iban_second_step">Second step</string>
+    <string name="iban_third_step">Third step</string>
+    <string name="iban_first_step_explanation">First you\'ll send your contact a challenge.\nClick manual if the bank account is not from the Bunq bank</string>
+    <string name="iban_second_step_explanation">Now your contact will sign this challenge with his private key.\n This button can be found in the main screen menu!</string>
+    <string name="iban_third_step_explanation">After he sends you his response, you can fill it in below to finish</string>
+    <string name="or_send_by_method">Or receive the code from the other person over:</string>
+    <string name="iban_button_in_main_screen">The other person can accept your challengen in Main Screen -> Menu -> IBAN Challenge</string>
+    <string name="please_note">Please note</string>
 </resources>

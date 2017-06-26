@@ -58,6 +58,7 @@ public final class ContactActivity extends AppCompatActivity {
 
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.contact_name);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_contact);
+        ListviewActivityHelper.setVerified(this, this.contact.isIbanVerified(), R.id.verified_icon);
         ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.contact_information_page_iban);
 
         final ListView lv = (ListView) this.findViewById(R.id.list_view_contact);
@@ -149,8 +150,13 @@ public final class ContactActivity extends AppCompatActivity {
                         .setConfirmClickListener(new DeleteContactClickListener())
                         .show();
                 return true;
-            } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
+            } else if (menuItem.getItemId() == R.id.edit_contact_menu_item) {
                 final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
+                intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
+                ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
+                return true;
+            } else if (menuItem.getItemId() == R.id.verify_contact_menu_item) {
+                final Intent intent = new Intent(ContactActivity.this, IbanVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
                 ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
                 return true;

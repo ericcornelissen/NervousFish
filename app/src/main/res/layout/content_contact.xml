@@ -60,20 +60,20 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/color_primary_dark"
                 android:padding="@dimen/contact_page_side_padding"
                 android:text="@string/contact_information"
                 android:textColor="@color/white"
-                android:background="@color/color_primary_dark"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/color_primary_dark"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/contact_page_side_padding"
-                android:paddingRight="@dimen/contact_page_side_padding"
                 android:paddingBottom="@dimen/contact_page_side_padding"
-                android:background="@color/color_primary_dark">
+                android:paddingLeft="@dimen/contact_page_side_padding"
+                android:paddingRight="@dimen/contact_page_side_padding">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -86,16 +86,43 @@
                     android:id="@+id/contact_information_page_iban"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:text="@string/dash"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
+
+
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_primary_dark"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/contact_page_side_padding"
+                android:paddingLeft="@dimen/contact_page_side_padding"
+                android:paddingRight="@dimen/contact_page_side_padding">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/iban_verified"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:id="@+id/verified_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:contentDescription="@string/iban_verified"
+                    app:srcCompat="@drawable/cancel" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/general_divider_height"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -108,7 +135,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/general_divider_height"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <ListView
                 android:id="@+id/list_view_contact"

@@ -90,7 +90,7 @@ public final class ChangeContactActivity extends AppCompatActivity {
                 Contact newContact = new Contact(editTextName.getText().toString(), contact.getKeys());
                 if (!ibanString.equals(EMPTY_STRING)) {
                     newContact = new Contact(editTextName.getText().toString(), contact.getKeys(),
-                            new IBAN(ibanString));
+                            new IBAN(ibanString), contact.isIbanVerified());
                 }
                 if (!contact.equals(newContact)) {
                     serviceLocator.getDatabase().updateContact(contact, newContact);
