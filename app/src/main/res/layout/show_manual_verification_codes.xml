@@ -58,7 +58,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:scaleType="fitCenter"
-                    app:srcCompat="?attr/actionModeCopyDrawable"
+                    android:src="?attr/actionModeCopyDrawable"
                     android:contentDescription="@string/account_holder" />
             </LinearLayout>
         </LinearLayout>
@@ -112,12 +112,12 @@
                     android:layout_weight="0"
                     android:adjustViewBounds="true"
                     android:background="@drawable/button_default"
+                    android:contentDescription="@string/transfer_description"
                     android:onClick="copyChallenge"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:scaleType="fitCenter"
-                    app:srcCompat="?attr/actionModeCopyDrawable"
-                    android:contentDescription="@string/transfer_description" />
+                    android:src="?attr/actionModeCopyDrawable" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
