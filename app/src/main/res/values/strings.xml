@@ -162,6 +162,11 @@
     <string name="iban_second_step_explanation">Now your contact will sign this challenge with his private key.\n This button can be found in the main screen menu!</string>
     <string name="iban_third_step_explanation">After he sends you his response, you can fill it in below to finish</string>
     <string name="or_send_by_method">Or receive the code from the other person over:</string>
-    <string name="iban_button_in_main_screen">The other person can accept your challengen in Main Screen -> Menu -> IBAN Challenge</string>
+    <string name="iban_button_in_main_screen">The other person can accept your challenge in Main Screen -> Menu -> IBAN Challenge</string>
     <string name="please_note">Please note</string>
+    <string name="manual_verification_explanation">To send your contact the challenge, you have to transfer a small amount of money from your bank account to his/her account.\n\n</string>
+    <string name="account_holder">Account holder:</string>
+    <string name="transfer_description">Transfer description:</string>
+    <string name="iban_contact">The IBAN of your contact is</string>
+    <string name="challenge_contact">The transfer description is</string>
 </resources>

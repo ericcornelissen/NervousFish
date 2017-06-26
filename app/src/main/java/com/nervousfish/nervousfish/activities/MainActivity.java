@@ -275,7 +275,7 @@ public final class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    /**
+    /**x
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
      * @param index The index of the contact in {@code this.contacts}.
