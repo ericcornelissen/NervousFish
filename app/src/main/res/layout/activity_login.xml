@@ -6,10 +6,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true">
+        android:layout_marginTop="80dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -24,18 +24,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/error_password_margin_top"
             android:gravity="center"
+            android:text="@string/login_password_mismatch"
             android:textColor="@android:color/holo_red_light"
             android:textSize="@dimen/error_password_text_size"
-            android:text="@string/login_password_mismatch"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/login_password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/enter_password_field_margin_top"
-            android:layout_marginStart="@dimen/field_margin_left"
             android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/enter_password_field_margin_top"
             android:hint="@string/password"
             android:imeOptions="actionSend"
             android:inputType="textPassword" />
