@@ -90,7 +90,6 @@ public final class IbanVerificationActivity extends Activity {
         this.challenge = this.bankVer.createManualChallenge(this.contact.getIban());
         this.showManualVerificationCodes();
         this.informAcceptChallengeButton();
-        this.finish();
     }
 
     /**
@@ -116,7 +115,6 @@ public final class IbanVerificationActivity extends Activity {
                             .setConfirmClickListener(dialog -> {
                                 dialog.dismissWithAnimation();
                                 this.informAcceptChallengeButton();
-                                this.finish();
                             })
                             .show();
                 })
