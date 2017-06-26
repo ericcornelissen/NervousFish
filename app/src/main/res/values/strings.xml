@@ -41,6 +41,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
+    <string name="your_device_name_is">Device name: "%1$s"</string>
 
     <!-- First time use -->
     <string name="welcome_title">Welcome to NervousFish</string>
