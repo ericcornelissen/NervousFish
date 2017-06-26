@@ -123,7 +123,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
             final IDatabase database = this.serviceLocator.getDatabase();
             Contact contact;
             try {
-                contact = new Contact(name, key, new IBAN(iban));
+                contact = new Contact(name, key, new IBAN(iban), false);
             } catch (final IllegalArgumentException e) {
                 LOGGER.info("IBAN is not valid", e);
                 contact = new Contact(name, key);

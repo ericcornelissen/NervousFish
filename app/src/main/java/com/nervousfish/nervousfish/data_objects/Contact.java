@@ -53,13 +53,13 @@ public final class Contact implements Serializable {
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
      */
-    public Contact(final String name, final IKey key, final IBAN iban) {
+    public Contact(final String name, final IKey key, final IBAN iban, final boolean ibanVerified) {
         Validate.notBlank(name);
         Validate.notNull(key);
         this.name = name;
         this.keys.add(SerializationUtils.clone(key));
         this.iban = iban;
-        this.ibanVerified = false;
+        this.ibanVerified = ibanVerified;
     }
 
     /**
