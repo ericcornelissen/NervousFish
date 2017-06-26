@@ -181,7 +181,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public Contact getContactWithIBAN(final IBAN iban) {
+    public Contact getContactWithIban(final IBAN iban) {
         final List<Contact> contacts = this.getAllContacts();
         for (final Contact contact : contacts) {
             if (contact.getIban().equals(iban)) {
@@ -197,7 +197,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      */
     @Override
     public void setContactVerified(final IBAN iban) {
-        final Contact oldContact = this.getContactWithIBAN(iban);
+        final Contact oldContact = this.getContactWithIban(iban);
         final Contact newContact = new Contact(oldContact.getName(), oldContact.getKeys(), oldContact.getIban(), true);
 
         try {

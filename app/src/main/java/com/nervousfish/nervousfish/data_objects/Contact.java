@@ -52,6 +52,7 @@ public final class Contact implements Serializable {
      * @param name The name of the {@link Contact}
      * @param key  The {@link IKey} to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
+     * @param ibanVerified The boolean if the IBAN is verified or not.
      */
     public Contact(final String name, final IKey key, final IBAN iban, final boolean ibanVerified) {
         Validate.notBlank(name);
@@ -86,6 +87,7 @@ public final class Contact implements Serializable {
      * @param name The name of the {@link Contact}
      * @param keys The {@link Collection} of keys to initialize the {@link Contact} with
      * @param iban  The IBAN of the {@link Contact}
+     * @param ibanVerified The boolean if the IBAN is verified or not.
      */
     public Contact(final String name, final Collection<IKey> keys, final IBAN iban, final boolean ibanVerified) {
         this.name = name;

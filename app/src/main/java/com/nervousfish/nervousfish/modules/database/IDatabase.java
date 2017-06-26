@@ -5,7 +5,6 @@ import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.IModule;
 
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.List;
 
 import nl.tudelft.ewi.ds.bankver.IBAN;
@@ -114,7 +113,7 @@ public interface IDatabase extends IModule {
      * @param iban The iban of the contact.
      * @return The contact with the given IBAN.
      */
-    Contact getContactWithIBAN(IBAN iban);
+    Contact getContactWithIban(IBAN iban);
 
     /**
      * Sets the boolean in the Contact with the given IBAN.
