@@ -154,6 +154,8 @@
     <string name="iban_challenge">Copy the challenge here</string>
     <string name="iban_generate_key_hint">Here the challenge will be signed with your private key</string>
     <string name="sign_generate">Generate</string>
+    <string name="iban_challenge_start">Let\'s verify the challenge!</string>
+    <string name="iban_string">IBAN of the challenger</string>
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>

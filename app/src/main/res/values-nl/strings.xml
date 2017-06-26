@@ -150,6 +150,11 @@
 
     <!-- IbanVerificationSigning -->
     <string name="pref_iban_sign_header">IBAN verificatie + ondertekening</string>
+    <string name="iban_challenge">Kopieer de challenge hier</string>
+    <string name="iban_generate_key_hint">Hier wordt de challenge gesigneerd met je private key</string>
+    <string name="sign_generate">Genereer</string>
+    <string name="iban_challenge_start">Laten we de challenge verifiëren!</string>
+    <string name="iban_string">IBAN van de challenger</string>
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>

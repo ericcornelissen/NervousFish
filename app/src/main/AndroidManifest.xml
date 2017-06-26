@@ -56,6 +56,9 @@
             android:name=".activities.IbanVerificationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.IbanSignActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.WelcomeActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />

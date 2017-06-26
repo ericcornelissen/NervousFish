@@ -12,7 +12,6 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.exceptions.DatabaseException;
-import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -27,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import nl.tudelft.ewi.ds.bankver.BankVer;
+import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 /**
  * The {@link Activity} that makes it possible for a user to encrypt his received
@@ -37,10 +38,10 @@ public final class IbanSignActivity extends AppCompatActivity {
     static final Logger LOGGER = LoggerFactory.getLogger("IbanSignActivity");
 
     private IServiceLocator serviceLocator;
+    private EditText ibanInput;
     private EditText challengeInput;
     private TextView challengeOutput;
     private BankVer bankVer;
-    private IDatabase database;
 
     /**
      * {@inheritDoc}
@@ -51,7 +52,6 @@ public final class IbanSignActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_iban_sign);
 
         this.serviceLocator = NervousFish.getServiceLocator();
-        this.database = this.serviceLocator.getDatabase();
 
         final Profile profile;
         try {
@@ -63,7 +63,8 @@ public final class IbanSignActivity extends AppCompatActivity {
         final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(profile);
         this.bankVer = new BankVer(this, blockchainWrapper);
 
-        this.challengeInput = (EditText) this.findViewById(R.id.icon_iban_challenge);
+        this.ibanInput = (EditText) this.findViewById(R.id.icon_iban_verify_challenge);
+        this.challengeInput = (EditText) this.findViewById(R.id.iban_challenge);
         this.challengeOutput = (TextView) this.findViewById(R.id.iban_generate_key);
 
         LOGGER.info("Activity created");
@@ -77,8 +78,12 @@ public final class IbanSignActivity extends AppCompatActivity {
     public void onSubmitClick(final View view) {
         Validate.notNull(view);
         final String challenge = challengeInput.getText().toString();
+        IBAN iban = null;
+        if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
+            iban = new IBAN(ibanInput.getText().toString());
+        }
 
-        bankVer.
+        this.challengeOutput.setText(this.bankVer.handleManualMessage(iban, challenge));
 
     }
 
@@ -126,14 +131,6 @@ public final class IbanSignActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, WaitActivity.class);
         intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
         this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
-    }
-
-    /**
-     * Progress to the next activity from the {@link IbanSignActivity}.
-     */
-    private void nextActivity() {
-        final Intent intent = new Intent(this, MainActivity.class);
-        this.startActivity(intent);
     }
 
 }
