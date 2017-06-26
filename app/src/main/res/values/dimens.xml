@@ -81,4 +81,8 @@
 
     <!-- Custom keyboard -->
     <dimen name="keyboard_button_radius">4dp</dimen>
+
+    <!-- IBAN verification activity -->
+    <dimen name="iban_verification_explanation_margin_top">40dp</dimen>
+    <dimen name="iban_verification_manual_button_margin_top">50dp</dimen>
 </resources>

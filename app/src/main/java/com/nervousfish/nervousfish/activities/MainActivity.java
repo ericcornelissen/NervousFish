@@ -79,6 +79,12 @@ public final class MainActivity extends AppCompatActivity {
         this.database = this.serviceLocator.getDatabase();
         this.popups = new MainActivityPopups(this);
 
+        try {
+            database.addContact(new Contact("Corn", new RSAKey("test", "a", "a"), new IBAN("NL02RABO0155534378")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         final Toolbar toolbar = (Toolbar) this.findViewById(R.id.toolbar_main);
         this.setSupportActionBar(toolbar);
 
@@ -274,8 +280,8 @@ public final class MainActivity extends AppCompatActivity {
      * @param view The view that was clicked
      */
     public void onClickDotsButton(final View view) {
-        final Intent intent = new Intent(this, SettingsActivity.class);
-        this.startActivity(intent);
+        final Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        MainActivity.this.startActivity(intent);
     }
 
     /**

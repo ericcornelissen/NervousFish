@@ -150,8 +150,13 @@ public final class ContactActivity extends AppCompatActivity {
                         .setConfirmClickListener(new DeleteContactClickListener())
                         .show();
                 return true;
-            } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
+            } else if (menuItem.getItemId() == R.id.edit_contact_menu_item) {
                 final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
+                intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
+                ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
+                return true;
+            } else if (menuItem.getItemId() == R.id.verify_contact_menu_item) {
+                final Intent intent = new Intent(ContactActivity.this, IbanVerificationActivity.class);
                 intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
                 ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
                 return true;

@@ -53,6 +53,9 @@
             android:name=".activities.BluetoothConnectActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activities.IbanVerificationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.WelcomeActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
