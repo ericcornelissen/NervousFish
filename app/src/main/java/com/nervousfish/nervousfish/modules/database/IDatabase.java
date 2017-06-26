@@ -115,4 +115,11 @@ public interface IDatabase extends IModule {
      * @return The contact with the given IBAN.
      */
     Contact getContactWithIBAN(IBAN iban);
+
+    /**
+     * Sets the boolean in the Contact with the given IBAN.
+     *
+     * @param iban The iban of the contact.
+     */
+    void setContactVerified(IBAN iban);
 }

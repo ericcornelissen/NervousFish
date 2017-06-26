@@ -68,6 +68,6 @@ public class BlockchainWrapper implements Blockchain {
 
     @Override
     public void setIbanVerified(final PublicKey publicKey, final IBAN iban, final String s) {
-
+        this.database.setContactVerified(iban);
     }
 }

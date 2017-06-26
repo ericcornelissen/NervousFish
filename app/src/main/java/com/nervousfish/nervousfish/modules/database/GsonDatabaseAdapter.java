@@ -196,6 +196,21 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
+    public void setContactVerified(final IBAN iban) {
+        final Contact oldContact = this.getContactWithIBAN(iban);
+        final Contact newContact = new Contact(oldContact.getName(), oldContact.getKeys(), oldContact.getIban(), true);
+
+        try {
+            this.updateContact(oldContact, newContact);
+        } catch (IOException e) {
+            LOGGER.error("IOException when setting contact verified", e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean contactExists(final String name) throws IOException {
         Validate.notBlank(name);
         return this.getContactWithName(name) != null;
