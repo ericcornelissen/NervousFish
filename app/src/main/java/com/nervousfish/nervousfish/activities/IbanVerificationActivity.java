@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
 
 /**
@@ -76,6 +77,7 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onManualVerificationClick(final View view) {
         LOGGER.info("Manual verification button was pressed");
+        this.informAcceptChallengeButton();
     }
 
     /**
@@ -85,5 +87,13 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onBunqVerificationClick(final View view) {
         LOGGER.info("Bunq verification button was pressed");
+        this.informAcceptChallengeButton();
+    }
+
+    private void informAcceptChallengeButton() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(this.getString(R.string.please_note))
+                .setContentText(this.getString(R.string.iban_button_in_main_screen))
+                .show();
     }
 }

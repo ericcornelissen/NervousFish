@@ -104,6 +104,7 @@
     <string name="confirm">Bevestigen</string>
     <string name="contact_information">Contact gegevens:</string>
     <string name="contact_public_keys">Public keys:</string>
+    <string name="iban_verified">IBAN verifieert</string>
 
     <string name="invalid_iban_explanation">Het IBAN nummer dat is ingevoerd is niet geldig, voer een geldige in alsjeblieft.</string>
 
@@ -150,4 +151,16 @@
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
     <string name="iban_verification_explanation">Om er zeker van te zijn dat de persoon in je contacten lijst echt is kunnen we hem verifiëren via een IBAN transactie.</string>
+    <string name="iban_manual_verification">Handmatige verificatie</string>
+    <string name="iban_bunq_verification">Bunq verificatie</string>
+    <string name="contact_to_verify">Contact om te verifiëren:</string>
+    <string name="iban_first_step">Stap 1</string>
+    <string name="iban_second_step">Stap 2</string>
+    <string name="iban_third_step">Stap 3</string>
+    <string name="iban_first_step_explanation">Eerst verstuur je naar je contact een challenge.\nKlik op Handmatig als jouw bank niet de Bunq bank is</string>
+    <string name="iban_second_step_explanation">Nu zal je contact jouw challenge accepteren door het te signen met zijn private key\nDeze knop kan worden gevonden in het menu van het Hoofd-scherm!</string>
+    <string name="iban_third_step_explanation">Nadat hij jou zijn antwoord heeft verstuurd, kun je het hieronder invullen</string>
+    <string name="or_send_by_method">Of ontvang zijn antwoord op een van de volgende manier:</string>
+    <string name="iban_button_in_main_screen">De andere persoon kan jouw challenge accepteren in Hoofd-scherm -> Menu -> IBAN-Challenge!</string>
+    <string name="please_note">Let op</string>
 </resources>
