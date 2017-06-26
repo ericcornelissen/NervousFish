@@ -90,6 +90,8 @@
     <string name="contact_information">Contact information:</string>
     <string name="contact_public_keys">Public keys:</string>
     <string name="invalid_iban_explanation">The IBAN entered is invalid, please use a real one. Also make sure the letters are capitalized.</string>
+    <string name="iban_verified">IBAN verified</string>
+
 
     <!-- RhythmActivity -->
     <string name="tap_me">Tap me!</string>
