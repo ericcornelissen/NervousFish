@@ -25,6 +25,7 @@ import nl.tudelft.ewi.ds.bankver.BankVer;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
+@SuppressWarnings("PMD.SingularField")
 public final class IbanVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");

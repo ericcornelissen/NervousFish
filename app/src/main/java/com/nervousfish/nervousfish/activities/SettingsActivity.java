@@ -69,7 +69,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                 return true;
             } else if (preference.getKey().equals(ConstantKeywords.IBAN_NUMBER)) {
                 LOGGER.info("Preference changed at the iban number");
-                updateIban(preference, stringValue);
+                this.updateIban(preference, stringValue);
                 return true;
             } else if (preference instanceof ListPreference) {
                 LOGGER.info("Preference changed for a ListPreference");
@@ -237,6 +237,10 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
             this.startActivity(intent);
         }
+        if (header.id == R.id.iban_verification_header) {
+            final Intent intent = new Intent(this, IbanVerificationActivity.class);
+            this.startActivity(intent);
+        }
     }
 
     /**
@@ -330,8 +334,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.DISPLAY_NAME));
-            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.IBAN_NUMBER));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.DISPLAY_NAME));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.IBAN_NUMBER));
         }
 
         @Override

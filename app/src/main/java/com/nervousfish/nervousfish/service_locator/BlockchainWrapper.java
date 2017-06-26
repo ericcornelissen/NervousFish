@@ -26,6 +26,7 @@ public final class BlockchainWrapper implements Blockchain {
 
     /**
      * Initialize the BlockchainWrapper
+     *
      * @param profile The profile of the user
      */
     public BlockchainWrapper(final Profile profile) {

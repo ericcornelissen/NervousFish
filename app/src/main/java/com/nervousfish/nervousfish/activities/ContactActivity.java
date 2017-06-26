@@ -58,7 +58,7 @@ public final class ContactActivity extends AppCompatActivity {
 
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.contact_name);
         ListviewActivityHelper.setKeys(this, this.contact.getKeys(), R.id.list_view_contact);
-        ListviewActivityHelper.setVerified(this, this.contact.getIbanVerified(), R.id.verified_icon);
+        ListviewActivityHelper.setVerified(this, this.contact.isIbanVerified(), R.id.verified_icon);
         ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.contact_information_page_iban);
 
         final ListView lv = (ListView) this.findViewById(R.id.list_view_contact);

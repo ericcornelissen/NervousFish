@@ -15,4 +15,9 @@
         android:icon="@drawable/key"
         android:title="@string/pref_key_management_header" />
 
+    <header
+        android:id="@+id/iban_verification_header"
+        android:icon="@drawable/iban"
+        android:title="@string/pref_iban_verification_header" />
+
 </preference-headers>

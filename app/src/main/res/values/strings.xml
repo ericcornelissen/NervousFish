@@ -149,6 +149,9 @@
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
 
+    <!-- IbanVerificationSigning -->
+    <string name="pref_iban_verification_header">IBAN verification + signing</string>
+
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
     <string name="iban_verification_explanation">To verify that the contact in your contact list is real, we can verify that through an IBAN transaction.</string>
