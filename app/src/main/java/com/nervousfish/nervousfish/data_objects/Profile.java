@@ -92,6 +92,20 @@ public final class Profile implements Serializable {
         return this.keyPairs;
     }
 
+    /**
+     * Returns the first Ed25519 Keypair of the user.
+     *
+     * @return The first Ed25519 Keypair of the user.
+     */
+    public KeyPair getFirstEd25519KeyPair() {
+        for (final KeyPair pair : this.keyPairs) {
+            if (pair.getPublicKey().getType().equals(ConstantKeywords.ED25519_KEY)) {
+                return pair;
+            }
+        }
+        throw new IllegalStateException("No Ed25519 key pair");
+    }
+
     public String getName() {
         return this.name;
     }
