@@ -1,5 +1,6 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -130,6 +131,8 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         final LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
+        // 1) Suppressed because this dialog does not need a parent
         final View dialogView = inflater.inflate(R.layout.info_keys, null);
         alert.setView(dialogView);
 

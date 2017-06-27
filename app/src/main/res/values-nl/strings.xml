@@ -68,6 +68,9 @@
     <string name="choose_your_keytype">Kies het type van je huidige keypair:</string>
     <string name="not_yet_implemented">Dit is nog niet mogelijk</string>
     <string name="custom_ed25519_key_not_yet_implemented">Je eigen ED25519 key invoeren in helaas nog niet mogelijk</string>
+    <string name="rsa_key_info">RSA is het meest gebruikte encryptie algoritme\n   - Prima standaard keuze\n   - Bestaat uit een modulus en een exponent, 2 zeer grote priemgetallen\n   - De gegenereerde keys zijn 256 tekens</string>
+    <string name="ed25519_key_info">EdDSA is een relatief nieuwe maar veelbelovend encryptie algoritme\n   - Het is zowel sneller als veiliger dan RSA\n   - Gebruikte een elliptische curve om een public en private ke te bepalen\n   - De gegenereerde keys zijn 512 tekens</string>
+    <string name="custom_key_info">Als je al een RSA of EdDSA key gebruikt, dan kun je deze gebruiken in NervousFish door "Gebruik bestaand keypair" te selecteren</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
