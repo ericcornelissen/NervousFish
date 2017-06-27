@@ -17,8 +17,6 @@
 
     <header
         android:id="@+id/iban_sign_header"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
         android:icon="@drawable/credit_card"
         android:title="@string/pref_iban_sign_header" />
 

@@ -1,6 +1,9 @@
 package com.nervousfish.nervousfish.activities;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +31,8 @@ import java.io.IOException;
 import nl.tudelft.ewi.ds.bankver.BankVer;
 import nl.tudelft.ewi.ds.bankver.IBAN;
 import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
+
+import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
 /**
  * The {@link Activity} that makes it possible for a user to encrypt his received
@@ -84,6 +89,9 @@ public final class IbanSignActivity extends AppCompatActivity {
         }
 
         this.challengeOutput.setText(this.bankVer.handleManualMessage(iban, challenge));
+        final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+        final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, this.challengeOutput.getText());
+        clipboard.setPrimaryClip(clip);
 
     }
 
