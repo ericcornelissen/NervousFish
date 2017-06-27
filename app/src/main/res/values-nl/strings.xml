@@ -88,6 +88,7 @@
     <string name="start_recording">Start met opnemen</string>
     <string name="too_few_taps_title">Te weinig getikt</string>
     <string name="too_few_taps_description">Je moet minimaal 3 keer tikken</string>
+    <string name="rhythm_explanation">Druk op \"Start met opnemen\" en tik hetzelfde ritme als je partner</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
