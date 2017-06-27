@@ -98,13 +98,31 @@
                 android:maxLines="1" />
         </RelativeLayout>
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/field_margin_right"
-            android:layout_marginStart="@dimen/field_margin_left"
-            android:layout_marginTop="@dimen/field_margin_top"
-            android:text="@string/keys_to_generate" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/field_margin_right"
+                android:layout_marginStart="@dimen/field_margin_left"
+                android:layout_marginTop="@dimen/field_margin_top"
+                android:text="@string/keys_to_generate"
+                android:id="@+id/textView" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/field_margin_right"
+                android:layout_marginStart="@dimen/field_margin_left"
+                android:layout_marginTop="@dimen/field_margin_top"
+                android:background="@drawable/button_round"
+                android:src="@android:drawable/ic_menu_help"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/info"
+                android:onClick="onKeyInfoButtonClicked"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"

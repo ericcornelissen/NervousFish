@@ -1,9 +1,11 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,10 +35,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
-@SuppressWarnings({"checkstyle:ReturnCount", "PMD.ExcessiveImports"})
+@SuppressWarnings({"checkstyle:ReturnCount", "PMD.ExcessiveImports", "checkstyle:ClassFanOutComplexity"})
 // 1) Suppresses return count to allow multiple returncodes while checking input fields.
 // 2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
 //    to outsource to another class
+// 3) Suppressed because the class is not meant to be extensible or inheritable
 public final class CreateProfileActivity extends AppCompatActivity {
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
     private final CreateProfileCustomKeyHelper customKeyHelper = new CreateProfileCustomKeyHelper(this, new CustomKeyPairSetter());
@@ -117,6 +120,21 @@ public final class CreateProfileActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * Called when the user clicks on the info button of the keys
+     * @param view The button that was clicked
+     */
+    public void onKeyInfoButtonClicked(final View view) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.info_keys, null);
+        alert.setView(dialogView);
+
+        alert.setPositiveButton(this.getString(R.string.dialog_ok), null);
+        alert.show();
     }
 
     /**

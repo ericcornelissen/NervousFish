@@ -7,7 +7,6 @@
     <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
-    <string name="ed25519_key">Ed25519 key</string>
     <string name="edit">Edit</string>
     <string name="exponent">Exponent</string>
     <string name="logo">Logo</string>
@@ -21,12 +20,14 @@
     <string name="qr">QR</string>
     <string name="qr_code">QR code</string>
     <string name="rsa_key">RSA key</string>
+    <string name="ed25519_key">(Ed)DSA - ED25519</string>
     <string name="save">Save</string>
     <string name="scanning">Scanning…</string>
     <string name="select_device">Select device</string>
     <string name="submit">Submit</string>
     <string name="type">Type</string>
     <string name="yes">Yes</string>
+    <string name="info">Info</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
@@ -66,6 +67,9 @@
     <string name="choose_your_keytype">Choose the type of your current keypair:</string>
     <string name="not_yet_implemented">Feature not yet implemented</string>
     <string name="custom_ed25519_key_not_yet_implemented">Providing your custom ED25519 key is not possible yet.</string>
+    <string name="rsa_key_info">RSA is the most used encryption algorithm.\n  - Excellent default choice\n   -  Consists of a modulus and an exponent, two very large prime numbers\n   -  The generated keys are 256 characters</string>
+    <string name="ed25519_key_info">EdDSA is a relatively new but promising encryption algorithm.\n   -  Both faster and safer than RSA keys\n  - Uses an elliptic curve to determine a public and private key\n   -  The generated keys are 512 characters</string>
+    <string name="custom_key_info">If you\'re already using an RSA or EdDSA key, you can use them in NervousFish by selecting "Use existing keypair"</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>

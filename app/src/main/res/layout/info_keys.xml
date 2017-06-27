@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_enter_rsa_key"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/field_margin_top"
+        android:gravity="center"
+        android:text="@string/rsa_key"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginTop="@dimen/field_margin_top"
+        android:text="@string/rsa_key_info" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/ed25519_key"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginTop="@dimen/field_margin_top"
+        android:text="@string/ed25519_key_info" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/use_existing_keypair"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/field_margin_right"
+        android:layout_marginStart="@dimen/field_margin_left"
+        android:layout_marginTop="@dimen/field_margin_top"
+        android:text="@string/custom_key_info" />
+</LinearLayout>
