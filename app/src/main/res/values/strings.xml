@@ -69,7 +69,7 @@
     <string name="custom_ed25519_key_not_yet_implemented">Providing your custom ED25519 key is not possible yet.</string>
     <string name="rsa_key_info">RSA is the most used encryption algorithm\n  - Excellent default choice\n   -  Consists of a modulus and an exponent, two very large prime numbers\n   -  The generated keys are 256 characters</string>
     <string name="ed25519_key_info">EdDSA is a relatively new but promising encryption algorithm\n   -  Both faster and safer than RSA\n  - Uses an elliptic curve to determine a public and private key\n   -  The generated keys are 512 characters</string>
-    <string name="custom_key_info">If you\'re already using an RSA or EdDSA key, you can use it in NervousFish by selecting "Use existing keypair"</string>
+    <string name="custom_key_info">If you\'re already using an RSA or EdDSA key, you can use it in NervousFish by selecting \"Use existing keypair\"</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>
