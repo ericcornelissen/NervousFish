@@ -42,6 +42,7 @@
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
+    <string name="visual_verification_explanation">Druk 6 keer in dezelfde volgorde op objecten als je partner</string>
 
     <!-- Eerste gebruik -->
     <string name="welcome_title">Welkom bij NervousFish</string>
@@ -88,6 +89,7 @@
     <string name="start_recording">Start met opnemen</string>
     <string name="too_few_taps_title">Te weinig getikt</string>
     <string name="too_few_taps_description">Je moet minimaal 3 keer tikken</string>
+    <string name="rhythm_explanation">Druk op \"Start met opnemen\" en tik hetzelfde ritme als je partner</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>

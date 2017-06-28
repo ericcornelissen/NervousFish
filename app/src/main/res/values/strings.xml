@@ -41,6 +41,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
+    <string name="visual_verification_explanation">Tap 6 times in the same order on objects as your partner</string>
 
     <!-- First time use -->
     <string name="welcome_title">Welcome to NervousFish</string>
@@ -105,6 +106,7 @@
     <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
     <string name="not_the_same_visual_title">Tapping order was the same</string>
     <string name="not_the_same_visual_explanation">Make sure that the locations tapped and the order are the same on both devices.</string>
+    <string name="rhythm_explanation">Press \"Start recording\" and tap the same rhythm as your partner</string>
 
     <!-- Select verification method -->
     <string name="select_verification_method">How do you want to secure your connection?</string>
