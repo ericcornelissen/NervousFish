@@ -107,6 +107,9 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
         // Get the AndroidBluetoothHandler.
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+
+        final String deviceName = String.format(this.getString(R.string.your_device_name_is), this.bluetoothAdapter.getName());
+        ((TextView) this.findViewById(R.id.tv_device_name)).setText(deviceName);
     }
 
     /**
