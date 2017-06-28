@@ -9,12 +9,15 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.charset.Charset;
 
 /**
  * Class that can be used to generate QR codes.
@@ -78,13 +81,15 @@ public final class QRGenerator {
     public static IKey deconstructToKey(final String qrMessage) throws NullPointerException, IllegalArgumentException {
         Validate.notBlank(qrMessage);
         final String spaceBar = " ";
+        final String hashtag = "#";
         final String[] messageComponents = qrMessage.split(", ");
         switch (messageComponents[COMPONENT_KEYTYPE]) {
             case ConstantKeywords.RSA_KEY:
                 return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
                         messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
             case ConstantKeywords.ED25519_KEY:
-                throw new IllegalArgumentException("Ed25519Key not deconstructable");
+                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(hashtag)[0],
+                        messageComponents[COMPONENT_KEY].split(spaceBar)[1].getBytes(Charset.defaultCharset()));
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }

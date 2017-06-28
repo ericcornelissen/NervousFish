@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -138,7 +139,7 @@ public class Ed25519KeyTest {
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 IKey key1 = (IKey) ois.readObject();
                 assertTrue(key1.getName().equals("foo"));
-                assertTrue(key1.getKey().equals("bar"));
+                assertTrue(key1.getKey().equals("bar" + "#" + Arrays.toString("foobar".getBytes())));
             }
         }
     }

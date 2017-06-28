@@ -18,7 +18,6 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -34,8 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
@@ -115,11 +112,6 @@ public final class MainActivity extends AppCompatActivity {
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         if (contact != null) {
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
-        } else {
-            ContactReceivedHelper.newContactReceived(this.database, this, new Contact("Betje Brievenbus",
-                    new Ed25519Key("Tinus Theedoek", "Pia Piano", new byte[]{0, 0, 7}),
-                    new IBAN("NL36RABO0137188641"),
-                    true));
         }
 
         LOGGER.info("Activity created");

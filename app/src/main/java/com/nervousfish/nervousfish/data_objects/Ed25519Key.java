@@ -113,7 +113,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getKey() {
-        return this.key;
+        return this.key + "#" + Arrays.toString(this.seed);
     }
 
     /**

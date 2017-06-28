@@ -112,7 +112,7 @@ public final class QRExchangeActivity extends AppCompatActivity {
             LOGGER.error("No scan result in QR Scanner");
         } else if (resultCode == RESULT_OK) {
             final String result = scanResult.getContents();
-            LOGGER.info("Adding new contact to database");
+            LOGGER.info("QR code scanned: " + result);
             //Name is the first part
             final String name = result.split(SEMI_COLON)[0];
             //IBAN is the second part
