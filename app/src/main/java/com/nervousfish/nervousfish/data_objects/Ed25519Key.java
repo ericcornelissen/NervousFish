@@ -168,7 +168,7 @@ public final class Ed25519Key implements IKey {
     @Override
     public boolean equals(final Object o) {
         if (o == null || this.getClass() != o.getClass()) {
-            return false;x
+            return false;
         }
 
         final Ed25519Key that = (Ed25519Key) o;
