@@ -25,18 +25,6 @@ Feature: Main Activity
       | Zoidberg |
       | Dr. Evil |
 
-  Scenario: Clicking the Bluetooth button
-    Given I am viewing the main activity
-    When I click on the new connection button
-    And I click the button with the Bluetooth icon
-    Then the app shouldn't crash because of Bluetooth
-
-  Scenario: Clicking the Bluetooth button label
-    Given I am viewing the main activity
-    When I click on the new connection button
-    And I click the button with the Bluetooth text label
-    Then the app shouldn't crash because of Bluetooth
-
   Scenario: Clicking the NFC button
     Given I am viewing the main activity
     When I click on the new connection button
@@ -65,3 +53,32 @@ Feature: Main Activity
     Given I am viewing the main activity
     When I click the three dots in the main activity
     Then I should go to the settings screen
+
+  Scenario: Clicking the sorting button once without contacts
+    Given I am viewing the main activity
+    When I click the sorting button
+    Then I should stay in the main activity from the main activity
+
+  Scenario: Clicking the sorting button once with contacts
+    Given I am viewing the main activity
+    When There are contacts with different keys in the database
+    And I click the sorting button
+    Then I should stay in the main activity from the main activity
+
+  Scenario: Clicking the sorting button twice
+    Given I am viewing the main activity
+    When There are contacts with different keys in the database
+    And I click the sorting button
+    And I click the sorting button again
+    Then I should stay in the main activity from the main activity
+
+  Scenario: Popup successfully received
+    Given I am viewing the main activity after exchanging successfully and receiving the contact
+    When I click on OK button
+    Then I should stay in the main activity from the main activity
+
+  Scenario: Popup contact already in database received
+    Given there is a contact in the database
+    And I am viewing the main activity after exchanging successfully and receiving the contact
+    When I click on OK button
+    Then I should stay in the main activity from the main activity

@@ -90,5 +90,4 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final EdDSAPrivateKey privateKey = keyPairGenerator.getPrivateKey();
         return new KeyPair(name, new Ed25519Key(name, publicKey), new Ed25519Key(name, privateKey));
     }
-
 }

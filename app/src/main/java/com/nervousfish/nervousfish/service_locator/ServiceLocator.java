@@ -249,6 +249,16 @@ public class ServiceLocator implements IServiceLocator {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    @DesignedForExtension
+    public boolean isRegisteredToEventBus(final Object object) {
+        Validate.notNull(object);
+        return EventBus.getDefault().isRegistered(object);
+    }
+
+    /**
      * Checks if the module is initialized and throws an error otherwise.
      *
      * @param object The object to check

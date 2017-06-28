@@ -38,24 +38,6 @@ public class WelcomeSteps {
     public ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<>(WelcomeActivity.class, true, false);
 
-    @Before
-    public void createDatabase() throws Exception {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-        KeyGeneratorAdapter keyGen = (KeyGeneratorAdapter) accessConstructor(KeyGeneratorAdapter.class, NervousFish.getServiceLocator());
-        KeyPair keyPair = keyGen.generateRSAKeyPair("Test");
-        Profile profile = new Profile("name", new ArrayList<KeyPair>());
-        profile.addKeyPair(keyPair);
-        database.createDatabase(profile, "Testpass");
-        database.loadDatabase("Testpass");
-    }
-
-    @After
-    public void deleteDatabase() {
-        final IDatabase database = NervousFish.getServiceLocator().getDatabase();
-
-        database.deleteDatabase();
-    }
-
     @Given("^I am viewing welcome activity$")
     public void iAmViewingTheFirstUseActivity() throws IOException {
         final Intent intent = new Intent();

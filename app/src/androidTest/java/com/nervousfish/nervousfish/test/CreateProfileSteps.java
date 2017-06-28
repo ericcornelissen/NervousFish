@@ -152,7 +152,7 @@ public class CreateProfileSteps {
     public void iSelectARSAKeyPair(final Boolean select) {
         if (select) {
             inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-            onView(withId(R.id.checkbox_ed25519_key)).perform(click());
+            onView(withId(R.id.rb_ed25519)).perform(click());
         }
     }
 
@@ -160,7 +160,7 @@ public class CreateProfileSteps {
     public void iSelectAEd25519KeyPair(final Boolean select) {
         if (select) {
             inputMethodManager.hideSoftInputFromWindow(mActivityRule.getActivity().getCurrentFocus().getWindowToken(), 0);
-            onView(withId(R.id.checkbox_rsa_key)).perform(click());
+            onView(withId(R.id.rb_rsa)).perform(click());
         }
     }
 

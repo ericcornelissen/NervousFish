@@ -19,7 +19,6 @@ import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -27,7 +26,6 @@ import com.nervousfish.nervousfish.service_locator.NervousFish;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.security.InvalidKeyException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -57,12 +55,7 @@ public final class IbanVerificationActivity extends Activity {
         final Intent intent = this.getIntent();
         this.contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
 
-        final Profile profile;
-        try {
-            profile = serviceLocator.getDatabase().getProfile();
-        } catch (final IOException e) {
-            throw new DatabaseException(e);
-        }
+        final Profile profile = serviceLocator.getDatabase().getProfile();
 
         ListviewActivityHelper.setText(this, this.contact.getName(), R.id.verification_page_name);
         ListviewActivityHelper.setText(this, this.contact.getIbanAsString(), R.id.verification_page_iban);

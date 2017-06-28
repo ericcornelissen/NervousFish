@@ -1,5 +1,7 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,6 +21,8 @@ public final class Database implements Serializable {
      * @param profile  The profile of the user.
      */
     public Database(final List<Contact> contacts, final Profile profile) {
+        Validate.notNull(contacts);
+        Validate.notNull(profile);
         this.contacts = contacts;
         this.profile = profile;
     }
