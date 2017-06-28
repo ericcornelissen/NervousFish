@@ -30,6 +30,15 @@
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/select_verification_method_description_background_color"
+            android:padding="@dimen/select_verification_method_description_padding"
+            android:text="@string/rhythm_explanation"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
         <include layout="@layout/content_rhythm_create" />
 
     </android.support.design.widget.AppBarLayout>
