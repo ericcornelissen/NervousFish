@@ -166,7 +166,7 @@
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
-    <string name="iban_verification_explanation">To verify that the contact in your contact list is real, we can verify that through an IBAN transaction.</string>
+    <string name="iban_verification_explanation">To verify that his/her iban is correct, you must transfer 1 cent to his/her bank account and he/she back to yours.</string>
     <string name="iban_manual_verification">Manual verification</string>
     <string name="iban_bunq_verification">Bunq verification</string>
     <string name="contact_to_verify">Contact to verify:</string>
@@ -189,4 +189,6 @@
     <string name="iban_verification_success_explanation">The IBAN of your contact is successfully verified.</string>
     <string name="iban_verification_failure">IBAN verification failure</string>
     <string name="iban_verification_failure_explanation">Unfortunately the verification of the IBAN of your contact failed.\nPlease try again.</string>
+    <string name="no_edsa_key_yet">EdDSA key needed</string>
+    <string name="edsa_key_needed_iban">IBAN verification requires an EdDSA key, but you don\'t have such a key yet.\nDo you want to generate one?</string>
 </resources>

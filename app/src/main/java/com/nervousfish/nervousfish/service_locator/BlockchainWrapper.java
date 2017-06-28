@@ -42,8 +42,12 @@ public final class BlockchainWrapper implements Blockchain {
     @NonNull
     @Override
     public PrivateKey getPrivateKey() {
-        final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
-        return ((Ed25519Key) keyPair.getPrivateKey()).getPrivateKey();
+        try {
+            final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
+            return ((Ed25519Key) keyPair.getPrivateKey()).getPrivateKey();
+        } catch (final IllegalStateException e) {
+            throw new IllegalStateException("Private key not found", e);
+        }
     }
 
     /**

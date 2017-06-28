@@ -165,7 +165,7 @@
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
-    <string name="iban_verification_explanation">Om er zeker van te zijn dat de persoon in je contacten lijst echt is kunnen we hem verifiëren via een IBAN transactie.</string>
+    <string name="iban_verification_explanation">Om er zeker van te zijn dat zijn/haar IBAN correct is, moet je 1 cent overmaken naar zijn/haar bankrekening en hij/zij terug naar die van jou.</string>
     <string name="iban_manual_verification">Handmatige verificatie</string>
     <string name="iban_bunq_verification">Bunq verificatie</string>
     <string name="contact_to_verify">Contact om te verifiëren:</string>
@@ -188,4 +188,6 @@
     <string name="iban_verification_success_explanation">De IBAN van je contact is succesvol verifieert.</string>
     <string name="iban_verification_failure">IBAN verificatie mislukt</string>
     <string name="iban_verification_failure_explanation">Helaas is het verifiëren van de IBAN van je contact mislukt.\nProbeer het nog eens.</string>
+    <string name="no_edsa_key_yet">EdDSA key nodig</string>
+    <string name="edsa_key_needed_iban">Je hebt een EdDSA key nodig om een IBAN te kunnen verifiëren, maar je hebt zo\'n sleutel nog niet.\nWil je er eentje genereren?</string>
 </resources>

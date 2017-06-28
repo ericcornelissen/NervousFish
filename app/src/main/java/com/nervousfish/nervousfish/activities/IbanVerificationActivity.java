@@ -18,7 +18,10 @@ import android.widget.Toast;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
+import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
@@ -26,7 +29,10 @@ import com.nervousfish.nervousfish.service_locator.NervousFish;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
@@ -39,6 +45,7 @@ import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 public final class IbanVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");
+    public static final String ED25519_KEY = "ED25519 key";
     private Contact contact;
     private BankVer bankVer;
     private String challenge;
@@ -85,8 +92,13 @@ public final class IbanVerificationActivity extends Activity {
      */
     public void onManualVerificationClick(final View view) throws InvalidKeyException {
         LOGGER.info("Manual verification button was pressed");
-        this.challenge = this.bankVer.createManualChallenge(this.contact.getIban());
-        this.showManualVerificationCodes();
+        try {
+            this.challenge = this.bankVer.createManualChallenge(this.contact.getIban());
+            this.showManualVerificationCodes();
+        } catch (final IllegalStateException e) {
+            LOGGER.warn("No ED25519 key yet", e);
+            this.askUserForNewED25519();
+        }
     }
 
     /**
@@ -196,6 +208,38 @@ public final class IbanVerificationActivity extends Activity {
                     .setConfirmClickListener(SweetAlertDialog::dismissWithAnimation)
                     .show();
         }
+    }
+
+    private void askUserForNewED25519() {
+
+
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(this.getString(R.string.no_edsa_key_yet))
+                .setContentText(this.getString(R.string.edsa_key_needed_iban))
+                .setCancelText(this.getString(R.string.no))
+                .setConfirmText(this.getString(R.string.yes))
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    sweetAlertDialog.dismissWithAnimation();
+
+                    final KeyPair keyPair = NervousFish.getServiceLocator().getKeyGenerator().generateEd25519KeyPair(ED25519_KEY);
+                    final Profile profile = NervousFish.getServiceLocator().getDatabase().getProfile();
+                    profile.addKeyPair(keyPair);
+                    final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(profile);
+                    this.bankVer = new BankVer(this, blockchainWrapper);
+                    try {
+                        NervousFish.getServiceLocator().getDatabase().updateProfile(profile);
+                    } catch (final IOException e) {
+                        LOGGER.error("Could not update the database with the new profile", e);
+                        throw new DatabaseException(e);
+                    }
+                    try {
+                        this.onManualVerificationClick(null);
+                    } catch (InvalidKeyException e) {
+                        LOGGER.error("This error cannot occur - manual verification button clicked", e);
+                    }
+                })
+                .setCancelClickListener(SweetAlertDialog::dismissWithAnimation)
+                .show();
     }
 
     private void showManualVerificationCodes() {
