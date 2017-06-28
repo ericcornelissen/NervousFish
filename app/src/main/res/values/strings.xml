@@ -171,4 +171,8 @@
     <string name="challenge_contact">The transfer description is</string>
     <string name="allow_bunq_challenge">Do you allow Bunq to transfer 1 cent from your bank account to the bank account of your contact?</string>
     <string name="successfully_initiated_challenge">Successfully transferred 1 cent with a challenge</string>
+    <string name="iban_verification_success">IBAN verification success</string>
+    <string name="iban_verification_success_explanation">The IBAN of your contact is successfully verified.</string>
+    <string name="iban_verification_failure">IBAN verification failure</string>
+    <string name="iban_verification_failure_explanation">Unfortunately the verification of the IBAN of your contact failed.\nPlease try again.</string>
 </resources>

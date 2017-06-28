@@ -1,35 +1,28 @@
 package com.nervousfish.nervousfish.data_objects;
 
-import com.google.gson.stream.JsonWriter;
-import com.nervousfish.nervousfish.ConstantKeywords;
+import com.nervousfish.nervousfish.modules.cryptography.Ed25519Generator;
+
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class Ed25519KeyTest {
 
     @Test
     public void testCanBeInstantiatedWithArbitraryValues() {
-        IKey key = new Ed25519Key("Webmail", "foobar", "foobar".getBytes());
+        IKey key = new Ed25519Key("Webmail", mock(EdDSAPublicKey.class), mock(EdDSAPrivateKey.class));
         assertNotNull(key);
     }
 
@@ -37,8 +30,11 @@ public class Ed25519KeyTest {
     public void testCanBeInstantiatedWithMap() throws IOException {
         Map<String, String> map = new ConcurrentHashMap<>();
         map.put("name", "name");
-        map.put("key", "key");
-        map.put("seed", "foobar");
+        final Ed25519Generator keyPairGenerator = Ed25519Generator.generatePair();
+        final EdDSAPublicKey publicKey = keyPairGenerator.getPublicKey();
+        final EdDSAPrivateKey privateKey = keyPairGenerator.getPrivateKey();
+        map.put("publicKey", Utils.bytesToHex(publicKey.getAbyte()));
+        map.put("privateKey", Utils.bytesToHex(privateKey.getAbyte()));
         IKey key = new Ed25519Key(map);
         assertNotNull(key);
     }
@@ -56,7 +52,7 @@ public class Ed25519KeyTest {
         new Ed25519Key(map);
     }
 
-    @Test
+    /*@Test
     public void testGetNameReturnsProvidedName() {
         IKey key = new Ed25519Key("Webserver", "foobar", "foobar".getBytes());
         assertEquals("Webserver", key.getName());
@@ -141,5 +137,13 @@ public class Ed25519KeyTest {
                 assertTrue(key1.getKey().equals("bar"));
             }
         }
+    }*/
+
+    @Test
+    public void testCreation() throws Exception {
+        EdDSAPublicKey publicKey = Ed25519Generator.generatePair().getPublicKey();
+        String hex = Utils.bytesToHex(publicKey.getAbyte());
+        EdDSAPublicKey newPublicKey = ED25519.getPublicKey(hex);
+        assertEquals(publicKey, newPublicKey);
     }
 }

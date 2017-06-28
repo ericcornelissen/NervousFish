@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import java.security.InvalidKeyException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
+import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
@@ -69,6 +71,8 @@ public final class IbanVerificationActivity extends Activity {
 
         final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(profile);
         this.bankVer = new BankVer(this, blockchainWrapper);
+        this.bankVer.setProperty(BankVer.SettingProperty.BANK_TYPE, "Bunq");
+        this.bankVer.setProperty(BankVer.SettingProperty.BUNQ_API_KEY, "55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
     }
 
     /**
@@ -89,7 +93,6 @@ public final class IbanVerificationActivity extends Activity {
         LOGGER.info("Manual verification button was pressed");
         this.challenge = this.bankVer.createManualChallenge(this.contact.getIban());
         this.showManualVerificationCodes();
-        this.informAcceptChallengeButton();
     }
 
     /**
@@ -125,6 +128,7 @@ public final class IbanVerificationActivity extends Activity {
 
     /**
      * Called by the Show IBAN button
+     *
      * @param view The button that called the function
      */
     public void showIban(final View view) {
@@ -137,6 +141,7 @@ public final class IbanVerificationActivity extends Activity {
 
     /**
      * Called by the Copy IBAN button
+     *
      * @param view The button that called the function
      */
     public void copyIban(final View view) {
@@ -144,11 +149,12 @@ public final class IbanVerificationActivity extends Activity {
         final ClipData clip = ClipData.newPlainText("", this.contact.getIbanAsString());
         clipboard.setPrimaryClip(clip);
 
-        Toast.makeText(this, "Copied the IBAN to your clipboard", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Copied the IBAN to your clipboard", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Called by the Show Challenge button
+     *
      * @param view The button that called the function
      */
     public void showChallenge(final View view) {
@@ -161,6 +167,7 @@ public final class IbanVerificationActivity extends Activity {
 
     /**
      * Called by the Copy Challenge button
+     *
      * @param view The button that called the function
      */
     public void copyChallenge(final View view) {
@@ -168,7 +175,33 @@ public final class IbanVerificationActivity extends Activity {
         final ClipData clip = ClipData.newPlainText("", this.challenge);
         clipboard.setPrimaryClip(clip);
 
-        Toast.makeText(this, "Copied the challenge to your clipboard", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Copied the challenge to your clipboard", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Called when the user clicks the button to verify the iban response from his partner
+     *
+     * @param view The button that was clicked
+     */
+    public void verifyIbanResponse(final View view) {
+        final String response = ((EditText) this.findViewById(R.id.edit_iban_response)).getText().toString();
+        final boolean responseValid = ChallengeResponse.isValidResponse(response, this.contact.getFirstEd25519Key());
+        if (responseValid) {
+            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText(this.getString(R.string.iban_verification_success))
+                    .setContentText(this.getString(R.string.iban_verification_success_explanation))
+                    .setConfirmClickListener(sweetAlertDialog -> {
+                        sweetAlertDialog.dismissWithAnimation();
+                        this.finish();
+                    })
+                    .show();
+        } else {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(this.getString(R.string.iban_verification_failure))
+                    .setContentText(this.getString(R.string.iban_verification_failure_explanation))
+                    .setConfirmClickListener(SweetAlertDialog::dismissWithAnimation)
+                    .show();
+        }
     }
 
     private void showManualVerificationCodes() {
@@ -182,7 +215,7 @@ public final class IbanVerificationActivity extends Activity {
         alert.setMessage(this.getString(R.string.manual_verification_explanation));
         alert.setView(dialogView);
 
-        alert.setPositiveButton(this.getString(R.string.dialog_ok), null);
+        alert.setPositiveButton(this.getString(R.string.dialog_ok), (dialog, which) -> this.informAcceptChallengeButton());
         alert.show();
 
         ((Button) dialogView.findViewById(R.id.contact_iban)).setText(this.contact.getIbanAsString());

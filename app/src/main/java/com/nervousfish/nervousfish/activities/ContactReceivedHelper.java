@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
+import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -32,6 +33,11 @@ enum ContactReceivedHelper {
     ;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactReceivedHelper.class);
+
+    static IDatabase database;
+    static Contact contact;
+    static List<IKey> keyss1;
+    static List<IKey> keyss2;
 
     private enum ContactExists {
         NOT, BY_NAME, BY_NAME_AND_KEYS
@@ -136,6 +142,8 @@ enum ContactReceivedHelper {
         assert database != null;
         assert contact != null;
         final String name = contact.getName();
+        ContactReceivedHelper.database = database;
+        ContactReceivedHelper.contact = contact;
         try {
             final List<Contact> list = database.getAllContacts();
             for (final Contact e : list) {
@@ -162,6 +170,8 @@ enum ContactReceivedHelper {
     private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
         assert keys1 != null;
         assert keys2 != null;
+        keyss1 = keys1;
+        keyss2 = keys2;
         final Set<IKey> keysSet1 = new HashSet<>(keys1);
         for (final IKey key : keys2) {
             if (!keysSet1.contains(key)) {

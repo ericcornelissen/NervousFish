@@ -88,8 +88,7 @@ public final class KeyGeneratorAdapter implements IKeyGenerator {
         final Ed25519Generator keyPairGenerator = Ed25519Generator.generatePair();
         final EdDSAPublicKey publicKey = keyPairGenerator.getPublicKey();
         final EdDSAPrivateKey privateKey = keyPairGenerator.getPrivateKey();
-        final byte[] seed = keyPairGenerator.getSeed();
-        return new KeyPair(name, new Ed25519Key(name, publicKey.getA(), seed), new Ed25519Key(name, privateKey.getA(), seed));
+        return new KeyPair(name, new Ed25519Key(name, publicKey), new Ed25519Key(name, privateKey));
     }
 
 }

@@ -26,6 +26,8 @@ import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEven
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import net.i2p.crypto.eddsa.Utils;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.ewi.ds.bankver.IBAN;
+import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
 /**
  * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
@@ -115,9 +118,9 @@ public final class MainActivity extends AppCompatActivity {
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         if (contact != null) {
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
-        } else {
+        } else if (this.contacts.isEmpty()) {
             ContactReceivedHelper.newContactReceived(this.database, this, new Contact("Betje Brievenbus",
-                    new Ed25519Key("Tinus Theedoek", "Pia Piano", new byte[]{0, 0, 7}),
+                    this.serviceLocator.getKeyGenerator().generateEd25519KeyPair("Tinus Theedoek").getPublicKey(),
                     new IBAN("NL36RABO0137188641"),
                     true));
         }

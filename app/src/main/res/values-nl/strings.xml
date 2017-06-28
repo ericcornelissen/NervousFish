@@ -170,4 +170,8 @@
     <string name="transfer_description">Beschrijving overboeking:</string>
     <string name="allow_bunq_challenge">Sta je Bunq toe om 1 cent van je rekening over te maken naar de rekening van je contact?</string>
     <string name="successfully_initiated_challenge">Succesvol 1 cent overgemaakt met een bijbehorend challenge</string>
+    <string name="iban_verification_success">IBAN verificatie succesvol</string>
+    <string name="iban_verification_success_explanation">De IBAN van je contact is succesvol verifieert.</string>
+    <string name="iban_verification_failure">IBAN verificatie mislukt</string>
+    <string name="iban_verification_failure_explanation">Helaas is het verifiëren van de IBAN van je contact mislukt.\nProbeer het nog eens.</string>
 </resources>

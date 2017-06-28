@@ -72,7 +72,14 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.google.code.findbugs:annotations:2.0.1'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'net.i2p.crypto:eddsa:0.1.0'
+    compile 'net.i2p.crypto:eddsa:0.2.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.4'
     compile files('./libs/bankver.jar')
 
     testCompile 'junit:junit:4.12'

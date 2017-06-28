@@ -9,6 +9,9 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -42,7 +45,7 @@ public final class BlockchainWrapper implements Blockchain {
     @Override
     public PrivateKey getPrivateKey() {
         final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
-        return Ed25519Key.getPrivateKeyOf((Ed25519Key) keyPair.getPrivateKey());
+        return ((Ed25519Key) keyPair.getPrivateKey()).getPrivateKey();
     }
 
     /**
@@ -54,7 +57,7 @@ public final class BlockchainWrapper implements Blockchain {
     @Override
     public PublicKey getPublicKey() {
         final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
-        return Ed25519Key.getPublicKeyOf((Ed25519Key) keyPair.getPublicKey());
+        return ((Ed25519Key) keyPair.getPublicKey()).getPublicKey();
     }
 
     /**
@@ -67,7 +70,7 @@ public final class BlockchainWrapper implements Blockchain {
     @Override
     public PublicKey getPublicKeyForIBAN(final IBAN iban) {
         final Contact contact = this.database.getContactWithIban(iban);
-        return Ed25519Key.getPublicKeyOf((Ed25519Key) contact.getFirstEd25519Key());
+        return contact.getFirstEd25519Key();
     }
 
     @Override
