@@ -43,6 +43,7 @@
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
+    <string name="your_device_name_is">Toestel naam: "%1$s"</string>
     <string name="visual_verification_explanation">Druk 6 keer in dezelfde volgorde op objecten als je partner</string>
 
     <!-- Eerste gebruik -->
