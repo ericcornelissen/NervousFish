@@ -37,6 +37,7 @@ import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class IbanVerificationActivity extends Activity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");

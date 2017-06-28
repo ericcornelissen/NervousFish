@@ -160,7 +160,6 @@
     <string name="iban_first_step_explanation">Eerst verstuur je naar je contact een challenge.\nKlik op Handmatig als jouw bank niet de Bunq bank is</string>
     <string name="iban_second_step_explanation">Nu zal je contact jouw challenge accepteren door het te signen met zijn private key\nDeze knop kan worden gevonden in het menu van het Hoofd-scherm!</string>
     <string name="iban_third_step_explanation">Nadat hij jou zijn antwoord heeft verstuurd, kun je het hieronder invullen</string>
-    <string name="or_send_by_method">Of ontvang zijn antwoord op een van de volgende manier:</string>
     <string name="iban_button_in_main_screen">De andere persoon kan jouw challenge accepteren in Hoofd-scherm -> Menu -> IBAN-Challenge!</string>
     <string name="please_note">Let op</string>
     <string name="account_holder">Rekeninghouder:</string>

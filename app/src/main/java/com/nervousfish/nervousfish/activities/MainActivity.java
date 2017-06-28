@@ -18,15 +18,12 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
 import com.nervousfish.nervousfish.modules.pairing.events.BluetoothConnectedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
-
-import net.i2p.crypto.eddsa.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.ewi.ds.bankver.IBAN;
-import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
 /**
  * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
@@ -73,6 +69,8 @@ public final class MainActivity extends AppCompatActivity {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    // 1) Suppressed because at line 115 we cannot easily refactor the ternary to an alternative
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -286,7 +284,8 @@ public final class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    /**x
+    /**
+     * x
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
      * @param index The index of the contact in {@code this.contacts}.

@@ -9,9 +9,6 @@ import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 
-import net.i2p.crypto.eddsa.EdDSAPrivateKey;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
-
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -29,6 +26,7 @@ public final class BlockchainWrapper implements Blockchain {
 
     /**
      * Initialize the BlockchainWrapper
+     *
      * @param profile The profile of the user
      */
     public BlockchainWrapper(final Profile profile) {

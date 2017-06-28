@@ -24,6 +24,7 @@ import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
  * <p>
  * For more info about Ed25519 see: https://ed25519.cr.yp.to/
  */
+@SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD.NullAssignment"})
 public final class Ed25519Key implements IKey {
 
     private static final long serialVersionUID = -3865050366412869804L;
@@ -71,6 +72,7 @@ public final class Ed25519Key implements IKey {
      * Constructor for a Ed25519-based key.
      *
      * @param name       The name for the key.
+     * @param publicKey  The public key
      * @param privateKey The private key
      */
     public Ed25519Key(final String name, final EdDSAPublicKey publicKey, final EdDSAPrivateKey privateKey) {
@@ -122,7 +124,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getKey() {
-        return Utils.bytesToHex(this.privateKey != null ? this.privateKey.getAbyte() : this.publicKey.getAbyte());
+        return Utils.bytesToHex(this.privateKey == null ? this.publicKey.getAbyte() : this.privateKey.getAbyte());
     }
 
     /**
@@ -130,7 +132,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getFormattedKey() {
-        return Utils.bytesToHex(this.privateKey != null ? this.privateKey.getAbyte() : this.publicKey.getAbyte());
+        return Utils.bytesToHex(this.privateKey == null ? this.publicKey.getAbyte() : this.privateKey.getAbyte());
     }
 
     /**
@@ -162,16 +164,19 @@ public final class Ed25519Key implements IKey {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({"checkstyle:OperatorWrap", "checkstyle:LineLength"})
     @Override
     public boolean equals(final Object o) {
         if (o == null || this.getClass() != o.getClass()) {
-            return false;
+            return false;x
         }
 
         final Ed25519Key that = (Ed25519Key) o;
         return this.name.equals(that.name)
-                && ((this.privateKey != null && that.privateKey != null && Utils.bytesToHex(this.privateKey.getAbyte()).equals(Utils.bytesToHex(that.privateKey.getAbyte()))) || this.privateKey == that.privateKey)
-                && ((this.publicKey != null && that.publicKey != null && Utils.bytesToHex(this.publicKey.getAbyte()).equals(Utils.bytesToHex(that.publicKey.getAbyte()))) || this.publicKey == that.publicKey);
+                && (this.privateKey != null && that.privateKey != null &&
+                Utils.bytesToHex(this.privateKey.getAbyte()).equals(Utils.bytesToHex(that.privateKey.getAbyte())) || this.privateKey == that.privateKey)
+                && (this.publicKey != null && that.publicKey != null &&
+                Utils.bytesToHex(this.publicKey.getAbyte()).equals(Utils.bytesToHex(that.publicKey.getAbyte())) || this.publicKey == that.publicKey);
     }
 
     /**
@@ -179,8 +184,13 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public int hashCode() {
-        Log.d("ASDF" , this.name);
-        return this.name.hashCode() + ((this.privateKey == null) ? 0 : Utils.bytesToHex(this.privateKey.getAbyte()).hashCode()) + ((this.publicKey == null) ? 0 : Utils.bytesToHex(this.publicKey.getAbyte()).hashCode());
+        Log.d("ASDF", this.name);
+        return this.name.hashCode() + ((this.privateKey == null)
+                ? 0
+                : Utils.bytesToHex(this.privateKey.getAbyte()).hashCode())
+                + (this.publicKey == null
+                ? 0
+                : Utils.bytesToHex(this.publicKey.getAbyte()).hashCode());
     }
 
 

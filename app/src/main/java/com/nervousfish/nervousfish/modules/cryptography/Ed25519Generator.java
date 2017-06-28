@@ -1,15 +1,7 @@
 package com.nervousfish.nervousfish.modules.cryptography;
 
-import com.nervousfish.nervousfish.data_objects.Ed25519Key;
-
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
-import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
-import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
-import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
-
-import java.security.SecureRandom;
 
 import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
@@ -50,6 +42,7 @@ public final class Ed25519Generator {
      * Get an instance of a Ed25519Generator, which provides a public/private privateKey-pair
      * based on the Ed25519Generator algorithm.
      *
+     * @param privateKey The private key key
      * @return A new {@link Ed25519Generator} instance.
      */
     static Ed25519Generator generatePair(final EdDSAPrivateKey privateKey) {
@@ -59,10 +52,16 @@ public final class Ed25519Generator {
         return new Ed25519Generator(publicKey, privateKey);
     }
 
+    /**
+     * @return The public key
+     */
     public EdDSAPublicKey getPublicKey() {
         return this.publicKey;
     }
 
+    /**
+     * @return The private key
+     */
     public EdDSAPrivateKey getPrivateKey() {
         return this.privateKey;
     }

@@ -7,7 +7,6 @@ import android.widget.EditText;
 
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.Database;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -34,15 +33,6 @@ enum ContactReceivedHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactReceivedHelper.class);
 
-    static IDatabase database;
-    static Contact contact;
-    static List<IKey> keyss1;
-    static List<IKey> keyss2;
-
-    private enum ContactExists {
-        NOT, BY_NAME, BY_NAME_AND_KEYS
-    }
-
     /**
      * Adds a new contact to the database. If it existed already, it asks the user if he wants to add
      * the received public key to the existing contact, or if he wants to create a contact with a new name.
@@ -55,7 +45,7 @@ enum ContactReceivedHelper {
         Validate.notNull(database);
         Validate.notNull(activity);
         Validate.notNull(contact);
-      
+
         switch (checkExists(database, contact)) {
             case NOT:
                 LOGGER.info("Adding contact to database...");
@@ -99,7 +89,7 @@ enum ContactReceivedHelper {
      *
      * @param database The {@link IDatabase} to use.
      * @param activity The {@link Activity} to use.
-     * @param contact The new {@link Contact}.
+     * @param contact  The new {@link Contact}.
      */
     private static void handleExistingContact(final IDatabase database, final Activity activity, final Contact contact) {
         assert database != null;
@@ -119,12 +109,12 @@ enum ContactReceivedHelper {
      * Handle the case where a newly received contact is a duplicate.
      *
      * @param activity The {@link Activity} to use.
-     * @param contact The new {@link Contact}.
+     * @param contact  The new {@link Contact}.
      */
     private static void handleDuplicateContact(final Activity activity, final Contact contact) {
         assert activity != null;
         assert contact != null;
-      
+
         new SweetAlertDialog(activity, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText(activity.getString(R.string.contact_already_exists))
                 .setContentText(String.format(activity.getString(R.string.contact_exists_nothing_done), contact.getName()))
@@ -142,8 +132,6 @@ enum ContactReceivedHelper {
         assert database != null;
         assert contact != null;
         final String name = contact.getName();
-        ContactReceivedHelper.database = database;
-        ContactReceivedHelper.contact = contact;
         try {
             final List<Contact> list = database.getAllContacts();
             for (final Contact e : list) {
@@ -170,8 +158,6 @@ enum ContactReceivedHelper {
     private static boolean checkKeysEqual(final List<IKey> keys1, final List<IKey> keys2) {
         assert keys1 != null;
         assert keys2 != null;
-        keyss1 = keys1;
-        keyss2 = keys2;
         final Set<IKey> keysSet1 = new HashSet<>(keys1);
         for (final IKey key : keys2) {
             if (!keysSet1.contains(key)) {
@@ -179,6 +165,10 @@ enum ContactReceivedHelper {
             }
         }
         return true;
+    }
+
+    private enum ContactExists {
+        NOT, BY_NAME, BY_NAME_AND_KEYS
     }
 
     private static final class CreateNewContactClickListener implements SweetAlertDialog.OnSweetClickListener {
@@ -194,7 +184,7 @@ enum ContactReceivedHelper {
          *
          * @param activity The activity related to creating the {@link Contact}.
          * @param database The {@link IDatabase} instance to use.
-         * @param contact The {@link Contact} to add.
+         * @param contact  The {@link Contact} to add.
          */
         CreateNewContactClickListener(final Activity activity, final IDatabase database, final Contact contact) {
             Validate.notNull(activity);
@@ -287,7 +277,7 @@ enum ContactReceivedHelper {
          * Create a click listeners for the add public key to contact button.
          *
          * @param database The {@link IDatabase} instance to use.
-         * @param contact The {@link Contact} to add the key to.
+         * @param contact  The {@link Contact} to add the key to.
          */
         AddPublicKeyToContactsClickListener(final IDatabase database, final Contact contact) {
             Validate.notNull(database);
