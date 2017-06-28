@@ -111,6 +111,16 @@ public final class RhythmVerificationActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
+    public void onBackPressed() {
+        this.serviceLocator.getBluetoothHandler().stop();
+        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        this.finish();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == ConstantKeywords.DONE_PAIRING_RESULT_CODE) {

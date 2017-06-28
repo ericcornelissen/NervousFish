@@ -85,6 +85,16 @@ public final class VisualVerificationActivity extends Activity {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        this.serviceLocator.getBluetoothHandler().stop();
+        this.setResult(ConstantKeywords.CANCEL_PAIRING_RESULT_CODE);
+        this.finish();
+    }
+
+    /**
      * Go to the next activity and provide it with the generated pattern.
      */
     private void nextActivity() {
