@@ -124,11 +124,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getKey() {
-<<<<<<< HEAD
-        return this.key + "#" + Arrays.toString(this.seed);
-=======
         return Utils.bytesToHex(this.privateKey == null ? this.publicKey.getAbyte() : this.privateKey.getAbyte());
->>>>>>> integration-develop
     }
 
     /**

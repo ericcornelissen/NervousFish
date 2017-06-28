@@ -13,11 +13,15 @@ import com.nervousfish.nervousfish.data_objects.Ed25519Key;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.RSAKey;
 
+import net.i2p.crypto.eddsa.Utils;
+
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
+
+import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
 /**
  * Class that can be used to generate QR codes.
@@ -88,8 +92,8 @@ public final class QRGenerator {
                 return new RSAKey(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(spaceBar)[0],
                         messageComponents[COMPONENT_KEY].split(spaceBar)[1]);
             case ConstantKeywords.ED25519_KEY:
-                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME], messageComponents[COMPONENT_KEY].split(hashtag)[0],
-                        messageComponents[COMPONENT_KEY].split(spaceBar)[1].getBytes(Charset.defaultCharset()));
+                return new Ed25519Key(messageComponents[COMPONENT_KEYNAME],
+                        ED25519.getPublicKey(Utils.hexToBytes(messageComponents[COMPONENT_KEY].split(hashtag)[0])));
             default:
                 throw new IllegalArgumentException("Key Type Not Found in deconstructKey");
         }
