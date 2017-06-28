@@ -12,5 +12,5 @@ interface ICustomKeyPairSetter {
      * @param publicKey  The public part of the RSA key pair
      * @param privateKey The private part of the RSA key pair
      */
-    void setRSAKeyPair(final RSAKey publicKey, final RSAKey privateKey);
+    void setRSAKeyPair(RSAKey publicKey, RSAKey privateKey);
 }

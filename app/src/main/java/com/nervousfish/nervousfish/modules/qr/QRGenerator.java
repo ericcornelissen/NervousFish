@@ -19,8 +19,6 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
-
 import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
 /**
