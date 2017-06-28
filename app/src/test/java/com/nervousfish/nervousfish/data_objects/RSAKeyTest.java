@@ -3,6 +3,9 @@ package com.nervousfish.nervousfish.data_objects;
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -113,7 +116,7 @@ public class RSAKeyTest {
     @Test
     public void testEqualsReturnsFalseForDifferentKeyTypes() {
         IKey keyA = new RSAKey("Personal", "foo", "bar");
-        IKey keyB = new Ed25519Key("Computer", "Hello world!", "foobar".getBytes());
+        IKey keyB = new Ed25519Key("Computer", mock(EdDSAPublicKey.class), mock(EdDSAPrivateKey.class));
         assertFalse(keyA.equals(keyB));
     }
 

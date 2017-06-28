@@ -26,6 +26,7 @@ public final class BlockchainWrapper implements Blockchain {
 
     /**
      * Initialize the BlockchainWrapper
+     *
      * @param profile The profile of the user
      */
     public BlockchainWrapper(final Profile profile) {
@@ -41,8 +42,12 @@ public final class BlockchainWrapper implements Blockchain {
     @NonNull
     @Override
     public PrivateKey getPrivateKey() {
-        final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
-        return Ed25519Key.getPrivateKeyOf((Ed25519Key) keyPair.getPrivateKey());
+        try {
+            final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
+            return ((Ed25519Key) keyPair.getPrivateKey()).getPrivateKey();
+        } catch (final IllegalStateException e) {
+            throw new IllegalStateException("Private key not found", e);
+        }
     }
 
     /**
@@ -54,7 +59,7 @@ public final class BlockchainWrapper implements Blockchain {
     @Override
     public PublicKey getPublicKey() {
         final KeyPair keyPair = this.profile.getFirstEd25519KeyPair();
-        return Ed25519Key.getPublicKeyOf((Ed25519Key) keyPair.getPublicKey());
+        return ((Ed25519Key) keyPair.getPublicKey()).getPublicKey();
     }
 
     /**
@@ -67,7 +72,7 @@ public final class BlockchainWrapper implements Blockchain {
     @Override
     public PublicKey getPublicKeyForIBAN(final IBAN iban) {
         final Contact contact = this.database.getContactWithIban(iban);
-        return Ed25519Key.getPublicKeyOf((Ed25519Key) contact.getFirstEd25519Key());
+        return contact.getFirstEd25519Key();
     }
 
     @Override

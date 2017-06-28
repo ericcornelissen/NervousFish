@@ -78,7 +78,7 @@ public final class LoginActivity extends AppCompatActivity {
             database.loadDatabase(providedPassword);
             mError.setVisibility(View.GONE);
             this.toMainActivity();
-        } catch (IOException e) {
+        } catch (final IOException | IllegalArgumentException e) {
             LOGGER.error("Something went wrong when loading the database", e);
             mError.setVisibility(View.VISIBLE);
         }

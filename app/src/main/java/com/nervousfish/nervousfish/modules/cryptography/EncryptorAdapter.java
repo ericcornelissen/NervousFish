@@ -10,13 +10,13 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -28,15 +28,18 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * An adapter to the default Java class for encrypting messages
  */
-@SuppressWarnings("checkstyle:ClassFanOutComplexity")
-// 1) Suppressed because the java crypto and security libraries require a lot of objects to use correctly
+@SuppressWarnings({"checkstyle:ClassFanOutComplexity", "PMD.ExcessiveImports"})
+// 1 & 2) The java.security and javax.crypto libraries, used for proper encryption, require a lot of imports
 public final class EncryptorAdapter implements IEncryptor {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("EncryptorAdapter");
     private static final String PBE_WITH_MD5_AND_DES = "PBEWithMD5AndDES";
     private static final String UTF_8_NO_LONGER_SUPPORTED = "UTF-8 is no longer an encoding algorithm";
@@ -44,7 +47,6 @@ public final class EncryptorAdapter implements IEncryptor {
     private static final int SEED = 1234569;
     private static final int IV_SPEC_SIZE = 8;
     private static final String UTF_8 = "UTF-8";
-
 
     /**
      * Prevents construction from outside the class.
@@ -137,7 +139,7 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
-    public SecretKey makeKeyFromPassword(final String password) throws InvalidKeySpecException, EncryptionException {
+    public SecretKey makeKeyFromPassword(final String password) {
         LOGGER.info("Making key for encryption");
         Validate.notBlank(password);
         try {
@@ -146,7 +148,7 @@ public final class EncryptorAdapter implements IEncryptor {
             final SecretKey key = keyFactory.generateSecret(keySpec);
             LOGGER.info("Key successfully made");
             return key;
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
             LOGGER.error("There isn't an algorithm like PBEWithMD5AndDES", e);
             throw new EncryptionException("Cannot happen, no algorithm like PBEWithMD5AndDES", e);
         }
@@ -156,9 +158,25 @@ public final class EncryptorAdapter implements IEncryptor {
      * {@inheritDoc}
      */
     @Override
+    public byte[] decryptWithPassword(final byte[] toDecrypt, final long key) throws GeneralSecurityException {
+        LOGGER.info("Started decrypting byte array with password");
+
+        final ByteBuffer buffer = ByteBuffer.allocate(2 * Long.SIZE / Byte.SIZE);
+        buffer.putLong(key);
+        final Key aesKey = new SecretKeySpec(buffer.array(), "AES");
+        final IvParameterSpec ivParameterSpec = new IvParameterSpec(aesKey.getEncoded());
+        final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
+        return cipher.doFinal(toDecrypt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String decryptWithPassword(final String toDecrypt, final SecretKey key) throws EncryptionException,
             IllegalBlockSizeException, BadPaddingException {
-        LOGGER.info("Started decrypting with password");
+        LOGGER.info("Started decrypting string with password");
         Validate.notBlank(toDecrypt);
         Validate.notNull(key);
 
@@ -167,7 +185,7 @@ public final class EncryptorAdapter implements IEncryptor {
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.DECRYPT_MODE;
-        final Cipher cipher = this.getCipher(key, ivSpec, mode);
+        final Cipher cipher = getCipher(key, ivSpec, mode);
 
         try {
             final byte[] decodedValue = Base64.decode(toDecrypt, Base64.DEFAULT);
@@ -194,7 +212,7 @@ public final class EncryptorAdapter implements IEncryptor {
         random.nextBytes(ivSpec);
 
         final int mode = Cipher.ENCRYPT_MODE;
-        final Cipher cipher = this.getCipher(key, ivSpec, mode);
+        final Cipher cipher = getCipher(key, ivSpec, mode);
 
         try {
             final byte[] cipherText = cipher.doFinal(toEncrypt.getBytes(UTF_8));
@@ -204,31 +222,5 @@ public final class EncryptorAdapter implements IEncryptor {
             LOGGER.error(UTF_8_NO_LONGER_SUPPORTED, e);
             throw new EncryptionException(CANNOT_HAPPEN_UTF_8, e);
         }
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        // No checks to perform
     }
 }

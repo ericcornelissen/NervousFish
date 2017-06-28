@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Writer;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
@@ -40,6 +38,7 @@ import nl.tudelft.ewi.ds.bankver.IBAN;
 // classes or single methods with more logic would make the class only less understandable
 //  2) Suppressed because of the by the pojo's created to write safely, we have to import this much
 public final class GsonDatabaseAdapter implements IDatabase {
+
     private static final String CONTACT_NOT_FOUND = "Contact not found in database";
     private static final String CONTACT_DUPLICATE = "Contact is already in the database";
     private static final String DATABASE_NOT_CREATED = "Database is not created";
@@ -96,6 +95,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
     @Override
     public void addContact(final Contact contact) throws IOException {
         Validate.notNull(contact);
+
         LOGGER.info("Adding new contact with name: {}", contact.getName());
         if (this.contactExists(contact.getName())) {
             throw new IllegalArgumentException(CONTACT_DUPLICATE);
@@ -135,7 +135,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
      * {@inheritDoc}
      */
     @Override
-    public void updateContact(final Contact oldContact, final Contact newContact) throws IOException {
+    public void updateContact(final Contact oldContact, final Contact newContact) throws IllegalArgumentException, IOException {
         Validate.notNull(oldContact);
         Validate.notNull(newContact);
         // Get the list of contacts
@@ -334,8 +334,6 @@ public final class GsonDatabaseAdapter implements IDatabase {
                 writer.write(databaseEncrypted);
             }
             LOGGER.info("Created the database: {}", this.databasePath);
-        } catch (final InvalidKeySpecException e) {
-            throw new IOException(BAD_KEY_SPEC, e);
         } catch (final IllegalBlockSizeException e) {
             throw new IOException(DATABASE_WRONG_SIZE, e);
         } catch (final BadPaddingException e) {
@@ -355,9 +353,7 @@ public final class GsonDatabaseAdapter implements IDatabase {
         LOGGER.info("Initializing password");
         this.databaseMap.put(ENCRYPTED_PASSWORD, this.encryptor.hashString(password));
 
-
         final String encryptedPassword = this.getEncryptedPassword();
-
         LOGGER.info("Encrypted password: {}", encryptedPassword);
 
         try (Writer writer = this.fileSystem.getWriter(this.passwordPath)) {
@@ -402,36 +398,5 @@ public final class GsonDatabaseAdapter implements IDatabase {
         } else {
             throw new DatabaseException(DATABASE_NOT_CREATED);
         }
-    }
-
-    /**
-     * Deserialize the instance using readObject to ensure invariants and security.
-     *
-     * @param stream The serialized object to be deserialized
-     */
-    private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        this.ensureClassInvariant();
-    }
-
-    /**
-     * Used to improve performance / efficiency
-     *
-     * @param stream The stream to which this object should be serialized to
-     */
-    private void writeObject(final ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-    }
-
-    /**
-     * Ensure that the instance meets its class invariant
-     */
-    private void ensureClassInvariant() {
-        assert this.fileSystem != null;
-        assert this.databasePath != null;
-        assert this.passwordPath != null;
-        assert this.helper != null;
-        assert this.encryptor != null;
-        assert this.databaseMap != null;
     }
 }

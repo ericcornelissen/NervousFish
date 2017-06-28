@@ -107,6 +107,9 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
         // Get the AndroidBluetoothHandler.
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         this.bluetoothHandler = this.serviceLocator.getBluetoothHandler();
+
+        final String deviceName = String.format(this.getString(R.string.your_device_name_is), this.bluetoothAdapter.getName());
+        ((TextView) this.findViewById(R.id.tv_device_name)).setText(deviceName);
     }
 
     /**
@@ -213,7 +216,7 @@ public final class BluetoothConnectActivity extends AppCompatActivity {
             this.isMaster = false;
         } else {
             final Intent intent = new Intent(this, WaitActivity.class);
-            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, getString(R.string.wait_message_slave_verification_method));
+            intent.putExtra(ConstantKeywords.WAIT_MESSAGE, this.getString(R.string.wait_message_slave_verification_method));
             this.startActivityForResult(intent, ConstantKeywords.START_RHYTHM_REQUEST_CODE);
         }
     }

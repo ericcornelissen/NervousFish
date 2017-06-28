@@ -1,9 +1,12 @@
 package com.nervousfish.nervousfish.activities;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -12,6 +15,7 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.IKey;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.modules.constants.Constants;
 import com.nervousfish.nervousfish.modules.cryptography.IKeyGenerator;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
@@ -23,41 +27,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.IBAN;
 import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.ALl_FIELDS_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.NAME_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
-import static com.nervousfish.nervousfish.modules.constants.Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.EMPTY_FIELD;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.INVALID_IBAN;
-import static com.nervousfish.nervousfish.modules.constants.Constants.InputFieldResultCodes.TOO_SHORT_FIELD;
-
 /**
  * The {@link android.app.Activity} that is used to create a user profile when the app is first
  * used.
  */
 @SuppressWarnings({"checkstyle:ReturnCount", "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-    "PMD.ExcessiveImports"})
-//1. Suppresses return count to allow multiple returncodes while checking input fields.
-//2 and 3. The complexity does not make the code unreadible at this moment.
+        "PMD.ExcessiveImports", "checkstyle:ClassDataAbstractionCoupling", "checkstyle:ClassFanOutComplexity"})
+// 1) Suppresses return count to allow multiple returncodes while checking input fields.
+// 2) Suppress excessive imports because it's necessairy and the 2 added imports methods would be unlogical
+//    to outsource to another class
+// 3) Suppressed because the class is not meant to be extensible or inheritable
 //4. We want to have so much imports so we dont have to write Constants.ExplicitFieldResultCodes every time.
 public final class CreateProfileActivity extends AppCompatActivity {
-
     private static final Logger LOGGER = LoggerFactory.getLogger("CreateProfileActivity");
+    private final CreateCustomKeyHelper customKeyHelper = new CreateCustomKeyHelper(this, new CustomKeyPairSetter());
     private IServiceLocator serviceLocator;
-    private CustomKeyboardHelper customKeyboard;
     private CreateProfileHelper helper;
     private EditText nameInput;
     private EditText passwordInput;
     private EditText repeatPasswordInput;
     private EditText ibanInput;
+    private RadioButton radiobuttonRSA;
+    private RadioButton radiobuttonEd25519;
+    private RadioButton radiobuttonExistingKeypair;
 
     /**
      * {@inheritDoc}
@@ -78,18 +77,11 @@ public final class CreateProfileActivity extends AppCompatActivity {
         this.passwordInput = (EditText) this.findViewById(R.id.profile_enter_password);
         this.repeatPasswordInput = (EditText) this.findViewById(R.id.profile_repeat_password);
         this.ibanInput = (EditText) this.findViewById(R.id.iban_create_profile);
+        this.radiobuttonRSA = (RadioButton) this.findViewById(R.id.rb_rsa);
+        this.radiobuttonEd25519 = (RadioButton) this.findViewById(R.id.rb_ed25519);
+        this.radiobuttonExistingKeypair = (RadioButton) this.findViewById(R.id.rb_existing_keypair);
 
         LOGGER.info("Activity created");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onBackPressed() {
-        if (this.customKeyboard.isVisible()) {
-            this.customKeyboard.hide();
-        }
     }
 
     /**
@@ -102,29 +94,13 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.ExplicitFieldResultCodes result = this.validateInputFields();
         switch (result) {
             case INPUT_CORRECT:
-                final String name = nameInput.getText().toString();
-                final String password = passwordInput.getText().toString();
-                IBAN iban = null;
-                if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
-                    iban = new IBAN(ibanInput.getText().toString());
-                }
-                final IDatabase database = this.serviceLocator.getDatabase();
-
-                try {
-                    // Create the new profile
-                    final List<KeyPair> keyPairs = helper.generateKeyPairs(this.getKeyTypeFromInput());
-                    final Profile userProfile = new Profile(name, keyPairs, iban);
-
-                    database.createDatabase(userProfile, password);
-                    database.loadDatabase(password);
-
-                    this.showProfileCreatedDialog();
-                } catch (final IOException e) {
-                    LOGGER.error("Something went wrong when creating a profile", e);
-                    this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+                if (this.radiobuttonExistingKeypair.isChecked()) {
+                    this.customKeyHelper.askForCustomKeypair();
+                } else {
+                    this.finishCreatingProfile(this.generateKeyPairList());
                 }
                 break;
-            case ALl_FIELDS_EMPTY:
+            case ALL_FIELDS_EMPTY:
                 this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_all_fields_empty));
                 break;
             case NAME_EMPTY:
@@ -148,6 +124,71 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
+     * Called when the user clicks on the info button of the keys
+     *
+     * @param view The button that was clicked
+     */
+    public void onKeyInfoButtonClicked(final View view) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
+        // 1) Suppressed because this dialog does not need a parent
+        final View dialogView = inflater.inflate(R.layout.info_keys, null);
+        alert.setView(dialogView);
+
+        alert.setPositiveButton(this.getString(R.string.dialog_ok), null);
+        alert.show();
+    }
+
+    /**
+     * Creates the new {@link Profile}, adds it to the database and goes to {@link MainActivity}
+     */
+    private void finishCreatingProfile(final List<KeyPair> keyPairs) {
+        final String name = this.nameInput.getText().toString();
+        final String password = this.passwordInput.getText().toString();
+        IBAN iban = null;
+        if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
+            iban = new IBAN(ibanInput.getText().toString());
+        }
+        final IDatabase database = this.serviceLocator.getDatabase();
+
+        try {
+            final Profile userProfile = new Profile(name, keyPairs, iban);
+
+            database.createDatabase(userProfile, password);
+            database.loadDatabase(password);
+
+            this.showProfileCreatedDialog();
+        } catch (final IOException e) {
+            LOGGER.error("Something went wrong when creating a profile", e);
+            this.showProfileNotCreatedDialog(this.getString(R.string.create_profile_error_adding_to_database));
+        }
+    }
+
+    /*
+     * Generates a list of key pairs, given the checked boxes.
+     *
+     * @return A list of keypairs with the types checked in the boxes.
+     */
+    private List<KeyPair> generateKeyPairList() {
+        final List<IKey.Types> keytypesToGenerate = new ArrayList<>();
+        if (this.radiobuttonRSA.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.RSA);
+        }
+        if (this.radiobuttonEd25519.isChecked()) {
+            keytypesToGenerate.add(IKey.Types.Ed25519);
+        }
+        final List<KeyPair> keyPairs = new ArrayList<>();
+        for (final IKey.Types type : keytypesToGenerate) {
+            keyPairs.addAll(this.helper.generateKeyPairs(type));
+        }
+
+        return keyPairs;
+
+    }
+
+    /**
      * Validates if the input fields are not empty and if the input is valid.
      * This also means that the password and the repeat password should be the same,
      * and the password length is larger or equal to 6.
@@ -160,21 +201,21 @@ public final class CreateProfileActivity extends AppCompatActivity {
         final Constants.InputFieldResultCodes repeatPasswordValidation = this.helper.validatePassword(this.repeatPasswordInput);
         final Constants.InputFieldResultCodes ibanValidation = this.helper.validateIban(this.ibanInput);
 
-        if (nameValidation == EMPTY_FIELD && passwordValidation == EMPTY_FIELD
-                && repeatPasswordValidation == EMPTY_FIELD) {
-            return ALl_FIELDS_EMPTY;
-        } else if (nameValidation == EMPTY_FIELD) {
-            return NAME_EMPTY;
-        } else if (passwordValidation == EMPTY_FIELD) {
-            return PASSWORD_EMPTY;
-        } else if (passwordValidation == TOO_SHORT_FIELD) {
-            return PASSWORD_TOO_SHORT;
-        } else if (ibanValidation == INVALID_IBAN) {
+        if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD && passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD
+                && repeatPasswordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.ALL_FIELDS_EMPTY;
+        } else if (nameValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.NAME_EMPTY;
+        } else if (passwordValidation == Constants.InputFieldResultCodes.EMPTY_FIELD) {
+            return Constants.ExplicitFieldResultCodes.PASSWORD_EMPTY;
+        } else if (passwordValidation == Constants.InputFieldResultCodes.TOO_SHORT_FIELD) {
+            return Constants.ExplicitFieldResultCodes.PASSWORD_TOO_SHORT;
+        } else if (ibanValidation == Constants.InputFieldResultCodes.INVALID_IBAN) {
             return Constants.ExplicitFieldResultCodes.INVALID_IBAN;
         } else if (this.helper.passwordsEqual(this.passwordInput, this.repeatPasswordInput)) {
-            return INPUT_CORRECT;
+            return Constants.ExplicitFieldResultCodes.INPUT_CORRECT;
         } else {
-            return PASSWORDS_NOT_EQUAL;
+            return Constants.ExplicitFieldResultCodes.PASSWORDS_NOT_EQUAL;
         }
     }
 
@@ -213,18 +254,19 @@ public final class CreateProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets from the radio buttons in this activity the one checked.
-     *
-     * @return The {@link IKey.Types} of the key that is checked
+     * Can be given by {@link CreateProfileActivity} to classes that are allowed to finish the creation of the new profile
+     * by supplying a new RSAKey
      */
-    public IKey.Types getKeyTypeFromInput() {
-        final RadioButton rsaRadioButton = (RadioButton) this.findViewById(R.id.checkbox_rsa_key);
-        final RadioButton ed25519RadioButton = (RadioButton) this.findViewById(R.id.checkbox_ed25519_key);
-        if (rsaRadioButton.isChecked()) {
-            return IKey.Types.RSA;
-        } else if (ed25519RadioButton.isChecked()) {
-            return IKey.Types.Ed25519;
+    final class CustomKeyPairSetter implements ICustomKeyPairSetter {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setRSAKeyPair(final RSAKey publicKey, final RSAKey privateKey) {
+            final List<KeyPair> keyPairs = new ArrayList<>();
+            keyPairs.add(new KeyPair("Custom key", publicKey, privateKey));
+            CreateProfileActivity.this.finishCreatingProfile(keyPairs);
         }
-        throw new IllegalArgumentException("No radio button selected");
     }
 }

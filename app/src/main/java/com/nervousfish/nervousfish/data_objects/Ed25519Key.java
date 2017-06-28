@@ -1,111 +1,122 @@
 package com.nervousfish.nervousfish.data_objects;
 
+import android.util.Log;
+
 import com.google.gson.stream.JsonWriter;
 import com.nervousfish.nervousfish.ConstantKeywords;
-import com.nervousfish.nervousfish.modules.cryptography.Ed25519Generator;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.math.GroupElement;
+import net.i2p.crypto.eddsa.Utils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Map;
+
+import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
 /**
  * Ed25519 variant of {@link IKey}. This is an example implementation of the {@link IKey} interface.
- *
+ * <p>
  * For more info about Ed25519 see: https://ed25519.cr.yp.to/
  */
+@SuppressWarnings({"checkstyle:CyclomaticComplexity", "PMD.NullAssignment"})
 public final class Ed25519Key implements IKey {
 
     private static final long serialVersionUID = -3865050366412869804L;
 
     private static final String KEYWORD_NAME = "name";
-    private static final String KEYWORD_KEY = "key";
-    private static final String KEYWORD_SEED = "seed";
+    private static final String KEYWORD_PUBLIC_KEY = "publicKey";
+    private static final String KEYWORD_PRIVATE_KEY = "privateKey";
+    private static final String KEYWORD_NULL = "NULL";
 
     private final String name;
-    private final String key;
-    private final byte[] seed;
+    private final EdDSAPublicKey publicKey;
+    private final EdDSAPrivateKey privateKey;
 
     /**
      * Constructor for a Ed25519-based key.
      *
-     * @param name The name for the key.
-     * @param key  The string representing the key.
-     * @param seed The byte array of the keys seed.
+     * @param name      The name for the key.
+     * @param publicKey The public key
      */
-    public Ed25519Key(final String name, final String key, final byte[] seed) {
+    public Ed25519Key(final String name, final EdDSAPublicKey publicKey) {
         Validate.notBlank(name);
-        Validate.notBlank(key);
+        Validate.notNull(publicKey);
 
         this.name = name;
-        this.key = key;
-        this.seed = seed.clone();
+        this.publicKey = publicKey;
+        this.privateKey = null;
     }
 
     /**
      * Constructor for a Ed25519-based key.
      *
-     * @param name The name for the key.
-     * @param key  The {@link GroupElement} of the key.
-     * @param seed The byte array of the keys seed.
+     * @param name       The name for the key.
+     * @param privateKey The private key
      */
-    public Ed25519Key(final String name, final GroupElement key, final byte[] seed) {
+    public Ed25519Key(final String name, final EdDSAPrivateKey privateKey) {
         Validate.notBlank(name);
-        Validate.notNull(seed);
+        Validate.notNull(privateKey);
 
         this.name = name;
-        this.key = key.toString();
-        this.seed = seed.clone();
+        this.publicKey = null;
+        this.privateKey = privateKey;
     }
 
     /**
-     * Constructor for a Ed25519-based key given a {@link Map} of its values.
+     * Constructor for a Ed25519-based key.
      *
-     * @param map A {@link Map} mapping {@link Ed25519Key} attribute names to values.
-     * @throws IOException when reading the map failed.
+     * @param name       The name for the key.
+     * @param publicKey  The public key
+     * @param privateKey The private key
      */
-    public Ed25519Key(final Map<String, String> map) throws IOException {
-        Validate.notNull(map);
-        this.name = map.get(KEYWORD_NAME);
-        this.key = map.get(KEYWORD_KEY);
-        this.seed = map.get(KEYWORD_SEED).getBytes(ConstantKeywords.UTF_8);
+    public Ed25519Key(final String name, final EdDSAPublicKey publicKey, final EdDSAPrivateKey privateKey) {
+        Validate.notBlank(name);
+        Validate.notNull(publicKey);
+        Validate.notNull(privateKey);
 
+        this.name = name;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+    }
+
+    /**
+     * Constructor for a RSA key given a {@link Map} of its values.
+     *
+     * @param map A {@link Map} mapping {@link RSAKey} attribute names to values.
+     */
+    public Ed25519Key(final Map<String, String> map) {
+        this.name = map.get(Ed25519Key.KEYWORD_NAME);
+        final String tmpPublicKey = map.get(Ed25519Key.KEYWORD_PUBLIC_KEY);
+        final String tmpPrivateKey = map.get(Ed25519Key.KEYWORD_PRIVATE_KEY);
         Validate.notBlank(this.name);
-        Validate.notBlank(this.key);
-        Validate.notNull(this.seed);
+        Validate.notBlank(tmpPublicKey);
+        Validate.notBlank(tmpPrivateKey);
+        this.publicKey = tmpPublicKey.equals(KEYWORD_NULL) ? null : ED25519.getPublicKey(tmpPublicKey);
+        this.privateKey = tmpPrivateKey.equals(KEYWORD_NULL) ? null : ED25519.getPrivateKey(tmpPrivateKey);
     }
 
     /**
      * Get the {@link EdDSAPublicKey} given a {@link Ed25519Key}.
      *
-     * @param key The {@link Ed25519Key}.
      * @return The {@link EdDSAPublicKey}.
      */
-    public static EdDSAPublicKey getPublicKeyOf(final Ed25519Key key) {
-        Validate.notNull(key);
-        final Ed25519Generator generator = Ed25519Generator.generatePair(key.seed);
-        return generator.getPublicKey();
+    public EdDSAPublicKey getPublicKey() {
+        return this.publicKey;
     }
 
     /**
      * Get the {@link EdDSAPrivateKey} given a {@link Ed25519Key}.
      *
-     * @param key The {@link Ed25519Key}.
      * @return The {@link EdDSAPrivateKey}.
      */
-    public static EdDSAPrivateKey getPrivateKeyOf(final Ed25519Key key) {
-        Validate.notNull(key);
-        final Ed25519Generator generator = Ed25519Generator.generatePair(key.seed);
-        return generator.getPrivateKey();
+    public EdDSAPrivateKey getPrivateKey() {
+        return this.privateKey;
     }
 
     /**
@@ -113,7 +124,11 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getKey() {
+<<<<<<< HEAD
         return this.key + "#" + Arrays.toString(this.seed);
+=======
+        return Utils.bytesToHex(this.privateKey == null ? this.publicKey.getAbyte() : this.privateKey.getAbyte());
+>>>>>>> integration-develop
     }
 
     /**
@@ -121,7 +136,7 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public String getFormattedKey() {
-        return StringUtils.replaceEach(this.key, new String[]{"[Ed25519FieldElement val=", "[GroupElement", "]"}, new String[]{"", "", ""});
+        return Utils.bytesToHex(this.privateKey == null ? this.publicKey.getAbyte() : this.privateKey.getAbyte());
     }
 
     /**
@@ -146,13 +161,14 @@ public final class Ed25519Key implements IKey {
     @Override
     public void toJson(final JsonWriter writer) throws IOException {
         writer.name(KEYWORD_NAME).value(this.name);
-        writer.name(KEYWORD_KEY).value(this.key);
-        writer.name(KEYWORD_SEED).value(new String(this.seed, ConstantKeywords.UTF_8));
+        writer.name(KEYWORD_PUBLIC_KEY).value(this.publicKey == null ? KEYWORD_NULL : Utils.bytesToHex(this.publicKey.getAbyte()));
+        writer.name(KEYWORD_PRIVATE_KEY).value(this.privateKey == null ? KEYWORD_NULL : Utils.bytesToHex(this.privateKey.getAbyte()));
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({"checkstyle:OperatorWrap", "checkstyle:LineLength"})
     @Override
     public boolean equals(final Object o) {
         if (o == null || this.getClass() != o.getClass()) {
@@ -161,8 +177,10 @@ public final class Ed25519Key implements IKey {
 
         final Ed25519Key that = (Ed25519Key) o;
         return this.name.equals(that.name)
-                && this.key.equals(that.key)
-                && Arrays.equals(this.seed, that.seed);
+                && (this.privateKey != null && that.privateKey != null &&
+                Utils.bytesToHex(this.privateKey.getAbyte()).equals(Utils.bytesToHex(that.privateKey.getAbyte())) || this.privateKey == that.privateKey)
+                && (this.publicKey != null && that.publicKey != null &&
+                Utils.bytesToHex(this.publicKey.getAbyte()).equals(Utils.bytesToHex(that.publicKey.getAbyte())) || this.publicKey == that.publicKey);
     }
 
     /**
@@ -170,7 +188,13 @@ public final class Ed25519Key implements IKey {
      */
     @Override
     public int hashCode() {
-        return this.name.hashCode() + this.key.hashCode() + Arrays.hashCode(this.seed);
+        Log.d("ASDF", this.name);
+        return this.name.hashCode() + ((this.privateKey == null)
+                ? 0
+                : Utils.bytesToHex(this.privateKey.getAbyte()).hashCode())
+                + (this.publicKey == null
+                ? 0
+                : Utils.bytesToHex(this.publicKey.getAbyte()).hashCode());
     }
 
 
@@ -178,7 +202,7 @@ public final class Ed25519Key implements IKey {
      * Serialize the created proxy instead of this instance.
      */
     private Object writeReplace() {
-        return new SerializationProxy(this);
+        return new Ed25519Key.SerializationProxy(this);
     }
 
     /**
@@ -198,25 +222,33 @@ public final class Ed25519Key implements IKey {
         private static final long serialVersionUID = -3865050366412869804L;
 
         private final String name;
-        private final String key;
-        private final byte[] seed;
+        private final String publicKey;
+        private final String privateKey;
 
         /**
          * Constructs a new SerializationProxy
+         *
          * @param key The current instance of the proxy
          */
         SerializationProxy(final Ed25519Key key) {
             this.name = key.name;
-            this.key = key.key;
-            this.seed = key.seed;
+            this.publicKey = (key.publicKey == null) ? null : Utils.bytesToHex(key.publicKey.getAbyte());
+            this.privateKey = (key.privateKey == null) ? null : Utils.bytesToHex(key.privateKey.getAbyte());
         }
 
         /**
          * Not to be called by the user - resolves a new object of this proxy
+         *
          * @return The object resolved by this proxy
          */
         private Object readResolve() {
-            return new Ed25519Key(this.name, this.key, this.seed);
+            if (this.privateKey == null) {
+                return new Ed25519Key(this.name, ED25519.getPublicKey(this.publicKey));
+            }
+            if (this.publicKey == null) {
+                return new Ed25519Key(this.name, ED25519.getPrivateKey(this.privateKey));
+            }
+            return new Ed25519Key(this.name, ED25519.getPublicKey(this.publicKey), ED25519.getPrivateKey(this.privateKey));
         }
 
     }

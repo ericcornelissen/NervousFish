@@ -152,7 +152,7 @@ public class ContactTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final IKey key = new Ed25519Key("bar", "baz", "foobar".getBytes());
+        final IKey key = new RSAKey("foo", "bar", "baz");
         Contact contact = new Contact("foo", key);
         try (
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
