@@ -18,7 +18,6 @@ import com.github.clans.fab.Label;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.exceptions.NoBluetoothException;
 import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.modules.pairing.IBluetoothHandler;
@@ -113,7 +112,6 @@ public final class MainActivity extends AppCompatActivity {
         if (contact != null) {
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
         }
-        ContactReceivedHelper.newContactReceived(this.database, this, new Contact("hoi", new RSAKey("foo", "bar", "baz")));
 
         LOGGER.info("Activity created");
     }
