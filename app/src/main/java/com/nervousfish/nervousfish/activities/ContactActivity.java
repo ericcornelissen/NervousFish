@@ -122,11 +122,11 @@ public final class ContactActivity extends AppCompatActivity {
             builder.setTitle(((IKey) this.keys.get(position)).getName());
             builder.setMessage(((IKey) this.keys.get(position)).getFormattedKey());
             builder.setPositiveButton("Copy", (dialog, which) -> {
-                final Activity activity = this.activity;
-                final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                final ClipboardManager clipboard = (ClipboardManager) this.activity.getSystemService(Context.CLIPBOARD_SERVICE);
                 final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, ((IKey) this.keys.get(position)).getKey());
                 clipboard.setPrimaryClip(clip);
             });
+            builder.setNegativeButton("Close", (dialog, which) -> dialog.dismiss());
             builder.show();
         }
     }
@@ -137,8 +137,8 @@ public final class ContactActivity extends AppCompatActivity {
          * {@inheritDoc}
          */
         @Override
-        public boolean onMenuItemClick(final MenuItem menuItem) {
-            if (menuItem.getItemId() == R.id.delete_contact_menu_item) {
+        public boolean onMenuItemClick(final MenuItem item) {
+            if (item.getItemId() == R.id.delete_contact_menu_item) {
                 new SweetAlertDialog(ContactActivity.this, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText(ContactActivity.this.getString(R.string.are_you_sure))
                         .setContentText(ContactActivity.this.getString(R.string.delete_popup_no_recovery))
@@ -147,11 +147,17 @@ public final class ContactActivity extends AppCompatActivity {
                         .setConfirmClickListener(new DeleteContactClickListener())
                         .show();
                 return true;
-            } else if (menuItem.getItemId() == R.id.edit_contact_menu_iten) {
+            } else if (item.getItemId() == R.id.edit_contact_menu_iten) {
                 final Intent intent = new Intent(ContactActivity.this, ChangeContactActivity.class);
                 intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
                 ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
                 return true;
+                // Commented because it's possible that this is needed again after integration-develop is merged
+            /*} else if (item.getItemId() == R.id.verify_contact_menu_item) {
+                final Intent intent = new Intent(ContactActivity.this, IbanVerificationActivity.class);
+                intent.putExtra(ConstantKeywords.CONTACT, ContactActivity.this.contact);
+                ContactActivity.this.startActivityForResult(intent, RESULT_FIRST_USER);
+                return true;*/
             } else {
                 return false;
             }
