@@ -14,6 +14,7 @@ import com.nervousfish.nervousfish.data_objects.VerificationMethod;
 import com.nervousfish.nervousfish.data_objects.VerificationMethodEnum;
 import com.nervousfish.nervousfish.modules.cryptography.IEncryptor;
 import com.nervousfish.nervousfish.modules.pairing.ByteWrapper;
+import com.nervousfish.nervousfish.modules.pairing.IDataReceiver;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDataReceivedEvent;
 import com.nervousfish.nervousfish.modules.pairing.events.NewDecryptedBytesReceivedEvent;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -162,7 +163,8 @@ public final class WaitActivity extends Activity {
         try {
             final byte[] decryptedData = this.encryptor.decryptWithPassword(this.dataReceived, this.key);
             LOGGER.info("Decrypted data");
-            this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
+            ((IDataReceiver) NervousFish.getServiceLocator().getBluetoothHandler().getDataReceiver().get()).dataReceived(decryptedData);
+            //this.serviceLocator.postOnEventBus(new NewDecryptedBytesReceivedEvent(decryptedData));
         } catch (final BadPaddingException e) {
             LOGGER.warn("Keys didn't match! Going back to the rhythm activity");
             final Intent intent = new Intent(this, this.classStartedFrom);

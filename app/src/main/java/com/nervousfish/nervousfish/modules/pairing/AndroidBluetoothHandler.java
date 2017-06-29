@@ -85,8 +85,8 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void stop() {
-        getService().stop();
-        this.getServiceLocator().unregisterFromEventBus(this);
+        //getService().stop();
+        //this.getServiceLocator().unregisterFromEventBus(this);
     }
 
     /**

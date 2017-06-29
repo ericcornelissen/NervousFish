@@ -38,7 +38,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 @SuppressWarnings({"checkstyle:classdataabstractioncoupling", "checkstyle:ClassFanOutComplexity"})
 // 1 / 2) Suppressed the code base if cluttered if we split this class that's already quite small in even smaller classes
-abstract class APairingHandler implements IPairingHandler {
+public abstract class APairingHandler implements IPairingHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("APairingHandler");
 

@@ -22,7 +22,7 @@ public final class PairingWrapper<T> {
     /**
      * @return The module it wraps
      */
-    T get() {
+    public T get() {
         return this.module;
     }
 

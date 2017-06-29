@@ -121,7 +121,7 @@
     <string name="contact_exists_nothing_done">A contact with the same name and keys exists already, so adding the same contact "%1$s" again was not needed</string>
     <string name="not_the_same_rhythm_title">Rhythm was not the same</string>
     <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
-    <string name="not_the_same_visual_title">Tapping order was the same</string>
+    <string name="not_the_same_visual_title">Tapping order not the same</string>
     <string name="not_the_same_visual_explanation">Make sure that the locations tapped and the order are the same on both devices.</string>
     <string name="rhythm_explanation">Press \"Start recording\" and tap the same rhythm as your partner</string>
 
