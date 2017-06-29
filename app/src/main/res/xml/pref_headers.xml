@@ -17,7 +17,7 @@
 
     <header
         android:id="@+id/iban_sign_header"
-        android:icon="@drawable/credit_card"
+        android:icon="@drawable/credit_card_small"
         android:title="@string/pref_iban_sign_header" />
 
 </preference-headers>

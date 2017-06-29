@@ -121,7 +121,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/icon_iban_create_profile"
                 android:hint="@string/iban"
-                android:inputType="text"
+                android:inputType="textCapCharacters"
                 android:maxLines="1" />
         </RelativeLayout>
 

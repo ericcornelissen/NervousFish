@@ -20,6 +20,12 @@ import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
+import net.i2p.crypto.eddsa.EdDSAEngine;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
+import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
+import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
+
 import org.apache.commons.lang3.Validate;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,10 +33,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
 import nl.tudelft.ewi.ds.bankver.IBAN;
 import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
+import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
+import nl.tudelft.ewi.ds.bankver.cryptography.ED25519;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
@@ -47,6 +62,7 @@ public final class IbanSignActivity extends AppCompatActivity {
     private EditText challengeInput;
     private TextView challengeOutput;
     private BankVer bankVer;
+    private BlockchainWrapper blockchainWrapper;
 
     /**
      * {@inheritDoc}
@@ -58,14 +74,9 @@ public final class IbanSignActivity extends AppCompatActivity {
 
         this.serviceLocator = NervousFish.getServiceLocator();
 
-        final Profile profile;
-        try {
-            profile = serviceLocator.getDatabase().getProfile();
-        } catch (final IOException e) {
-            throw new DatabaseException(e);
-        }
+        final Profile profile = serviceLocator.getDatabase().getProfile();
 
-        final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(profile);
+        this.blockchainWrapper = new BlockchainWrapper(profile);
         this.bankVer = new BankVer(this, blockchainWrapper);
 
         this.ibanInput = (EditText) this.findViewById(R.id.icon_iban_verify_challenge);
@@ -83,15 +94,43 @@ public final class IbanSignActivity extends AppCompatActivity {
     public void onSubmitClick(final View view) {
         Validate.notNull(view);
         final String challenge = challengeInput.getText().toString();
-        IBAN iban = null;
-        if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
-            iban = new IBAN(ibanInput.getText().toString());
-        }
 
-        this.challengeOutput.setText(this.bankVer.handleManualMessage(iban, challenge));
-        final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
-        final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, this.challengeOutput.getText());
-        clipboard.setPrimaryClip(clip);
+        if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
+            final IBAN iban = new IBAN(ibanInput.getText().toString());
+            EdDSAPublicKey peerPublicKey = (EdDSAPublicKey) blockchainWrapper.getPublicKeyForIBAN(iban);
+            System.out.println("----" + ChallengeResponse.isValidDescriptionFormat(challenge));
+            System.out.println("----" + Utils.bytesToHex(peerPublicKey.getAbyte()));
+            System.out.println("----" + ChallengeResponse.isValidChallenge(challenge, peerPublicKey));
+
+            String[] challengeArray = challenge.split(":");
+            byte[] message = Utils.hexToBytes(challengeArray[1]);
+            byte[] signature = Utils.hexToBytes(challengeArray[2]);
+            System.out.println("+++ " + challengeArray[0].equals("CH"));
+            System.out.println("+++" + ED25519.verifySignature(message, signature, peerPublicKey));
+
+            EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName("Ed25519");
+            try {
+                Signature s = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
+                s.initVerify(peerPublicKey);
+                s.update(message);
+                System.out.println("-=-=-=- " + s.verify(signature));
+            } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+                e.printStackTrace();
+            }
+
+
+            this.challengeOutput.setText(this.bankVer.handleManualMessage(iban, challenge));
+            final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+            final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, this.challengeOutput.getText());
+            clipboard.setPrimaryClip(clip);
+        } else {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(this.getString(R.string.invalid_iban))
+                    .setContentText(this.getString(R.string.invalid_iban_explanation))
+                    .setConfirmText(this.getString(R.string.dialog_ok))
+                    .setConfirmClickListener(null)
+                    .show();
+        }
 
     }
 
