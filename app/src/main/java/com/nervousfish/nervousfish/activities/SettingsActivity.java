@@ -1,6 +1,5 @@
 package com.nervousfish.nervousfish.activities;
 
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +17,7 @@ import android.view.MenuItem;
 import com.nervousfish.nervousfish.ConstantKeywords;
 import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Profile;
+import com.nervousfish.nervousfish.modules.database.IDatabase;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
 import com.nervousfish.nervousfish.service_locator.NervousFish;
 
@@ -40,151 +40,140 @@ import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
  */
 @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 //Because of the structure with the static methods, a static attribute has to be set.
-@SuppressWarnings({"checkstyle:AnonInnerLength", "PMD.AvoidUsingVolatile"})
+@SuppressWarnings({"checkstyle:AnonInnerLength", "checkstyle:MultipleStringLiterals", "PMD.AvoidUsingVolatile"})
 //1. In this class large anonymous classes are needed. It does not infer with readability.
-//2. The volatile identifier is needed because this class uses static methods, which are essential.
+//2. The same string is used multiple times and we can't get strings using .getString() here...
+//3. The volatile identifier is needed because this class uses static methods, which are essential.
 public final class SettingsActivity extends AAppCompatPreferenceActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("SettingsActivity");
     private static boolean firstLoadName = true;
     private static boolean firstLoadIban = true;
     private static volatile IServiceLocator serviceLocator;
+    private static volatile IDatabase database;
 
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
+    @java.lang.SuppressWarnings("checkstyle:Indentation")
     private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
             new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-            LOGGER.info("Preference changed");
-            Validate.notNull(preference);
-            Validate.notNull(newValue);
-            final String stringValue = newValue.toString();
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                    LOGGER.info("Preference changed");
+                    Validate.notNull(preference);
+                    Validate.notNull(newValue);
+                    final String stringValue = newValue.toString();
 
-            if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
-                LOGGER.info("Preference changed at the display name");
-                this.updateDisplayName(preference, stringValue);
-                return true;
-            } else if (preference.getKey().equals(ConstantKeywords.IBAN_NUMBER)) {
-                LOGGER.info("Preference changed at the iban number");
-                this.updateIban(preference, stringValue);
-                return true;
-            } else if (preference instanceof ListPreference) {
-                LOGGER.info("Preference changed for a ListPreference");
-                this.updateListPreference(preference, stringValue);
-                return true;
-            } else {
-                LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-                return true;
-            }
-        }
-
-        /**
-         * If the key is display_name this method is called to update the summary
-         * and the Profile in the database.
-         *
-         * @param preference The preference which is changed
-         * @param stringValue The string value which is new
-         */
-        private void updateDisplayName(final Preference preference, final String stringValue) {
-            assert preference != null;
-            assert stringValue != null;
-            if (firstLoadName) {
-                firstLoadName = false;
-
-                try {
-                    preference.setSummary(serviceLocator.getDatabase().getProfile().getName());
-                    return;
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't get profiles from database while loading for the first time", e);
-                }
-
-                preference.setSummary(stringValue);
-            } else {
-                try {
-                    LOGGER.info("Updating profile name");
-                    final Profile profile = serviceLocator.getDatabase().getProfile();
-                    serviceLocator.getDatabase().updateProfile(new Profile(stringValue, profile.getKeyPairs()));
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't get profiles from database", e);
-                }
-
-                preference.setSummary(stringValue);
-            }
-        }
-
-        /**
-         * If the key is iban_number this method is called to update the summary
-         * and the Profile in the database.
-         *
-         * @param preference The preference which is changed
-         * @param stringValue The string value which is new
-         */
-        private void updateIban(final Preference preference, final String stringValue) {
-            assert preference != null;
-            assert stringValue != null;
-            if (firstLoadIban) {
-                firstLoadIban = false;
-
-                try {
-                    final String iban = serviceLocator.getDatabase().getProfile().getIbanAsString();
-                    preference.setSummary(iban);
-                    return;
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't get profiles from database while loading IBAN for the first time", e);
-                }
-
-                preference.setSummary(stringValue);
-            } else {
-                try {
-                    final Profile profile = serviceLocator.getDatabase().getProfile();
-                    if (IBANVerifier.isValidIBAN(stringValue)) {
-                        LOGGER.info("Updating profile iban");
-                        serviceLocator.getDatabase().updateProfile(
-                                new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
-                        preference.setSummary(stringValue);
+                    if (preference.getKey().equals(ConstantKeywords.DISPLAY_NAME)) {
+                        LOGGER.info("Preference changed at the display name");
+                        this.updateDisplayName(preference, stringValue);
+                        return true;
+                    } else if (preference.getKey().equals(ConstantKeywords.IBAN_NUMBER)) {
+                        LOGGER.info("Preference changed at the iban number");
+                        updateIban(preference, stringValue);
+                        return true;
+                    } else if (preference instanceof ListPreference) {
+                        LOGGER.info("Preference changed for a ListPreference");
+                        this.updateListPreference(preference, stringValue);
+                        return true;
                     } else {
-                        preference.setSummary("INVALID IBAN");
-                        final Context context = preference.getContext();
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText(context.getString(R.string.invalid_iban))
-                                .setContentText(context.getString(R.string.invalid_iban_explanation))
-                                .setConfirmText(context.getString(R.string.dialog_ok))
-                                .setConfirmClickListener(null)
-                                .show();
+                        LOGGER.info("Preference changed which is not a ListPreference, and not the display name");
+                        // For all other preferences, set the summary to the value's
+                        // simple string representation.
+                        preference.setSummary(stringValue);
+                        return true;
                     }
-                } catch (final IOException e) {
-                    LOGGER.error("Couldn't get profiles from database for IBAN", e);
                 }
-            }
-        }
 
-        /**
-         * If the preference is a list preference this method is called to update the summary.
-         *
-         * @param preference The preference which is changed
-         * @param stringValue The string value which is new
-         */
-        private void updateListPreference(final Preference preference, final String stringValue) {
-            assert preference != null;
-            assert stringValue != null;
-            // For list preferences, look up the correct display value in
-            // the preference's 'entries' list.
-            final ListPreference listPreference = (ListPreference) preference;
-            final int index = listPreference.findIndexOfValue(stringValue);
+                /**
+                 * If the key is display_name this method is called to update the summary
+                 * and the Profile in the database.
+                 *
+                 * @param preference The preference which is changed
+                 * @param stringValue The string value which is new
+                 */
+                private void updateDisplayName(final Preference preference, final String stringValue) {
+                    assert preference != null;
+                    assert stringValue != null;
+                    if (firstLoadName) {
+                        firstLoadName = false;
 
-            // Set the summary to reflect the new value.
-            preference.setSummary(
-                    index >= 0
-                            ? listPreference.getEntries()[index]
-                            : "");
-        }
-    };
+                        preference.setSummary(database.getProfile().getName());
+                    } else {
+                        try {
+                            LOGGER.info("Updating profile name");
+                            final Profile profile = database.getProfile();
+                            database.updateProfile(new Profile(stringValue, profile.getKeyPairs()));
+                        } catch (final IOException e) {
+                            LOGGER.error("Couldn't get profiles from database", e);
+                        }
+
+                        preference.setSummary(stringValue);
+                    }
+                }
+
+                /**
+                 * If the key is iban_number this method is called to update the summary
+                 * and the Profile in the database.
+                 *
+                 * @param preference The preference which is changed
+                 * @param stringValue The string value which is new
+                 */
+                private void updateIban(final Preference preference, final String stringValue) {
+                    assert preference != null;
+                    assert stringValue != null;
+                    if (firstLoadIban) {
+                        firstLoadIban = false;
+                        final String iban = serviceLocator.getDatabase().getProfile().getIbanAsString();
+                        preference.setSummary(iban);
+                    } else {
+                        try {
+                            final Profile profile = serviceLocator.getDatabase().getProfile();
+                            if (IBANVerifier.isValidIBAN(stringValue)) {
+                                LOGGER.info("Updating profile iban");
+                                serviceLocator.getDatabase().updateProfile(
+                                        new Profile(profile.getName(), profile.getKeyPairs(), new IBAN(stringValue)));
+                                preference.setSummary(stringValue);
+                            } else {
+                                preference.setSummary("INVALID IBAN");
+                                final Context context = preference.getContext();
+                                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText(context.getString(R.string.invalid_iban))
+                                        .setContentText(context.getString(R.string.invalid_iban_explanation))
+                                        .setConfirmText(context.getString(R.string.dialog_ok))
+                                        .setConfirmClickListener(null)
+                                        .show();
+                            }
+                        } catch (final IOException e) {
+                            LOGGER.error("Couldn't get profiles from database for IBAN", e);
+                        }
+                    }
+                }
+
+                /**
+                 * If the preference is a list preference this method is called to update the summary.
+                 *
+                 * @param preference The preference which is changed
+                 * @param stringValue The string value which is new
+                 */
+                private void updateListPreference(final Preference preference, final String stringValue) {
+                    assert preference != null;
+                    assert stringValue != null;
+                    // For list preferences, look up the correct display value in
+                    // the preference's 'entries' list.
+                    final ListPreference listPreference = (ListPreference) preference;
+                    final int index = listPreference.findIndexOfValue(stringValue);
+
+                    // Set the summary to reflect the new value.
+                    preference.setSummary(
+                            index >= 0
+                                    ? listPreference.getEntries()[index]
+                                    : "");
+                }
+
+            };
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -208,6 +197,9 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,20 +208,23 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
         if (serviceLocator == null) {
             serviceLocator = NervousFish.getServiceLocator();
         }
-
-        try {
-            PreferenceManager
-                    .getDefaultSharedPreferences(this)
-                    .edit()
-                    .putString(ConstantKeywords.DISPLAY_NAME, serviceLocator.getDatabase().getProfile().getName())
-                    .putString(ConstantKeywords.IBAN_NUMBER, serviceLocator.getDatabase().getProfile().getIbanAsString())
-                    .apply();
-        } catch (final IOException e) {
-            LOGGER.error("Couldn't get profiles from database at the onCreate", e);
+        if (database == null) {
+            database = serviceLocator.getDatabase();
         }
+
+        PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .edit()
+                .putString(ConstantKeywords.DISPLAY_NAME, database.getProfile().getName())
+                .putString(ConstantKeywords.IBAN_NUMBER, database.getProfile().getIbanAsString())
+                .apply();
+
         LOGGER.info("SettingsActivity created");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onHeaderClick(final PreferenceActivity.Header header, final int position) {
         super.onHeaderClick(header, position);
@@ -246,6 +241,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
+
     private void setupActionBar() {
         final ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
@@ -324,6 +320,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static final class ProfilePreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -349,5 +346,7 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
     }
+
 }

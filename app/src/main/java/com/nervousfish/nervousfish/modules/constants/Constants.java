@@ -7,6 +7,8 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -14,6 +16,7 @@ import java.util.UUID;
  * they're used by multiple files and don't logically belong to any one of them.
  */
 public final class Constants implements IConstants {
+
     private static final Logger LOGGER = LoggerFactory.getLogger("Constants");
     private static final String DB_USERDATA_PATH = "accountInformation.json";
     private static final String DB_CONTACTS_PATH = "contacts.json";
@@ -23,6 +26,7 @@ public final class Constants implements IConstants {
     private static final UUID MY_UUID = UUID.fromString("2d7c6682-3b84-4d00-9e61-717bac0b2643");
     // Name for the SDP record when creating server socket
     private static final String NAME_SDP_RECORD = "BluetoothChatSecure";
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
     private final String androidFilesDir;
     private final String databaseContactsPath;
     private final String databaseUserPath;
@@ -104,6 +108,14 @@ public final class Constants implements IConstants {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Charset getCharset() {
+        return CHARSET;
+    }
+
+    /**
      * The general result codes for inputfield checks.
      */
     public enum InputFieldResultCodes {
@@ -115,6 +127,7 @@ public final class Constants implements IConstants {
      */
     public enum ExplicitFieldResultCodes {
         INPUT_CORRECT, PASSWORD_TOO_SHORT, PASSWORD_EMPTY, NAME_EMPTY,
-        PASSWORDS_NOT_EQUAL, ALl_FIELDS_EMPTY, INVALID_IBAN
+        PASSWORDS_NOT_EQUAL, ALL_FIELDS_EMPTY, INVALID_IBAN
     }
+
 }

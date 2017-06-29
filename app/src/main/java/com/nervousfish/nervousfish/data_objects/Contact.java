@@ -2,6 +2,8 @@ package com.nervousfish.nervousfish.data_objects;
 
 import com.nervousfish.nervousfish.ConstantKeywords;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -58,7 +60,7 @@ public final class Contact implements Serializable {
         Validate.notBlank(name);
         Validate.notNull(key);
         this.name = name;
-        this.keys.add(SerializationUtils.clone(key));
+        this.keys.add(key);
         this.iban = iban;
         this.ibanVerified = ibanVerified;
     }
@@ -115,10 +117,10 @@ public final class Contact implements Serializable {
      *
      * @return The first Ed25519 Key of the user.
      */
-    public IKey getFirstEd25519Key() {
+    public EdDSAPublicKey getFirstEd25519Key() {
         for (final IKey key : this.keys) {
             if (key.getType().equals(ConstantKeywords.ED25519_KEY)) {
-                return key;
+                return ((Ed25519Key) key).getPublicKey();
             }
         }
         throw new IllegalStateException("No Ed25519 key found");
@@ -140,11 +142,7 @@ public final class Contact implements Serializable {
      * @return A list of all public keys of the contact
      */
     public List<IKey> getKeys() {
-        final ArrayList<IKey> keysCopy = new ArrayList<>();
-        for (final IKey key : this.keys) {
-            keysCopy.add(SerializationUtils.clone(key));
-        }
-        return keysCopy;
+        return new ArrayList<>(this.keys);
     }
 
     /**
@@ -153,9 +151,7 @@ public final class Contact implements Serializable {
      * @param keys The public keys to add to the contact
      */
     public void addKeys(final Collection<IKey> keys) {
-        for (final IKey key : keys) {
-            this.keys.add(SerializationUtils.clone(key));
-        }
+        this.keys.addAll(keys);
     }
 
     /**

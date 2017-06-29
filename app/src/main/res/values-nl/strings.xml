@@ -5,11 +5,14 @@
     <!-- Woorden -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Annuleren</string>
+    <string name="confirm">Bevestig</string>
     <string name="delete">Verwijderen</string>
     <string name="done">Klaar</string>
     <string name="ed25519_key">Ed25519 sleutel</string>
     <string name="edit">Bewerken</string>
+    <string name="exponent">Exponent</string>
     <string name="logo">Logo</string>
+    <string name="modulus">Modulus</string>
     <string name="more">Meer</string>
     <string name="name">Naam</string>
     <string name="nfc">NFC</string>
@@ -26,6 +29,7 @@
     <string name="type">Type</string>
     <string name="yes">Ja</string>
     <string name="iban">IBAN</string>
+    <string name="info">Info</string>
 
     <!-- Gebruikelijk zinnen -->
     <string name="are_you_sure">Weet je het zeker?</string>
@@ -40,6 +44,8 @@
     <string name="something_went_wrong">Er ging iets fout</string>
     <string name="try_again">Probeer opnieuw alstublieft.</string>
     <string name="waiting_for_partner">Wachten op partner…</string>
+    <string name="your_device_name_is">Toestel naam: "%1$s"</string>
+    <string name="visual_verification_explanation">Druk 6 keer in dezelfde volgorde op objecten als je partner</string>
 
     <!-- Eerste gebruik -->
     <string name="welcome_title">Welkom bij NervousFish</string>
@@ -62,6 +68,17 @@
     <string name="name_create_profile">Naam*</string>
     <string name="repeat_password">Herhaal wachtwoord*</string>
     <string name="password_create_profile">Wachtwoord*</string>
+    <string name="use_existing_keypair">Gebruik bestaande keypair</string>
+    <string name="enter_public_key">Voer je public key in:</string>
+    <string name="enter_private_key">Voer je private key in:</string>
+    <string name="enter_public_key_too_short">De key is te kort!\nVoer je public key in:</string>
+    <string name="enter_private_key_too_short">De key is te kort!\nVoer je private key in:</string>
+    <string name="choose_your_keytype">Kies het type van je huidige keypair:</string>
+    <string name="not_yet_implemented">Dit is nog niet mogelijk</string>
+    <string name="custom_ed25519_key_not_yet_implemented">Je eigen ED25519 key invoeren in helaas nog niet mogelijk</string>
+    <string name="rsa_key_info">RSA is het meest gebruikte encryptie algoritme\n   - Prima standaard keuze\n   - Bestaat uit een modulus en een exponent, 2 zeer grote priemgetallen\n   - De gegenereerde keys zijn 256 tekens</string>
+    <string name="ed25519_key_info">EdDSA is een relatief nieuwe maar veelbelovend encryptie algoritme\n   - Het is zowel sneller als veiliger dan RSA\n   - Gebruikte een elliptische curve om een public en private ke te bepalen\n   - De gegenereerde keys zijn 512 tekens</string>
+    <string name="custom_key_info">Als je al een RSA of EdDSA key gebruikt, dan kun je deze gebruiken in NervousFish door \"Gebruik bestaand keypair\" te selecteren</string>
 
     <!-- Hoofdscherm -->
     <string name="contact_added_popup_title">Succesvol ontvangen!</string>
@@ -83,6 +100,7 @@
     <string name="start_recording">Start met opnemen</string>
     <string name="too_few_taps_title">Te weinig getikt</string>
     <string name="too_few_taps_description">Je moet minimaal 3 keer tikken</string>
+    <string name="rhythm_explanation">Druk op \"Start met opnemen\" en tik hetzelfde ritme als je partner</string>
 
     <!-- Contacten -->
     <string name="contact_already_deleted">Dit contactpersoon was al eerder verwijderd</string>
@@ -96,17 +114,16 @@
     <string name="yes_delete">Ja, verwijder!</string>
     <string name="yes_go_back">Ja, ga terug!</string>
     <string name="contact_already_exists">Dit contact bestaat al</string>
-    <string name="contact_already_exists_with_name">Er bestaat al een contact met de naam "%1$s"</string>
     <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
-    <string name="add_public_key_to_contact">Voeg een public key toe aan contact</string>
-    <string name="create_new_contact">Creëer een nieuw contact</string>
-    <string name="enter_name_contact">Voer de naam van het nieuwe contact in</string>
-    <string name="confirm">Bevestigen</string>
     <string name="contact_information">Contact gegevens:</string>
     <string name="contact_public_keys">Public keys:</string>
     <string name="iban_verified">IBAN geverifieerd</string>
 
     <string name="invalid_iban_explanation">Het IBAN nummer dat is ingevoerd is niet geldig, voer een geldige in alsjeblieft.</string>
+    <string name="not_the_same_rhythm_title">Ritmes zijn niet hetzelfde</string>
+    <string name="not_the_same_rhythm_explanation">Je ritme was niet hetzelfde als dat van je partner.</string>
+    <string name="not_the_same_visual_title">Geklikte elementen niet gelijk</string>
+    <string name="not_the_same_visual_explanation">Zorg ervoor dat de plaatjes én de volgorde op beide apparaten hetzelfde zijn.</string>
 
     <!-- Kies verificatie methode -->
     <string name="select_verification_method">Hoe wil je de verbinding beveiligen?</string>
@@ -137,12 +154,10 @@
 
     <!-- General settings -->
     <string name="pref_header_general">Algemeen</string>
-
     <string name="pref_verification_method_to_use">Verificatie methode om te gebruiken</string>
 
     <!-- Profile Settings -->
     <string name="pref_header_profile">Profiel informatie</string>
-
     <string name="display_name">Publieke naam</string>
 
     <!-- KeyManagementActivity -->
@@ -158,7 +173,7 @@
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
-    <string name="iban_verification_explanation">Om er zeker van te zijn dat de persoon in je contacten lijst echt is kunnen we hem verifiëren via een IBAN transactie.</string>
+    <string name="iban_verification_explanation">Om er zeker van te zijn dat zijn/haar IBAN correct is, moet je 1 cent overmaken naar zijn/haar bankrekening en hij/zij terug naar die van jou.</string>
     <string name="iban_manual_verification">Handmatige verificatie</string>
     <string name="iban_bunq_verification">Bunq verificatie</string>
     <string name="contact_to_verify">Contact om te verifiëren:</string>
@@ -168,7 +183,19 @@
     <string name="iban_first_step_explanation">Eerst verstuur je naar je contact een challenge.\nKlik op Handmatig als jouw bank niet de Bunq bank is</string>
     <string name="iban_second_step_explanation">Nu zal je contact jouw challenge accepteren door het te signen met zijn private key\nDeze knop kan worden gevonden in het menu van het Hoofd-scherm!</string>
     <string name="iban_third_step_explanation">Nadat hij jou zijn antwoord heeft verstuurd, kun je het hieronder invullen</string>
-    <string name="or_send_by_method">Of ontvang zijn antwoord op een van de volgende manier:</string>
     <string name="iban_button_in_main_screen">De andere persoon kan jouw challenge accepteren in Hoofd-scherm -> Menu -> IBAN-Challenge!</string>
     <string name="please_note">Let op</string>
+    <string name="account_holder">Rekeninghouder:</string>
+    <string name="challenge_contact">De overboeking omschrijving is</string>
+    <string name="iban_contact">De IBAN van je contact is</string>
+    <string name="manual_verification_explanation">Je stuurt je contact de challenge door een kleine hoeveelheid geld van jouw bank acount naar zijn/haar bank account over te maken</string>
+    <string name="transfer_description">Beschrijving overboeking:</string>
+    <string name="allow_bunq_challenge">Sta je Bunq toe om 1 cent van je rekening over te maken naar de rekening van je contact?</string>
+    <string name="successfully_initiated_challenge">Succesvol 1 cent overgemaakt met een bijbehorend challenge</string>
+    <string name="iban_verification_success">IBAN verificatie succesvol</string>
+    <string name="iban_verification_success_explanation">De IBAN van je contact is succesvol verifieert.</string>
+    <string name="iban_verification_failure">IBAN verificatie mislukt</string>
+    <string name="iban_verification_failure_explanation">Helaas is het verifiëren van de IBAN van je contact mislukt.\nProbeer het nog eens.</string>
+    <string name="no_edsa_key_yet">EdDSA key nodig</string>
+    <string name="edsa_key_needed_iban">Je hebt een EdDSA key nodig om een IBAN te kunnen verifiëren, maar je hebt zo\'n sleutel nog niet.\nWil je er eentje genereren?</string>
 </resources>

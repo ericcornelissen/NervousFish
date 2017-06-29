@@ -80,20 +80,17 @@ final class MainActivityPopups {
                 .setContentText(description)
                 .setCancelText(this.mainActivity.getString(R.string.no))
                 .setConfirmText(this.mainActivity.getString(R.string.yes))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    sweetAlertDialog.dismissWithAnimation();
 
-                        MainActivity.LOGGER.info("Requesting to enable Bluetooth");
-                        final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        if (buttonClicked) {
-                            mainActivity.startActivityForResult(intent, MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK);
-                        } else {
-                            mainActivity.startActivityForResult(intent, MainActivity.ENABLE_BLUETOOTH_ON_START);
-                        }
-                        MainActivity.LOGGER.info("Request to enable Bluetooth sent");
+                    MainActivity.LOGGER.info("Requesting to enable Bluetooth");
+                    final Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    if (buttonClicked) {
+                        this.mainActivity.startActivityForResult(intent, MainActivity.ENABLE_BLUETOOTH_ON_BUTTON_CLICK);
+                    } else {
+                        this.mainActivity.startActivityForResult(intent, MainActivity.ENABLE_BLUETOOTH_ON_START);
                     }
+                    MainActivity.LOGGER.info("Request to enable Bluetooth sent");
                 })
                 .show();
     }
@@ -108,13 +105,10 @@ final class MainActivityPopups {
                 .setContentText(this.mainActivity.getString(R.string.popup_enable_nfc_settings))
                 .setCancelText(this.mainActivity.getString(R.string.no))
                 .setConfirmText(this.mainActivity.getString(R.string.yes))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog dialog) {
-                        dialog.dismiss();
-                        mainActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                        MainActivity.LOGGER.info("Request to enable NFC sent, forwarded to settings");
-                    }
+                .setConfirmClickListener(dialog -> {
+                    dialog.dismissWithAnimation();
+                    this.mainActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                    MainActivity.LOGGER.info("Request to enable NFC sent, forwarded to settings");
                 })
                 .show();
     }

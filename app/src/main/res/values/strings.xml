@@ -4,11 +4,13 @@
     <!-- Words -->
     <string name="bluetooth">Bluetooth</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="done">Done</string>
-    <string name="ed25519_key">Ed25519 key</string>
     <string name="edit">Edit</string>
+    <string name="exponent">Exponent</string>
     <string name="logo">Logo</string>
+    <string name="modulus">Modulus</string>
     <string name="more">More</string>
     <string name="name">Name</string>
     <string name="nfc">NFC</string>
@@ -18,6 +20,7 @@
     <string name="qr">QR</string>
     <string name="qr_code">QR code</string>
     <string name="rsa_key">RSA key</string>
+    <string name="ed25519_key">(Ed)DSA - ED25519</string>
     <string name="save">Save</string>
     <string name="scanning">Scanning…</string>
     <string name="select_device">Select device</string>
@@ -26,6 +29,7 @@
     <string name="yes">Yes</string>
     <string name="dash" translatable="false">-</string>
     <string name="iban">IBAN</string>
+    <string name="info">Info</string>
 
     <!-- Common sentences -->
     <string name="are_you_sure">Are you sure?</string>
@@ -40,6 +44,8 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="try_again">Please try again.</string>
     <string name="waiting_for_partner">Waiting for partner…</string>
+    <string name="your_device_name_is">Device name: "%1$s"</string>
+    <string name="visual_verification_explanation">Tap 6 times in the same order on objects as your partner</string>
 
     <!-- First time use -->
     <string name="welcome_title">Welcome to NervousFish</string>
@@ -62,6 +68,17 @@
     <string name="name_create_profile">Name*</string>
     <string name="repeat_password">Repeat password*</string>
     <string name="password_create_profile">Password*</string>
+    <string name="use_existing_keypair">Use existing keypair</string>
+    <string name="enter_public_key">Enter your public key:</string>
+    <string name="enter_private_key">Enter your private key:</string>
+    <string name="enter_public_key_too_short">The key is too short!\nEnter your public key:</string>
+    <string name="enter_private_key_too_short">The key is too short!\nEnter your private key:</string>
+    <string name="choose_your_keytype">Choose the type of your current keypair:</string>
+    <string name="not_yet_implemented">Feature not yet implemented</string>
+    <string name="custom_ed25519_key_not_yet_implemented">Providing your custom ED25519 key is not possible yet.</string>
+    <string name="rsa_key_info">RSA is the most used encryption algorithm\n  - Excellent default choice\n   -  Consists of a modulus and an exponent, two very large prime numbers\n   -  The generated keys are 256 characters</string>
+    <string name="ed25519_key_info">EdDSA is a relatively new but promising encryption algorithm\n   -  Both faster and safer than RSA\n  - Uses an elliptic curve to determine a public and private key\n   -  The generated keys are 512 characters</string>
+    <string name="custom_key_info">If you\'re already using an RSA or EdDSA key, you can use it in NervousFish by selecting \"Use existing keypair\"</string>
 
     <!-- Main activity -->
     <string name="contact_added_popup_title">Successfully received!</string>
@@ -101,12 +118,12 @@
     <string name="too_few_taps_description">You have to tap at least 3 times</string>
     <string name="contact_image">Contact image</string>
     <string name="contact_already_exists">Contact already exists</string>
-    <string name="contact_already_exists_with_name">A contact with the name "%1$s" exists already</string>
     <string name="contact_exists_nothing_done">A contact with the same name and keys exists already, so adding the same contact "%1$s" again was not needed</string>
-    <string name="add_public_key_to_contact">Add public key to contact</string>
-    <string name="create_new_contact">Create a new contact</string>
-    <string name="enter_name_contact">Enter the name of the new contact</string>
-    <string name="confirm">Confirm</string>
+    <string name="not_the_same_rhythm_title">Rhythm was not the same</string>
+    <string name="not_the_same_rhythm_explanation">The rhythm you tapped was not the same as on the other device.</string>
+    <string name="not_the_same_visual_title">Tapping order was the same</string>
+    <string name="not_the_same_visual_explanation">Make sure that the locations tapped and the order are the same on both devices.</string>
+    <string name="rhythm_explanation">Press \"Start recording\" and tap the same rhythm as your partner</string>
 
     <!-- Select verification method -->
     <string name="select_verification_method">How do you want to secure your connection?</string>
@@ -138,12 +155,10 @@
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>
-
     <string name="pref_verification_method_to_use">Verification method to use</string>
 
     <!-- Profile Settings -->
     <string name="pref_header_profile">Profile information</string>
-
     <string name="display_name">Display name</string>
 
     <!-- KeyManagementActivity -->
@@ -159,7 +174,7 @@
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
-    <string name="iban_verification_explanation">To verify that the contact in your contact list is real, we can verify that through an IBAN transaction.</string>
+    <string name="iban_verification_explanation">To verify that his/her iban is correct, you must transfer 1 cent to his/her bank account and he/she back to yours.</string>
     <string name="iban_manual_verification">Manual verification</string>
     <string name="iban_bunq_verification">Bunq verification</string>
     <string name="contact_to_verify">Contact to verify:</string>
@@ -169,7 +184,19 @@
     <string name="iban_first_step_explanation">First you\'ll send your contact a challenge.\nClick manual if the bank account is not from the Bunq bank</string>
     <string name="iban_second_step_explanation">Now your contact will sign this challenge with his private key.\n This button can be found in the main screen menu!</string>
     <string name="iban_third_step_explanation">After he sends you his response, you can fill it in below to finish</string>
-    <string name="or_send_by_method">Or receive the code from the other person over:</string>
-    <string name="iban_button_in_main_screen">The other person can accept your challengen in Main Screen -> Menu -> IBAN Challenge</string>
+    <string name="iban_button_in_main_screen">The other person can accept your challenge in Main Screen -> Menu -> IBAN Challenge</string>
     <string name="please_note">Please note</string>
+    <string name="manual_verification_explanation">To send your contact the challenge, you have to transfer a small amount of money from your bank account to his/her account.\n\n</string>
+    <string name="account_holder">Account holder:</string>
+    <string name="transfer_description">Transfer description:</string>
+    <string name="iban_contact">The IBAN of your contact is</string>
+    <string name="challenge_contact">The transfer description is</string>
+    <string name="allow_bunq_challenge">Do you allow Bunq to transfer 1 cent from your bank account to the bank account of your contact?</string>
+    <string name="successfully_initiated_challenge">Successfully transferred 1 cent with a challenge</string>
+    <string name="iban_verification_success">IBAN verification success</string>
+    <string name="iban_verification_success_explanation">The IBAN of your contact is successfully verified.</string>
+    <string name="iban_verification_failure">IBAN verification failure</string>
+    <string name="iban_verification_failure_explanation">Unfortunately the verification of the IBAN of your contact failed.\nPlease try again.</string>
+    <string name="no_edsa_key_yet">EdDSA key needed</string>
+    <string name="edsa_key_needed_iban">IBAN verification requires an EdDSA key, but you don\'t have such a key yet.\nDo you want to generate one?</string>
 </resources>

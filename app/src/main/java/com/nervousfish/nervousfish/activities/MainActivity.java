@@ -67,6 +67,8 @@ public final class MainActivity extends AppCompatActivity {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    // 1) Suppressed because at line 115 we cannot easily refactor the ternary to an alternative
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -276,6 +278,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * x
      * Temporary method to open the {@link ContactActivity} for a contact.
      *
      * @param index The index of the contact in {@code this.contacts}.

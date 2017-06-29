@@ -65,7 +65,7 @@ public final class NFCExchangeActivity extends Activity implements NfcAdapter.Cr
             LOGGER.info("Sending my profile with name: {} , public key: {} ", profile.getName(),
                     keyPair.getPublicKey());
 
-            final Contact contact = new Contact(profile.getName(), keyPair.getPublicKey());
+            final Contact contact = profile.getContact();
             final INfcHandler nfcHandler = this.serviceLocator.getNFCHandler();
             this.bytes = nfcHandler.objectToBytes(contact);
         } catch (final IOException e) {

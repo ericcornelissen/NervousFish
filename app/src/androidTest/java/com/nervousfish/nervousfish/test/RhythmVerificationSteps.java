@@ -41,7 +41,7 @@ public class RhythmVerificationSteps {
     @Given("^I am viewing the create rhythm activity$")
     public void iAmViewingTheCreateRhythmActivity() throws IOException {
         final Intent intent = new Intent();
-        mActivityRule.launchActivity(intent);
+        this.mActivityRule.launchActivity(intent);
     }
 
     @When("^I tap the start button$")
@@ -75,28 +75,6 @@ public class RhythmVerificationSteps {
     @Then("^I go to WaitActivity$")
     public void iGoToWaitActivity() {
         intended(hasComponent(WaitActivity.class.getName()));
-    }
-
-    /**
-     * Checks if an element has a certain background color.
-     *
-     * @param color - the color that has to be checked
-     * @return a {@link Matcher}
-     */
-    private static Matcher<View> withBackgroundColor(final int color) {
-        Checks.checkNotNull(color);
-        return new BoundedMatcher<View, EditText>(EditText.class) {
-            @Override
-            public boolean matchesSafely(EditText warning) {
-
-                return color == ((ColorDrawable) warning.getBackground()).getColor();
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with text color: ");
-            }
-        };
     }
 
 }
