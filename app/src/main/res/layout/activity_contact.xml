@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:backgroundTint="@color/color_primary"
                 android:contentDescription="@string/go_back"
                 app:srcCompat="?attr/actionModeCloseDrawable"
@@ -44,15 +44,15 @@
 
             <ImageButton
                 android:id="@+id/edit_menu_button"
+                style="?android:attr/actionOverflowButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:backgroundTint="@color/color_primary"
+                android:contentDescription="@string/more"
                 android:onClick="showPopupMenu"
-                app:srcCompat="@android:drawable/ic_menu_more"
-                tools:targetApi="lollipop"
-                android:contentDescription="@string/more" />
+                tools:targetApi="lollipop" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
