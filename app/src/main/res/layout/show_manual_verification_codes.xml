@@ -1,126 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_enter_rsa_key"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
+        android:id="@+id/layout_enter_rsa_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/ten_padding"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="4dp"
-        card_view:cardUseCompatPadding="true">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="@dimen/field_margin_right"
-                android:layout_marginStart="@dimen/field_margin_left"
-                android:gravity="center"
-                android:text="@string/account_holder"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/ten_padding"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <Button
-                    android:id="@+id/contact_iban"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_default"
-                    android:onClick="showIban"
-                    android:padding="10dp"
-                    android:textColor="@color/white" />
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="@dimen/field_margin_right"
+                    android:layout_marginStart="@dimen/field_margin_left"
+                    android:gravity="center"
+                    android:text="@string/account_holder"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="45dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/button_default"
-                    android:onClick="copyIban"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:scaleType="fitCenter"
-                    android:src="?attr/actionModeCopyDrawable"
-                    android:contentDescription="@string/account_holder" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/contact_iban"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_default"
+                        android:onClick="showIban"
+                        android:padding="10dp"
+                        android:textColor="@color/white" />
+
+                    <ImageButton
+                        android:layout_width="45dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_default"
+                        android:contentDescription="@string/account_holder"
+                        android:onClick="copyIban"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="?attr/actionModeCopyDrawable" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/ten_padding"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="4dp"
-        card_view:cardUseCompatPadding="true">
-
-        <LinearLayout
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="@dimen/field_margin_right"
-                android:layout_marginStart="@dimen/field_margin_left"
-                android:gravity="center"
-                android:text="@string/transfer_description"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/ten_padding"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <Button
-                    android:id="@+id/contact_challenge"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_default"
-                    android:onClick="showChallenge"
-                    android:padding="10dp"
-                    android:textColor="@color/white" />
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="@dimen/field_margin_right"
+                    android:layout_marginStart="@dimen/field_margin_left"
+                    android:gravity="center"
+                    android:text="@string/transfer_description"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="45dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/button_default"
-                    android:contentDescription="@string/transfer_description"
-                    android:onClick="copyChallenge"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:scaleType="fitCenter"
-                    android:src="?attr/actionModeCopyDrawable" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/contact_challenge"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_default"
+                        android:onClick="showChallenge"
+                        android:padding="10dp"
+                        android:textColor="@color/white" />
+
+                    <ImageButton
+                        android:layout_width="45dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_default"
+                        android:contentDescription="@string/transfer_description"
+                        android:onClick="copyChallenge"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="?attr/actionModeCopyDrawable" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</ScrollView>
