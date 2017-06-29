@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -333,7 +332,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     List<Contact> getContacts() {
-        return new ArrayList<>(this.contacts);
+        return this.contacts;
     }
 
 }
