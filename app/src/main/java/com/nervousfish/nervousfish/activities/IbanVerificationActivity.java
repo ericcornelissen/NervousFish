@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -30,10 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.PublicKey;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
-import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
+import nl.tudelft.ewi.ds.bankver.IBAN;
 
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
@@ -46,6 +46,7 @@ public final class IbanVerificationActivity extends Activity {
     private Contact contact;
     private BankVer bankVer;
     private String challenge;
+    private BlockchainWrapper blockchainWrapper;
 
     /**
      * {@inheritDoc}
@@ -67,7 +68,7 @@ public final class IbanVerificationActivity extends Activity {
         final ImageButton backButton = (ImageButton) this.findViewById(R.id.back_button_iban_verification);
         backButton.setOnClickListener(v -> this.finish());
 
-        final BlockchainWrapper blockchainWrapper = new BlockchainWrapper(profile);
+        this.blockchainWrapper = new BlockchainWrapper(profile);
         this.bankVer = new BankVer(this, blockchainWrapper);
         this.bankVer.setProperty(BankVer.SettingProperty.BANK_TYPE, "Bunq");
         this.bankVer.setProperty(BankVer.SettingProperty.BUNQ_API_KEY, "55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
@@ -187,24 +188,29 @@ public final class IbanVerificationActivity extends Activity {
      * @param view The button that was clicked
      */
     public void verifyIbanResponse(final View view) {
-        final String response = ((EditText) this.findViewById(R.id.edit_iban_response)).getText().toString();
+        /*final String response = ((EditText) this.findViewById(R.id.edit_iban_response)).getText().toString();
         final boolean responseValid = ChallengeResponse.isValidResponse(response, this.contact.getFirstEd25519Key());
-        if (responseValid) {
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText(this.getString(R.string.iban_verification_success))
-                    .setContentText(this.getString(R.string.iban_verification_success_explanation))
-                    .setConfirmClickListener(sweetAlertDialog -> {
-                        sweetAlertDialog.dismissWithAnimation();
-                        this.finish();
-                    })
-                    .show();
-        } else {
+        if (responseValid) {*/
+        this.blockchainWrapper.setIbanVerified(contact.getFirstEd25519Key(), contact.getIban(), "");
+        final Contact newContact = new Contact(contact.getName(), contact.getKeys(),
+                contact.getIban(), true);
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(this.getString(R.string.iban_verification_success))
+                .setContentText(this.getString(R.string.iban_verification_success_explanation))
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    sweetAlertDialog.dismissWithAnimation();
+                    setResult(RESULT_FIRST_USER,
+                            new Intent().putExtra(ConstantKeywords.CONTACT, newContact));
+                    this.finish();
+                })
+                .show();
+        /*} else {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(this.getString(R.string.iban_verification_failure))
                     .setContentText(this.getString(R.string.iban_verification_failure_explanation))
                     .setConfirmClickListener(SweetAlertDialog::dismissWithAnimation)
                     .show();
-        }
+        }*/
     }
 
     private void askUserForNewED25519() {

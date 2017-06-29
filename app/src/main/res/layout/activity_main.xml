@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:adjustViewBounds="true"
             android:background="@color/color_primary"
             android:contentDescription="@string/content_description_settings_button"

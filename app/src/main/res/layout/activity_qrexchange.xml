@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="0"
                     android:backgroundTint="@color/color_primary"
                     android:contentDescription="@string/go_back"
                     android:onClick="onBackButtonClick"
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.5"
+                    android:layout_weight="0.1"
                     android:backgroundTint="@color/color_primary"
                     tools:targetApi="lollipop"
                     tools:ignore="ContentDescription" /> <!-- Empty button doesn't need a description -->
