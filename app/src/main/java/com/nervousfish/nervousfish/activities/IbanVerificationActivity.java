@@ -20,7 +20,6 @@ import com.nervousfish.nervousfish.R;
 import com.nervousfish.nervousfish.data_objects.Contact;
 import com.nervousfish.nervousfish.data_objects.KeyPair;
 import com.nervousfish.nervousfish.data_objects.Profile;
-import com.nervousfish.nervousfish.data_objects.RSAKey;
 import com.nervousfish.nervousfish.exceptions.DatabaseException;
 import com.nervousfish.nervousfish.service_locator.BlockchainWrapper;
 import com.nervousfish.nervousfish.service_locator.IServiceLocator;
@@ -31,8 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.util.ArrayList;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
@@ -41,11 +38,11 @@ import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.ExcessiveImports", "checkstyle:ClassFanOutComplexity"})
 public final class IbanVerificationActivity extends Activity {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");
     public static final String ED25519_KEY = "ED25519 key";
+    private static final Logger LOGGER = LoggerFactory.getLogger("IbanVerificationActivity");
     private Contact contact;
     private BankVer bankVer;
     private String challenge;

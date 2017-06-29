@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.ewi.ds.bankver.IBAN;
-
 /**
  * The main {@link Activity} that shows a list of all contacts and a button that lets you obtain new
  * public keys from other people
@@ -116,11 +114,6 @@ public final class MainActivity extends AppCompatActivity {
         final Contact contact = (Contact) intent.getSerializableExtra(ConstantKeywords.CONTACT);
         if (contact != null) {
             ContactReceivedHelper.newContactReceived(this.database, this, contact);
-        } else if (this.contacts.isEmpty()) {
-            ContactReceivedHelper.newContactReceived(this.database, this, new Contact("Betje Brievenbus",
-                    this.serviceLocator.getKeyGenerator().generateEd25519KeyPair("Tinus Theedoek").getPublicKey(),
-                    new IBAN("NL36RABO0137188641"),
-                    true));
         }
 
         LOGGER.info("Activity created");

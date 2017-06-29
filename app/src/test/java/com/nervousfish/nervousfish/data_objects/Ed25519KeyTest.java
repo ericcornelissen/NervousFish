@@ -134,7 +134,7 @@ public class Ed25519KeyTest {
                  ObjectInputStream ois = new ObjectInputStream(bis)) {
                 IKey key1 = (IKey) ois.readObject();
                 assertTrue(key1.getName().equals("foo"));
-                assertTrue(key1.getKey().equals("bar"));
+                assertTrue(key1.getKey().equals("bar" + "#" + Arrays.toString("foobar".getBytes())));
             }
         }
     }*/
