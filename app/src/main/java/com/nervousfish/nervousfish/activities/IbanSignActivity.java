@@ -39,6 +39,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Arrays;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
@@ -97,15 +98,16 @@ public final class IbanSignActivity extends AppCompatActivity {
 
         if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
             final IBAN iban = new IBAN(ibanInput.getText().toString());
-            EdDSAPublicKey peerPublicKey = (EdDSAPublicKey) blockchainWrapper.getPublicKeyForIBAN(iban);
+            PublicKey peerPublicKey = this.blockchainWrapper.getPublicKeyForIBAN(iban);
             System.out.println("----" + ChallengeResponse.isValidDescriptionFormat(challenge));
-            System.out.println("----" + Utils.bytesToHex(peerPublicKey.getAbyte()));
+            //System.out.println("----" + Utils.bytesToHex(peerPublicKey.getAbyte()));
             System.out.println("----" + ChallengeResponse.isValidChallenge(challenge, peerPublicKey));
 
             String[] challengeArray = challenge.split(":");
             byte[] message = Utils.hexToBytes(challengeArray[1]);
             byte[] signature = Utils.hexToBytes(challengeArray[2]);
-            System.out.println("+++ " + challengeArray[0].equals("CH"));
+            System.out.println("))  " + Arrays.toString(message));
+            System.out.println("))  " + Arrays.toString(signature));
             System.out.println("+++" + ED25519.verifySignature(message, signature, peerPublicKey));
 
             EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName("Ed25519");
@@ -113,6 +115,7 @@ public final class IbanSignActivity extends AppCompatActivity {
                 Signature s = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
                 s.initVerify(peerPublicKey);
                 s.update(message);
+                System.out.println("}}}  " + s);
                 System.out.println("-=-=-=- " + s.verify(signature));
             } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
                 e.printStackTrace();
