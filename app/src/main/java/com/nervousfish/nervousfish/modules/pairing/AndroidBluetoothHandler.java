@@ -56,6 +56,7 @@ public final class AndroidBluetoothHandler extends APairingHandler implements IB
      */
     @Override
     public void start() throws IOException {
+        LOGGER.info("Start AndroidBluetoothHandler");
         getService().start();
         if (!this.getServiceLocator().isRegisteredToEventBus(this)) {
             this.getServiceLocator().registerToEventBus(this);
