@@ -105,12 +105,11 @@ public final class KeyManagementActivity extends Activity {
             builder.setTitle(this.title);
             builder.setMessage(this.key);
             builder.setPositiveButton("Copy", (dialog, which) -> {
-                final Activity activity = this.activity;
-                final Profile profile = this.profile;
-                final ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, profile.getKeyPairs().get(0).getPublicKey().getKey());
+                final ClipboardManager clipboard = (ClipboardManager) this.activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, this.profile.getKeyPairs().get(0).getPublicKey().getKey());
                 clipboard.setPrimaryClip(clip);
             });
+            builder.setNegativeButton("Close", (dialog, which) -> dialog.dismiss());
             builder.show();
         }
     }
