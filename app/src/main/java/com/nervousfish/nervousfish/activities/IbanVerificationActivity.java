@@ -38,7 +38,7 @@ import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
  */
-@SuppressWarnings({"PMD.TooManyMethods", "checkstyle:ClassFanOutComplexity"})
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.ExcessiveImports", "checkstyle:ClassFanOutComplexity"})
 public final class IbanVerificationActivity extends Activity {
 
     public static final String ED25519_KEY = "ED25519 key";
