@@ -164,6 +164,14 @@
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
 
+    <!-- IbanVerificationSigning -->
+    <string name="pref_iban_sign_header">IBAN verification + signing</string>
+    <string name="iban_challenge">Copy the challenge here</string>
+    <string name="iban_generate_key_hint">This response will be automatically copied to clipboard</string>
+    <string name="sign_generate">Generate</string>
+    <string name="iban_challenge_start">Let\'s verify the challenge!</string>
+    <string name="iban_string">IBAN of the challenger</string>
+
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>
     <string name="iban_verification_explanation">To verify that his/her iban is correct, you must transfer 1 cent to his/her bank account and he/she back to yours.</string>

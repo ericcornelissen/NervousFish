@@ -117,7 +117,7 @@
     <string name="contact_exists_nothing_done">Er bestaat al een contact met dezelfde naam en keys, dus het contact "%1$s" opnieuw toevoegen was niet nodig</string>
     <string name="contact_information">Contact gegevens:</string>
     <string name="contact_public_keys">Public keys:</string>
-    <string name="iban_verified">IBAN verifieert</string>
+    <string name="iban_verified">IBAN geverifieerd</string>
 
     <string name="invalid_iban_explanation">Het IBAN nummer dat is ingevoerd is niet geldig, voer een geldige in alsjeblieft.</string>
     <string name="not_the_same_rhythm_title">Ritmes zijn niet hetzelfde</string>
@@ -162,6 +162,14 @@
 
     <!-- KeyManagementActivity -->
     <string name="pref_key_management_header">Key management</string>
+
+    <!-- IbanVerificationSigning -->
+    <string name="pref_iban_sign_header">IBAN verificatie + ondertekening</string>
+    <string name="iban_challenge">Kopieer de challenge hier</string>
+    <string name="iban_generate_key_hint">Deze respons wordt automatisch gekopieerd naar het klembord.</string>
+    <string name="sign_generate">Genereer</string>
+    <string name="iban_challenge_start">Laten we de challenge verifiëren!</string>
+    <string name="iban_string">IBAN van de challenger</string>
 
     <!-- IBAN Verification -->
     <string name="iban_verification_activity_title">IBAN verification</string>

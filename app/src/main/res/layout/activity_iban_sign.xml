@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/sea_at_night">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/iban_challenge_start"
+            android:textSize="@dimen/create_profile_message_size" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top">
+
+            <ImageView
+                android:id="@+id/icon_iban_verify"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/credit_card"
+                tools:ignore="ContentDescription" /> <!-- not useful for people with bad-eyesight -->
+
+            <EditText
+                android:id="@+id/icon_iban_verify_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/no_users_text_margin_bottom"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon_iban_verify"
+                android:hint="@string/iban_string"
+                android:inputType="textCapCharacters"
+                android:maxLines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top">
+
+            <ImageView
+                android:id="@+id/icon_iban_challenge_icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/credit_card"
+                tools:ignore="ContentDescription" /> <!-- not useful for people with bad-eyesight -->
+
+            <EditText
+                android:id="@+id/iban_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/no_users_text_margin_bottom"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon_iban_challenge_icon"
+                android:hint="@string/iban_challenge"
+                android:inputType="text"
+                android:maxLines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/field_margin_right"
+            android:layout_marginStart="@dimen/field_margin_left"
+            android:layout_marginTop="@dimen/field_margin_top">
+
+            <ImageView
+                android:id="@+id/icon_iban_generate"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/key"
+                tools:ignore="ContentDescription" /> <!-- not useful for people with bad-eyesight -->
+
+            <TextView
+                android:id="@+id/iban_generate_key"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/no_users_text_margin_bottom"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon_iban_generate"
+                android:hint="@string/iban_generate_key_hint" />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/submitProfile"
+            android:layout_width="@dimen/submit_password_width"
+            android:layout_height="@dimen/submit_password_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/submit_password_margin_top"
+            android:background="@color/color_primary"
+            android:gravity="center"
+            android:onClick="onSubmitClick"
+            android:text="@string/sign_generate"
+            android:textSize="@dimen/submit_text_size" />
+    </LinearLayout>
+
+    <include layout="@layout/custom_keyboard" />
+</RelativeLayout>

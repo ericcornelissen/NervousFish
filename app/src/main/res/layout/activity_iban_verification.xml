@@ -185,7 +185,6 @@
                         android:onClick="onManualVerificationClick"
                         android:text="@string/iban_manual_verification"
                         android:textColor="@color/white" />
-
                     <Button
                         android:id="@+id/bunq_iban_verification_button"
                         android:layout_width="match_parent"

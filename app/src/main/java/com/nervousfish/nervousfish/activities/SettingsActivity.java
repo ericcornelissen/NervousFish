@@ -59,7 +59,6 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
     @java.lang.SuppressWarnings("checkstyle:Indentation")
     private static final Preference.OnPreferenceChangeListener BIND_PREFERENCE_SUMMARY_TO_VALUE_LISTENER =
             new Preference.OnPreferenceChangeListener() {
-
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object newValue) {
                     LOGGER.info("Preference changed");
@@ -233,6 +232,10 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             final Intent intent = new Intent(this, KeyManagementActivity.class);
             this.startActivity(intent);
         }
+        if (header.id == R.id.iban_sign_header) {
+            final Intent intent = new Intent(this, IbanSignActivity.class);
+            this.startActivity(intent);
+        }
     }
 
     /**
@@ -328,8 +331,8 @@ public final class SettingsActivity extends AAppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.DISPLAY_NAME));
-            bindPreferenceSummaryToValue(findPreference(ConstantKeywords.IBAN_NUMBER));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.DISPLAY_NAME));
+            bindPreferenceSummaryToValue(this.findPreference(ConstantKeywords.IBAN_NUMBER));
         }
 
         @Override
