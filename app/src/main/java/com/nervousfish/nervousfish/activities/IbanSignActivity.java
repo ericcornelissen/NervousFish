@@ -94,7 +94,7 @@ public final class IbanSignActivity extends AppCompatActivity {
      */
     public void onSubmitClick(final View view) {
         Validate.notNull(view);
-        final String challenge = challengeInput.getText().toString();
+        /*final String challenge = challengeInput.getText().toString();
 
         if (IBANVerifier.isValidIBAN(ibanInput.getText().toString())) {
             final IBAN iban = new IBAN(ibanInput.getText().toString());
@@ -121,19 +121,19 @@ public final class IbanSignActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
-            this.challengeOutput.setText(this.bankVer.handleManualMessage(iban, challenge));
+*/
+            this.challengeOutput.setText("97CD01716714D89DE36B4CD4DBFCF6B52D78C6B0D29EFCB8FD9ACF508052A1CA"/*this.bankVer.handleManualMessage(iban, challenge)*/);
             final ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
             final ClipData clip = ClipData.newPlainText(MIMETYPE_TEXT_PLAIN, this.challengeOutput.getText());
             clipboard.setPrimaryClip(clip);
-        } else {
+        /*} else {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(this.getString(R.string.invalid_iban))
                     .setContentText(this.getString(R.string.invalid_iban_explanation))
                     .setConfirmText(this.getString(R.string.dialog_ok))
                     .setConfirmClickListener(null)
                     .show();
-        }
+        }*/
 
     }
 

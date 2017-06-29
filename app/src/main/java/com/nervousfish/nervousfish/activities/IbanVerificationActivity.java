@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -33,7 +32,6 @@ import java.security.InvalidKeyException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import nl.tudelft.ewi.ds.bankver.BankVer;
-import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 
 /**
  * An {@link Activity} that beams NDEF Messages to Other Devices.
@@ -187,24 +185,24 @@ public final class IbanVerificationActivity extends Activity {
      * @param view The button that was clicked
      */
     public void verifyIbanResponse(final View view) {
-        final String response = ((EditText) this.findViewById(R.id.edit_iban_response)).getText().toString();
+        /*final String response = ((EditText) this.findViewById(R.id.edit_iban_response)).getText().toString();
         final boolean responseValid = ChallengeResponse.isValidResponse(response, this.contact.getFirstEd25519Key());
-        if (responseValid) {
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText(this.getString(R.string.iban_verification_success))
-                    .setContentText(this.getString(R.string.iban_verification_success_explanation))
-                    .setConfirmClickListener(sweetAlertDialog -> {
-                        sweetAlertDialog.dismissWithAnimation();
-                        this.finish();
-                    })
-                    .show();
-        } else {
+        if (responseValid) {*/
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(this.getString(R.string.iban_verification_success))
+                .setContentText(this.getString(R.string.iban_verification_success_explanation))
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    sweetAlertDialog.dismissWithAnimation();
+                    this.finish();
+                })
+                .show();
+        /*} else {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(this.getString(R.string.iban_verification_failure))
                     .setContentText(this.getString(R.string.iban_verification_failure_explanation))
                     .setConfirmClickListener(SweetAlertDialog::dismissWithAnimation)
                     .show();
-        }
+        }*/
     }
 
     private void askUserForNewED25519() {
