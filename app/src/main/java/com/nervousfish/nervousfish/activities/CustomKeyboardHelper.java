@@ -41,7 +41,7 @@ final class CustomKeyboardHelper {
         final Keyboard keyboard = new Keyboard(activity, R.xml.qwerty);
         this.keyboardView.setKeyboard(keyboard);
         this.keyboardView.setPreviewEnabled(false);
-        this.keyboardView.setOnKeyboardActionListener(new CustomKeyboardHelper.OnCustomKeyboardActionListener(activity));
+        this.keyboardView.setOnKeyboardActionListener(new CustomKeyboardHelper.OnCustomKeyboardActionListener(activity, keyboardView));
 
         // Disable the default keyboard
         final Window window = this.activity.getWindow();
@@ -129,8 +129,13 @@ final class CustomKeyboardHelper {
 
         private final Activity activity;
 
-        OnCustomKeyboardActionListener(final Activity activity) {
+        private final KeyboardView keyboardView;
+
+        private boolean isShifted;
+
+        OnCustomKeyboardActionListener(final Activity activity, final KeyboardView keyboardView) {
             this.activity = activity;
+            this.keyboardView = keyboardView;
         }
 
         @Override
@@ -157,13 +162,29 @@ final class CustomKeyboardHelper {
             final EditText edittext = (EditText) focusCurrent;
             final Editable editable = edittext.getText();
             final int start = edittext.getSelectionStart();
-            if (primaryCode == Keyboard.KEYCODE_CANCEL) {
-                final int length = editable.length();
-                if (length > 0) {
-                    editable.delete(length - 1, length);
-                }
-            } else {
-                editable.insert(start, Character.toString((char) primaryCode));
+
+            switch (primaryCode) {
+                case Keyboard.KEYCODE_CANCEL:
+                    final int length = editable.length();
+                    if (length > 0) {
+                        editable.delete(length - 1, length);
+                    }
+                    break;
+                case Keyboard.KEYCODE_SHIFT:
+                    isShifted = !isShifted;
+                    keyboardView.setShifted(isShifted);
+                    keyboardView.invalidateAllKeys();
+                    break;
+                default:
+                    if (isShifted) {
+                        isShifted = false;
+                        keyboardView.setShifted(false);
+                        keyboardView.invalidateAllKeys();
+                        editable.insert(start, Character.toString(Character.toUpperCase((char) primaryCode)));
+                    } else {
+                        editable.insert(start, Character.toString((char) primaryCode));
+                    }
+                    break;
             }
         }
 

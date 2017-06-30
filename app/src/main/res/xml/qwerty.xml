@@ -105,9 +105,11 @@
     </Row>
     <Row>
         <Key
-            android:codes="122"
+            android:codes="-1"
             android:keyEdgeFlags="left"
-            android:horizontalGap="10%"
+            android:keyLabel="\u21e7" />
+        <Key
+            android:codes="122"
             android:keyLabel="z" />
         <Key
             android:codes="120"
